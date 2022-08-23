@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+    com.ticho.boot.datasource.config.TichoDataSourceConfig,\
+    com.ticho.boot.datasource.config.TichoMybatisPlusConfig,\
+    com.ticho.boot.datasource.component.TichoIdGenerator

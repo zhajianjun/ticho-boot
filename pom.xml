@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modules>
+        <module>ticho-dependencies</module>
+        <module>ticho-starter-view</module>
+        <module>ticho-starter-web</module>
+        <module>ticho-starter-datasource</module>
+        <module>ticho-starter-email</module>
+        <module>ticho-starter-cloud</module>
+        <module>ticho-starter-minio</module>
+        <module>ticho-starter-swagger</module>
+        <module>ticho-starter-feign</module>
+    </modules>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>ticho-boot</artifactId>
+    <groupId>com.ticho.boot</groupId>
+    <version>1.0-SNAPSHOT</version>
+    <name>ticho-boot</name>
+    <packaging>pom</packaging>
+    <description>ticho-boot</description>
+
+    <properties>
+        <!-- 项目版本信息 -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <java.version>8</java.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <dependency>
+                <groupId>com.ticho.boot</groupId>
+                <artifactId>ticho-dependencies</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+        </dependencies>
+
+    </dependencyManagement>
+
+
+    <build>
+        <finalName>${project.artifactId}-${project.version}</finalName>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.6.0</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                    </configuration>
+                </plugin>
+                <!-- 上传源码 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.0.1</version>
+                    <configuration>
+                        <attach>true</attach>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>compile</phase>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>ticho-repos</id>
+            <name>ticho中央仓库</name>
+            <url>http://192.168.243.138:10010/repository/maven-public/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <!--每次打包都回去拉取最新的snapshots包-->
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <!-- 配置为 ticho-repos 会覆盖超级POM中央仓库的配置 -->
+            <id>ticho-repos</id>
+            <name>ticho中央仓库</name>
+            <url>http://192.168.243.138:10010/repository/maven-public/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <!-- 发布仓库 -->
+    <distributionManagement>
+        <repository>
+            <id>ticho-releases</id>
+            <name>Nexus Release</name>
+            <url>http://192.168.243.138:10010/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>ticho-snapshots</id>
+            <name>Nexus Snapshot</name>
+            <url>http://192.168.243.138:10010/repository/maven-snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+
+</project>

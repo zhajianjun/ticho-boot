@@ -1,0 +1,29 @@
+{
+  "properties": [
+    {
+      "name": "ticho.datasource.url",
+      "type": "java.lang.String",
+      "description": "Description for ticho.datasource.url."
+    },
+    {
+      "name": "ticho.datasource.username",
+      "type": "java.lang.String",
+      "description": "Description for ticho.datasource.username."
+    },
+    {
+      "name": "ticho.datasource.password",
+      "type": "java.lang.String",
+      "description": "Description for ticho.datasource.password."
+    },
+    {
+      "name": "ticho.datasource.driver-class-name",
+      "type": "java.lang.String",
+      "description": "Description for ticho.datasource.driver-class-name."
+    },
+    {
+      "name": "ticho.mybatis.type-aliases-package",
+      "type": "java.lang.String",
+      "description": "Description for ticho.mybatis.type-aliases-package."
+    }
+  ]
+}

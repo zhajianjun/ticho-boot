@@ -1,0 +1,21 @@
+# 配置模版
+spring:
+  mail:
+    #配置 SMTP 服务器地址
+    host: smtp.qq.com
+    #SMTP 服务器的端口
+    port: 587
+    #配置邮箱用户名
+    username: 123@qq.com
+    #配置密码，注意，不是真正的密码，而是申请到的授权码
+    password: 123456
+    #默认的邮件编码
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+        mail.smtp.connectiontimeout: 5000
+        #配饰 SSL 加密工厂
+        socketFactoryClass: javax.net.ssl.SSLSocketFactory
+        #表示开启 DEBUG 模式，这样，邮件发送过程的日志会在控制台打印出来，方便排查错误
+        debug: true
