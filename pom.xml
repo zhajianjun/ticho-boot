@@ -76,47 +76,114 @@
                         </execution>
                     </executions>
                 </plugin>
+                <!-- 指定maven-resources-plugin版本 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.1.0</version>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
 
+
+    <distributionManagement>
+        <repository>
+            <id>rdc-releases</id>
+            <name>rdc releases</name>
+            <url>https://packages.aliyun.com/maven/repository/2256283-release-lllfCh/</url>
+        </repository>
+        <snapshotRepository>
+            <id>rdc-snapshots</id>
+            <name>rdc snapshots</name>
+            <url>https://packages.aliyun.com/maven/repository/2256283-snapshot-4ykLJ4/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <repositories>
         <repository>
-            <id>ticho-repos</id>
-            <name>ticho中央仓库</name>
-            <url>http://192.168.243.138:10010/repository/maven-public/</url>
-            <snapshots>
-                <enabled>true</enabled>
-                <!--每次打包都回去拉取最新的snapshots包-->
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
+            <id>central</id>
+            <url>https://maven.aliyun.com/nexus/content/groups/public</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>snapshots</id>
+            <url>https://maven.aliyun.com/nexus/content/groups/public</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>rdc-releases</id>
+            <url>https://packages.aliyun.com/maven/repository/2256283-release-lllfCh/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>rdc-snapshots</id>
+            <url>https://packages.aliyun.com/maven/repository/2256283-snapshot-4ykLJ4/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
-            <!-- 配置为 ticho-repos 会覆盖超级POM中央仓库的配置 -->
-            <id>ticho-repos</id>
-            <name>ticho中央仓库</name>
-            <url>http://192.168.243.138:10010/repository/maven-public/</url>
+            <id>central</id>
+            <url>https://maven.aliyun.com/nexus/content/groups/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>snapshots</id>
+            <url>https://maven.aliyun.com/nexus/content/groups/public</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>rdc-releases</id>
+            <url>https://packages.aliyun.com/maven/repository/2256283-release-lllfCh/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>rdc-snapshots</id>
+            <url>https://packages.aliyun.com/maven/repository/2256283-snapshot-4ykLJ4/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </pluginRepository>
     </pluginRepositories>
-
-    <!-- 发布仓库 -->
-    <distributionManagement>
-        <repository>
-            <id>ticho-releases</id>
-            <name>Nexus Release</name>
-            <url>http://192.168.243.138:10010/repository/maven-releases/</url>
-        </repository>
-        <snapshotRepository>
-            <id>ticho-snapshots</id>
-            <name>Nexus Snapshot</name>
-            <url>http://192.168.243.138:10010/repository/maven-snapshots/</url>
-        </snapshotRepository>
-    </distributionManagement>
-
 
 </project>
