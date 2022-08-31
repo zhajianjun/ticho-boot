@@ -11,7 +11,6 @@
 
     <artifactId>ticho-starter-cloud</artifactId>
     <name>ticho-starter-cloud</name>
-    <packaging>pom</packaging>
     <description>ticho cloud</description>
     <url>http://www.example.com</url>
 
