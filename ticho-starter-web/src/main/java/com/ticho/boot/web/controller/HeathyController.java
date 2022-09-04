@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RefreshScope
 @RestController
-@RequestMapping("healthy")
+@RequestMapping("health")
 @Api(tags = "健康检查")
 @ApiSort(Ordered.HIGHEST_PRECEDENCE)
 @View
@@ -32,7 +32,7 @@ public class HeathyController {
     @Value("${server.port:}")
     private String port;
 
-    @Value("${ticho.healthy:healthy}")
+    @Value("${ticho.health:health}")
     private String healthy;
 
 
