@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class WebConst {
 
-    public static final String CORS_PREFIX = "ticho.cors.enable";
+    public static final String CORS = "ticho.cors.enable";
 
-    public static final String ASYNC_PREFIX = "ticho.async";
+    public static final String ASYNC_PREFIX = "ticho";
 
 }

@@ -43,14 +43,14 @@ public class SwaggerSecurityConfig {
     // @formatter:off
 
     @Bean
-    @ConditionalOnProperty(prefix = "ticho.security", name = "type", havingValue = "password")
+    @ConditionalOnProperty(value = "ticho.security.type", havingValue = "password")
     @ConditionalOnMissingBean(Docket.class)
     public Docket passwordDocket() {
         return creteDocket(securityContexts(), passwordSecuritySchemes());
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "ticho.security", name = "type", havingValue = "authorization")
+    @ConditionalOnProperty(value = "ticho.security.type", havingValue = "authorization")
     @ConditionalOnMissingBean(Docket.class)
     public Docket authorizationCodeDocket() {
         return creteDocket(securityContexts(), authorizationCodeSecuritySchemes());
@@ -58,7 +58,7 @@ public class SwaggerSecurityConfig {
 
     //@Bean("implicitSecurityDocket")
     @Bean
-    @ConditionalOnProperty(prefix = "ticho.security", name = "type", havingValue = "implicit")
+    @ConditionalOnProperty(value = "ticho.security.type", havingValue = "implicit")
     @ConditionalOnMissingBean(Docket.class)
     public Docket implicitSecurityDocket() {
         return creteDocket(securityContexts(), implicitSecuritySchemes());
@@ -66,7 +66,7 @@ public class SwaggerSecurityConfig {
 
     //@Bean("clientCredentialsDocket")
     @Bean
-    @ConditionalOnProperty(prefix = "ticho.security", name = "type", havingValue = "clientCredentials")
+    @ConditionalOnProperty(value = "ticho.security.type", havingValue = "clientCredentials")
     @ConditionalOnMissingBean(Docket.class)
     public Docket clientCredentialsDocket() {
         return creteDocket(securityContexts(), clientCredentialsSchemes());
