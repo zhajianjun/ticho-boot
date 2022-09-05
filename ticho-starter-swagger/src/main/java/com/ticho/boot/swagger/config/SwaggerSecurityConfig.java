@@ -46,14 +46,14 @@ public class SwaggerSecurityConfig {
     @ConditionalOnProperty(prefix = "ticho.security", name = "type", havingValue = "password")
     @ConditionalOnMissingBean(Docket.class)
     public Docket passwordDocket() {
-        return creteDocket(null, securityContexts(), passwordSecuritySchemes());
+        return creteDocket(securityContexts(), passwordSecuritySchemes());
     }
 
     @Bean
     @ConditionalOnProperty(prefix = "ticho.security", name = "type", havingValue = "authorization")
     @ConditionalOnMissingBean(Docket.class)
     public Docket authorizationCodeDocket() {
-        return creteDocket("default-authorizationCode", securityContexts(), authorizationCodeSecuritySchemes());
+        return creteDocket(securityContexts(), authorizationCodeSecuritySchemes());
     }
 
     //@Bean("implicitSecurityDocket")
@@ -61,7 +61,7 @@ public class SwaggerSecurityConfig {
     @ConditionalOnProperty(prefix = "ticho.security", name = "type", havingValue = "implicit")
     @ConditionalOnMissingBean(Docket.class)
     public Docket implicitSecurityDocket() {
-        return creteDocket("default-implicitSecurity", securityContexts(), implicitSecuritySchemes());
+        return creteDocket(securityContexts(), implicitSecuritySchemes());
     }
 
     //@Bean("clientCredentialsDocket")
@@ -69,13 +69,12 @@ public class SwaggerSecurityConfig {
     @ConditionalOnProperty(prefix = "ticho.security", name = "type", havingValue = "clientCredentials")
     @ConditionalOnMissingBean(Docket.class)
     public Docket clientCredentialsDocket() {
-        return creteDocket("default-clientCredentials", securityContexts(), clientCredentialsSchemes());
+        return creteDocket(securityContexts(), clientCredentialsSchemes());
     }
 
-    private Docket creteDocket(String groupName, List<SecurityContext> securityContexts, List<? extends SecurityScheme> securitySchemes) {
+    private Docket creteDocket(List<SecurityContext> securityContexts, List<? extends SecurityScheme> securitySchemes) {
         return new Docket(DocumentationType.SWAGGER_2)
             .pathMapping("/")
-            .groupName(groupName)
             .select()
             //.apis(RequestHandlerSelectors.basePackage("com.ticho"))
             .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
@@ -135,7 +134,7 @@ public class SwaggerSecurityConfig {
      * 简化模式
      */
     private List<SecurityScheme> implicitSecuritySchemes() {
-        String loginEndpointUrl = securityProperty.getUrl() + "/oauth/authorize";
+        String loginEndpointUrl = securityProperty.getUrl() + OAUTH_AUTHORIZE;
         LoginEndpoint tokenEndpoint = new LoginEndpoint(loginEndpointUrl);
         GrantType implicitGrant = new ImplicitGrant(tokenEndpoint, "");
         List<GrantType> grantTypes = Stream.of(implicitGrant).collect(Collectors.toList());
