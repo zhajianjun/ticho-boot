@@ -1,8 +1,8 @@
 package com.ticho.boot.swagger.config;
 
+import com.ticho.boot.swagger.prop.SwaggerSecurityProperty;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -30,13 +30,14 @@ import java.util.stream.Stream;
 @Configuration
 public class SwaggerSecurityConfig {
 
-    private static final String OAUTH_TOKEN = "/oauth/token";
     private static final String OAUTH_2 = "oauth2";
+    private static final String OAUTH_TOKEN = "/oauth/token";
+    private static final String OAUTH_AUTHORIZE = "/oauth/authorize";
 
-    @Value("${ticho.security.url:http://localhost:8010}")
-    private String url;
+    @Autowired
+    private SwaggerSecurityProperty securityProperty;
 
-    @Autowired(required = false)
+    @Autowired
     private ApiInfo apiInfo;
 
     // @formatter:off
@@ -109,7 +110,7 @@ public class SwaggerSecurityConfig {
      * 密码模式
      */
     private List<SecurityScheme> passwordSecuritySchemes() {
-        String passwordTokenUrl = url + OAUTH_TOKEN;
+        String passwordTokenUrl = securityProperty.getUrl() + OAUTH_TOKEN;
         GrantType passwordCredentialsGrant = new ResourceOwnerPasswordCredentialsGrant(passwordTokenUrl);
         List<GrantType> grantTypes = Stream.of(passwordCredentialsGrant).collect(Collectors.toList());
         OAuth oAuth = new OAuthBuilder().name(OAUTH_2).grantTypes(grantTypes).build();
@@ -120,8 +121,8 @@ public class SwaggerSecurityConfig {
      * 授权码模式
      */
     private List<SecurityScheme> authorizationCodeSecuritySchemes() {
-        String authorizationUrl = url + "/oauth/authorize";
-        String tokenEndpointUrl = url + OAUTH_TOKEN;
+        String authorizationUrl = securityProperty.getUrl() + OAUTH_AUTHORIZE;
+        String tokenEndpointUrl = securityProperty.getUrl() + OAUTH_TOKEN;
         TokenRequestEndpoint tokenRequestEndpoint = new TokenRequestEndpoint(authorizationUrl, "web", "web");
         TokenEndpoint tokenEndpoint = new TokenEndpoint(tokenEndpointUrl, "");
         GrantType authorizationCodeGrant = new AuthorizationCodeGrant(tokenRequestEndpoint, tokenEndpoint);
@@ -134,7 +135,7 @@ public class SwaggerSecurityConfig {
      * 简化模式
      */
     private List<SecurityScheme> implicitSecuritySchemes() {
-        String loginEndpointUrl = url + "/oauth/authorize";
+        String loginEndpointUrl = securityProperty.getUrl() + "/oauth/authorize";
         LoginEndpoint tokenEndpoint = new LoginEndpoint(loginEndpointUrl);
         GrantType implicitGrant = new ImplicitGrant(tokenEndpoint, "");
         List<GrantType> grantTypes = Stream.of(implicitGrant).collect(Collectors.toList());
@@ -146,7 +147,7 @@ public class SwaggerSecurityConfig {
      * 客户端模式
      */
     private List<SecurityScheme> clientCredentialsSchemes() {
-        String clientCredentialsUrl = url + OAUTH_TOKEN;
+        String clientCredentialsUrl = securityProperty.getUrl() + OAUTH_TOKEN;
         GrantType clientCredentialsGrant = new ClientCredentialsGrant(clientCredentialsUrl);
         List<GrantType> grantTypes = Stream.of(clientCredentialsGrant).collect(Collectors.toList());
         OAuth oAuth = new OAuthBuilder().name(OAUTH_2).grantTypes(grantTypes).build();

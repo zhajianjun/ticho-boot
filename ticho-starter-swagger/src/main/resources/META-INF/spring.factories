@@ -1,5 +1,7 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.ticho.boot.swagger.config.SwaggerConfig,\
-  com.ticho.boot.swagger.config.SwaggerSecurityConfig
+  com.ticho.boot.swagger.prop.SwaggerSecurityProperty,\
+  com.ticho.boot.swagger.config.SwaggerSecurityConfig,\
+  com.ticho.boot.swagger.config.SwaggerConfig
+
 
 
