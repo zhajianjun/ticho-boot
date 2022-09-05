@@ -1,10 +1,12 @@
 package com.ticho.boot.swagger.config;
 
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import springfox.documentation.builders.OAuthBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -28,7 +30,10 @@ import java.util.stream.Stream;
 @Configuration
 public class SwaggerSecurityConfig {
 
-    @Value("${fog.oauth.url:http://localhost:8010}")
+    private static final String OAUTH_TOKEN = "/oauth/token";
+    private static final String OAUTH_2 = "oauth2";
+
+    @Value("${ticho.security.url:http://localhost:8010}")
     private String url;
 
     @Autowired(required = false)
@@ -36,25 +41,32 @@ public class SwaggerSecurityConfig {
 
     // @formatter:off
 
-    @Bean("password")
-    @Primary
+    @Bean
+    @ConditionalOnProperty(prefix = "ticho.security", name = "type", havingValue = "password")
+    @ConditionalOnMissingBean(Docket.class)
     public Docket passwordDocket() {
         return creteDocket(null, securityContexts(), passwordSecuritySchemes());
     }
 
-    @Bean("authorizationCodeDocket")
+    @Bean
+    @ConditionalOnProperty(prefix = "ticho.security", name = "type", havingValue = "authorization")
+    @ConditionalOnMissingBean(Docket.class)
     public Docket authorizationCodeDocket() {
         return creteDocket("default-authorizationCode", securityContexts(), authorizationCodeSecuritySchemes());
     }
 
     //@Bean("implicitSecurityDocket")
-
+    @Bean
+    @ConditionalOnProperty(prefix = "ticho.security", name = "type", havingValue = "implicit")
+    @ConditionalOnMissingBean(Docket.class)
     public Docket implicitSecurityDocket() {
         return creteDocket("default-implicitSecurity", securityContexts(), implicitSecuritySchemes());
     }
 
     //@Bean("clientCredentialsDocket")
-
+    @Bean
+    @ConditionalOnProperty(prefix = "ticho.security", name = "type", havingValue = "clientCredentials")
+    @ConditionalOnMissingBean(Docket.class)
     public Docket clientCredentialsDocket() {
         return creteDocket("default-clientCredentials", securityContexts(), clientCredentialsSchemes());
     }
@@ -64,8 +76,8 @@ public class SwaggerSecurityConfig {
             .pathMapping("/")
             .groupName(groupName)
             .select()
-            .apis(RequestHandlerSelectors.basePackage("com.ticho"))
-            //.apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
+            //.apis(RequestHandlerSelectors.basePackage("com.ticho"))
+            .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
             // 路径使用any风格
             .paths(PathSelectors.any())
             //过滤规则,哪些可以通过
@@ -88,7 +100,7 @@ public class SwaggerSecurityConfig {
         scopes.add(new AuthorizationScope("reads", "read all resources"));
         scopes.add(new AuthorizationScope("writes", "write all resources"));
         scopes.add(new AuthorizationScope("all", "all resources"));
-        SecurityReference securityReference = new SecurityReference("oauth2", scopes.toArray(new AuthorizationScope[]{}));
+        SecurityReference securityReference = new SecurityReference(OAUTH_2, scopes.toArray(new AuthorizationScope[]{}));
         SecurityContext securityContext = new SecurityContext(Collections.singletonList(securityReference), PathSelectors.ant("/api/**"));
         return Collections.singletonList(securityContext);
     }
@@ -97,10 +109,10 @@ public class SwaggerSecurityConfig {
      * 密码模式
      */
     private List<SecurityScheme> passwordSecuritySchemes() {
-        String passwordTokenUrl = url + "/oauth/token";
+        String passwordTokenUrl = url + OAUTH_TOKEN;
         GrantType passwordCredentialsGrant = new ResourceOwnerPasswordCredentialsGrant(passwordTokenUrl);
         List<GrantType> grantTypes = Stream.of(passwordCredentialsGrant).collect(Collectors.toList());
-        OAuth oAuth = new OAuthBuilder().name("oauth2").grantTypes(grantTypes).build();
+        OAuth oAuth = new OAuthBuilder().name(OAUTH_2).grantTypes(grantTypes).build();
         return Collections.singletonList(oAuth);
     }
 
@@ -109,12 +121,12 @@ public class SwaggerSecurityConfig {
      */
     private List<SecurityScheme> authorizationCodeSecuritySchemes() {
         String authorizationUrl = url + "/oauth/authorize";
-        String tokenEndpointUrl = url + "/oauth/token";
+        String tokenEndpointUrl = url + OAUTH_TOKEN;
         TokenRequestEndpoint tokenRequestEndpoint = new TokenRequestEndpoint(authorizationUrl, "web", "web");
         TokenEndpoint tokenEndpoint = new TokenEndpoint(tokenEndpointUrl, "");
         GrantType authorizationCodeGrant = new AuthorizationCodeGrant(tokenRequestEndpoint, tokenEndpoint);
         List<GrantType> grantTypes = Stream.of(authorizationCodeGrant).collect(Collectors.toList());
-        OAuth oAuth = new OAuthBuilder().name("oauth2").grantTypes(grantTypes).build();
+        OAuth oAuth = new OAuthBuilder().name(OAUTH_2).grantTypes(grantTypes).build();
         return Collections.singletonList(oAuth);
     }
 
@@ -126,7 +138,7 @@ public class SwaggerSecurityConfig {
         LoginEndpoint tokenEndpoint = new LoginEndpoint(loginEndpointUrl);
         GrantType implicitGrant = new ImplicitGrant(tokenEndpoint, "");
         List<GrantType> grantTypes = Stream.of(implicitGrant).collect(Collectors.toList());
-        OAuth oAuth = new OAuthBuilder().name("oauth2").grantTypes(grantTypes).build();
+        OAuth oAuth = new OAuthBuilder().name(OAUTH_2).grantTypes(grantTypes).build();
         return Collections.singletonList(oAuth);
     }
 
@@ -134,10 +146,10 @@ public class SwaggerSecurityConfig {
      * 客户端模式
      */
     private List<SecurityScheme> clientCredentialsSchemes() {
-        String clientCredentialsUrl = url + "/oauth/token";
+        String clientCredentialsUrl = url + OAUTH_TOKEN;
         GrantType clientCredentialsGrant = new ClientCredentialsGrant(clientCredentialsUrl);
         List<GrantType> grantTypes = Stream.of(clientCredentialsGrant).collect(Collectors.toList());
-        OAuth oAuth = new OAuthBuilder().name("oauth2").grantTypes(grantTypes).build();
+        OAuth oAuth = new OAuthBuilder().name(OAUTH_2).grantTypes(grantTypes).build();
         return Collections.singletonList(oAuth);
     }
 

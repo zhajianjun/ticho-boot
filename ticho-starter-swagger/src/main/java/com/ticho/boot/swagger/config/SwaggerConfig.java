@@ -3,6 +3,7 @@ package com.ticho.boot.swagger.config;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
@@ -39,6 +40,7 @@ public class SwaggerConfig {
     // @formatter:off
 
     @Bean
+    @ConditionalOnProperty(prefix = "ticho.security", name = "type", havingValue = "default", matchIfMissing = true)
     @ConditionalOnMissingBean(Docket.class)
     public Docket docket(ApiInfo apiInfo) {
         return new Docket(DocumentationType.SWAGGER_2)

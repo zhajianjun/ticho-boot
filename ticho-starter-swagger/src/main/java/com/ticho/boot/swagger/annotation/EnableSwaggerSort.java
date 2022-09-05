@@ -28,5 +28,5 @@ import java.lang.annotation.Target;
     BeanValidatorPluginsConfiguration.class
 })
 // @formatter:on
-public @interface EnableSwaggerSortConfig {
+public @interface EnableSwaggerSort {
 }
