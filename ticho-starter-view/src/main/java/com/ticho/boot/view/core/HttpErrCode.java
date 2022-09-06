@@ -38,7 +38,7 @@ public enum HttpErrCode implements Serializable, IErrCode {
 
     UNSUPPORTED_MEDIA_TYPE(415, "不受支持的媒体类型"),
 
-    FAILED(500, "执行失败"),
+    FAIL(500, "执行失败"),
 
     INTERNAL_SERVER_ERROR(500, "系统异常"),
 

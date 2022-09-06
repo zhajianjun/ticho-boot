@@ -113,7 +113,8 @@ public class TichoBaseResponseHandle implements ResponseBodyAdvice<Object> {
             return result;
         } else {
             // 未知异常
-            result = Result.of(HttpErrCode.FAILED);
+            result = Result.of(HttpErrCode.FAIL);
+            result.setMsg(ex.getMessage());
             res.setStatus(result.getCode());
         }
         log.error("catch error\t{}", ex.getMessage(), ex);
