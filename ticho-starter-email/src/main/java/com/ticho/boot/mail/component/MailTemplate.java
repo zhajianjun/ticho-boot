@@ -3,8 +3,8 @@ package com.ticho.boot.mail.component;
 import cn.hutool.core.collection.CollUtil;
 import com.ticho.boot.view.core.BizErrCode;
 import com.ticho.boot.view.util.Assert;
+import com.ticho.boot.web.util.SpringContext;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.lang.NonNull;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -17,6 +17,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * 邮件工具
@@ -28,18 +29,16 @@ import java.util.List;
 @Slf4j
 public class MailTemplate {
 
-    @Autowired
-    private MailProperties mailProperties;
-
-    @Autowired
-    private JavaMailSender javaMailSender;
-
     /**
      * 发送邮件
      *
      * @param mailContent 邮件内容
      */
     public void sendSimpleMail(MailContent mailContent) {
+        MailProperties mailProperties = SpringContext.getBean(MailProperties.class);
+        JavaMailSender javaMailSender = SpringContext.getBean(JavaMailSender.class);
+        Assert.isNotNull(mailProperties, BizErrCode.FAIL, "请检查邮件配置");
+        Assert.isNotNull(javaMailSender, BizErrCode.FAIL, "请检查邮件配置");
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = null;
         try {
@@ -72,7 +71,8 @@ public class MailTemplate {
     private void addAttachment(@NonNull MimeMessageHelper finalHelper, @NonNull MultipartFile file) {
         try {
             ByteArrayDataSource iss = new ByteArrayDataSource(file.getInputStream(), file.getContentType());
-            finalHelper.addAttachment(file.getOriginalFilename(), iss);
+            String originalFilename = Optional.ofNullable(file.getOriginalFilename()).orElse("未知文件名");
+            finalHelper.addAttachment(originalFilename, iss);
         } catch (MessagingException | IOException e) {
             log.error(e.getMessage(), e);
             Assert.cast(BizErrCode.FAIL, "添加附件资源失败");
