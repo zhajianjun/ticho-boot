@@ -46,7 +46,7 @@ public class TichoAsyncConfig implements AsyncConfigurer {
      */
     private int keepAliveSeconds = 60;
     /**
-     * 设置线程名称
+     * 设置线程名称前缀
      */
     private String threadNamePrefix = "ticho";
 
@@ -67,7 +67,7 @@ public class TichoAsyncConfig implements AsyncConfigurer {
         taskExecutor.setQueueCapacity(queueCapacity);
         // 设置线程活跃时间（秒）
         taskExecutor.setKeepAliveSeconds(keepAliveSeconds);
-        // 设置线程名称
+        // 设置线程名称前缀
         taskExecutor.setThreadNamePrefix(threadNamePrefix);
         // 设置拒绝策略
         // setRejectedExecutionHandler：当pool已经达到max size的时候，如何处理新任务
