@@ -33,14 +33,14 @@ public class MinioProperty {
     private String secretKey;
 
     /**
-     * 图片大小限制
+     * 图片大小限制，默认20MB
      */
-    private DataSize imgSize = DataSize.ofMegabytes(1L);
+    private DataSize maxImgSize = DataSize.ofMegabytes(20L);
 
     /**
-     * 文件大小限制
+     * 文件大小限制，默认20MB
      */
-    private DataSize fileSize = DataSize.ofMegabytes(1L);
+    private DataSize maxFileSize = DataSize.ofMegabytes(20L);
 
     /**
      * 默认桶

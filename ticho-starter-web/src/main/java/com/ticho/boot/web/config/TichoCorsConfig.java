@@ -17,7 +17,7 @@ import org.springframework.web.filter.CorsFilter;
  * @date 2022-07-10 15:56:30
  */
 @Configuration
-@ConditionalOnProperty(prefix = WebConst.CORS_PREFIX, value = "false", havingValue = "true")
+@ConditionalOnProperty(value = WebConst.CORS, havingValue = "true")
 public class TichoCorsConfig {
 
     private CorsConfiguration corsConfiguration() {

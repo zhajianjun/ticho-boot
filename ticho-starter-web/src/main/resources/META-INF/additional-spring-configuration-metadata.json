@@ -28,7 +28,12 @@
     {
       "name": "ticho.cors.enable",
       "type": "java.lang.String",
-      "description": "Description for ticho.cors.enable."
+      "description": "开启跨域配置."
+    },
+    {
+      "name": "ticho.health",
+      "type": "java.lang.String",
+      "description": "探针接口内容."
     }
   ]
 }
