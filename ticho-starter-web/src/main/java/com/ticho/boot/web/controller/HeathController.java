@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = "健康检查")
 @ApiSort(Ordered.HIGHEST_PRECEDENCE)
 @View
-public class HeathyController {
+public class HeathController {
 
     @Value("${spring.application.name:application}")
     private String applicationName;
@@ -33,14 +33,14 @@ public class HeathyController {
     private String port;
 
     @Value("${ticho.health:health}")
-    private String healthy;
+    private String health;
 
 
     @ApiOperation(value = "健康检查", notes = "健康检查")
     @ApiOperationSupport(order = 10)
     @GetMapping
-    public String healthy() {
-        return String.format("【应用名：%s。端口：%s。健康配置参数内容：%s】", applicationName, port, healthy);
+    public String health() {
+        return String.format("【应用名：%s。端口：%s。健康配置参数内容：%s】", applicationName, port, health);
     }
 
 }
