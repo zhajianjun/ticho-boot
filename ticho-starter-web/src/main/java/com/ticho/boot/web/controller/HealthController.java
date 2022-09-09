@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = "健康检查")
 @ApiSort(Ordered.HIGHEST_PRECEDENCE)
 @View
-public class HeathController {
+public class HealthController {
 
     @Value("${spring.application.name:application}")
     private String applicationName;

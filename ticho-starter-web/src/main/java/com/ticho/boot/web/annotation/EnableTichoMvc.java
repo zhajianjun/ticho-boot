@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
     com.ticho.boot.web.config.TichoMvcConfig.class,
     com.ticho.boot.web.config.TichoCorsConfig.class,
     com.ticho.boot.web.config.TichoJacksonCustomizerConfig.class,
-    com.ticho.boot.web.controller.HeathController.class,
+    com.ticho.boot.web.controller.HealthController.class,
     com.ticho.boot.web.handle.TichoBaseResponseHandle.class,
     com.ticho.boot.web.converter.DateConverter.class,
     com.ticho.boot.web.converter.LocalDateConverter.class,
