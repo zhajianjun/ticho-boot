@@ -10,7 +10,19 @@ import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.OAuthBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.*;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.AuthorizationCodeGrant;
+import springfox.documentation.service.AuthorizationScope;
+import springfox.documentation.service.ClientCredentialsGrant;
+import springfox.documentation.service.GrantType;
+import springfox.documentation.service.ImplicitGrant;
+import springfox.documentation.service.LoginEndpoint;
+import springfox.documentation.service.OAuth;
+import springfox.documentation.service.ResourceOwnerPasswordCredentialsGrant;
+import springfox.documentation.service.SecurityReference;
+import springfox.documentation.service.SecurityScheme;
+import springfox.documentation.service.TokenEndpoint;
+import springfox.documentation.service.TokenRequestEndpoint;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
@@ -72,7 +84,7 @@ public class SwaggerSecurityConfig {
         return creteDocket(securityContexts(), clientCredentialsSchemes());
     }
 
-    private Docket creteDocket(List<SecurityContext> securityContexts, List<? extends SecurityScheme> securitySchemes) {
+    private Docket creteDocket(List<SecurityContext> securityContexts, List<SecurityScheme> securitySchemes) {
         return new Docket(DocumentationType.SWAGGER_2)
             .pathMapping("/")
             .select()
@@ -101,7 +113,8 @@ public class SwaggerSecurityConfig {
         scopes.add(new AuthorizationScope("writes", "write all resources"));
         scopes.add(new AuthorizationScope("all", "all resources"));
         SecurityReference securityReference = new SecurityReference(OAUTH_2, scopes.toArray(new AuthorizationScope[]{}));
-        SecurityContext securityContext = new SecurityContext(Collections.singletonList(securityReference), PathSelectors.ant("/api/**"));
+        SecurityContext securityContext = new SecurityContext(Collections.singletonList(securityReference),
+                PathSelectors.ant("/api/**"));
         return Collections.singletonList(securityContext);
     }
 
@@ -109,7 +122,7 @@ public class SwaggerSecurityConfig {
      * 密码模式
      */
     private List<SecurityScheme> passwordSecuritySchemes() {
-        String passwordTokenUrl = securityProperty.getUrl() + OAUTH_TOKEN;
+        String passwordTokenUrl = securityProperty.getSecurityUrl() + OAUTH_TOKEN;
         GrantType passwordCredentialsGrant = new ResourceOwnerPasswordCredentialsGrant(passwordTokenUrl);
         List<GrantType> grantTypes = Stream.of(passwordCredentialsGrant).collect(Collectors.toList());
         OAuth oAuth = new OAuthBuilder().name(OAUTH_2).grantTypes(grantTypes).build();
@@ -120,8 +133,8 @@ public class SwaggerSecurityConfig {
      * 授权码模式
      */
     private List<SecurityScheme> authorizationCodeSecuritySchemes() {
-        String authorizationUrl = securityProperty.getUrl() + OAUTH_AUTHORIZE;
-        String tokenEndpointUrl = securityProperty.getUrl() + OAUTH_TOKEN;
+        String authorizationUrl = securityProperty.getSecurityUrl() + OAUTH_AUTHORIZE;
+        String tokenEndpointUrl = securityProperty.getSecurityUrl() + OAUTH_TOKEN;
         TokenRequestEndpoint tokenRequestEndpoint = new TokenRequestEndpoint(authorizationUrl, "web", "web");
         TokenEndpoint tokenEndpoint = new TokenEndpoint(tokenEndpointUrl, "");
         GrantType authorizationCodeGrant = new AuthorizationCodeGrant(tokenRequestEndpoint, tokenEndpoint);
@@ -134,7 +147,7 @@ public class SwaggerSecurityConfig {
      * 简化模式
      */
     private List<SecurityScheme> implicitSecuritySchemes() {
-        String loginEndpointUrl = securityProperty.getUrl() + OAUTH_AUTHORIZE;
+        String loginEndpointUrl = securityProperty.getSecurityUrl() + OAUTH_AUTHORIZE;
         LoginEndpoint tokenEndpoint = new LoginEndpoint(loginEndpointUrl);
         GrantType implicitGrant = new ImplicitGrant(tokenEndpoint, "");
         List<GrantType> grantTypes = Stream.of(implicitGrant).collect(Collectors.toList());
@@ -146,7 +159,7 @@ public class SwaggerSecurityConfig {
      * 客户端模式
      */
     private List<SecurityScheme> clientCredentialsSchemes() {
-        String clientCredentialsUrl = securityProperty.getUrl() + OAUTH_TOKEN;
+        String clientCredentialsUrl = securityProperty.getSecurityUrl() + OAUTH_TOKEN;
         GrantType clientCredentialsGrant = new ClientCredentialsGrant(clientCredentialsUrl);
         List<GrantType> grantTypes = Stream.of(clientCredentialsGrant).collect(Collectors.toList());
         OAuth oAuth = new OAuthBuilder().name(OAUTH_2).grantTypes(grantTypes).build();

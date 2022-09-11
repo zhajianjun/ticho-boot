@@ -20,11 +20,17 @@
 
     <dependencies>
 
+        <!--        <dependency>-->
+        <!--            <groupId>io.springfox</groupId>-->
+        <!--            <artifactId>springfox-boot-starter</artifactId>-->
+        <!--        </dependency>-->
+
         <!--swagger接口-->
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-spring-boot-starter</artifactId>
         </dependency>
+
 
         <!-- 参数校验  knife4j 需要-->
         <dependency>

@@ -13,11 +13,11 @@ import org.springframework.context.annotation.Configuration;
  */
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "ticho.security")
+@ConfigurationProperties(prefix = "ticho.swagger.security")
 public class SwaggerSecurityProperty {
 
     /** 权限地址 */
     @ApiModelProperty(value = "权限地址", position = 10)
-    private String url;
+    private String securityUrl;
 
 }

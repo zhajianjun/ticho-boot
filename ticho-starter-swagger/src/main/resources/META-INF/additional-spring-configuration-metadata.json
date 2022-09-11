@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "ticho.swagger.pathMatchs",
+      "type": "java.lang.String",
+      "description": "Description for ticho.swagger.pathMatchs."
+    }
+  ]
+}

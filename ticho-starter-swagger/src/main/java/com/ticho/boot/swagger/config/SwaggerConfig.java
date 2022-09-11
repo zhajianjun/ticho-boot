@@ -1,5 +1,6 @@
 package com.ticho.boot.swagger.config;
 
+import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -23,8 +24,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 import java.util.Collections;
 import java.util.List;
 
-import static springfox.documentation.builders.PathSelectors.regex;
-
 /**
  * swagger2配置
  *
@@ -32,6 +31,7 @@ import static springfox.documentation.builders.PathSelectors.regex;
  * @date 2022-07-13 22:40:25
  */
 @Configuration
+@EnableKnife4j
 @EnableSwagger2WebMvc
 public class SwaggerConfig {
     @Value("${spring.application.name:ticho-boot-demo}")
@@ -83,7 +83,7 @@ public class SwaggerConfig {
         SecurityContext securityContext = SecurityContext
             .builder()
             .securityReferences(Collections.singletonList(authorization))
-            .forPaths(regex("^(?!auth).*$"))
+            .forPaths(PathSelectors.regex("^(?!auth).*$"))
             .build();
         return Collections.singletonList(securityContext);
     }
