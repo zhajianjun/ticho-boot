@@ -113,8 +113,7 @@ public class SwaggerSecurityConfig {
         scopes.add(new AuthorizationScope("writes", "write all resources"));
         scopes.add(new AuthorizationScope("all", "all resources"));
         SecurityReference securityReference = new SecurityReference(OAUTH_2, scopes.toArray(new AuthorizationScope[]{}));
-        SecurityContext securityContext = new SecurityContext(Collections.singletonList(securityReference),
-                PathSelectors.ant("/api/**"));
+        SecurityContext securityContext = new SecurityContext(Collections.singletonList(securityReference), PathSelectors.ant("/api/**"));
         return Collections.singletonList(securityContext);
     }
 

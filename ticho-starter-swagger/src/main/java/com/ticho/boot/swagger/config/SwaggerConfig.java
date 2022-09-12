@@ -31,7 +31,6 @@ import java.util.List;
  * @date 2022-07-13 22:40:25
  */
 @Configuration
-@EnableKnife4j
 @EnableSwagger2WebMvc
 public class SwaggerConfig {
     @Value("${spring.application.name:ticho-boot-demo}")
