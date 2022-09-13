@@ -1,3 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
     com.ticho.boot.minio.prop.MinioProperty,\
+    com.ticho.boot.minio.config.DefaultSevletMultiartConfig,\
     com.ticho.boot.minio.component.MinioTemplate

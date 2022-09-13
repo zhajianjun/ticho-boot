@@ -4,6 +4,16 @@
       "name": "ticho.swagger.pathMatchs",
       "type": "java.lang.String",
       "description": "Description for ticho.swagger.pathMatchs."
+    },
+    {
+      "name": "ticho.swagger.enable",
+      "type": "java.lang.String",
+      "description": "Description for ticho.swagger.enable."
+    },
+    {
+      "name": "ticho.swagger.type",
+      "type": "java.lang.String",
+      "description": "Description for ticho.swagger.type."
     }
   ]
 }

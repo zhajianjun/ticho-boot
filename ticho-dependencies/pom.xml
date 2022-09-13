@@ -203,6 +203,7 @@
                 </exclusions>
             </dependency>
 
+            <!-- JSqlParser就是一个把SQL转换为JAVA对象操作 -->
             <dependency>
                 <groupId>com.github.jsqlparser</groupId>
                 <artifactId>jsqlparser</artifactId>

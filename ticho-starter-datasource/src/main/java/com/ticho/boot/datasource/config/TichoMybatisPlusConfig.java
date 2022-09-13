@@ -1,7 +1,7 @@
 package com.ticho.boot.datasource.config;
 
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
-import com.ticho.boot.web.factory.YamlPropertySourceFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -18,13 +18,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement
 @Order(Ordered.HIGHEST_PRECEDENCE)
-@PropertySource(factory = YamlPropertySourceFactory.class, value = "classpath:ticho-mybatis-plus.yml")
+@PropertySource(value = "classpath:ticho-mybatis-plus.properties")
 public class TichoMybatisPlusConfig {
 
     /**
      * mybatis-plus 乐观锁拦截器
      */
     @Bean
+    @ConditionalOnMissingBean(OptimisticLockerInnerInterceptor.class)
     public OptimisticLockerInnerInterceptor optimisticLockerInterceptor() {
         return new OptimisticLockerInnerInterceptor();
     }

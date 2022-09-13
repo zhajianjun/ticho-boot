@@ -1,0 +1,17 @@
+ticho:
+  # 探针接口的返回信息
+  health: 健康检查！
+  # 开启跨域
+  cors:
+    enable: true
+  async:
+    # 核心线程数，线程池维护线程的最小数量
+    corePoolSize: 4
+    # 最大线程数，线程池维护线程的最大数量
+    maxPoolSize: 8
+    # 队列容量
+    queueCapacity: 20
+    # 线程活跃时间（秒）
+    keepAliveSeconds: 60
+    # 线程名称前缀
+    threadNamePrefix: ticho_

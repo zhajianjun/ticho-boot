@@ -1,0 +1,6 @@
+ticho:
+  datasource:
+    url: jdbc:mysql://122.112.164.156:10030/ticho_dev?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: mysql1511ticho.
+    driver-class-name: com.mysql.cj.jdbc.Driver
