@@ -1,5 +1,6 @@
 package com.ticho.boot.swagger.config;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
  * @author zhajianjun
  * @date 2022-07-13 22:40:25
  */
+@ConditionalOnBean(DefaultSwaggerConfig.class)
 @Primary
 @Component("ServiceModelToSwagger2Mapper")
 @Order(Ordered.HIGHEST_PRECEDENCE)

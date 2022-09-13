@@ -6,12 +6,14 @@ import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
 import io.swagger.annotations.ApiModelProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.stereotype.Component;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.schema.ModelPropertyBuilderPlugin;
 import springfox.documentation.spi.schema.contexts.ModelPropertyContext;
 import springfox.documentation.swagger.common.SwaggerPluginSupport;
 
+import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.util.Optional;
 
@@ -25,6 +27,7 @@ import static springfox.documentation.swagger.schema.ApiModelProperties.findApiM
  * @date 2022-07-13 22:40:25
  */
 @Component
+@ConditionalOnBean(DefaultSwaggerConfig.class)
 public class DefaultModelPropertySortPlugin implements ModelPropertyBuilderPlugin {
     private static final Logger log = LoggerFactory.getLogger(DefaultModelPropertySortPlugin.class);
 
@@ -59,11 +62,12 @@ public class DefaultModelPropertySortPlugin implements ModelPropertyBuilderPlugi
     public void apply(ModelPropertyContext context) {
         Optional<BeanPropertyDefinition> beanPropertyDefinitionOpt = context.getBeanPropertyDefinition();
         Optional<ApiModelProperty> apiModelProperty = Optional.empty();
-        if (context.getAnnotatedElement().isPresent()) {
-            apiModelProperty = findApiModePropertyAnnotation(context.getAnnotatedElement().get());
+        Optional<AnnotatedElement> annotatedElement = context.getAnnotatedElement();
+        if (annotatedElement.isPresent()) {
+            apiModelProperty = findApiModePropertyAnnotation(annotatedElement.get());
         }
-        if (context.getBeanPropertyDefinition().isPresent()) {
-            apiModelProperty = findPropertyAnnotation(context.getBeanPropertyDefinition().get(), ApiModelProperty.class);
+        if (beanPropertyDefinitionOpt.isPresent()) {
+            apiModelProperty = findPropertyAnnotation(beanPropertyDefinitionOpt.get(), ApiModelProperty.class);
         }
         if (beanPropertyDefinitionOpt.isPresent()) {
             BeanPropertyDefinition beanPropertyDefinition = beanPropertyDefinitionOpt.get();

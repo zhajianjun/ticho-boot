@@ -3,6 +3,7 @@ package com.ticho.boot.swagger.config;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -32,6 +33,7 @@ import static springfox.documentation.swagger.common.SwaggerPluginSupport.SWAGGE
  * @author zhajianjun
  * @date 2022-07-13 22:40:25
  */
+@ConditionalOnBean(DefaultSwaggerConfig.class)
 @Primary
 @Component
 public class DefaultSwaggerParameterBuilder implements ExpandedParameterBuilderPlugin {
@@ -39,7 +41,7 @@ public class DefaultSwaggerParameterBuilder implements ExpandedParameterBuilderP
     private final DescriptionResolver descriptions;
     private final EnumTypeDeterminer enumTypeDeterminer;
 
-    @Autowired
+    @Autowired(required = false)
     public DefaultSwaggerParameterBuilder(DescriptionResolver descriptions, EnumTypeDeterminer enumTypeDeterminer) {
         this.descriptions = descriptions;
         this.enumTypeDeterminer = enumTypeDeterminer;

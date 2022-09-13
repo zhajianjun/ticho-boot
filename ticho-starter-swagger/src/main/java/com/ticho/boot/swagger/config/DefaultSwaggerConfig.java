@@ -1,12 +1,14 @@
 package com.ticho.boot.swagger.config;
 
-import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
+import com.github.xiaoymin.knife4j.spring.configuration.Knife4jAutoConfiguration;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
@@ -30,9 +32,14 @@ import java.util.List;
  * @author zhajianjun
  * @date 2022-07-13 22:40:25
  */
+@ConditionalOnProperty(value = "ticho.swagger.enable", havingValue = "true", matchIfMissing = true)
 @Configuration
+@PropertySource(value = "/DefaultKnife4jConfig.properties")
+@AutoConfigureBefore(Knife4jAutoConfiguration.class)
 @EnableSwagger2WebMvc
-public class SwaggerConfig {
+public class DefaultSwaggerConfig {
+    private static final String URL = "http://www.ticho.top";
+
     @Value("${spring.application.name:ticho-boot-demo}")
     private String applicationName;
 
@@ -70,9 +77,9 @@ public class SwaggerConfig {
             .version("1.0.0")
             .description("")
             .license("The Apache License")
-            .licenseUrl("http://www.ticho.top")
-            .termsOfServiceUrl("http://www.ticho.top")
-            .contact(new Contact("zhajianjun", "http://www.ticho.top", "1019319474@qq.com"))
+            .licenseUrl(URL)
+            .termsOfServiceUrl(URL)
+            .contact(new Contact("zhajianjun", URL, "1019319474@qq.com"))
             .build();
     }
 
