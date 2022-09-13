@@ -27,6 +27,7 @@
         <mybatis-plus.version>3.4.3.4</mybatis-plus.version>
         <pagehelper-spring-boot-starter.version>1.4.1</pagehelper-spring-boot-starter.version>
         <mapstruct.version>1.5.2.Final</mapstruct.version>
+        <spring-boot-admin.version>2.6.2</spring-boot-admin.version>
     </properties>
 
 
@@ -246,13 +247,13 @@
             <dependency>
                 <groupId>de.codecentric</groupId>
                 <artifactId>spring-boot-admin-starter-server</artifactId>
-                <version>2.5.2</version>
+                <version>${spring-boot-admin.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>de.codecentric</groupId>
                 <artifactId>spring-boot-admin-server-ui</artifactId>
-                <version>2.5.2</version>
+                <version>${spring-boot-admin.version}</version>
             </dependency>
 
             <!-- https://mvnrepository.com/artifact/com.alibaba/transmittable-thread-local -->

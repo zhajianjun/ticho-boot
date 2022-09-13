@@ -12,6 +12,7 @@
         <module>ticho-starter-minio</module>
         <module>ticho-starter-swagger</module>
         <module>ticho-starter-feign</module>
+        <module>ticho-starter-rabbitmq</module>
     </modules>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ticho-boot</artifactId>

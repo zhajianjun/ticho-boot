@@ -27,8 +27,9 @@
     },
     {
       "name": "ticho.cors.enable",
-      "type": "java.lang.String",
-      "description": "开启跨域配置."
+      "type": "java.lang.Boolean",
+      "description": "开启跨域配置.",
+      "defaultValue": false
     },
     {
       "name": "ticho.health",

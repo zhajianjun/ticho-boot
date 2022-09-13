@@ -32,7 +32,7 @@ import java.util.List;
  * @author zhajianjun
  * @date 2022-07-13 22:40:25
  */
-@ConditionalOnProperty(value = "ticho.swagger.enable", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(value = "ticho.swagger.enable", havingValue = "true")
 @Configuration
 @PropertySource(value = "/DefaultKnife4jConfig.properties")
 @AutoConfigureBefore(Knife4jAutoConfiguration.class)

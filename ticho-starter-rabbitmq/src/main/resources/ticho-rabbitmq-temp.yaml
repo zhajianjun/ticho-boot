@@ -1,0 +1,10 @@
+xirui-cloud:
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: admin
+    password: admin
+    listener:
+      simple:
+        # 手动确认消息消费
+        acknowledge-mode: manual

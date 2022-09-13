@@ -1,0 +1,70 @@
+{
+  "properties": [
+    {
+      "name": "ticho.rabbitmq.host",
+      "type": "java.lang.String",
+      "description": "RabbitMQ host. Ignored if an address is set.",
+      "sourceType": "org.springframework.boot.autoconfigure.amqp.RabbitProperties",
+      "defaultValue": "localhost"
+    },
+    {
+      "name": "ticho.rabbitmq.port",
+      "type": "java.lang.Integer",
+      "description": "RabbitMQ port. Ignored if an address is set. Default to 5672, or 5671 if SSL is enabled.",
+      "sourceType": "org.springframework.boot.autoconfigure.amqp.RabbitProperties"
+    },
+    {
+      "name": "ticho.rabbitmq.username",
+      "type": "java.lang.String",
+      "description": "Description for ticho.rabbitmq.username."
+    },
+    {
+      "name": "ticho.rabbitmq.password",
+      "type": "java.lang.String",
+      "description": "Description for ticho.rabbitmq.password."
+    },
+    {
+      "name": "ticho.rabbitmq.publisher-confirms",
+      "type": "java.lang.Boolean",
+      "deprecated": true,
+      "deprecation": {
+        "level": "error"
+      }
+    },
+    {
+      "name": "ticho.rabbitmq.publisher-returns",
+      "type": "java.lang.Boolean",
+      "description": "Whether to enable publisher returns.",
+      "sourceType": "org.springframework.boot.autoconfigure.amqp.RabbitProperties",
+      "defaultValue": false
+    },
+    {
+      "name": "ticho.rabbitmq.listener.simple.acknowledge-mode",
+      "type": "org.springframework.amqp.core.AcknowledgeMode",
+      "description": "Acknowledge mode of container.",
+      "sourceType": "org.springframework.boot.autoconfigure.amqp.RabbitProperties$SimpleContainer",
+      "defaultValue": "manual"
+    },
+    {
+      "name": "ticho.rabbitmq.listener.simple.retry.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Whether publishing retries are enabled.",
+      "sourceType": "org.springframework.boot.autoconfigure.amqp.RabbitProperties$ListenerRetry",
+      "defaultValue": false
+    },
+    {
+      "name": "ticho.rabbitmq.listener.simple.retry.max-attempts",
+      "type": "java.lang.Integer",
+      "description": "Maximum number of attempts to deliver a message.",
+      "sourceType": "org.springframework.boot.autoconfigure.amqp.RabbitProperties$ListenerRetry",
+      "defaultValue": 3
+    },
+    {
+      "name": "ticho.rabbitmq.listener.simple.retry.initial-interval",
+      "type": "java.time.Duration",
+      "description": "Duration between the first and second attempt to deliver a message.",
+      "sourceType": "org.springframework.boot.autoconfigure.amqp.RabbitProperties$ListenerRetry",
+      "defaultValue": "1000ms"
+    }
+  ]
+}

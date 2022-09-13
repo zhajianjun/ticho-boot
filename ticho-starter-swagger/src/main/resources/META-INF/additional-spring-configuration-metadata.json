@@ -7,8 +7,9 @@
     },
     {
       "name": "ticho.swagger.enable",
-      "type": "java.lang.String",
-      "description": "Description for ticho.swagger.enable."
+      "type": "java.lang.Boolean",
+      "description": "Description for ticho.swagger.enable.",
+      "defaultValue": false
     },
     {
       "name": "ticho.swagger.type",
