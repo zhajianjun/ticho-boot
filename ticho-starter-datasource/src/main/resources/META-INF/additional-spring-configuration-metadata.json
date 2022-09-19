@@ -27,7 +27,8 @@
     },
     {
       "name": "ticho.datasource.print-sql",
-      "type": "java.lang.String",
+      "type": "java.lang.Boolean",
+      "defaultValue":  "false",
       "description": "Description for ticho.datasource.print-sql."
     }
   ]

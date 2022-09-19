@@ -32,7 +32,7 @@ import java.util.regex.Matcher;
 // @formatter:off
 
 /**
- * 日志打印
+ * sql日志打印
  *
  * @author zhajianjun
  * @date 2022-09-19 14:17:16
@@ -72,7 +72,7 @@ public class TichoSqlLogInterceptor implements Interceptor {
         long start = SystemClock.now();
         Object result = invocation.proceed();
         long timing = SystemClock.now() - start;
-        log.warn("sql print [{}]: [{}] [耗时: {}ms]", ms.getId(), sql, timing);
+        log.info("sql print [{}]: [{}] [耗时: {}ms]", ms.getId(), sql, timing);
         return result;
     }
 
