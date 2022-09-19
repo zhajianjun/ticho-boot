@@ -21,9 +21,14 @@
       "description": "Description for ticho.datasource.driver-class-name."
     },
     {
-      "name": "ticho.mybatis.type-aliases-package",
+      "name": "ticho.datasource.type-aliases-package",
       "type": "java.lang.String",
-      "description": "Description for ticho.mybatis.type-aliases-package."
+      "description": "Description for ticho.datasource.type-aliases-package."
+    },
+    {
+      "name": "ticho.datasource.print-sql",
+      "type": "java.lang.String",
+      "description": "Description for ticho.datasource.print-sql."
     }
   ]
 }
