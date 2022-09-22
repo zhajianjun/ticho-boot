@@ -46,7 +46,7 @@ public class DefaultSwaggerConfig {
     // @formatter:off
 
     @Bean
-    @ConditionalOnProperty(value = "ticho.security.type", havingValue = "default", matchIfMissing = true)
+    @ConditionalOnProperty(value = "ticho.swagger.securityType", havingValue = "default", matchIfMissing = true)
     @ConditionalOnMissingBean(Docket.class)
     public Docket docket(ApiInfo apiInfo) {
         return new Docket(DocumentationType.SWAGGER_2)

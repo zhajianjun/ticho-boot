@@ -12,9 +12,9 @@
       "defaultValue": false
     },
     {
-      "name": "ticho.swagger.type",
+      "name": "ticho.swagger.securityType",
       "type": "java.lang.String",
-      "description": "Description for ticho.swagger.type."
+      "description": "Description for ticho.swagger.securityType."
     }
   ]
 }

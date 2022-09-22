@@ -28,7 +28,6 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -58,14 +57,14 @@ public class DefaultSecurityConfig {
     // @formatter:off
 
     @Bean
-    @ConditionalOnProperty(value = "ticho.security.type", havingValue = "password")
+    @ConditionalOnProperty(value = "ticho.swagger.securityType", havingValue = "password")
     @ConditionalOnMissingBean(Docket.class)
     public Docket passwordDocket() {
         return creteDocket(securityContexts(), passwordSecuritySchemes());
     }
 
     @Bean
-    @ConditionalOnProperty(value = "ticho.security.type", havingValue = "authorization")
+    @ConditionalOnProperty(value = "ticho.swagger.securityType", havingValue = "authorization")
     @ConditionalOnMissingBean(Docket.class)
     public Docket authorizationCodeDocket() {
         return creteDocket(securityContexts(), authorizationCodeSecuritySchemes());
@@ -73,7 +72,7 @@ public class DefaultSecurityConfig {
 
     //@Bean("implicitSecurityDocket")
     @Bean
-    @ConditionalOnProperty(value = "ticho.security.type", havingValue = "implicit")
+    @ConditionalOnProperty(value = "ticho.swagger.securityType", havingValue = "implicit")
     @ConditionalOnMissingBean(Docket.class)
     public Docket implicitSecurityDocket() {
         return creteDocket(securityContexts(), implicitSecuritySchemes());
@@ -81,7 +80,7 @@ public class DefaultSecurityConfig {
 
     //@Bean("clientCredentialsDocket")
     @Bean
-    @ConditionalOnProperty(value = "ticho.security.type", havingValue = "clientCredentials")
+    @ConditionalOnProperty(value = "ticho.swagger.securityType", havingValue = "clientCredentials")
     @ConditionalOnMissingBean(Docket.class)
     public Docket clientCredentialsDocket() {
         return creteDocket(securityContexts(), clientCredentialsSchemes());
