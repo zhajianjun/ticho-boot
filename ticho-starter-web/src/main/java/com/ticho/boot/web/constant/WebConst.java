@@ -14,6 +14,6 @@ public class WebConst {
 
     public static final String CORS = "ticho.cors.enable";
 
-    public static final String ASYNC_PREFIX = "ticho";
+    public static final String ASYNC_PREFIX = "ticho.async";
 
 }

@@ -102,12 +102,12 @@ public class TichoBaseResponseHandle implements ResponseBodyAdvice<Object> {
         } else if (ex instanceof SysException) {
             // 系统异常
             SysException systemException = (SysException) ex;
-            result = Result.of(systemException.getCode(), systemException.getMessage());
+            result = Result.of(systemException.getCode(), systemException.getMsg());
             res.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         } else if (ex instanceof BizException) {
             // 业务异常
-            BizException serviceException = (BizException) ex;
-            result = Result.of(serviceException.getCode(), serviceException.getMessage());
+            BizException bizException = (BizException) ex;
+            result = Result.of(bizException.getCode(), bizException.getMsg());
             res.setStatus(HttpStatus.OK.value());
             log.warn("catch error\t{}", ex.getMessage());
             return result;

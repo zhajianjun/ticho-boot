@@ -63,7 +63,7 @@ public class JsonUtil {
          * 同样，需要设置JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES为true，打开该特性。
          */
         objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        objectMapper.setSerializationInclusion(JsonInclude.Include.ALWAYS);
         JavaTimeModule javaTimeModule = new JavaTimeModule();
         javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DateFormatConsant.YYYY_MM_DD_HH_MM_SS)));
         javaTimeModule.addSerializer(LocalDate.class,new LocalDateSerializer(DateTimeFormatter.ofPattern(DateFormatConsant.YYYY_MM_DD)));
@@ -88,7 +88,7 @@ public class JsonUtil {
             }
             return Objects.nonNull(obj) ? MAPPER.writeValueAsString(obj) : EMPTY;
         } catch (Exception e) {
-            log.error("toJsonString error, param={}, catch error\n {}", obj, e.getMessage(), e);
+            log.error("toJsonString error, param={}, catch error {}", obj, e.getMessage(), e);
             return EMPTY;
         }
     }
@@ -107,7 +107,7 @@ public class JsonUtil {
         try {
             return isEmpty(jsonString) ? null : MAPPER.readValue(jsonString, clazz);
         } catch (Exception e) {
-            log.error("obj toJavaObject error, param={}, catch error\n {}", obj, e.getMessage(), e);
+            log.error("obj toJavaObject error, param={}, catch error {}", obj, e.getMessage(), e);
             return null;
         }
     }
@@ -124,7 +124,7 @@ public class JsonUtil {
         try {
             return isEmpty(jsonString) ? null : MAPPER.readValue(jsonString, clazz);
         } catch (Exception e) {
-            log.error("str toJavaObject error, param={}, catch error\n {}", jsonString, e.getMessage(), e);
+            log.error("str toJavaObject error, param={}, catch error {}", jsonString, e.getMessage(), e);
             return null;
         }
     }
@@ -151,7 +151,7 @@ public class JsonUtil {
         try {
             return isEmpty(jsonStr) ? null : MAPPER.readValue(jsonStr, typeReference);
         } catch (Exception e) {
-            log.error("str toJavaObject error, param={}, catch error\n {}", jsonStr, e.getMessage(), e);
+            log.error("str toJavaObject error, param={}, catch error {}", jsonStr, e.getMessage(), e);
             return null;
         }
     }
@@ -169,7 +169,7 @@ public class JsonUtil {
         try {
             return isEmpty(jsonStr) ? null : MAPPER.readValue(jsonStr, typeReference);
         } catch (Exception e) {
-            log.error("obj toJavaObject error, param={}, catch error\n {}", obj, e.getMessage(), e);
+            log.error("obj toJavaObject error, param={}, catch error {}", obj, e.getMessage(), e);
             return null;
         }
     }
@@ -185,7 +185,7 @@ public class JsonUtil {
             JavaType javaType = MAPPER.getTypeFactory().constructParametricType(List.class, Object.class);
             return isEmpty(jsonStr) ? Collections.emptyList() : MAPPER.readValue(jsonStr, javaType);
         } catch (Exception e) {
-            log.error("toList error, param={}, catch error\n {}", jsonStr, e.getMessage(), e);
+            log.error("toList error, param={}, catch error {}", jsonStr, e.getMessage(), e);
             return Collections.emptyList();
         }
     }
@@ -204,7 +204,7 @@ public class JsonUtil {
             JavaType javaType = MAPPER.getTypeFactory().constructParametricType(List.class, clazz);
             return isEmpty(jsonStr) ? Collections.emptyList() : MAPPER.readValue(jsonStr, javaType);
         } catch (Exception e) {
-            log.error("toList error, param={}, catch error\n {}", jsonStr, e.getMessage(), e);
+            log.error("toList error, param={}, catch error {}", jsonStr, e.getMessage(), e);
             return Collections.emptyList();
         }
     }
@@ -220,7 +220,7 @@ public class JsonUtil {
             JavaType javaType = MAPPER.getTypeFactory().constructParametricType(Map.class, Object.class, Object.class);
             return isEmpty(jsonStr) ? new LinkedHashMap<>() : MAPPER.readValue(jsonStr, javaType);
         } catch (Exception e) {
-            log.error("toMap error, param={}, catch error\n {}", jsonStr, e.getMessage(), e);
+            log.error("toMap error, param={}, catch error {}", jsonStr, e.getMessage(), e);
             return new LinkedHashMap<>();
         }
     }
@@ -240,7 +240,7 @@ public class JsonUtil {
             JavaType javaType = MAPPER.getTypeFactory().constructParametricType(Map.class, kClass, vClass);
             return isEmpty(jsonStr) ? new LinkedHashMap<>() : MAPPER.readValue(jsonStr, javaType);
         } catch (Exception e) {
-            log.error("toMap error, param={}, catch error\n {}", jsonStr, e.getMessage(), e);
+            log.error("toMap error, param={}, catch error {}", jsonStr, e.getMessage(), e);
             return new LinkedHashMap<>();
         }
     }

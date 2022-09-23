@@ -23,7 +23,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @date 2022-07-10 15:56:30
  */
 @Configuration
-@ConfigurationProperties(prefix = WebConst.ASYNC_PREFIX)
+@ConfigurationProperties(prefix = "ticho.async")
 @Data
 @Slf4j
 @EnableAsync
