@@ -13,8 +13,7 @@
         <module>ticho-starter-swagger</module>
         <module>ticho-starter-feign</module>
         <module>ticho-starter-rabbitmq</module>
-        <module>ticho-starter-security-client</module>
-        <module>ticho-starter-security-server</module>
+        <module>ticho-starter-security</module>
     </modules>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ticho-boot</artifactId>

@@ -1,7 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.ticho.boot.security.prop.TichoOauthProperty,\
-  com.ticho.boot.security.handle.jwt.JwtEncode,\
-  com.ticho.boot.security.handle.login.TichoUsernameLoginUserStragety,\
-  com.ticho.boot.security.handle.LoginUserHandle,\
-  com.ticho.boot.security.controller.OauthController
-
