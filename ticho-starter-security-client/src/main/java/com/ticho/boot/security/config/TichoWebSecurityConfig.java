@@ -1,9 +1,9 @@
 package com.ticho.boot.security.config;
 
 
-import com.ticho.boot.security.filter.JwtAuthenticationTokenFilter;
-import com.ticho.boot.security.filter.NoAuthenticationMessageView;
+import com.ticho.boot.security.filter.AbstractAuthTokenFilter;
 import com.ticho.boot.security.prop.TichoSecurityProperty;
+import com.ticho.boot.security.view.NoAuthenticationMessageView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,7 +36,7 @@ import javax.annotation.Resource;
 public class TichoWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Resource
-    private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
+    private AbstractAuthTokenFilter<?> abstractAuthTokenFilter;
 
     @Resource
     private AccessDeniedHandler accessDeniedHandler;
@@ -73,7 +73,7 @@ public class TichoWebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .headers()
             .cacheControl();
-        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(abstractAuthTokenFilter, UsernamePasswordAuthenticationFilter.class);
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler)// 无Authorization相关header参数
             .authenticationEntryPoint(new NoAuthenticationMessageView());
         // @formatter:on

@@ -2,9 +2,5 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.ticho.boot.security.config.TichoSecurityImportConfig,\
   com.ticho.boot.security.config.TichoWebSecurityConfig,\
   com.ticho.boot.security.controller.PrinciplController,\
-  com.ticho.boot.security.handle.load.TichoUsernameUserDetailsStrategy,\
-  com.ticho.boot.security.handle.load.TichoEmailUserDetailsStrategy,\
-  com.ticho.boot.security.handle.load.TichoPhoneUserDetailsStrategy,\
-  com.ticho.boot.security.handle.LoadUserHandle,\
-  com.ticho.boot.security.prop.TichoSecurityProperty
+  com.ticho.boot.security.handle.TichoUsernameUserDetailsService
 

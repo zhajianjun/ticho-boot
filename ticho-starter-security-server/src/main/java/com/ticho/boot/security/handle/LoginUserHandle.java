@@ -5,17 +5,20 @@ import com.ticho.boot.security.constant.OAuth2Const;
 import com.ticho.boot.security.constant.SecurityConst;
 import com.ticho.boot.security.dto.LoginDto;
 import com.ticho.boot.security.dto.OAuth2AccessToken;
-import com.ticho.boot.security.dto.SecurityUser;
 import com.ticho.boot.security.handle.jwt.JwtConverter;
+import com.ticho.boot.security.handle.jwt.JwtDecode;
+import com.ticho.boot.security.handle.jwt.JwtEncode;
 import com.ticho.boot.security.handle.jwt.JwtExtInfo;
-import com.ticho.boot.security.handle.load.LoadUserStrategy;
 import com.ticho.boot.security.handle.login.LoginUserStragety;
 import com.ticho.boot.view.core.BizErrCode;
 import com.ticho.boot.view.exception.BizException;
 import com.ticho.boot.view.util.Assert;
+import com.ticho.boot.web.util.SpringContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -40,7 +43,10 @@ public class LoginUserHandle {
     private Map<String, LoginUserStragety> loginUserServiceMap;
 
     @Autowired
-    private LoadUserStrategy loadUserStrategy;
+    private JwtEncode jwtEncode;
+
+    @Autowired
+    private JwtDecode jwtDecode;
 
     @Autowired
     private JwtConverter jwtConverter;
@@ -57,7 +63,7 @@ public class LoginUserHandle {
         if (loadUserService == null) {
             loadUserService = loginUserServiceMap.get(SecurityConst.LOGIN_USER_TYPE_USERNAME);
         }
-        SecurityUser securityUser = loadUserService.login(account, credentials);
+        UserDetails securityUser = loadUserService.login(account, credentials);
         return getoAuth2AccessToken(securityUser);
         // @formatter:on
     }
@@ -65,13 +71,14 @@ public class LoginUserHandle {
     public OAuth2AccessToken refreshToken(String refreshToken) {
         Assert.isNotNull(refreshToken, BizErrCode.PARAM_ERROR, "参数不能为空");
         // @formatter:off
-        Map<String, Object> decodeAndVerify = jwtConverter.decodeAndVerify(refreshToken);
+        Map<String, Object> decodeAndVerify = jwtDecode.decodeAndVerify(refreshToken);
         Object type = decodeAndVerify.getOrDefault(OAuth2Const.TYPE, "");
         Assert.isTrue(Objects.equals(type, OAuth2Const.REFRESH_TOKEN), BizErrCode.FAIL, "refreshToken不合法");
         String username = Optional.ofNullable(decodeAndVerify.get(OAuth2Const.USERNAME))
             .map(Object::toString)
             .orElseThrow(()-> new BizException(BizErrCode.FAIL, "用户名不存在"));
-        SecurityUser securityUser = loadUserStrategy.loadUser(username);
+        UserDetailsService userDetailsService = SpringContext.getBean(SecurityConst.LOAD_USER_TYPE_USERNAME, UserDetailsService.class);
+        UserDetails securityUser = userDetailsService.loadUserByUsername(username);
         return getoAuth2AccessToken(securityUser);
         // @formatter:on
     }
@@ -81,8 +88,8 @@ public class LoginUserHandle {
         // @formatter:on
     }
 
-    private OAuth2AccessToken getoAuth2AccessToken(SecurityUser securityUser) {
-        UsernamePasswordAuthenticationToken authentication = getUsernamePasswordAuthenticationToken(securityUser);
+    private OAuth2AccessToken getoAuth2AccessToken(UserDetails userDetails) {
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, "N/A", userDetails.getAuthorities());
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder
                 .getRequestAttributes();
         if (requestAttributes != null) {
@@ -100,13 +107,8 @@ public class LoginUserHandle {
             map.putAll(ext);
         }
         oAuth2AccessToken.setExtInfo(map);
-        jwtConverter.encode(oAuth2AccessToken, securityUser);
+        jwtEncode.encode(oAuth2AccessToken, userDetails);
         return oAuth2AccessToken;
     }
-
-    private UsernamePasswordAuthenticationToken getUsernamePasswordAuthenticationToken(SecurityUser securityUser) {
-        return new UsernamePasswordAuthenticationToken(securityUser, "N/A", securityUser.getAuthorities());
-    }
-
 
 }

@@ -1,7 +1,7 @@
 package com.ticho.boot.security.handle.login;
 
 
-import com.ticho.boot.security.dto.SecurityUser;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * 用户登录策略
@@ -18,6 +18,6 @@ public interface LoginUserStragety {
      * @param credentials 凭证
      * @return 用户信息
      */
-    SecurityUser login(String account, String credentials);
+    UserDetails login(String account, String credentials);
 
 }
