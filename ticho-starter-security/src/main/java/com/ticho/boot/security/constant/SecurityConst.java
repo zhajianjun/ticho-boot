@@ -33,6 +33,8 @@ public class SecurityConst {
 
     public static final String TOKEN_TYPE = "token_type";
 
+    public static final String PM = "pm";
+
 
     /** 加载用户类型: */
     public static final String LOAD_USER_TYPE = "load_user_type:";
