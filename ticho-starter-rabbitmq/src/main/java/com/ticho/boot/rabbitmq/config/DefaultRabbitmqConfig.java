@@ -1,7 +1,7 @@
 package com.ticho.boot.rabbitmq.config;
 
-import com.ticho.boot.rabbitmq.event.MqSendToExchangeFailEvent;
 import com.ticho.boot.rabbitmq.event.MqSendSuccessEvent;
+import com.ticho.boot.rabbitmq.event.MqSendToExchangeFailEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.connection.CorrelationData;

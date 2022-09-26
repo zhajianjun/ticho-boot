@@ -1,9 +1,9 @@
 package com.ticho.boot.web.util;
 
-import com.ticho.boot.view.exception.BizException;
-import com.ticho.boot.view.exception.SysException;
 import com.ticho.boot.view.core.BizErrCode;
 import com.ticho.boot.view.core.Result;
+import com.ticho.boot.view.exception.BizException;
+import com.ticho.boot.view.exception.SysException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.function.Supplier;

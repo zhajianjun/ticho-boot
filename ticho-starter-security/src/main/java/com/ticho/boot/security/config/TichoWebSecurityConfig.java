@@ -2,23 +2,18 @@ package com.ticho.boot.security.config;
 
 
 import com.ticho.boot.security.filter.AbstractAuthTokenFilter;
-import com.ticho.boot.security.prop.TichoSecurityProperty;
-import com.ticho.boot.security.view.NoAuthenticationMessageView;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.BeanIds;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.access.AccessDecisionManager;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.annotation.Resource;
@@ -39,25 +34,13 @@ public class TichoWebSecurityConfig extends WebSecurityConfigurerAdapter {
     private AbstractAuthTokenFilter<?> abstractAuthTokenFilter;
 
     @Resource
+    private AuthenticationEntryPoint authenticationEntryPoint;
+
+    @Resource
     private AccessDeniedHandler accessDeniedHandler;
 
     @Resource
-    private TichoSecurityProperty tichoSecurityProperty;
-
-    @Autowired
-    public void configureAuthentication(
-        AuthenticationManagerBuilder authenticationManagerBuilder,
-        PasswordEncoder passwordEncoder,
-        UserDetailsService userDetailsService
-    ) throws Exception {
-        authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
-    }
-
-    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
+    private AccessDecisionManager accessDecisionManager;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -67,7 +50,15 @@ public class TichoWebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .authorizeRequests()
             .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-            .antMatchers(tichoSecurityProperty.getAntPatterns()).permitAll()
+            // 给特定资源接口放行
+            .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+                @Override
+                public <O extends FilterSecurityInterceptor> O postProcess(O o) {
+                    // 权限判断
+                    o.setAccessDecisionManager(accessDecisionManager);
+                    return o;
+                }
+            })
             .antMatchers("/druid/**")
             .anonymous().anyRequest().authenticated()
             .and()
@@ -75,7 +66,7 @@ public class TichoWebSecurityConfig extends WebSecurityConfigurerAdapter {
             .cacheControl();
         http.addFilterBefore(abstractAuthTokenFilter, UsernamePasswordAuthenticationFilter.class);
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler)// 无Authorization相关header参数
-            .authenticationEntryPoint(new NoAuthenticationMessageView());
+            .authenticationEntryPoint(authenticationEntryPoint);
         // @formatter:on
     }
 

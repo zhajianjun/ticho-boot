@@ -1,8 +1,10 @@
-package com.ticho.boot.security.config;
+package com.ticho.boot.security.annotation;
 
 import com.ticho.boot.security.controller.OauthController;
 import com.ticho.boot.security.handle.TichoLoginUserHandle;
 import com.ticho.boot.security.handle.jwt.JwtEncode;
+import com.ticho.boot.security.handle.load.TichoPhoneLoadUserService;
+import com.ticho.boot.security.handle.load.TichoUsernameLoadUserService;
 import com.ticho.boot.security.handle.login.TichoUsernameLoginUserStragety;
 import com.ticho.boot.security.prop.TichoOauthProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -26,6 +28,8 @@ import java.lang.annotation.Target;
 @Import({
     TichoOauthProperty.class,
     JwtEncode.class,
+    TichoUsernameLoadUserService.class,
+    TichoPhoneLoadUserService.class,
     TichoLoginUserHandle.class,
     TichoUsernameLoginUserStragety.class,
     TichoUsernameLoginUserStragety.class,

@@ -23,7 +23,7 @@ import java.nio.charset.StandardCharsets;
  * @author zhajianjun
  * @date 2022-09-23 17:44:39
  */
-public class NoAuthenticationMessageView implements AuthenticationEntryPoint {
+public class TichoNoAuthenticationView implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest req, HttpServletResponse res, AuthenticationException e) throws IOException {
@@ -31,6 +31,7 @@ public class NoAuthenticationMessageView implements AuthenticationEntryPoint {
         result.setData(req.getRequestURI());
         res.setContentType(MediaType.APPLICATION_JSON_VALUE);
         res.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        res.setStatus(result.getCode());
         PrintWriter writer = res.getWriter();
         writer.write(JsonUtil.toJsonString(result));
         writer.close();

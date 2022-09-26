@@ -4,21 +4,17 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 /**
- * oauth2相关静态常量
+ *
  *
  * @author zhajianjun
- * @date 2022-09-21 16:59
+ * @date 2022-09-26 16:07
  */
-
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class OAuth2Const {
-
-    public static final String OAUTH2_TOKEN_FILTER_BEAN_NAME = "oauth2_token_filter_bean_name";
-
-    public static final String OAUTH2_CONTROLLER = "oauth2_controller";
+public class FeignConst {
 
     public static final String INNER = "inner";
 
     public static final String INNER_VALUE = "true";
+
 
 }

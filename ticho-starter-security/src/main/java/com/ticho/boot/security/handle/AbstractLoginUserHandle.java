@@ -5,17 +5,22 @@ import com.ticho.boot.security.dto.Oauth2AccessToken;
 import com.ticho.boot.security.handle.jwt.JwtConverter;
 import com.ticho.boot.security.handle.jwt.JwtEncode;
 import com.ticho.boot.security.handle.jwt.JwtExtInfo;
+import com.ticho.boot.view.core.TichoSecurityUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 登录处理抽象类
@@ -44,12 +49,15 @@ public abstract class AbstractLoginUserHandle implements LoginUserHandle {
     /**
      * 根据权限用户获取token返回信息
      *
-     * @param userDetails 权限用户
+     * @param tichoSecurityUser 权限用户
      * @return token返回信息
      */
-    protected Oauth2AccessToken getOauth2TokenAndSetAuthentication(UserDetails userDetails) {
+    protected Oauth2AccessToken getOauth2TokenAndSetAuthentication(TichoSecurityUser tichoSecurityUser) {
         // @formatter:off
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, "N/A", userDetails.getAuthorities());
+        List<String> authoritieStrs = Optional.ofNullable(tichoSecurityUser.getRoleIds()).orElseGet(ArrayList::new);
+        tichoSecurityUser.setPassword("N/A");
+        List<SimpleGrantedAuthority> authorities = authoritieStrs.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(tichoSecurityUser, tichoSecurityUser.getPassword(), authorities);
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (requestAttributes != null) {
             HttpServletRequest httpServletRequest = requestAttributes.getRequest();
@@ -60,7 +68,7 @@ public abstract class AbstractLoginUserHandle implements LoginUserHandle {
         Map<String, Object> map = getAllJwtExtInfo();
         // jwt扩展接口的所有数据放入token中
         oAuth2AccessToken.setExtInfo(map);
-        jwtEncode.encode(oAuth2AccessToken, userDetails);
+        jwtEncode.encode(oAuth2AccessToken, tichoSecurityUser);
         return oAuth2AccessToken;
         // @formatter:on
     }

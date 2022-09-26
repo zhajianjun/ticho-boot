@@ -1,9 +1,8 @@
 package com.ticho.boot.security.handle.load;
 
 import com.ticho.boot.security.constant.SecurityConst;
+import com.ticho.boot.view.core.TichoSecurityUser;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,10 +13,10 @@ import org.springframework.stereotype.Component;
  */
 @Component(SecurityConst.LOAD_USER_TYPE_PHONE)
 @ConditionalOnMissingBean(name = SecurityConst.LOAD_USER_TYPE_PHONE)
-public class TichoPhoneUserDetailsService implements UserDetailsService {
+public class TichoPhoneLoadUserService implements LoadUserService {
 
     @Override
-    public UserDetails loadUserByUsername(String account) {
+    public TichoSecurityUser load(String account) {
         throw new UnsupportedOperationException("根据手机号码查询用户信息 服务未实现");
     }
 

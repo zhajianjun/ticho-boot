@@ -2,14 +2,14 @@ package com.ticho.boot.security.handle.load;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import com.ticho.boot.security.constant.SecurityConst;
 import com.ticho.boot.security.prop.TichoSecurityProperty;
+import com.ticho.boot.view.core.TichoSecurityUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.annotation.Primary;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -25,18 +25,17 @@ import java.util.Objects;
  */
 @Component(SecurityConst.LOAD_USER_TYPE_USERNAME)
 @ConditionalOnMissingBean(name = SecurityConst.LOAD_USER_TYPE_USERNAME)
-@Primary
 @Slf4j
-public class TichoUsernameUserDetailsService implements UserDetailsService, InitializingBean {
-    private TichoSecurityProperty.User user = null;
+public class TichoUsernameLoadUserService implements LoadUserService, InitializingBean {
+    private TichoSecurityUser user = null;
 
     @Resource
     private TichoSecurityProperty tichoSecurityProperty;
 
     @Override
-    public UserDetails loadUserByUsername(String account) {
+    public TichoSecurityUser load(String account) {
         // @formatter:off
-        List<TichoSecurityProperty.User> users = tichoSecurityProperty.getUsers();
+        List<TichoSecurityUser> users = tichoSecurityProperty.getUsers();
         afterPropertiesSet();
         return users
             .stream()
@@ -49,7 +48,7 @@ public class TichoUsernameUserDetailsService implements UserDetailsService, Init
 
     @Override
     public void afterPropertiesSet() {
-        List<TichoSecurityProperty.User> users = tichoSecurityProperty.getUsers();
+        List<TichoSecurityUser> users = tichoSecurityProperty.getUsers();
         if (CollUtil.isNotEmpty(users)) {
             return;
         }
@@ -57,11 +56,12 @@ public class TichoUsernameUserDetailsService implements UserDetailsService, Init
             users.add(user);
             return;
         }
-        TichoSecurityProperty.User userInfo = new TichoSecurityProperty.User();
+        TichoSecurityUser userInfo = new TichoSecurityUser();
         userInfo.setUsername(SecurityConst.DEFAULT_USERNAME);
         String password = IdUtil.fastUUID();
-        userInfo.setPassword(password);
-        userInfo.setRoles(Collections.singletonList(SecurityConst.DEFAULT_ROLE));
+        PasswordEncoder passwordEncoder = SpringUtil.getBean(PasswordEncoder.class);
+        userInfo.setPassword(passwordEncoder.encode(password));
+        userInfo.setRoleIds(Collections.singletonList(SecurityConst.DEFAULT_ROLE));
         users.add(userInfo);
         user = userInfo;
         log.info("默认用户信息：{}， 密码：{}", SecurityConst.DEFAULT_USERNAME, password);

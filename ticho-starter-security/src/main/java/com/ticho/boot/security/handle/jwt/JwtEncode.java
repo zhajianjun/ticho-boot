@@ -4,10 +4,9 @@ import com.ticho.boot.security.constant.SecurityConst;
 import com.ticho.boot.security.dto.Oauth2AccessToken;
 import com.ticho.boot.security.prop.TichoOauthProperty;
 import com.ticho.boot.view.core.BizErrCode;
+import com.ticho.boot.view.core.TichoSecurityUser;
 import com.ticho.boot.view.util.Assert;
 import com.ticho.boot.web.util.JsonUtil;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.jwt.crypto.sign.Signer;
 import org.springframework.util.CollectionUtils;
@@ -18,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * jwt加密
@@ -37,7 +35,7 @@ public class JwtEncode {
         this.oauthProperty = oauthProperty;
     }
 
-    public void encode(Oauth2AccessToken oAuth2AccessToken, UserDetails userDetails) {
+    public void encode(Oauth2AccessToken oAuth2AccessToken, TichoSecurityUser tichoSecurityUser) {
         // @formatter:off
         Signer signer = jwtConverter.getSigner();
         Assert.isNotNull(signer, BizErrCode.FAIL, "signer is null");
@@ -50,15 +48,12 @@ public class JwtEncode {
         oAuth2AccessToken.setExp(exp);
         oAuth2AccessToken.setExpiresIn(oAuth2AccessToken.getExpiresIn());
         oAuth2AccessToken.setTokenType(SecurityConst.BEARER.toLowerCase());
-        List<String> authorities = Optional.ofNullable(userDetails.getAuthorities()).orElseGet(ArrayList::new)
-            .stream()
-            .map(GrantedAuthority::getAuthority)
-            .collect(Collectors.toList());
+        List<String> authorities = Optional.ofNullable(tichoSecurityUser.getRoleIds()).orElseGet(ArrayList::new);
         // access token信息
         Map<String, Object> accessTokenInfo = new HashMap<>();
         accessTokenInfo.put(SecurityConst.TYPE, SecurityConst.ACCESS_TOKEN);
         accessTokenInfo.put(SecurityConst.EXP, exp);
-        accessTokenInfo.put(SecurityConst.USERNAME, userDetails.getUsername());
+        accessTokenInfo.put(SecurityConst.USERNAME, tichoSecurityUser.getUsername());
         accessTokenInfo.put(SecurityConst.AUTHORITIES, authorities);
         // access token 加载扩展信息
         Map<String, Object> extInfo = oAuth2AccessToken.getExtInfo();
@@ -69,7 +64,7 @@ public class JwtEncode {
         Map<String, Object> refreshTokenInfo = new HashMap<>();
         refreshTokenInfo.put(SecurityConst.TYPE, SecurityConst.REFRESH_TOKEN);
         refreshTokenInfo.put(SecurityConst.EXP, refreTokenExp);
-        refreshTokenInfo.put(SecurityConst.USERNAME, userDetails.getUsername());
+        refreshTokenInfo.put(SecurityConst.USERNAME, tichoSecurityUser.getUsername());
         String accessToken = JwtHelper.encode(JsonUtil.toJsonString(accessTokenInfo), signer).getEncoded();
         String refreshToken = JwtHelper.encode(JsonUtil.toJsonString(refreshTokenInfo), signer).getEncoded();
         oAuth2AccessToken.setAccessToken(accessToken);

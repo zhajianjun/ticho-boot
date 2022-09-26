@@ -6,13 +6,13 @@ import com.ticho.boot.security.dto.LoginRequest;
 import com.ticho.boot.security.dto.Oauth2AccessToken;
 import com.ticho.boot.security.handle.jwt.JwtConverter;
 import com.ticho.boot.security.handle.jwt.JwtDecode;
+import com.ticho.boot.security.handle.load.LoadUserService;
 import com.ticho.boot.security.handle.login.LoginUserStragety;
 import com.ticho.boot.view.core.BizErrCode;
+import com.ticho.boot.view.core.TichoSecurityUser;
 import com.ticho.boot.view.exception.BizException;
 import com.ticho.boot.view.util.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -32,7 +32,7 @@ public class TichoLoginUserHandle extends AbstractLoginUserHandle {
     private Map<String, LoginUserStragety> loginUserServiceMap;
 
     @Autowired
-    private Map<String, UserDetailsService> userDetailsServiceMap;
+    private Map<String, LoadUserService> loadUserServiceMap;
 
     @Autowired
     private JwtDecode jwtDecode;
@@ -51,8 +51,8 @@ public class TichoLoginUserHandle extends AbstractLoginUserHandle {
         // @formatter:off
         LoginUserStragety loadUserService = loginUserServiceMap.get(SecurityConst.LOGIN_USER_TYPE + type);
         Assert.isNotNull(loadUserService, BizErrCode.FAIL, "不存在的登录方式");
-        UserDetails securityUser = loadUserService.login(account, credentials);
-        return getOauth2TokenAndSetAuthentication(securityUser);
+        TichoSecurityUser tichoSecurityUser = loadUserService.login(account, credentials);
+        return getOauth2TokenAndSetAuthentication(tichoSecurityUser);
         // @formatter:on
     }
 
@@ -65,9 +65,9 @@ public class TichoLoginUserHandle extends AbstractLoginUserHandle {
         String username = Optional.ofNullable(decodeAndVerify.get(SecurityConst.USERNAME))
             .map(Object::toString)
             .orElseThrow(()-> new BizException(BizErrCode.FAIL, "用户名不存在"));
-        UserDetailsService userDetailsService = userDetailsServiceMap.get(SecurityConst.LOAD_USER_TYPE_USERNAME);
-        UserDetails securityUser = userDetailsService.loadUserByUsername(username);
-        return getOauth2TokenAndSetAuthentication(securityUser);
+        LoadUserService loadUserService = loadUserServiceMap.get(SecurityConst.LOAD_USER_TYPE_USERNAME);
+        TichoSecurityUser tichoSecurityUser = loadUserService.load(username);
+        return getOauth2TokenAndSetAuthentication(tichoSecurityUser);
         // @formatter:on
     }
 

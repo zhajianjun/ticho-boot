@@ -28,6 +28,7 @@ public class TichoAccessDenyFilter implements AccessDeniedHandler {
     public void handle(HttpServletRequest req, HttpServletResponse res, AccessDeniedException e) throws IOException {
         Result<String> result = Result.of(HttpErrCode.TOKEN_INVALID);
         result.setData(req.getRequestURI());
+        res.setStatus(result.getCode());
         res.setContentType(MediaType.APPLICATION_JSON_VALUE);
         res.setCharacterEncoding(StandardCharsets.UTF_8.name());
         PrintWriter writer = res.getWriter();

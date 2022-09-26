@@ -1,6 +1,5 @@
 package com.ticho.boot.web.config;
 
-import com.ticho.boot.web.constant.WebConst;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
