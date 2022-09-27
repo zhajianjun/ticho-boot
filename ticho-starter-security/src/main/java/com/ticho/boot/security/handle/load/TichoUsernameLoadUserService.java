@@ -37,7 +37,6 @@ public class TichoUsernameLoadUserService implements LoadUserService, Initializi
     public TichoSecurityUser load(String account) {
         // @formatter:off
         List<TichoSecurityUser> users = tichoSecurityProperty.getUsers();
-        afterPropertiesSet();
         TichoSecurityUser tichoSecurityUser = users
             .stream()
             .filter(x-> Objects.equals(x.getUsername(), account))

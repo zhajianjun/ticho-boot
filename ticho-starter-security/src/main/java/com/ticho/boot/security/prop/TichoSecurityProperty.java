@@ -28,7 +28,7 @@ public class TichoSecurityProperty {
 
     /** 默认用户，如果UserDetailsService接口被实现则没有啥作用了 */
     @Getter
-    private final List<TichoSecurityUser> users = new ArrayList<>();
+    private List<TichoSecurityUser> users = new ArrayList<>();
 
     /** 权限过滤地址 */
     @Getter
@@ -47,19 +47,20 @@ public class TichoSecurityProperty {
         // @formatter:on
     }
 
-    public void setUsers(List<TichoSecurityUser> tichoSecurityUsers) {
+    public void setUsers(List<TichoSecurityUser> users) {
         // @formatter:off
-        if (CollUtil.isEmpty(tichoSecurityUsers)) {
+        if (CollUtil.isEmpty(users)) {
             return;
         }
         PasswordEncoder passwordEncoder = SpringUtil.getBean(PasswordEncoder.class);
-        for (TichoSecurityUser userInfo : tichoSecurityUsers) {
+        for (TichoSecurityUser userInfo : users) {
             String password = userInfo.getPassword();
             if (StrUtil.isBlank(password)) {
                 continue;
             }
             userInfo.setPassword(passwordEncoder.encode(password));
         }
+        this.users = users;
         // @formatter:on
     }
 
