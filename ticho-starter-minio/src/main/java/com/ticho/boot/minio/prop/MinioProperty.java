@@ -1,6 +1,5 @@
 package com.ticho.boot.minio.prop;
 
-import com.ticho.boot.minio.constant.MinioConst;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -12,7 +11,7 @@ import org.springframework.util.unit.DataSize;
  * @author zhajianjun
  * @date 2022-07-13 22:40:25
  */
-@ConfigurationProperties(prefix = MinioConst.MINIO_PREFIX)
+@ConfigurationProperties(prefix = "ticho.minio")
 @Component
 @Data
 public class MinioProperty {
