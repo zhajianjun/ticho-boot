@@ -7,6 +7,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -31,11 +32,24 @@ public class TichoSecurityControllerAdvice {
      * @param e e
      * @return Result
      */
-    @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public Result<String> handleAccessDeniedException(AccessDeniedException e, HttpServletRequest request) {
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.OK)
+    public Result<String> accessDeniedException(AccessDeniedException e, HttpServletRequest request) {
         log.warn("权限不足 e={}", e.getMessage());
         return Result.of(HttpErrCode.ACCESS_DENIED, e.getMessage(), request.getRequestURI());
+    }
+
+    /**
+     * AuthenticationException
+     *
+     * @param e e
+     * @return Result
+     */
+    @ExceptionHandler(AuthenticationException.class)
+    @ResponseStatus(HttpStatus.OK)
+    public Result<String> authenticationException(AuthenticationException e, HttpServletRequest request) {
+        log.warn("登录异常 e={}", e.getMessage());
+        return Result.of(HttpErrCode.NOT_LOGIN, e.getMessage(), request.getRequestURI());
     }
 
 }

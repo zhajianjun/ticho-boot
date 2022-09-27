@@ -2,21 +2,17 @@ package com.ticho.boot.security.prop;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import com.ticho.boot.security.constant.SecurityConst;
 import com.ticho.boot.view.core.TichoSecurityUser;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +24,7 @@ import java.util.stream.Collectors;
  */
 @NoArgsConstructor
 @Slf4j
-public class TichoSecurityProperty implements InitializingBean {
+public class TichoSecurityProperty {
 
     /** 默认用户，如果UserDetailsService接口被实现则没有啥作用了 */
     @Getter
@@ -53,6 +49,9 @@ public class TichoSecurityProperty implements InitializingBean {
 
     public void setUsers(List<TichoSecurityUser> tichoSecurityUsers) {
         // @formatter:off
+        if (CollUtil.isEmpty(tichoSecurityUsers)) {
+            return;
+        }
         PasswordEncoder passwordEncoder = SpringUtil.getBean(PasswordEncoder.class);
         for (TichoSecurityUser userInfo : tichoSecurityUsers) {
             String password = userInfo.getPassword();
@@ -62,21 +61,6 @@ public class TichoSecurityProperty implements InitializingBean {
             userInfo.setPassword(passwordEncoder.encode(password));
         }
         // @formatter:on
-    }
-
-    @Override
-    public void afterPropertiesSet() {
-        PasswordEncoder passwordEncoder = SpringUtil.getBean(PasswordEncoder.class);
-        if (CollUtil.isNotEmpty(users)) {
-            return;
-        }
-        TichoSecurityUser userInfo = new TichoSecurityUser();
-        userInfo.setUsername(SecurityConst.DEFAULT_USERNAME);
-        String password = IdUtil.fastUUID();
-        userInfo.setPassword(passwordEncoder.encode(password));
-        userInfo.setRoleIds(Collections.singletonList(SecurityConst.DEFAULT_ROLE));
-        users.add(userInfo);
-        log.info("默认用户信息：{}， 密码：{}", SecurityConst.DEFAULT_USERNAME, password);
     }
 
 }
