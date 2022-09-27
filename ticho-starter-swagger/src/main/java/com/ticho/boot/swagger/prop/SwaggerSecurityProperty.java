@@ -21,7 +21,7 @@ public class SwaggerSecurityProperty {
 
     /** 开启swagger功能 */
     @ApiModelProperty(value = "开启swagger功能", position = 10)
-    private String enable;
+    private Boolean enable = false;
 
     /** 权限地址 */
     @ApiModelProperty(value = "权限地址", position = 20)
