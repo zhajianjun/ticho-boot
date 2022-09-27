@@ -33,16 +33,16 @@ import static springfox.documentation.swagger.common.SwaggerPluginSupport.SWAGGE
  * @author zhajianjun
  * @date 2022-07-13 22:40:25
  */
-@ConditionalOnBean(DefaultSwaggerConfig.class)
+@ConditionalOnBean(TichoSwaggerConfig.class)
 @Primary
 @Component
-public class DefaultSwaggerParameterBuilder implements ExpandedParameterBuilderPlugin {
+public class TichoSwaggerParameterBuilder implements ExpandedParameterBuilderPlugin {
 
     private final DescriptionResolver descriptions;
     private final EnumTypeDeterminer enumTypeDeterminer;
 
     @Autowired(required = false)
-    public DefaultSwaggerParameterBuilder(DescriptionResolver descriptions, EnumTypeDeterminer enumTypeDeterminer) {
+    public TichoSwaggerParameterBuilder(DescriptionResolver descriptions, EnumTypeDeterminer enumTypeDeterminer) {
         this.descriptions = descriptions;
         this.enumTypeDeterminer = enumTypeDeterminer;
     }

@@ -1,6 +1,6 @@
 package com.ticho.boot.swagger.config;
 
-import com.ticho.boot.swagger.prop.SwaggerSecurityProperty;
+import com.ticho.boot.swagger.prop.TichoSwaggerSecurityProperty;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -41,15 +41,15 @@ import java.util.stream.Stream;
  * @date 2022-07-13 22:40:25
  */
 @Configuration
-@ConditionalOnBean(DefaultSwaggerConfig.class)
-public class DefaultSecurityConfig {
+@ConditionalOnBean(TichoSwaggerConfig.class)
+public class TichoSecurityConfig {
 
     private static final String OAUTH_2 = "oauth2";
     private static final String OAUTH_TOKEN = "/oauth/token";
     private static final String OAUTH_AUTHORIZE = "/oauth/authorize";
 
     @Autowired
-    private SwaggerSecurityProperty swaggerSecurityProperty;
+    private TichoSwaggerSecurityProperty tichoSwaggerSecurityProperty;
 
     @Autowired(required = false)
     private ApiInfo apiInfo;
@@ -57,14 +57,14 @@ public class DefaultSecurityConfig {
     // @formatter:off
 
     @Bean
-    @ConditionalOnProperty(value = "ticho.swagger.securityType", havingValue = "password")
+    @ConditionalOnProperty(value = TichoSwaggerConfig.TYPE, havingValue = "password")
     @ConditionalOnMissingBean(Docket.class)
     public Docket passwordDocket() {
         return creteDocket(securityContexts(), passwordSecuritySchemes());
     }
 
     @Bean
-    @ConditionalOnProperty(value = "ticho.swagger.securityType", havingValue = "authorization")
+    @ConditionalOnProperty(value = TichoSwaggerConfig.TYPE, havingValue = "authorization")
     @ConditionalOnMissingBean(Docket.class)
     public Docket authorizationCodeDocket() {
         return creteDocket(securityContexts(), authorizationCodeSecuritySchemes());
@@ -72,7 +72,7 @@ public class DefaultSecurityConfig {
 
     //@Bean("implicitSecurityDocket")
     @Bean
-    @ConditionalOnProperty(value = "ticho.swagger.securityType", havingValue = "implicit")
+    @ConditionalOnProperty(value = TichoSwaggerConfig.TYPE, havingValue = "implicit")
     @ConditionalOnMissingBean(Docket.class)
     public Docket implicitSecurityDocket() {
         return creteDocket(securityContexts(), implicitSecuritySchemes());
@@ -80,7 +80,7 @@ public class DefaultSecurityConfig {
 
     //@Bean("clientCredentialsDocket")
     @Bean
-    @ConditionalOnProperty(value = "ticho.swagger.securityType", havingValue = "clientCredentials")
+    @ConditionalOnProperty(value = TichoSwaggerConfig.TYPE, havingValue = "clientCredentials")
     @ConditionalOnMissingBean(Docket.class)
     public Docket clientCredentialsDocket() {
         return creteDocket(securityContexts(), clientCredentialsSchemes());
@@ -123,7 +123,7 @@ public class DefaultSecurityConfig {
      * 密码模式
      */
     private List<SecurityScheme> passwordSecuritySchemes() {
-        String passwordTokenUrl = swaggerSecurityProperty.getSecurityUrl() + OAUTH_TOKEN;
+        String passwordTokenUrl = tichoSwaggerSecurityProperty.getSecurityUrl() + OAUTH_TOKEN;
         GrantType passwordCredentialsGrant = new ResourceOwnerPasswordCredentialsGrant(passwordTokenUrl);
         List<GrantType> grantTypes = Stream.of(passwordCredentialsGrant).collect(Collectors.toList());
         OAuth oAuth = new OAuthBuilder().name(OAUTH_2).grantTypes(grantTypes).build();
@@ -134,8 +134,8 @@ public class DefaultSecurityConfig {
      * 授权码模式
      */
     private List<SecurityScheme> authorizationCodeSecuritySchemes() {
-        String authorizationUrl = swaggerSecurityProperty.getSecurityUrl() + OAUTH_AUTHORIZE;
-        String tokenEndpointUrl = swaggerSecurityProperty.getSecurityUrl() + OAUTH_TOKEN;
+        String authorizationUrl = tichoSwaggerSecurityProperty.getSecurityUrl() + OAUTH_AUTHORIZE;
+        String tokenEndpointUrl = tichoSwaggerSecurityProperty.getSecurityUrl() + OAUTH_TOKEN;
         TokenRequestEndpoint tokenRequestEndpoint = new TokenRequestEndpoint(authorizationUrl, "web", "web");
         TokenEndpoint tokenEndpoint = new TokenEndpoint(tokenEndpointUrl, "");
         GrantType authorizationCodeGrant = new AuthorizationCodeGrant(tokenRequestEndpoint, tokenEndpoint);
@@ -148,7 +148,7 @@ public class DefaultSecurityConfig {
      * 简化模式
      */
     private List<SecurityScheme> implicitSecuritySchemes() {
-        String loginEndpointUrl = swaggerSecurityProperty.getSecurityUrl() + OAUTH_AUTHORIZE;
+        String loginEndpointUrl = tichoSwaggerSecurityProperty.getSecurityUrl() + OAUTH_AUTHORIZE;
         LoginEndpoint tokenEndpoint = new LoginEndpoint(loginEndpointUrl);
         GrantType implicitGrant = new ImplicitGrant(tokenEndpoint, "");
         List<GrantType> grantTypes = Stream.of(implicitGrant).collect(Collectors.toList());
@@ -160,7 +160,7 @@ public class DefaultSecurityConfig {
      * 客户端模式
      */
     private List<SecurityScheme> clientCredentialsSchemes() {
-        String clientCredentialsUrl = swaggerSecurityProperty.getSecurityUrl() + OAUTH_TOKEN;
+        String clientCredentialsUrl = tichoSwaggerSecurityProperty.getSecurityUrl() + OAUTH_TOKEN;
         GrantType clientCredentialsGrant = new ClientCredentialsGrant(clientCredentialsUrl);
         List<GrantType> grantTypes = Stream.of(clientCredentialsGrant).collect(Collectors.toList());
         OAuth oAuth = new OAuthBuilder().name(OAUTH_2).grantTypes(grantTypes).build();

@@ -1,6 +1,6 @@
 package com.ticho.boot.swagger.prop;
 
-import com.ticho.boot.swagger.config.DefaultSwaggerConfig;
+import com.ticho.boot.swagger.config.TichoSwaggerConfig;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -15,9 +15,9 @@ import org.springframework.context.annotation.Configuration;
  */
 @Data
 @Configuration
-@ConditionalOnBean(DefaultSwaggerConfig.class)
+@ConditionalOnBean(TichoSwaggerConfig.class)
 @ConfigurationProperties(prefix = "ticho.swagger")
-public class SwaggerSecurityProperty {
+public class TichoSwaggerSecurityProperty {
 
     /** 开启swagger功能 */
     @ApiModelProperty(value = "开启swagger功能", position = 10)

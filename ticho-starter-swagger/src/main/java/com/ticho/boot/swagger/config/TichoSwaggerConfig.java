@@ -37,8 +37,9 @@ import java.util.List;
 @PropertySource(value = "/DefaultKnife4jConfig.properties")
 @AutoConfigureBefore(Knife4jAutoConfiguration.class)
 @EnableSwagger2WebMvc
-public class DefaultSwaggerConfig {
+public class TichoSwaggerConfig {
     private static final String URL = "http://www.ticho.top";
+    public static final String TYPE = "ticho.swagger.securityType";
 
     @Value("${spring.application.name:ticho-boot-demo}")
     private String applicationName;
@@ -46,7 +47,7 @@ public class DefaultSwaggerConfig {
     // @formatter:off
 
     @Bean
-    @ConditionalOnProperty(value = "ticho.swagger.securityType", havingValue = "default", matchIfMissing = true)
+    @ConditionalOnProperty(value = TYPE, havingValue = "default", matchIfMissing = true)
     @ConditionalOnMissingBean(Docket.class)
     public Docket docket(ApiInfo apiInfo) {
         return new Docket(DocumentationType.SWAGGER_2)

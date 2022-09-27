@@ -27,9 +27,9 @@ import static springfox.documentation.swagger.schema.ApiModelProperties.findApiM
  * @date 2022-07-13 22:40:25
  */
 @Component
-@ConditionalOnBean(DefaultSwaggerConfig.class)
-public class DefaultModelPropertySortPlugin implements ModelPropertyBuilderPlugin {
-    private static final Logger log = LoggerFactory.getLogger(DefaultModelPropertySortPlugin.class);
+@ConditionalOnBean(TichoSwaggerConfig.class)
+public class TichoModelPropertySortPlugin implements ModelPropertyBuilderPlugin {
+    private static final Logger log = LoggerFactory.getLogger(TichoModelPropertySortPlugin.class);
 
     public static int indexOf(Object[] array, Object objectToFind) {
         if (array != null) {

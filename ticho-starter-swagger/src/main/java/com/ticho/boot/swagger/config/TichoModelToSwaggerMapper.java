@@ -15,15 +15,15 @@ import java.util.stream.Collectors;
 /**
  * 重写 将Document转换成Swagger 类, 根据order进行排序 和 ExpandedParameterBuilderPlugin配套使用
  * Primary 同一个接口，可能会有几种不同的实现类，而默认只会采取其中一种的情况下
- * @see DefaultSwaggerParameterBuilder
+ * @see TichoSwaggerParameterBuilder
  * @author zhajianjun
  * @date 2022-07-13 22:40:25
  */
-@ConditionalOnBean(DefaultSwaggerConfig.class)
+@ConditionalOnBean(TichoSwaggerConfig.class)
 @Primary
 @Component("ServiceModelToSwagger2Mapper")
 @Order(Ordered.HIGHEST_PRECEDENCE)
-public class DefaultModelToSwaggerMapper extends ServiceModelToSwagger2MapperImpl {
+public class TichoModelToSwaggerMapper extends ServiceModelToSwagger2MapperImpl {
 
     @Override
     protected List<io.swagger.models.parameters.Parameter> parameterListToParameterList(List<Parameter> list) {
