@@ -28,10 +28,9 @@ public class TichoRequestInterceptor implements RequestInterceptor {
 
     @Override
     public void apply(RequestTemplate template) {
+        // feign则是内部调用，添加header inner = true
         template.header(FeignConst.INNER, FeignConst.INNER_VALUE);
-
         Collection<String> fromHeader = template.headers().get(FeignConst.INNER);
-        // 带from 请求直接跳过
         if (CollUtil.isNotEmpty(fromHeader) && fromHeader.contains(FeignConst.INNER_VALUE)) {
             return;
         }
