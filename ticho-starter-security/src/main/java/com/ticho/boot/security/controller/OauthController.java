@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 用户信息
+ * 权限用户登录控制器
  *
  * @author zhajianjun
  * @date 2022-09-22 15:36

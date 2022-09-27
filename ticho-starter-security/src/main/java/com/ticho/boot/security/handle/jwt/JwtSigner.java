@@ -25,35 +25,25 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * jwt转换器
+ * jwt签证信息
  *
  * @author zhajianjun
  * @date 2022-09-21 15:55
  */
 @Slf4j
 @Getter
-public class JwtConverter implements InitializingBean {
-    private String verifierKey;
-
-    private final Signer signer;
+public class JwtSigner implements InitializingBean {
 
     private String signingKey;
 
-    private SignatureVerifier verifier;
+    private final String verifierKey;
+
+    private final Signer signer;
+
+    private final SignatureVerifier verifier;
 
     @Override
     public void afterPropertiesSet() {
-        if (verifier != null) {
-            // Assume signer also set independently if needed
-            return;
-        }
-        SignatureVerifier verifier = new MacSigner(verifierKey);
-        try {
-            verifier = new RsaVerifier(verifierKey);
-        } catch (Exception e) {
-            log.warn("Unable to create an RSA verifier from verifierKey (ignoreable if using MAC)");
-        }
-        // Check the signing and verification keys match
         if (signer instanceof RsaSigner) {
             byte[] test = "test".getBytes();
             try {
@@ -63,18 +53,14 @@ public class JwtConverter implements InitializingBean {
                 log.error("Signing and verification RSA keys do not match");
             }
         } else if (verifier instanceof MacSigner) {
-            // Avoid a race condition where setters are called in the wrong order. Use of
-            // == is intentional.
-            Assert.isTrue(Objects.equals(this.signingKey, this.verifierKey), BizErrCode.FAIL,
-                    "For MAC signing you do not need to specify the verifier key separately, and if you do it must match the signing key");
+            Assert.isTrue(Objects.equals(this.signingKey, this.verifierKey), BizErrCode.FAIL, "For MAC signing you do not need to specify the verifier key separately, and if you do it must match the signing key");
         }
-        this.verifier = verifier;
     }
 
     /**
      * 通过证书加密
      */
-    public JwtConverter(String path, String alias, String password) {
+    public JwtSigner(String path, String alias, String password) {
         // @formatter:off
         ClassPathResource resource = new ClassPathResource(path);
         //设置密钥对（私钥） 此处传入的是创建jks文件时的别名-alias 和 秘钥库访问密码
@@ -93,17 +79,13 @@ public class JwtConverter implements InitializingBean {
     /**
      * 通过公钥加密
      */
-    public JwtConverter(String key) {
+    public JwtSigner(String key) {
+        Assert.isNotNull(key, BizErrCode.FAIL, "key is null");
         key = key.trim();
-        this.signingKey = key;
-        if (isPublic(key)) {
-            signer = new RsaSigner(key);
-            log.info("Configured with RSA signing key");
-        } else {
-            // Assume it's a MAC key
-            this.verifierKey = key;
-            signer = new MacSigner(key);
-        }
+        signingKey = key;
+        verifierKey = key;
+        verifier = new MacSigner(key);
+        signer = (Signer) verifier;
     }
 
     public boolean isPublic(String key) {

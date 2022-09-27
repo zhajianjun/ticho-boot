@@ -3,6 +3,7 @@ package com.ticho.boot.security.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ticho.boot.security.constant.SecurityConst;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -15,6 +16,7 @@ import java.util.Map;
  * @date 2022-09-21 16:52
  */
 @Data
+@ApiModel("Oauth2AccessToken信息")
 public class Oauth2AccessToken {
 
     /** token */

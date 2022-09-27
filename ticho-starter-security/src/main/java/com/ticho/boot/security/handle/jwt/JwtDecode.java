@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
- *
+ * jwt解密
  *
  * @author zhajianjun
  * @date 2022-09-24 13:45:19
@@ -25,11 +25,11 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class JwtDecode {
 
-    public final JwtConverter jwtConverter;
+    public final JwtSigner jwtSigner;
 
-    public JwtDecode(JwtConverter jwtConverter) {
-        Assert.isNotNull(jwtConverter, BizErrCode.FAIL, "signer is null");
-        this.jwtConverter = jwtConverter;
+    public JwtDecode(JwtSigner jwtSigner) {
+        Assert.isNotNull(jwtSigner, BizErrCode.FAIL, "signer is null");
+        this.jwtSigner = jwtSigner;
     }
 
     public Map<String, Object> decode(String token) {
@@ -38,7 +38,7 @@ public class JwtDecode {
     }
 
     public Map<String, Object> decodeAndVerify(String token) {
-        SignatureVerifier verifier = jwtConverter.getVerifier();
+        SignatureVerifier verifier = jwtSigner.getVerifier();
         Assert.isNotNull(verifier, BizErrCode.FAIL, "verifier is null");
         String claims;
         try {

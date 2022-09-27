@@ -3,7 +3,7 @@ package com.ticho.boot.security.handle.load;
 import com.ticho.boot.view.core.TichoSecurityUser;
 
 /**
- *
+ * 用户查询服务
  *
  * @author zhajianjun
  * @date 2022-09-26 08:41

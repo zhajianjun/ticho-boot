@@ -26,18 +26,18 @@ import java.util.concurrent.TimeUnit;
  */
 public class JwtEncode {
 
-    public final JwtConverter jwtConverter;
+    public final JwtSigner jwtSigner;
     public final TichoOauthProperty oauthProperty;
 
-    public JwtEncode(JwtConverter jwtConverter, TichoOauthProperty oauthProperty) {
-        Assert.isNotNull(jwtConverter, BizErrCode.FAIL, "signer is null");
-        this.jwtConverter = jwtConverter;
+    public JwtEncode(JwtSigner jwtSigner, TichoOauthProperty oauthProperty) {
+        Assert.isNotNull(jwtSigner, BizErrCode.FAIL, "signer is null");
+        this.jwtSigner = jwtSigner;
         this.oauthProperty = oauthProperty;
     }
 
     public void encode(Oauth2AccessToken oAuth2AccessToken, TichoSecurityUser tichoSecurityUser) {
         // @formatter:off
-        Signer signer = jwtConverter.getSigner();
+        Signer signer = jwtSigner.getSigner();
         Assert.isNotNull(signer, BizErrCode.FAIL, "signer is null");
         long iat = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
         long accessTokenValidity = oauthProperty.getAccessTokenValidity();

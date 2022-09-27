@@ -40,6 +40,7 @@ import java.lang.annotation.Target;
 @Documented
 public @interface IgnoreAuth {
 
+    /** 是否内部服务调用 true-是，false-否 */
     @AliasFor("inner")
     boolean value() default false;
 

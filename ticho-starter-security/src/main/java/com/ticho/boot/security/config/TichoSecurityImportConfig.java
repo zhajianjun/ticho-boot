@@ -7,13 +7,13 @@ import com.ticho.boot.security.constant.OAuth2Const;
 import com.ticho.boot.security.constant.SecurityConst;
 import com.ticho.boot.security.filter.TichoAccessDecisionManager;
 import com.ticho.boot.security.filter.TichoTokenAuthenticationTokenFilter;
-import com.ticho.boot.security.handle.jwt.JwtConverter;
+import com.ticho.boot.security.handle.jwt.JwtSigner;
 import com.ticho.boot.security.handle.jwt.JwtDecode;
 import com.ticho.boot.security.handle.jwt.JwtExtInfo;
 import com.ticho.boot.security.handle.jwt.TichoJwtExtInfo;
 import com.ticho.boot.security.prop.TichoSecurityProperty;
-import com.ticho.boot.security.view.TichoAccessDenyFilter;
-import com.ticho.boot.security.view.TichoNoAuthenticationView;
+import com.ticho.boot.security.view.TichoAccessDeniedHandler;
+import com.ticho.boot.security.view.TichoAuthenticationEntryPoint;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -40,9 +40,9 @@ public class TichoSecurityImportConfig {
     }
 
     @Bean
-    @ConditionalOnMissingBean(JwtConverter.class)
-    public JwtConverter jwtConverter() {
-        return new JwtConverter("ticho");
+    @ConditionalOnMissingBean(JwtSigner.class)
+    public JwtSigner jwtSinger() {
+        return new JwtSigner("ticho");
     }
 
     @Bean(OAuth2Const.OAUTH2_TOKEN_FILTER_BEAN_NAME)
@@ -54,13 +54,13 @@ public class TichoSecurityImportConfig {
     @Bean
     @ConditionalOnMissingBean(AccessDeniedHandler.class)
     public AccessDeniedHandler accessDeniedHandler(){
-        return new TichoAccessDenyFilter();
+        return new TichoAccessDeniedHandler();
     }
 
     @Bean
     @ConditionalOnMissingBean(AuthenticationEntryPoint.class)
     public AuthenticationEntryPoint authenticationEntryPoint(){
-        return new TichoNoAuthenticationView();
+        return new TichoAuthenticationEntryPoint();
     }
 
     @Bean
@@ -69,8 +69,8 @@ public class TichoSecurityImportConfig {
     }
 
     @Bean
-    public JwtDecode jwtDecode(JwtConverter jwtConverter) {
-        return new JwtDecode(jwtConverter);
+    public JwtDecode jwtDecode(JwtSigner jwtSigner) {
+        return new JwtDecode(jwtSigner);
     }
 
     @Bean

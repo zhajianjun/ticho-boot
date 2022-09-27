@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
 // @formatter:off
 
 /**
- *
+ * 开启Oauth权限服务
  *
  * @author zhajianjun
  * @date 2022-09-24 22:47:37

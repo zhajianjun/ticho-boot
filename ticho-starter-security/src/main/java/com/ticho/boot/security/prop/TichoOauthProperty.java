@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * security参数配置对象
+ * Oauth参数配置对象
  *
  * @author zhajianjun
  * @date 2022-09-23 14:46

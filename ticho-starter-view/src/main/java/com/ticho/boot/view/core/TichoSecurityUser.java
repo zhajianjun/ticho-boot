@@ -33,7 +33,7 @@ public class TichoSecurityUser implements Serializable {
 
 
     public String toString() {
-        return getClass().getSimpleName();
+        return getUsername();
     }
 
 }

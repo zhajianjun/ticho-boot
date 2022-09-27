@@ -4,7 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import com.ticho.boot.security.constant.SecurityConst;
 import com.ticho.boot.security.dto.LoginRequest;
 import com.ticho.boot.security.dto.Oauth2AccessToken;
-import com.ticho.boot.security.handle.jwt.JwtConverter;
+import com.ticho.boot.security.handle.jwt.JwtSigner;
 import com.ticho.boot.security.handle.jwt.JwtDecode;
 import com.ticho.boot.security.handle.load.LoadUserService;
 import com.ticho.boot.security.handle.login.LoginUserStragety;
@@ -38,7 +38,7 @@ public class TichoLoginUserHandle extends AbstractLoginUserHandle {
     private JwtDecode jwtDecode;
 
     @Autowired
-    private JwtConverter jwtConverter;
+    private JwtSigner jwtSigner;
 
     public Oauth2AccessToken token(LoginRequest loginRequest) {
         String account = loginRequest.getUsername();
@@ -73,7 +73,7 @@ public class TichoLoginUserHandle extends AbstractLoginUserHandle {
 
     @Override
     public String getPublicKey() {
-        return jwtConverter.getVerifierKey();
+        return jwtSigner.getVerifierKey();
         // @formatter:on
     }
 }

@@ -2,7 +2,7 @@ package com.ticho.boot.security.handle;
 
 import cn.hutool.core.collection.CollUtil;
 import com.ticho.boot.security.dto.Oauth2AccessToken;
-import com.ticho.boot.security.handle.jwt.JwtConverter;
+import com.ticho.boot.security.handle.jwt.JwtSigner;
 import com.ticho.boot.security.handle.jwt.JwtEncode;
 import com.ticho.boot.security.handle.jwt.JwtExtInfo;
 import com.ticho.boot.view.core.TichoSecurityUser;
@@ -35,14 +35,14 @@ public abstract class AbstractLoginUserHandle implements LoginUserHandle {
     private JwtEncode jwtEncode;
 
     @Autowired
-    private JwtConverter jwtConverter;
+    private JwtSigner jwtSigner;
 
     @Autowired
     private Map<String, JwtExtInfo> jwtExtInfoMap;
 
 
     public String getPublicKey() {
-        return jwtConverter.getVerifierKey();
+        return jwtSigner.getVerifierKey();
         // @formatter:on
     }
 

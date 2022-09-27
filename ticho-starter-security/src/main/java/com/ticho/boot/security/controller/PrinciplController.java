@@ -14,12 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.Principal;
 
 /**
- * 用户信息
+ * 权限用户信息 控制器
  *
  * @author zhajianjun
  * @date 2022-09-22 15:36
  */
-
 @RestController
 @RequestMapping("principal")
 @ApiSort(Ordered.HIGHEST_PRECEDENCE + 100)

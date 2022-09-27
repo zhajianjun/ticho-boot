@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
+ * 默认的jwt扩展信息接口实现
  *
  * @author zhajianjun
  * @date 2022-09-23 10:47

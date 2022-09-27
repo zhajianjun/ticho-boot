@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 
 
 /**
- * token验证过滤器抽象
+ * token验证过滤器抽象类
  *
  * @author zhajianjun
  * @date 2022-09-22 08:38:17

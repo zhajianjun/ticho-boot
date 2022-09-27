@@ -23,7 +23,7 @@ import java.nio.charset.StandardCharsets;
  * @author zhajianjun
  * @date 2022-09-23 17:44:39
  */
-public class TichoNoAuthenticationView implements AuthenticationEntryPoint {
+public class TichoAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest req, HttpServletResponse res, AuthenticationException e) throws IOException {
