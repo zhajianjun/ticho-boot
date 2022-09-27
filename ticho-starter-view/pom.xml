@@ -9,10 +9,6 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ticho-starter-view</artifactId>
-    <name>ticho-starter-view</name>
-    <description>ticho view</description>
-    <url>http://www.example.com</url>
-
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

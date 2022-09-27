@@ -1,0 +1,21 @@
+{
+  "properties": [
+    {
+      "name": "ticho.redis.host",
+      "type": "java.lang.String",
+      "description": "Description for ticho.redis.host.",
+      "defaultValue": "localhost"
+    },
+    {
+      "name": "ticho.redis.port",
+      "type": "java.lang.String",
+      "description": "Description for ticho.redis.port.",
+      "defaultValue": 6379
+    },
+    {
+      "name": "ticho.redis.password",
+      "type": "java.lang.String",
+      "description": "Description for ticho.redis.password."
+    }
+  ]
+}

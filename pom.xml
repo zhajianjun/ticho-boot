@@ -14,6 +14,7 @@
         <module>ticho-starter-feign</module>
         <module>ticho-starter-rabbitmq</module>
         <module>ticho-starter-security</module>
+        <module>ticho-starter-redis</module>
     </modules>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ticho-boot</artifactId>
