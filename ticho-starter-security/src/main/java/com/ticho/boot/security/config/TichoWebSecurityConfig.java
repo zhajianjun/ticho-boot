@@ -67,7 +67,10 @@ public class TichoWebSecurityConfig extends WebSecurityConfigurerAdapter {
             .headers()
             .cacheControl();
         http.addFilterBefore(oncePerRequestFilter, UsernamePasswordAuthenticationFilter.class);
-        http.exceptionHandling().accessDeniedHandler(accessDeniedHandler)// 无Authorization相关header参数
+        http.exceptionHandling()
+            // 无Authorization相关header参数
+            .accessDeniedHandler(accessDeniedHandler)
+            // 认证成功,权限不足返回视图
             .authenticationEntryPoint(authenticationEntryPoint);
         // @formatter:on
     }
