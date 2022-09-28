@@ -7,7 +7,10 @@ import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.ZSetOperations;
+import org.springframework.util.ObjectUtils;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -17,13 +20,21 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * Redis工具对象
  *
+ * <p>String 用户的访问次数、微博数、粉丝数</p>
+ * <p>Hash 系统中对象数据的存储。电商网站购物车的设计与实现</p>
+ * <p>List 发布与订阅或者消息队列、慢查询</p>
+ * <p>Set 共同喜爱，共同粉丝</p>
+ * <p>Zset 排行榜</p>
+ *
  * @author zhajianjun
  * @date 2022-06-27 14:20
  */
+@SuppressWarnings("unchecked")
 public class RedisUtil<K, V> {
     public static final long DEFAULT_EXPIRE_TIME = -1;
     public static final long DEFAULT_COUNT = 0;
@@ -37,6 +48,7 @@ public class RedisUtil<K, V> {
 
     /**
      * 设置过期时间
+     *
      * @param key 键
      * @param timeout 过期时间
      * @param timeUnit 时间单位
@@ -70,6 +82,7 @@ public class RedisUtil<K, V> {
 
     /**
      * 设置过期时间
+     *
      * @param key 键
      * @param timeout 过期时间
      * @return true-成功，false-失败
@@ -80,6 +93,7 @@ public class RedisUtil<K, V> {
 
     /**
      * 删除键
+     *
      * @param key 键
      * @return true-成功，false-失败
      */
@@ -96,6 +110,7 @@ public class RedisUtil<K, V> {
 
     /**
      * 批量删除键
+     *
      * @param keys 键 集合
      * @return true-成功，false-失败
      */
@@ -111,6 +126,7 @@ public class RedisUtil<K, V> {
 
     /**
      * 查询键是否存在
+     *
      * @param key 键
      * @return true-成功，false-失败
      */
@@ -128,6 +144,7 @@ public class RedisUtil<K, V> {
 
     /**
      * 自增
+     *
      * @param key 键
      * @param delta 步长
      */
@@ -141,6 +158,7 @@ public class RedisUtil<K, V> {
 
     /**
      * 自减
+     *
      * @param key 键
      * @param delta 步长
      */
@@ -154,6 +172,7 @@ public class RedisUtil<K, V> {
 
     /**
      * 存入普通键值对象
+     *
      * @param key 键
      * @param value 值
      */
@@ -167,6 +186,7 @@ public class RedisUtil<K, V> {
 
     /**
      * 存入普通键值对象
+     *
      * @param key 键
      * @param value 值
      * @param timeout 过期时间
@@ -182,6 +202,7 @@ public class RedisUtil<K, V> {
 
     /**
      * 批量存入普通键值对象
+     *
      * @param map 键值对集合
      */
     public void vMultiSet(Map<? extends K, ? extends V> map) {
@@ -194,6 +215,7 @@ public class RedisUtil<K, V> {
 
     /**
      * 获取普通键值对象
+     *
      * @param key 键
      * @return 对象
      */
@@ -208,6 +230,7 @@ public class RedisUtil<K, V> {
 
     /**
      * 批量获取普通键值对象
+     *
      * @param keys 键集合
      * @return 对象
      */
@@ -220,17 +243,34 @@ public class RedisUtil<K, V> {
         }
     }
 
+    /**
+     * 批量获取普通键值对象
+     *
+     * @param keys 键集合
+     * @return 对象
+     */
+    public List<V> vMultiGet(K... keys) {
+        Set<K> kSet = Arrays.stream(keys).collect(Collectors.toSet());
+        try {
+            return this.opsForValue().multiGet(kSet);
+        } catch (Exception e) {
+            log.error("{}键批量获取普通对象失败,异常：{}", kSet, e.getMessage(), e);
+            return Collections.emptyList();
+        }
+    }
+
     /* ---------------------------------------------------- opsForHash ---------------------------------------------------- */
 
     /**
      * 查询Hash中的某个对象是否存在
+     *
      * @param key 键
-     * @param obj true-成功，false-失败
-     * @return
+     * @param hashKey hash键
+     * @return boolean
      */
-    public boolean hExists(K key, Object obj) {
+    public boolean hExists(K key, Object hashKey) {
         try {
-            return this.opsForHash().hasKey(key, obj);
+            return this.opsForHash().hasKey(key, hashKey);
         } catch (Exception e) {
             log.error("查询{}键的Hash对象是否存在对象失败,异常：{}", key, e.getMessage(), e);
             return false;
@@ -240,8 +280,9 @@ public class RedisUtil<K, V> {
 
     /**
      * Hash中存入数据
+     *
      * @param key 键
-     * @param hKey Hash键
+     * @param hKey hash键
      * @param value 值
      */
     public <HK, HV> void hPut(final K key, final HK hKey, final HV value) {
@@ -254,6 +295,7 @@ public class RedisUtil<K, V> {
 
     /**
      * Hash中批量存入数据
+     *
      * @param key 键
      * @param values Hash键值对
      */
@@ -267,6 +309,7 @@ public class RedisUtil<K, V> {
 
     /**
      * 获取Hash中的数据
+     *
      * @param key 键
      * @param hKey Hash键
      * @return Hash中的对象
@@ -283,6 +326,7 @@ public class RedisUtil<K, V> {
 
     /**
      * 删除Hash中的数据
+     *
      * @param key 键
      * @param hKey Hash键
      * @return <HK>
@@ -298,6 +342,7 @@ public class RedisUtil<K, V> {
 
     /**
      * 获取多个Hash中的数据
+     *
      * @param key 键
      * @param hKeys Hash键集合
      * @return List
@@ -314,6 +359,7 @@ public class RedisUtil<K, V> {
 
     /**
      * 获取Hash数据的个数
+     *
      * @param key 键
      * @return 个数
      */
@@ -328,6 +374,7 @@ public class RedisUtil<K, V> {
 
     /**
      * 获取Hash中所有的数据 键值对形式
+     *
      * @param key 键
      * @return Hash对象集合 Map<HK, HV>
      */
@@ -344,12 +391,12 @@ public class RedisUtil<K, V> {
     /* ---------------------------------------------------- opsForSet ---------------------------------------------------- */
 
     /**
-     * Set中存入数据
+     * Set集合中存入数据
+     *
      * @param key 键
      * @param values 值
      * @return 存入个数
      */
-    @SafeVarargs
     public final long sAdd(final K key, final V... values) {
         Long count;
         try { count = this.opsForSet().add(key, values); } catch (Exception e) {
@@ -361,6 +408,7 @@ public class RedisUtil<K, V> {
 
     /**
      * 获取Set对象的大小
+     *
      * @param key 键
      * @return 存入个数
      */
@@ -375,7 +423,8 @@ public class RedisUtil<K, V> {
     }
 
     /**
-     * 查询Set中的某个对象是否存在
+     * 查询Set集合中的某个对象是否存在
+     *
      * @param key 键
      * @param obj 对象
      * @return true-成功，false-失败
@@ -393,6 +442,7 @@ public class RedisUtil<K, V> {
 
     /**
      * 随机从Set集合查询对象
+     *
      * @param key 键
      * @param size 大小
      * @return List<V>
@@ -406,11 +456,13 @@ public class RedisUtil<K, V> {
         return result;
     }
 
+
     /**
      * 随机(不重复)从Set集合查询对象
-     * @param key 键
+     *
+     * @param key 关键
      * @param size 大小
-     * @return Set<V>
+     * @return {@link Set}<{@link V}>
      */
     public Set<V> distinctRandomMembers(K key, long size) {
         try {
@@ -421,6 +473,13 @@ public class RedisUtil<K, V> {
         }
     }
 
+
+    /**
+     * 获取set的数据
+     *
+     * @param key 关键
+     * @return {@link Set}<{@link V}>
+     */
     public Set<V> members(K key) {
         try { return this.opsForSet().members(key); } catch (Exception e) {
             log.error("获取{}键的Set对象失败,异常：{}", key, e.getMessage(), e);
@@ -430,6 +489,7 @@ public class RedisUtil<K, V> {
 
     /**
      * 删除Set中的数据
+     *
      * @param key 键
      * @param values 值
      * @return 删除个数
@@ -443,36 +503,116 @@ public class RedisUtil<K, V> {
         return count == null ? DEFAULT_COUNT : count;
     }
 
+
     /**
+     * 获取两个Set集合中的交集元素
      *
      * @param key 键
-     * @param otherKey
-     * @param destKey
-     * @return
+     * @param otherKey 其他关键
+     * @return {@link Set}<{@link V}>
      */
-    public long intersectAndStore(K key, K otherKey, K destKey) {
+    public Set<V> intersect(K key, K otherKey) {
         try {
-            Long count = this.opsForSet().intersectAndStore(key, otherKey, destKey);
+            Set<V> intersect = this.opsForSet().intersect(key, otherKey);
+            return intersect == null ? Collections.emptySet() : intersect;
+        } catch (Exception e) {
+            log.error("{}键 intersect 操作失败,异常：{}", key, e.getMessage(), e);
+            return Collections.emptySet();
+        }
+    }
+
+
+    /**
+     * 两个Set集合交集元素存入新的Set集合中
+     *
+     * @param destKey 存储键
+     * @param keys 交集键
+     * @return 存储对象个数
+     */
+    public long intersectAndStore(K destKey, K... keys) {
+        Set<K> set = Arrays.stream(keys).collect(Collectors.toSet());
+        try {
+            Long count = this.opsForSet().intersectAndStore(set, destKey);
             return count == null ? DEFAULT_COUNT : count;
         } catch (Exception e) {
-            log.error("{}键 intersectAndStore 操作失败,异常：{}", key, e.getMessage(), e);
+            log.error("存储键{} 交集键{} intersectAndStore 操作失败,异常：{}", destKey, set, e.getMessage(), e);
+            return DEFAULT_COUNT;
+        }
+    }
+
+
+    /**
+     * 两个Set集合差集元素存入新的Set集合中
+     *
+     * @param keys 键
+     * @return {@link Set}<{@link V}>
+     */
+    public final Set<V> difference(K... keys) {
+        if (ObjectUtils.isEmpty(keys)) {
+            return Collections.emptySet();
+        }
+        Set<K> keySet = Arrays.stream(keys).collect(Collectors.toSet());
+        try {
+            Set<V> difference = this.opsForSet().difference(keySet);
+            return difference == null ? Collections.emptySet() : difference;
+        } catch (Exception e) {
+            log.error("{}键 difference 操作失败,异常：{}", keySet, e.getMessage(), e);
+            return Collections.emptySet();
+        }
+    }
+
+    /**
+     * 两个Set集合差集元素存入新的Set集合中
+     *
+     * @param destKey 存储键
+     * @param keys 差集键
+     * @return 存储对象个数
+     */
+    public long differenceAndStore(K destKey, K... keys) {
+        Set<K> set = Arrays.stream(keys).collect(Collectors.toSet());
+        try {
+            Long count = this.opsForSet().differenceAndStore(set, destKey);
+            return count == null ? DEFAULT_COUNT : count;
+        } catch (Exception e) {
+            log.error("存储键{} 差集键{} differenceAndStore 操作失败,异常：{}", destKey, set, e.getMessage(), e);
             return DEFAULT_COUNT;
         }
     }
 
     /**
+     * 两个Set集合交集元素存入新的Set集合中
      *
-     * @param key 键
-     * @param otherKey
-     * @param destKey
-     * @return
+     * @param keys 键
+     * @return {@link Set}<{@link V}>
      */
-    public long differenceAndStore(K key, K otherKey, K destKey) {
+    public final Set<V> union(K... keys) {
+        if (ObjectUtils.isEmpty(keys)) {
+            return Collections.emptySet();
+        }
+        Set<K> keySet = Arrays.stream(keys).collect(Collectors.toSet());
         try {
-            Long count = this.opsForSet().differenceAndStore(key, otherKey, destKey);
+            Set<V> difference = this.opsForSet().union(keySet);
+            return difference == null ? Collections.emptySet() : difference;
+        } catch (Exception e) {
+            log.error("{}键 union 操作失败,异常：{}", keySet, e.getMessage(), e);
+            return Collections.emptySet();
+        }
+    }
+
+    /**
+     * 两个Set集合交集元素存入新的Set集合中
+     *
+     * @param destKey 存储键
+     * @param keys 交集键
+     * @return 存储对象个数
+     */
+    public long unionAndStore(K destKey, K... keys) {
+        Set<K> set = Arrays.stream(keys).collect(Collectors.toSet());
+        try {
+            Long count = this.opsForSet().unionAndStore(set, destKey);
             return count == null ? DEFAULT_COUNT : count;
         } catch (Exception e) {
-            log.error("{}键 differenceAndStore 操作失败,异常：{}", key, e.getMessage(), e);
+            log.error("存储键{} 交集键{} unionAndStore 操作失败,异常：{}", destKey, set, e.getMessage(), e);
             return DEFAULT_COUNT;
         }
     }
@@ -480,39 +620,126 @@ public class RedisUtil<K, V> {
     /* ---------------------------------------------------- opsForList ---------------------------------------------------- */
 
     /**
-     * List中存入数据
+     * 从左边往List中存入数据
+     *
      * @param key 键
      * @param value 值
-     * @return 存入个数
+     * @return 存储对象个数
      */
-    public long lPush(final K key, final V value) {
+    public long llPush(final K key, final V value) {
         try {
-            Long count = this.opsForList().rightPush(key, value);
+            Long count = this.opsForList().leftPush(key, value);
             return count == null ? DEFAULT_COUNT : count;
         } catch (Exception e) {
-            log.error("{}键的List对象存入数据失败,异常：{}", key, e.getMessage(), e);
+            log.error("{}键的List对象从左批量存入数据失败,异常：{}", key, e.getMessage(), e);
             return DEFAULT_COUNT;
         }
     }
 
     /**
-     * 往List中存入多个数据
+     * 从左边往List中存入多个数据
+     *
      * @param key 键
      * @param values 多个数据
-     * @return 存入的个数
+     * @return 存储对象个数
      */
-    public long lPushAll(final K key, final Collection<V> values) {
+    public long llPush(final K key, final V... values) {
+        try {
+            Long count = this.opsForList().leftPushAll(key, values);
+            return count == null ? DEFAULT_COUNT : count;
+        } catch (Exception e) {
+            log.error("{}键的List对象从左批量存入数据失败,异常：{}", key, e.getMessage(), e);
+            return DEFAULT_COUNT;
+        }
+    }
+
+    /**
+     * 从左边往List中存入多个数据
+     *
+     * @param key 键
+     * @param values 多个数据
+     * @return 存储对象个数
+     */
+    public long llPush(final K key, final Collection<V> values) {
+        try {
+            Long count = this.opsForList().leftPushAll(key, values);
+            return count == null ? DEFAULT_COUNT : count;
+        } catch (Exception e) {
+            log.error("{}键的List对象从左批量存入数据失败,异常：{}", key, e.getMessage(), e);
+            return DEFAULT_COUNT;
+        }
+    }
+
+    /**
+     * 从右边往List中存入数据
+     *
+     * @param key 键
+     * @param value 值
+     * @return 存储对象个数
+     */
+    public long lrPush(final K key, final V value) {
+        try {
+            Long count = this.opsForList().rightPush(key, value);
+            return count == null ? DEFAULT_COUNT : count;
+        } catch (Exception e) {
+            log.error("{}键的List对象从右批量存入数据失败,异常：{}", key, e.getMessage(), e);
+            return DEFAULT_COUNT;
+        }
+    }
+
+    /**
+     * 从右边往List中存入多个数据
+     *
+     * @param key 键
+     * @param values 多个数据
+     * @return 存储对象个数
+     */
+    public long lrPushAll(final K key, final V... values) {
         try {
             Long count = this.opsForList().rightPushAll(key, values);
             return count == null ? DEFAULT_COUNT : count;
         } catch (Exception e) {
-            log.error("{}键的List对象批量存入数据失败,异常：{}", key, e.getMessage(), e);
+            log.error("{}键的List对象从右批量存入数据失败,异常：{}", key, e.getMessage(), e);
+            return DEFAULT_COUNT;
+        }
+    }
+
+    /**
+     * 从右边往List中存入多个数据
+     *
+     * @param key 键
+     * @param values 多个数据
+     * @return 存储对象个数
+     */
+    public long lrPushAll(final K key, final Collection<V> values) {
+        try {
+            Long count = this.opsForList().rightPushAll(key, values);
+            return count == null ? DEFAULT_COUNT : count;
+        } catch (Exception e) {
+            log.error("{}键的List对象从右批量存入数据失败,异常：{}", key, e.getMessage(), e);
+            return DEFAULT_COUNT;
+        }
+    }
+
+    /**
+     * 获取List集合大小
+     *
+     * @param key 键
+     * @return List集合大小
+     */
+    public long lSize(final K key) {
+        try {
+            Long count = this.opsForList().size(key);
+            return count == null ? DEFAULT_COUNT : count;
+        } catch (Exception e) {
+            log.error("获取{}键List集合大小失败,异常：{}", key, e.getMessage(), e);
             return DEFAULT_COUNT;
         }
     }
 
     /**
      * 从List中获取begin到end之间的元素
+     *
      * @param key 键
      * @param start 开始位置
      * @param end 结束位置（start=DEFAULT_COUNT，end=INT表示获取全部元素）
@@ -543,6 +770,10 @@ public class RedisUtil<K, V> {
 
     private SetOperations<K, V> opsForSet() {
         return redisTemplate.opsForSet();
+    }
+
+    private ZSetOperations<K, V> opsForZSet() {
+        return redisTemplate.opsForZSet();
     }
 
 }

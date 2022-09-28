@@ -23,7 +23,7 @@ import javax.annotation.PostConstruct;
 @Configuration
 @PropertySource(value = "classpath:ticho-rabbitmq.properties")
 @Slf4j
-public class DefaultRabbitmqConfig implements RabbitTemplate.ConfirmCallback, RabbitTemplate.ReturnCallback {
+public class TichoRabbitmqConfig implements RabbitTemplate.ConfirmCallback, RabbitTemplate.ReturnCallback {
 
 
     // @formatter:off

@@ -25,7 +25,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * jwt签证信息
+ * jwt转换器
  *
  * @author zhajianjun
  * @date 2022-09-21 15:55
@@ -33,17 +33,26 @@ import java.util.stream.Collectors;
 @Slf4j
 @Getter
 public class JwtSigner implements InitializingBean {
-
-    private String signingKey;
-
-    private final String verifierKey;
+    private String verifierKey;
 
     private final Signer signer;
 
-    private final SignatureVerifier verifier;
+    private String signingKey;
+
+    private SignatureVerifier verifier;
 
     @Override
     public void afterPropertiesSet() {
+        // @formatter:off
+        if (verifier != null) {
+            return;
+        }
+        SignatureVerifier verifier = new MacSigner(verifierKey);
+        try {
+            verifier = new RsaVerifier(verifierKey);
+        } catch (Exception e) {
+            log.warn("Unable to create an RSA verifier from verifierKey (ignoreable if using MAC)");
+        }
         if (signer instanceof RsaSigner) {
             byte[] test = "test".getBytes();
             try {
@@ -55,6 +64,8 @@ public class JwtSigner implements InitializingBean {
         } else if (verifier instanceof MacSigner) {
             Assert.isTrue(Objects.equals(this.signingKey, this.verifierKey), BizErrCode.FAIL, "For MAC signing you do not need to specify the verifier key separately, and if you do it must match the signing key");
         }
+        this.verifier = verifier;
+        // @formatter:on
     }
 
     /**
@@ -80,12 +91,15 @@ public class JwtSigner implements InitializingBean {
      * 通过公钥加密
      */
     public JwtSigner(String key) {
-        Assert.isNotNull(key, BizErrCode.FAIL, "key is null");
         key = key.trim();
-        signingKey = key;
-        verifierKey = key;
-        verifier = new MacSigner(key);
-        signer = (Signer) verifier;
+        this.signingKey = key;
+        if (isPublic(key)) {
+            signer = new RsaSigner(key);
+            log.info("Configured with RSA signing key");
+        } else {
+            this.verifierKey = key;
+            signer = new MacSigner(key);
+        }
     }
 
     public boolean isPublic(String key) {

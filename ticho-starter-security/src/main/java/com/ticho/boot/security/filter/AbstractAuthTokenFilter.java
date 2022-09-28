@@ -56,10 +56,7 @@ public abstract class AbstractAuthTokenFilter<T extends TichoSecurityUser> exten
      * @param request request
      * @param response response
      */
-    protected void support(
-        @NonNull HttpServletRequest request,
-        @NonNull HttpServletResponse response
-    ) {
+    protected void support(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response) {
     }
 
     /**
@@ -68,10 +65,7 @@ public abstract class AbstractAuthTokenFilter<T extends TichoSecurityUser> exten
      * @param request request
      * @param response response
      */
-    protected void complete(
-            @NonNull HttpServletRequest request,
-            @NonNull HttpServletResponse response
-    ) {
+    protected void complete(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response) {
     }
 
     protected abstract T convert(Map<String, Object> decodeAndVerify);
@@ -116,7 +110,6 @@ public abstract class AbstractAuthTokenFilter<T extends TichoSecurityUser> exten
             Result<String> result = Result.of(HttpErrCode.TOKEN_INVALID, message, request.getRequestURI());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-            response.setStatus(result.getCode());
             response.getWriter().write(JsonUtil.toJsonString(result));
         } finally{
             complete(request, response);
