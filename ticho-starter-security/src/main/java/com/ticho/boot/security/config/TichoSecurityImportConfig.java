@@ -22,6 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
  * springsecurity 相关bean配置
@@ -47,7 +48,7 @@ public class TichoSecurityImportConfig {
 
     @Bean(OAuth2Const.OAUTH2_TOKEN_FILTER_BEAN_NAME)
     @ConditionalOnMissingBean(name = OAuth2Const.OAUTH2_TOKEN_FILTER_BEAN_NAME)
-    public TichoTokenAuthenticationTokenFilter tichoToenAuthenticationTokenFilter(){
+    public OncePerRequestFilter tichoToenAuthenticationTokenFilter(){
         return new TichoTokenAuthenticationTokenFilter();
     }
 

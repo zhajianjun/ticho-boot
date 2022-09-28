@@ -1,7 +1,8 @@
 package com.ticho.boot.security.config;
 
 
-import com.ticho.boot.security.filter.AbstractAuthTokenFilter;
+import com.ticho.boot.security.constant.OAuth2Const;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.AccessDecisionManager;
@@ -15,6 +16,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.annotation.Resource;
 
@@ -31,7 +33,8 @@ import javax.annotation.Resource;
 public class TichoWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Resource
-    private AbstractAuthTokenFilter<?> abstractAuthTokenFilter;
+    @Qualifier(OAuth2Const.OAUTH2_TOKEN_FILTER_BEAN_NAME)
+    private OncePerRequestFilter oncePerRequestFilter;
 
     @Resource
     private AuthenticationEntryPoint authenticationEntryPoint;
@@ -64,7 +67,7 @@ public class TichoWebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .headers()
             .cacheControl();
-        http.addFilterBefore(abstractAuthTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(oncePerRequestFilter, UsernamePasswordAuthenticationFilter.class);
         http.exceptionHandling().accessDeniedHandler(accessDeniedHandler)// 无Authorization相关header参数
             .authenticationEntryPoint(authenticationEntryPoint);
         // @formatter:on
