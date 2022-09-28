@@ -62,8 +62,7 @@ public class TichoWebSecurityConfig extends WebSecurityConfigurerAdapter {
                     return o;
                 }
             })
-            .antMatchers("/druid/**")
-            .anonymous().anyRequest().authenticated()
+            .anyRequest().authenticated()
             .and()
             .headers()
             .cacheControl();
