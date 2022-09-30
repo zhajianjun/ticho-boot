@@ -72,7 +72,7 @@ public class TichoLoginUserHandle extends AbstractLoginUserHandle {
     }
 
     @Override
-    public String getPublicKey() {
+    public String publicKey() {
         return jwtSigner.getVerifierKey();
         // @formatter:on
     }

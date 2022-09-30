@@ -41,7 +41,7 @@ public abstract class AbstractLoginUserHandle implements LoginUserHandle {
     private Map<String, JwtExtInfo> jwtExtInfoMap;
 
 
-    public String getPublicKey() {
+    public String publicKey() {
         return jwtSigner.getVerifierKey();
         // @formatter:on
     }

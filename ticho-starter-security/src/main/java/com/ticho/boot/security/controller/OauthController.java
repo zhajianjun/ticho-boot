@@ -54,7 +54,7 @@ public class OauthController {
     @ApiOperationSupport(order = 30)
     @GetMapping("publicKey")
     public String getPublicKey() {
-        return loginUserHandle.getPublicKey();
+        return loginUserHandle.publicKey();
     }
 
 

@@ -34,7 +34,7 @@ public interface LoginUserHandle {
      *
      * @return 获取公钥
      */
-    String getPublicKey();
+    String publicKey();
 
 
 }
