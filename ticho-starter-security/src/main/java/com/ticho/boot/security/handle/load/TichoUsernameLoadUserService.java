@@ -33,6 +33,9 @@ public class TichoUsernameLoadUserService implements LoadUserService, Initializi
     @Resource
     private TichoSecurityProperty tichoSecurityProperty;
 
+    @Resource
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public TichoSecurityUser load(String account) {
         // @formatter:off
@@ -61,7 +64,6 @@ public class TichoUsernameLoadUserService implements LoadUserService, Initializi
         TichoSecurityUser userInfo = new TichoSecurityUser();
         userInfo.setUsername(SecurityConst.DEFAULT_USERNAME);
         String password = IdUtil.fastUUID();
-        PasswordEncoder passwordEncoder = SpringUtil.getBean(PasswordEncoder.class);
         userInfo.setPassword(passwordEncoder.encode(password));
         userInfo.setRoleIds(Collections.singletonList(SecurityConst.DEFAULT_ROLE));
         users.add(userInfo);

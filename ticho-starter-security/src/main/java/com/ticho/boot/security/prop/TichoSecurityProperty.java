@@ -3,11 +3,14 @@ package com.ticho.boot.security.prop;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.spring.SpringUtil;
 import com.ticho.boot.view.core.TichoSecurityUser;
+import com.ticho.boot.web.util.SpringContext;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -52,7 +55,7 @@ public class TichoSecurityProperty {
         if (CollUtil.isEmpty(users)) {
             return;
         }
-        PasswordEncoder passwordEncoder = SpringUtil.getBean(PasswordEncoder.class);
+        PasswordEncoder passwordEncoder = SpringContext.getBean(PasswordEncoder.class);
         for (TichoSecurityUser userInfo : users) {
             String password = userInfo.getPassword();
             if (StrUtil.isBlank(password)) {

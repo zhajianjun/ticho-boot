@@ -7,6 +7,13 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.HandlerExecutionChain;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Spring 工具
@@ -46,6 +53,32 @@ public class SpringContext implements ApplicationContextAware {
 
     public static <T> T getBean(String name, Class<T> clazz) {
         return applicationContext.getBean(name, clazz);
+    }
+
+
+    public static HandlerMethod getHandlerMethod(HttpServletRequest request) throws Exception {
+        RequestMappingHandlerMapping mapping = getBean(RequestMappingHandlerMapping.class);
+        HandlerExecutionChain executionChain = mapping.getHandler(request);
+        if (executionChain == null) {
+            return null;
+        }
+        // 不是handler，false
+        Object handler = executionChain.getHandler();
+        if (!(handler instanceof HandlerMethod)) {
+            return null;
+        }
+        return (HandlerMethod) handler;
+    }
+
+    public static HandlerMethod getHandlerMethod() throws Exception {
+        // @formatter:off
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (requestAttributes == null) {
+            return null;
+        }
+        HttpServletRequest request = requestAttributes.getRequest();
+        return getHandlerMethod(request);
+        // @formatter:on
     }
 
 }

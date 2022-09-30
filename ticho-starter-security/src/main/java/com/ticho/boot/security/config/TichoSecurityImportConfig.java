@@ -5,16 +5,20 @@ import com.ticho.boot.security.auth.PermissionService;
 import com.ticho.boot.security.auth.PermissionServiceImpl;
 import com.ticho.boot.security.constant.OAuth2Const;
 import com.ticho.boot.security.constant.SecurityConst;
+import com.ticho.boot.security.filter.SecurityCompleteFilter;
 import com.ticho.boot.security.filter.TichoAccessDecisionManager;
 import com.ticho.boot.security.filter.TichoTokenAuthenticationTokenFilter;
-import com.ticho.boot.security.handle.jwt.JwtSigner;
 import com.ticho.boot.security.handle.jwt.JwtDecode;
 import com.ticho.boot.security.handle.jwt.JwtExtInfo;
+import com.ticho.boot.security.handle.jwt.JwtSigner;
 import com.ticho.boot.security.handle.jwt.TichoJwtExtInfo;
 import com.ticho.boot.security.prop.TichoSecurityProperty;
 import com.ticho.boot.security.view.TichoAccessDeniedHandler;
 import com.ticho.boot.security.view.TichoAuthenticationEntryPoint;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -94,6 +98,22 @@ public class TichoSecurityImportConfig {
     @ConditionalOnMissingBean(name = SecurityConst.PM)
     public PermissionService permissionService(){
         return new PermissionServiceImpl();
+    }
+
+    @Bean
+    public SecurityCompleteFilter securityCompleteFilter(){
+        return new SecurityCompleteFilter();
+    }
+
+    /**
+     * 处理安全控制台打印
+     *
+     * @see UserDetailsServiceAutoConfiguration 87行 会打印存储在内存的权限用户密码
+     */
+    @Autowired
+    public void handleConsoleSecurityPrint(SecurityProperties properties){
+        SecurityProperties.User user = properties.getUser();
+        user.setPassword("user");
     }
 
 }

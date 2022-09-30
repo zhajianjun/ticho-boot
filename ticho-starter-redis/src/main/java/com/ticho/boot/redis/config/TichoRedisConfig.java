@@ -1,8 +1,12 @@
 package com.ticho.boot.redis.config;
 
 import com.ticho.boot.redis.util.RedisUtil;
+import org.redisson.Redisson;
+import org.redisson.config.Config;
+import org.redisson.config.SingleServerConfig;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -32,6 +36,18 @@ public class TichoRedisConfig {
     @ConditionalOnBean(StringRedisTemplate.class)
     public RedisUtil<String, String> redisUtil(StringRedisTemplate stringRedisTemplate) {
         return new RedisUtil<>(stringRedisTemplate);
+    }
+
+    @Bean(destroyMethod = "shutdown")
+    public Redisson redisson(RedisProperties redisProperties) {
+        Config config = new Config();
+        SingleServerConfig singleServerConfig = config.useSingleServer();
+        String host = redisProperties.getHost();
+        int port = redisProperties.getPort();
+        String password = redisProperties.getPassword();
+        singleServerConfig.setAddress("redis://" + host + ":" + port);
+        singleServerConfig.setPassword(password);
+        return (Redisson) Redisson.create(config);
     }
 
 }

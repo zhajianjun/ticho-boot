@@ -52,6 +52,12 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
         </dependency>
 
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>transmittable-thread-local</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

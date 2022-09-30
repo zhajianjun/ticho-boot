@@ -1,8 +1,10 @@
 package com.ticho.boot.security.auth;
 
+import com.alibaba.ttl.TransmittableThreadLocal;
 import com.ticho.boot.security.annotation.IgnoreAuth;
 import com.ticho.boot.security.constant.OAuth2Const;
 import com.ticho.boot.security.prop.TichoSecurityProperty;
+import com.ticho.boot.web.util.SpringContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.method.HandlerMethod;
@@ -14,26 +16,31 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- *
+ * 接口匹配过滤处理
  *
  * @author zhajianjun
  * @date 2022-09-26 15:22
  */
 public class AntPatternsAuthHandle {
+    private static final ThreadLocal<Boolean> threadLocal = new TransmittableThreadLocal<>();
 
     @Autowired
     private TichoSecurityProperty tichoSecurityProperty;
 
-    @Autowired
-    private RequestMappingHandlerMapping requestMappingHandlerMapping;
-
     public boolean ignoreAuth(HttpServletRequest request) throws Exception {
         // @formatter:off
-        if (checkHandleMethod(request)) {
+        Boolean get = threadLocal.get();
+        if (Objects.nonNull(get)) {
+            return get;
+        }
+        if (checkHandleMethodIsIgnoreAuth(request)) {
+            threadLocal.set(true);
             return true;
         }
         List<AntPathRequestMatcher> antPathRequestMatchers = tichoSecurityProperty.getAntPathRequestMatchers();
-        return antPathRequestMatchers.stream().anyMatch(x -> x.matches(request));
+        boolean match = antPathRequestMatchers.stream().anyMatch(x -> x.matches(request));
+        threadLocal.set(match);
+        return match;
         // @formatter:on
     }
 
@@ -44,19 +51,12 @@ public class AntPatternsAuthHandle {
      * @return boolean
      * @throws Exception e
      */
-    private boolean checkHandleMethod(HttpServletRequest request) throws Exception {
-        HandlerExecutionChain executionChain = requestMappingHandlerMapping.getHandler(request);
-        // 不存在executionChain，false
-        if (executionChain == null) {
-            return false;
-        }
-        // 不是handler，false
-        Object handler = executionChain.getHandler();
-        if (!(handler instanceof HandlerMethod)) {
+    private boolean checkHandleMethodIsIgnoreAuth(HttpServletRequest request) throws Exception {
+        HandlerMethod handlerMethod = SpringContext.getHandlerMethod(request);
+        if (handlerMethod == null) {
             return false;
         }
         // 没有IgnoreAuth注解，false
-        HandlerMethod handlerMethod = (HandlerMethod) handler;
         IgnoreAuth methodAnnotation = handlerMethod.getMethodAnnotation(IgnoreAuth.class);
         if (methodAnnotation == null) {
             return false;
@@ -68,6 +68,10 @@ public class AntPatternsAuthHandle {
         }
         // inner=true,内部服务访问，则header中存在 inner = true,则权限放开
         return Objects.equals(request.getHeader(OAuth2Const.INNER), OAuth2Const.INNER_VALUE);
+    }
+
+    public void clear() {
+        threadLocal.remove();
     }
 
 }
