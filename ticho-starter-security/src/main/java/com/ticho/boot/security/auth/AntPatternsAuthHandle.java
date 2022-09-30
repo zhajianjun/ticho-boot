@@ -1,6 +1,5 @@
 package com.ticho.boot.security.auth;
 
-import com.alibaba.ttl.TransmittableThreadLocal;
 import com.ticho.boot.security.annotation.IgnoreAuth;
 import com.ticho.boot.security.constant.OAuth2Const;
 import com.ticho.boot.security.prop.TichoSecurityProperty;
@@ -22,25 +21,17 @@ import java.util.Objects;
  * @date 2022-09-26 15:22
  */
 public class AntPatternsAuthHandle {
-    private static final ThreadLocal<Boolean> threadLocal = new TransmittableThreadLocal<>();
 
     @Autowired
     private TichoSecurityProperty tichoSecurityProperty;
 
     public boolean ignoreAuth(HttpServletRequest request) throws Exception {
         // @formatter:off
-        Boolean get = threadLocal.get();
-        if (Objects.nonNull(get)) {
-            return get;
-        }
         if (checkHandleMethodIsIgnoreAuth(request)) {
-            threadLocal.set(true);
             return true;
         }
         List<AntPathRequestMatcher> antPathRequestMatchers = tichoSecurityProperty.getAntPathRequestMatchers();
-        boolean match = antPathRequestMatchers.stream().anyMatch(x -> x.matches(request));
-        threadLocal.set(match);
-        return match;
+        return antPathRequestMatchers.stream().anyMatch(x -> x.matches(request));
         // @formatter:on
     }
 
@@ -68,10 +59,6 @@ public class AntPatternsAuthHandle {
         }
         // inner=true,内部服务访问，则header中存在 inner = true,则权限放开
         return Objects.equals(request.getHeader(OAuth2Const.INNER), OAuth2Const.INNER_VALUE);
-    }
-
-    public void clear() {
-        threadLocal.remove();
     }
 
 }

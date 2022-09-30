@@ -5,7 +5,6 @@ import com.ticho.boot.security.auth.PermissionService;
 import com.ticho.boot.security.auth.PermissionServiceImpl;
 import com.ticho.boot.security.constant.OAuth2Const;
 import com.ticho.boot.security.constant.SecurityConst;
-import com.ticho.boot.security.filter.SecurityCompleteFilter;
 import com.ticho.boot.security.filter.TichoAccessDecisionManager;
 import com.ticho.boot.security.filter.TichoTokenAuthenticationTokenFilter;
 import com.ticho.boot.security.handle.jwt.JwtDecode;
@@ -98,11 +97,6 @@ public class TichoSecurityImportConfig {
     @ConditionalOnMissingBean(name = SecurityConst.PM)
     public PermissionService permissionService(){
         return new PermissionServiceImpl();
-    }
-
-    @Bean
-    public SecurityCompleteFilter securityCompleteFilter(){
-        return new SecurityCompleteFilter();
     }
 
     /**
