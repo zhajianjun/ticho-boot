@@ -2,6 +2,7 @@ package com.ticho.boot.web.handle;
 
 import com.ticho.boot.view.core.HttpErrCode;
 import com.ticho.boot.view.core.Result;
+import com.ticho.boot.view.enums.IErrCode;
 import com.ticho.boot.view.exception.BizException;
 import com.ticho.boot.view.exception.SysException;
 import com.ticho.boot.web.annotation.View;
@@ -35,6 +36,9 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -47,70 +51,55 @@ import javax.servlet.http.HttpServletResponse;
 @RestControllerAdvice
 @Order(Ordered.LOWEST_PRECEDENCE - 10)
 public class TichoBaseResponseHandle implements ResponseBodyAdvice<Object> {
+    private static Map<Class<? extends Throwable>, IErrCode> errCodeMap = null;
+
+
+    static {
+        Map<Class<? extends Throwable>, IErrCode> errCodeMap = new HashMap<>();
+        errCodeMap.put(BindException.class, HttpErrCode.BAD_REQUEST);
+        errCodeMap.put(TypeMismatchException.class, HttpErrCode.BAD_REQUEST);
+        errCodeMap.put(NoHandlerFoundException.class, HttpErrCode.BAD_REQUEST);
+        errCodeMap.put(ServletRequestBindingException.class, HttpErrCode.BAD_REQUEST);
+        errCodeMap.put(HttpMessageNotReadableException.class, HttpErrCode.BAD_REQUEST);
+        errCodeMap.put(MethodArgumentNotValidException.class, HttpErrCode.BAD_REQUEST);
+        errCodeMap.put(MissingServletRequestPartException.class, HttpErrCode.BAD_REQUEST);
+        errCodeMap.put(MissingServletRequestParameterException.class, HttpErrCode.BAD_REQUEST);
+
+        errCodeMap.put(MissingPathVariableException.class, HttpErrCode.INTERNAL_SERVER_ERROR);
+        errCodeMap.put(ConversionNotSupportedException.class, HttpErrCode.INTERNAL_SERVER_ERROR);
+        errCodeMap.put(HttpMessageNotWritableException.class, HttpErrCode.INTERNAL_SERVER_ERROR);
+
+        errCodeMap.put(HttpRequestMethodNotSupportedException.class, HttpErrCode.METHOD_NOT_ALLOWED);
+        errCodeMap.put(HttpMediaTypeNotSupportedException.class, HttpErrCode.UNSUPPORTED_MEDIA_TYPE);
+        errCodeMap.put(HttpMediaTypeNotAcceptableException.class, HttpErrCode.NOT_ACCEPTABLE);
+
+        errCodeMap.put(AsyncRequestTimeoutException.class, HttpErrCode.SERVICE_UNAVAILABLE);
+        TichoBaseResponseHandle.errCodeMap = Collections.unmodifiableMap(errCodeMap);
+    }
 
     /**
      * 全局错误用于捕获不可预知的异常
      */
     @ExceptionHandler(Exception.class)
     public Result<String> exception(Exception ex, HttpServletResponse res) {
+        if (ex instanceof BizException) {
+            // 业务异常
+            BizException bizException = (BizException) ex;
+            res.setStatus(HttpStatus.OK.value());
+            log.warn("catch error\t{}", ex.getMessage());
+            return Result.of(bizException.getCode(), bizException.getMsg());
+        }
+
+        IErrCode iErrCode = errCodeMap.get(ex.getClass());
         Result<String> result;
-        if (ex instanceof HttpRequestMethodNotSupportedException) {
-            result = Result.of(HttpErrCode.METHOD_NOT_ALLOWED);
-            res.setStatus(result.getCode());
-        } else if (ex instanceof HttpMediaTypeNotSupportedException) {
-            result = Result.of(HttpErrCode.UNSUPPORTED_MEDIA_TYPE);
-            res.setStatus(result.getCode());
-        } else if (ex instanceof HttpMediaTypeNotAcceptableException) {
-            result = Result.of(HttpErrCode.NOT_ACCEPTABLE);
-            res.setStatus(result.getCode());
-        } else if (ex instanceof MissingPathVariableException) {
-            result = Result.of(HttpErrCode.INTERNAL_SERVER_ERROR);
-            res.setStatus(result.getCode());
-        } else if (ex instanceof MissingServletRequestParameterException) {
-            result = Result.of(HttpErrCode.BAD_REQUEST);
-            res.setStatus(result.getCode());
-        } else if (ex instanceof ServletRequestBindingException) {
-            result = Result.of(HttpErrCode.BAD_REQUEST);
-            res.setStatus(result.getCode());
-        } else if (ex instanceof ConversionNotSupportedException) {
-            result = Result.of(HttpErrCode.INTERNAL_SERVER_ERROR);
-            res.setStatus(result.getCode());
-        } else if (ex instanceof TypeMismatchException) {
-            result = Result.of(HttpErrCode.BAD_REQUEST);
-            res.setStatus(result.getCode());
-        } else if (ex instanceof HttpMessageNotReadableException) {
-            result = Result.of(HttpErrCode.BAD_REQUEST);
-            res.setStatus(result.getCode());
-        } else if (ex instanceof HttpMessageNotWritableException) {
-            result = Result.of(HttpErrCode.INTERNAL_SERVER_ERROR);
-            res.setStatus(result.getCode());
-        } else if (ex instanceof MethodArgumentNotValidException) {
-            result = Result.of(HttpErrCode.BAD_REQUEST);
-            res.setStatus(result.getCode());
-        } else if (ex instanceof MissingServletRequestPartException) {
-            result = Result.of(HttpErrCode.BAD_REQUEST);
-            res.setStatus(result.getCode());
-        } else if (ex instanceof BindException) {
-            result = Result.of(HttpErrCode.BAD_REQUEST);
-            res.setStatus(result.getCode());
-        } else if (ex instanceof NoHandlerFoundException) {
-            result = Result.of(HttpErrCode.NOT_FOUND);
-            res.setStatus(result.getCode());
-        } else if (ex instanceof AsyncRequestTimeoutException) {
-            result = Result.of(HttpErrCode.SERVICE_UNAVAILABLE);
+        if (iErrCode != null) {
+            result = Result.of(iErrCode);
             res.setStatus(result.getCode());
         } else if (ex instanceof SysException) {
             // 系统异常
             SysException systemException = (SysException) ex;
             result = Result.of(systemException.getCode(), systemException.getMsg());
             res.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        } else if (ex instanceof BizException) {
-            // 业务异常
-            BizException bizException = (BizException) ex;
-            result = Result.of(bizException.getCode(), bizException.getMsg());
-            res.setStatus(HttpStatus.OK.value());
-            log.warn("catch error\t{}", ex.getMessage());
-            return result;
         } else {
             // 未知异常
             result = Result.of(HttpErrCode.FAIL);

@@ -40,7 +40,7 @@ public class TichoLoginUserHandle extends AbstractLoginUserHandle {
     @Autowired
     private JwtSigner jwtSigner;
 
-    public Oauth2AccessToken token(LoginRequest loginRequest) {
+    public Oauth2AccessToken token (LoginRequest loginRequest) {
         String account = loginRequest.getUsername();
         String credentials = loginRequest.getPassword();
         String type = loginRequest.getType();
