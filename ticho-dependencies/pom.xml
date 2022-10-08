@@ -213,7 +213,7 @@
             <dependency>
                 <groupId>com.github.jsqlparser</groupId>
                 <artifactId>jsqlparser</artifactId>
-                <version>1.4</version>
+                <version>3.1</version>
             </dependency>
 
             <!-- 对象拷贝工具 -->
