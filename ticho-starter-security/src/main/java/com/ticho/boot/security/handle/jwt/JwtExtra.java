@@ -9,8 +9,13 @@ import java.util.Map;
  * @author zhajianjun
  * @date 2022-09-23 10:45
  */
-public interface JwtExtInfo {
+public interface JwtExtra {
 
-    Map<String, Object> getExt();
+    /**
+     * 获取扩展信息Map
+     *
+     * @return {@link Map}<{@link String}, {@link Object}>
+     */
+    Map<String, Object> getExtra();
 
 }

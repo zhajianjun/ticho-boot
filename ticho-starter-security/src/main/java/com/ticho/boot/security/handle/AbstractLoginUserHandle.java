@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.ticho.boot.security.dto.Oauth2AccessToken;
 import com.ticho.boot.security.handle.jwt.JwtSigner;
 import com.ticho.boot.security.handle.jwt.JwtEncode;
-import com.ticho.boot.security.handle.jwt.JwtExtInfo;
+import com.ticho.boot.security.handle.jwt.JwtExtra;
 import com.ticho.boot.view.core.TichoSecurityUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,7 +38,7 @@ public abstract class AbstractLoginUserHandle implements LoginUserHandle {
     private JwtSigner jwtSigner;
 
     @Autowired
-    private Map<String, JwtExtInfo> jwtExtInfoMap;
+    private Map<String, JwtExtra> jwtExtInfoMap;
 
 
     public String publicKey() {
@@ -78,8 +78,8 @@ public abstract class AbstractLoginUserHandle implements LoginUserHandle {
      */
     private Map<String, Object> getAllJwtExtInfo() {
         Map<String, Object> map = new HashMap<>(8);
-        for (JwtExtInfo value : jwtExtInfoMap.values()) {
-            Map<String, Object> ext = value.getExt();
+        for (JwtExtra value : jwtExtInfoMap.values()) {
+            Map<String, Object> ext = value.getExtra();
             if (CollUtil.isEmpty(ext)) {
                 continue;
             }

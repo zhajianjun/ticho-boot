@@ -9,10 +9,10 @@ import java.util.Map;
  * @author zhajianjun
  * @date 2022-09-23 10:47
  */
-public class TichoJwtExtInfo implements JwtExtInfo {
+public class TichoJwtExtra implements JwtExtra {
 
     @Override
-    public Map<String, Object> getExt() {
+    public Map<String, Object> getExtra() {
         Map<String, Object> extMap = new HashMap<>();
         extMap.put("author", "zhajianjun");
         return extMap;
