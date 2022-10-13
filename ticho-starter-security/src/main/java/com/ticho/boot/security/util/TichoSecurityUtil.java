@@ -8,7 +8,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -31,7 +30,7 @@ public class TichoSecurityUtil {
             return null;
         }
         // 匿名用户返回null
-        if (principal instanceof String && Objects.equals(principal.toString(), "anonymousUser")) {
+        if (principal instanceof String) {
             return null;
         }
         return (T) principal;

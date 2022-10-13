@@ -44,10 +44,10 @@ public class JwtDecode {
         try {
             claims = JwtHelper.decodeAndVerify(token, verifier).getClaims();
         } catch (Exception e) {
-            log.error("token验证失败, {}", e.getMessage(), e);
-            throw new BizException(BizErrCode.FAIL, "token验证失败");
+            log.error("TOKEN 失效, {}", e.getMessage(), e);
+            throw new BizException(BizErrCode.FAIL, "TOKEN 失效");
         }
-        Assert.isNotNull(claims, BizErrCode.FAIL, "token验证失败");
+        Assert.isNotNull(claims, BizErrCode.FAIL, "TOKEN 失效");
         Map<String, Object> map = JsonUtil.toMap(claims, String.class, Object.class);
         boolean isExpired = false;
         if (CollUtil.isEmpty(map) || !map.containsKey(SecurityConst.EXP)) {
