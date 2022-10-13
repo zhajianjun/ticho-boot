@@ -38,16 +38,16 @@ public class OauthController {
     @ApiOperation("登录")
     @ApiOperationSupport(order = 10)
     @PostMapping("token")
-    public Result<Oauth2AccessToken> token(LoginRequest loginRequest) {
-        return Result.ok(loginUserHandle.token(loginRequest));
+    public Oauth2AccessToken token(LoginRequest loginRequest) {
+        return loginUserHandle.token(loginRequest);
     }
 
     @View(ignore = true)
     @ApiOperation("刷新token")
     @ApiOperationSupport(order = 20)
     @PostMapping("refreshToken")
-    public Result<Oauth2AccessToken> refreshToken(String refreshToken) {
-        return Result.ok(loginUserHandle.refreshToken(refreshToken));
+    public Oauth2AccessToken refreshToken(String refreshToken) {
+        return loginUserHandle.refreshToken(refreshToken);
     }
 
     @ApiOperation("获取公钥")

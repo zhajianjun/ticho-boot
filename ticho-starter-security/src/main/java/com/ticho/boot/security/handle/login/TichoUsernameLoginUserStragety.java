@@ -39,10 +39,10 @@ public class TichoUsernameLoginUserStragety implements LoginUserStragety {
         Assert.isNotNull(account, BizErrCode.PARAM_ERROR, "用户名不能为空");
         Assert.isNotNull(credentials, BizErrCode.PARAM_ERROR, "密码不能为空");
         TichoSecurityUser tichoSecurityUser = loadUserService.load(account);
-        Assert.isNotNull(tichoSecurityUser, HttpErrCode.NOT_LOGIN, "用户不存在");
+        Assert.isNotNull(tichoSecurityUser, HttpErrCode.NOT_LOGIN, "用户或者密码不正确");
         // 校验用户密码
         String passwordAes = tichoSecurityUser.getPassword();
-        Assert.isTrue(passwordEncoder.matches(credentials, passwordAes), HttpErrCode.NOT_LOGIN, "密码输入不正确");
+        Assert.isTrue(passwordEncoder.matches(credentials, passwordAes), HttpErrCode.NOT_LOGIN, "用户或者密码不正确");
         return tichoSecurityUser;
         // @formatter:on
     }

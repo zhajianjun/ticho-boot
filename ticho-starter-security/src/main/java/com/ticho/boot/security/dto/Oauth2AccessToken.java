@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * token信息
@@ -34,18 +35,18 @@ public class Oauth2AccessToken {
     @JsonProperty(SecurityConst.TOKEN_TYPE)
     public String tokenType;
 
-    /** 开始时间戳，单位(ms) */
-    @ApiModelProperty(value = "开始时间戳，单位(ms)", position = 30)
+    /** 开始时间戳，单位(s) */
+    @ApiModelProperty(value = "开始时间戳，单位(s)", position = 30)
     @JsonProperty(SecurityConst.IAT)
     public Long iat;
 
-    /** 剩余时间，单位(ms)  */
-    @ApiModelProperty(value = "剩余时间，单位(ms)", position = 40)
+    /** 剩余时间，单位(s)  */
+    @ApiModelProperty(value = "剩余时间，单位(s)", position = 40)
     @JsonProperty(SecurityConst.EXPIRES_IN)
     public Long expiresIn;
 
-    /** 结束时间时间戳，单位(ms)  */
-    @ApiModelProperty(value = "结束时间时间戳，单位(ms)", position = 50)
+    /** 结束时间时间戳，单位(s)  */
+    @ApiModelProperty(value = "结束时间时间戳，单位(s)", position = 50)
     @JsonProperty(SecurityConst.EXP)
     public Long exp;
 
@@ -56,10 +57,10 @@ public class Oauth2AccessToken {
 
     @JsonIgnore
     public boolean isExpired() {
-        return exp < System.currentTimeMillis();
+        return exp < TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
     }
 
     public Long getExpiresIn() {
-        return exp - System.currentTimeMillis();
+        return exp - TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
     }
 }

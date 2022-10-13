@@ -36,5 +36,4 @@ public interface LoginUserHandle {
      */
     String publicKey();
 
-
 }
