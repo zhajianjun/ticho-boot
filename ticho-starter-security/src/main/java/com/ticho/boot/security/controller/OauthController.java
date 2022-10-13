@@ -6,6 +6,7 @@ import com.ticho.boot.security.constant.OAuth2Const;
 import com.ticho.boot.security.dto.LoginRequest;
 import com.ticho.boot.security.dto.Oauth2AccessToken;
 import com.ticho.boot.security.handle.LoginUserHandle;
+import com.ticho.boot.view.core.Result;
 import com.ticho.boot.web.annotation.View;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("oauth")
 @ApiSort(Ordered.HIGHEST_PRECEDENCE + 200)
 @Api(tags = "权限用户登录")
-@View
 public class OauthController {
 
     @Autowired
@@ -38,23 +38,23 @@ public class OauthController {
     @ApiOperation("登录")
     @ApiOperationSupport(order = 10)
     @PostMapping("token")
-    public Oauth2AccessToken token(LoginRequest loginRequest) {
-        return loginUserHandle.token(loginRequest);
+    public Result<Oauth2AccessToken> token(LoginRequest loginRequest) {
+        return Result.ok(loginUserHandle.token(loginRequest));
     }
 
     @View(ignore = true)
     @ApiOperation("刷新token")
     @ApiOperationSupport(order = 20)
     @PostMapping("refreshToken")
-    public Oauth2AccessToken refreshToken(String refreshToken) {
-        return loginUserHandle.refreshToken(refreshToken);
+    public Result<Oauth2AccessToken> refreshToken(String refreshToken) {
+        return Result.ok(loginUserHandle.refreshToken(refreshToken));
     }
 
     @ApiOperation("获取公钥")
     @ApiOperationSupport(order = 30)
     @GetMapping("publicKey")
-    public String getPublicKey() {
-        return loginUserHandle.publicKey();
+    public Result<String> getPublicKey() {
+        return Result.ok(loginUserHandle.publicKey());
     }
 
 
