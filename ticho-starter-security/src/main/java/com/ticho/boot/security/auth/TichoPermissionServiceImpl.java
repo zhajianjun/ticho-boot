@@ -13,7 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
  * @date 2022-09-26 17:31:58
  */
 @Slf4j
-public class PermissionServiceImpl implements PermissionService {
+public class TichoPermissionServiceImpl implements PermissionService {
 
     public boolean hasPerms(String... permissions) {
         if (ArrayUtil.isEmpty(permissions)) {

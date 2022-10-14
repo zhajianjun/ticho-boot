@@ -2,7 +2,7 @@ package com.ticho.boot.security.config;
 
 import com.ticho.boot.security.auth.AntPatternsAuthHandle;
 import com.ticho.boot.security.auth.PermissionService;
-import com.ticho.boot.security.auth.PermissionServiceImpl;
+import com.ticho.boot.security.auth.TichoPermissionServiceImpl;
 import com.ticho.boot.security.constant.OAuth2Const;
 import com.ticho.boot.security.constant.SecurityConst;
 import com.ticho.boot.security.filter.TichoAccessDecisionManager;
@@ -141,7 +141,7 @@ public class TichoSecurityImportConfig {
     @Bean(SecurityConst.PM)
     @ConditionalOnMissingBean(name = SecurityConst.PM)
     public PermissionService permissionService() {
-        return new PermissionServiceImpl();
+        return new TichoPermissionServiceImpl();
     }
 
     /**

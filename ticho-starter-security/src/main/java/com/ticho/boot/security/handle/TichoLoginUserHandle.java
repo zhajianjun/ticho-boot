@@ -4,8 +4,8 @@ import cn.hutool.core.util.StrUtil;
 import com.ticho.boot.security.constant.SecurityConst;
 import com.ticho.boot.security.dto.LoginRequest;
 import com.ticho.boot.security.dto.Oauth2AccessToken;
-import com.ticho.boot.security.handle.jwt.JwtSigner;
 import com.ticho.boot.security.handle.jwt.JwtDecode;
+import com.ticho.boot.security.handle.jwt.JwtSigner;
 import com.ticho.boot.security.handle.load.LoadUserService;
 import com.ticho.boot.security.handle.login.LoginUserStragety;
 import com.ticho.boot.view.core.BizErrCode;
@@ -40,7 +40,7 @@ public class TichoLoginUserHandle extends AbstractLoginUserHandle {
     @Autowired
     private JwtSigner jwtSigner;
 
-    public Oauth2AccessToken token (LoginRequest loginRequest) {
+    public Oauth2AccessToken token(LoginRequest loginRequest) {
         String account = loginRequest.getUsername();
         String credentials = loginRequest.getPassword();
         String type = loginRequest.getType();

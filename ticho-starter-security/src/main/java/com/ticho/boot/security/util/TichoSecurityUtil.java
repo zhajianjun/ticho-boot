@@ -20,7 +20,7 @@ import java.util.Optional;
 public class TichoSecurityUtil {
 
 
-    public static <T extends TichoSecurityUser> T getUser() {
+    public static <T extends TichoSecurityUser> T getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
             return null;
@@ -36,13 +36,13 @@ public class TichoSecurityUtil {
         return (T) principal;
     }
 
-    public static String getUserName() {
-        TichoSecurityUser user = getUser();
+    public static String getCurrentUsername() {
+        TichoSecurityUser user = getCurrentUser();
         return Optional.ofNullable(user).map(TichoSecurityUser::getUsername).orElse(null);
     }
 
     public static List<String> getRoleIds() {
-        TichoSecurityUser user = getUser();
+        TichoSecurityUser user = getCurrentUser();
         return Optional.ofNullable(user).map(TichoSecurityUser::getRoleIds).orElseGet(ArrayList::new);
     }
 

@@ -13,10 +13,13 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.core.Ordered;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.security.Principal;
 
 /**
  * 权限用户登录控制器
@@ -28,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController(OAuth2Const.OAUTH2_CONTROLLER)
 @RequestMapping("oauth")
 @ApiSort(Ordered.HIGHEST_PRECEDENCE + 200)
-@Api(tags = "权限用户登录")
+@Api(tags = "权限登录")
 public class OauthController {
 
     @Autowired
@@ -50,10 +53,17 @@ public class OauthController {
         return loginUserHandle.refreshToken(refreshToken);
     }
 
-    @ApiOperation("获取公钥")
+    @ApiOperation(value = "用户信息查询")
     @ApiOperationSupport(order = 30)
+    @GetMapping
+    public Principal principal() {
+        return SecurityContextHolder.getContext().getAuthentication();
+    }
+
+    @ApiOperation("获取公钥")
+    @ApiOperationSupport(order = 40)
     @GetMapping("publicKey")
-    public Result<String> getPublicKey() {
+    public Result<String> publicKey() {
         return Result.ok(loginUserHandle.publicKey());
     }
 

@@ -85,7 +85,7 @@ public class TichoAsyncConfig implements AsyncConfigurer {
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
         return (Throwable ex, Method method, Object... params) -> {
             String errorMessage = "Async execution error on method:" + method.toString() + " with parameters:" + Arrays.toString(params);
-            log.error(errorMessage);
+            log.error(errorMessage, ex);
         };
     }
 }

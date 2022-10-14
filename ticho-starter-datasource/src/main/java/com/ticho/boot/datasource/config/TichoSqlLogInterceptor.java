@@ -72,7 +72,7 @@ public class TichoSqlLogInterceptor implements Interceptor {
         long start = SystemClock.now();
         Object result = invocation.proceed();
         long timing = SystemClock.now() - start;
-        log.info("sql print [{}]: [{}] [耗时: {}ms]", ms.getId(), sql, timing);
+        log.info("sql日志打印 =>【{}】-【 {} 】-【耗时: {}ms】", ms.getId(), sql, timing);
         return result;
     }
 
@@ -126,7 +126,7 @@ public class TichoSqlLogInterceptor implements Interceptor {
         if (obj != null) {
             return obj.toString();
         }
-        return "";
+        return "''";
     }
 
 }
