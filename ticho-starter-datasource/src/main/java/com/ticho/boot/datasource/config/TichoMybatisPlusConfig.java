@@ -1,6 +1,7 @@
 package com.ticho.boot.datasource.config;
 
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
+import com.ticho.boot.datasource.injector.TichoSqlInjector;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,4 +30,10 @@ public class TichoMybatisPlusConfig {
     public OptimisticLockerInnerInterceptor optimisticLockerInterceptor() {
         return new OptimisticLockerInnerInterceptor();
     }
+
+    @Bean
+    public TichoSqlInjector tichoSqlInjector() {
+        return new TichoSqlInjector();
+    }
+
 }
