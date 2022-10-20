@@ -1,6 +1,8 @@
 package com.ticho.boot.datasource.config;
 
+import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.ticho.boot.datasource.injector.TichoSqlInjector;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -31,6 +33,18 @@ public class TichoMybatisPlusConfig {
         return new OptimisticLockerInnerInterceptor();
     }
 
+    /**
+     * 分页拦截器
+     */
+    @Bean
+    @ConditionalOnMissingBean(PaginationInnerInterceptor.class)
+    public PaginationInnerInterceptor paginationInnerInterceptor() {
+        return new PaginationInnerInterceptor(DbType.MYSQL);
+    }
+
+    /**
+     * 默认sql注入器
+     */
     @Bean
     public TichoSqlInjector tichoSqlInjector() {
         return new TichoSqlInjector();
