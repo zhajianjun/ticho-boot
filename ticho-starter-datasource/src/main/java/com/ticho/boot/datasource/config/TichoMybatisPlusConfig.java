@@ -1,7 +1,10 @@
 package com.ticho.boot.datasource.config;
 
+import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
-import com.ticho.boot.web.factory.YamlPropertySourceFactory;
+import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import com.ticho.boot.datasource.injector.TichoSqlInjector;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -18,14 +21,33 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement
 @Order(Ordered.HIGHEST_PRECEDENCE)
-@PropertySource(factory = YamlPropertySourceFactory.class, value = "classpath:ticho-mybatis-plus.yml")
+@PropertySource(value = "classpath:ticho-mybatis-plus.properties")
 public class TichoMybatisPlusConfig {
 
     /**
      * mybatis-plus 乐观锁拦截器
      */
     @Bean
+    @ConditionalOnMissingBean(OptimisticLockerInnerInterceptor.class)
     public OptimisticLockerInnerInterceptor optimisticLockerInterceptor() {
         return new OptimisticLockerInnerInterceptor();
     }
+
+    /**
+     * 分页拦截器
+     */
+    @Bean
+    @ConditionalOnMissingBean(PaginationInnerInterceptor.class)
+    public PaginationInnerInterceptor paginationInnerInterceptor() {
+        return new PaginationInnerInterceptor(DbType.MYSQL);
+    }
+
+    /**
+     * 默认sql注入器
+     */
+    @Bean
+    public TichoSqlInjector tichoSqlInjector() {
+        return new TichoSqlInjector();
+    }
+
 }

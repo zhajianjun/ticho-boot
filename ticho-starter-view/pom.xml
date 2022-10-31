@@ -9,13 +9,14 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ticho-starter-view</artifactId>
-    <name>ticho-starter-view</name>
-    <description>ticho view</description>
-    <url>http://www.example.com</url>
-
+    <version>1.0-SNAPSHOT</version>
 
     <properties>
+        <!-- 项目版本信息 -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <java.version>8</java.version>
     </properties>
 
     <dependencies>
@@ -32,7 +33,7 @@
 
         <dependency>
             <groupId>cn.hutool</groupId>
-            <artifactId>hutool-core</artifactId>
+            <artifactId>hutool-all</artifactId>
         </dependency>
 
     </dependencies>

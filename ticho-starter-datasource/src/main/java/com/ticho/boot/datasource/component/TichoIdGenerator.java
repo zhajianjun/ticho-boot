@@ -41,7 +41,7 @@ public class TichoIdGenerator implements IdentifierGenerator {
     }
 
     private void printLog(Object entity, Serializable id) {
-        log.debug("\n{}对象主键防空策略生成主键值->:{}", entity.getClass().getName(), id);
+        log.debug("{}对象主键防空策略生成主键值->:{}", entity.getClass().getName(), id);
     }
 
 }

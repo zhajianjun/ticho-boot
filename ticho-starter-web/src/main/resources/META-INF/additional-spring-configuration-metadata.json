@@ -1,34 +1,10 @@
 {
   "properties": [
     {
-      "name": "ticho.async.corePoolSize",
-      "type": "java.lang.Integer",
-      "description": "Description for ticho.async.corePoolSize."
-    },
-    {
-      "name": "ticho.async.maxPoolSize",
-      "type": "java.lang.Integer",
-      "description": "Description for ticho.async.maxPoolSize."
-    },
-    {
-      "name": "ticho.async.queueCapacity",
-      "type": "java.lang.Integer",
-      "description": "Description for ticho.async.queueCapacity."
-    },
-    {
-      "name": "ticho.async.keepAliveSeconds",
-      "type": "java.lang.Integer",
-      "description": "Description for ticho.async.keepAliveSeconds."
-    },
-    {
-      "name": "ticho.async.threadNamePrefix",
-      "type": "java.lang.String",
-      "description": "Description for ticho.async.threadNamePrefix."
-    },
-    {
       "name": "ticho.cors.enable",
-      "type": "java.lang.String",
-      "description": "开启跨域配置."
+      "type": "java.lang.Boolean",
+      "description": "开启跨域配置.",
+      "defaultValue": false
     },
     {
       "name": "ticho.health",

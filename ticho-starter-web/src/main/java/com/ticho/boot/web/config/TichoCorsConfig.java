@@ -1,6 +1,5 @@
 package com.ticho.boot.web.config;
 
-import com.ticho.boot.web.constant.WebConst;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +16,7 @@ import org.springframework.web.filter.CorsFilter;
  * @date 2022-07-10 15:56:30
  */
 @Configuration
-@ConditionalOnProperty(value = WebConst.CORS, havingValue = "true")
+@ConditionalOnProperty(value = "ticho.cors.enable", havingValue = "true")
 public class TichoCorsConfig {
 
     private CorsConfiguration corsConfiguration() {

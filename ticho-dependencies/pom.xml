@@ -2,17 +2,10 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.5.5</version>
-        <relativePath/>
-    </parent>
-    <modelVersion>4.0.0</modelVersion>
     <groupId>com.ticho.boot</groupId>
     <artifactId>ticho-dependencies</artifactId>
-    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+    <modelVersion>4.0.0</modelVersion>
 
     <properties>
         <!-- 项目版本信息 -->
@@ -21,22 +14,20 @@
         <maven.compiler.target>8</maven.compiler.target>
         <java.version>8</java.version>
         <!-- spring-boot spring-cloud-alibaba 版本信息 -->
-        <spring-boot-starter.version>2.5.5</spring-boot-starter.version>
-        <spring-cloud.version>2020.0.4</spring-cloud.version>
-        <spring-cloud-context.version>3.0.4</spring-cloud-context.version>
-        <spring-cloud-alibaba-dependencies.version>2021.1</spring-cloud-alibaba-dependencies.version>
+        <spring-boot-starter.version>2.6.3</spring-boot-starter.version>
+        <spring-cloud.version>2021.0.1</spring-cloud.version>
+        <spring-cloud-alibaba-dependencies.version>2021.0.1.0</spring-cloud-alibaba-dependencies.version>
         <!-- 其它的一些信息 -->
         <hutool.version>5.8.4</hutool.version>
-        <swagger.version>1.5.20</swagger.version>
-        <springfox.version>2.10.5</springfox.version>
+        <swagger-base.version>1.5.22</swagger-base.version>
+        <swagger.version>2.10.5</swagger.version>
         <knife4j.version>2.0.9</knife4j.version>
-
-        <fog-cloud.version>1.0-SNAPSHOT</fog-cloud.version>
         <minio.version>8.1.0</minio.version>
         <guava.version>29.0-jre</guava.version>
         <mybatis-plus.version>3.4.3.4</mybatis-plus.version>
-        <pagehelper-spring-boot-starter.version>1.2.10</pagehelper-spring-boot-starter.version>
+        <pagehelper-spring-boot-starter.version>1.4.1</pagehelper-spring-boot-starter.version>
         <mapstruct.version>1.5.2.Final</mapstruct.version>
+        <spring-boot-admin.version>2.6.2</spring-boot-admin.version>
     </properties>
 
 
@@ -91,6 +82,11 @@
                 <version>1.0-SNAPSHOT</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.ticho.boot</groupId>
+                <artifactId>ticho-starter-security</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
 
             <!-- SpringBoot -->
             <dependency>
@@ -119,13 +115,6 @@
                 <scope>import</scope>
             </dependency>
 
-            <!-- @RefreshScope注解 用于刷新配置 -->
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-context</artifactId>
-                <version>${spring-cloud-context.version}</version>
-            </dependency>
-
             <!-- hutool全能工具包 -->
             <dependency>
                 <groupId>cn.hutool</groupId>
@@ -142,18 +131,11 @@
             <!-- swagger -->
 
             <dependency>
-                <groupId>io.swagger</groupId>
-                <artifactId>swagger-annotations</artifactId>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
                 <version>${swagger.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger2</artifactId>
-                <version>${springfox.version}</version>
-            </dependency>
-
-            <!-- swagger knife4j -->
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
                 <artifactId>knife4j-annotations</artifactId>
@@ -165,6 +147,23 @@
                 <artifactId>knife4j-spring-boot-starter</artifactId>
                 <version>${knife4j.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger-base.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-models</artifactId>
+                <version>${swagger-base.version}</version>
+            </dependency>
+
+<!--            <dependency>-->
+<!--                <groupId>io.springfox</groupId>-->
+<!--                <artifactId>springfox-swagger2</artifactId>-->
+<!--                <version>${springfox.version}</version>-->
+<!--            </dependency>-->
 
             <!-- mybatis plus -->
             <dependency>
@@ -210,12 +209,6 @@
                 </exclusions>
             </dependency>
 
-            <dependency>
-                <groupId>com.github.jsqlparser</groupId>
-                <artifactId>jsqlparser</artifactId>
-                <version>1.4</version>
-            </dependency>
-
             <!-- 对象拷贝工具 -->
             <dependency>
                 <groupId>org.mapstruct</groupId>
@@ -252,13 +245,13 @@
             <dependency>
                 <groupId>de.codecentric</groupId>
                 <artifactId>spring-boot-admin-starter-server</artifactId>
-                <version>2.5.2</version>
+                <version>${spring-boot-admin.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>de.codecentric</groupId>
                 <artifactId>spring-boot-admin-server-ui</artifactId>
-                <version>2.5.2</version>
+                <version>${spring-boot-admin.version}</version>
             </dependency>
 
             <!-- https://mvnrepository.com/artifact/com.alibaba/transmittable-thread-local -->
@@ -266,6 +259,18 @@
                 <groupId>com.alibaba</groupId>
                 <artifactId>transmittable-thread-local</artifactId>
                 <version>2.14.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-jwt</artifactId>
+                <version>1.0.10.RELEASE</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-spring-boot-starter</artifactId>
+                <version>3.17.6</version>
             </dependency>
 
         </dependencies>

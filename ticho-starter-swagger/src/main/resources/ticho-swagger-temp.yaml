@@ -1,0 +1,5 @@
+ticho:
+  swagger:
+    enable: true
+    securityUrl: http://localhost:7010
+    type: default

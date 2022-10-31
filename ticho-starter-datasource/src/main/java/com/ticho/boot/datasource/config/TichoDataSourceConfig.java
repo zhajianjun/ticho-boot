@@ -2,7 +2,7 @@ package com.ticho.boot.datasource.config;
 
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
-import com.ticho.boot.web.factory.YamlPropertySourceFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +16,7 @@ import org.springframework.context.annotation.PropertySource;
  * @date 2022-07-10 15:56:30
  */
 @Configuration
-@PropertySource(factory = YamlPropertySourceFactory.class, value = "classpath:ticho-datasource.yml")
+@PropertySource(value = "classpath:ticho-datasource.properties")
 public class TichoDataSourceConfig {
 
     // @formatter:off
@@ -27,6 +27,7 @@ public class TichoDataSourceConfig {
      * @return ServletRegistrationBean
      */
     @Bean
+    @ConditionalOnMissingBean(name = "druidStatViewServle")
     public ServletRegistrationBean<StatViewServlet> druidStatViewServle() {
         //org.springframework.boot.context.embedded.ServletRegistrationBean提供类的进行注册.
         ServletRegistrationBean<StatViewServlet> servletRegistrationBean = new ServletRegistrationBean<>(new StatViewServlet(), "/druid/*");
@@ -49,6 +50,7 @@ public class TichoDataSourceConfig {
      * @return FilterRegistrationBean
      */
     @Bean
+    @ConditionalOnMissingBean(name = "druidStatFilter")
     public FilterRegistrationBean<WebStatFilter> druidStatFilter() {
         FilterRegistrationBean<WebStatFilter> filterRegistrationBean = new FilterRegistrationBean<>(new WebStatFilter());
         //添加过滤规则.

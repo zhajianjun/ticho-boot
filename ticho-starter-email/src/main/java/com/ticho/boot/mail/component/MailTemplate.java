@@ -3,7 +3,6 @@ package com.ticho.boot.mail.component;
 import cn.hutool.core.collection.CollUtil;
 import com.ticho.boot.view.core.BizErrCode;
 import com.ticho.boot.view.util.Assert;
-import com.ticho.boot.web.util.SpringContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.lang.NonNull;
@@ -12,6 +11,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
@@ -29,14 +29,18 @@ import java.util.Optional;
 @Slf4j
 public class MailTemplate {
 
+    @Resource
+    private MailProperties mailProperties;
+
+    @Resource
+    private JavaMailSender javaMailSender;
+
     /**
      * 发送邮件
      *
      * @param mailContent 邮件内容
      */
     public void sendSimpleMail(MailContent mailContent) {
-        MailProperties mailProperties = SpringContext.getBean(MailProperties.class);
-        JavaMailSender javaMailSender = SpringContext.getBean(JavaMailSender.class);
         Assert.isNotNull(mailProperties, BizErrCode.FAIL, "请检查邮件配置");
         Assert.isNotNull(javaMailSender, BizErrCode.FAIL, "请检查邮件配置");
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();

@@ -1,7 +1,11 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.ticho.boot.swagger.prop.SwaggerSecurityProperty,\
-  com.ticho.boot.swagger.config.SwaggerSecurityConfig,\
-  com.ticho.boot.swagger.config.SwaggerConfig
+  com.ticho.boot.swagger.prop.TichoSwaggerSecurityProperty,\
+  com.ticho.boot.swagger.config.TichoModelPropertySortPlugin,\
+  com.ticho.boot.swagger.config.TichoModelToSwaggerMapper,\
+  com.ticho.boot.swagger.config.TichoSwaggerParameterBuilder,\
+  com.ticho.boot.swagger.config.TichoSwaggerConfig,\
+  com.ticho.boot.swagger.config.TichoSecurityConfig
+
 
 
 

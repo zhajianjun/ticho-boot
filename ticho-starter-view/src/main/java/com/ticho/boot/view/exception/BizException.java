@@ -1,7 +1,7 @@
 package com.ticho.boot.view.exception;
 
-import com.ticho.boot.view.enums.IErrCode;
 import com.ticho.boot.view.core.HttpErrCode;
+import com.ticho.boot.view.enums.IErrCode;
 import lombok.Getter;
 
 /**

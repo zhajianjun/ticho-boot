@@ -12,6 +12,9 @@
         <module>ticho-starter-minio</module>
         <module>ticho-starter-swagger</module>
         <module>ticho-starter-feign</module>
+        <module>ticho-starter-rabbitmq</module>
+        <module>ticho-starter-security</module>
+        <module>ticho-starter-redis</module>
     </modules>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ticho-boot</artifactId>
@@ -90,6 +93,21 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <!--mvn versions:set -DnewVersion=1.0.0 //升级版本号到1.0.0-->
+        <!--mvn versions:set -DgroupId=com.xxx.xxx -DartifactId=xxx-xxx-xxx -DnewVersion=1.1.8 -DallowSnapshots=true //修改制定模块版本号-->
+        <!--mvn versions:use-next-releases -DprocessDependencyManagement=false //升级到下一个版本，不要升级dependencyManagement中的版本-->
+        <!--mvn versions:use-next-releases -DprocessDependencies=false //升级到下一个版本，不要升级dependencies中的版本-->
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.8.1</version>
+                <configuration>
+                    <!--pom不备份-->
+                    <generateBackupPoms>false</generateBackupPoms>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
 
