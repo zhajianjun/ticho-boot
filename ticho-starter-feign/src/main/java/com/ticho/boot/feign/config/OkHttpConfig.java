@@ -44,7 +44,7 @@ public class OkHttpConfig {
         // @formatter:off
         OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
         if (Boolean.TRUE.equals(prop.getOpenLog())) {
-            builder.addInterceptor(new OkHttpInterceptor());
+            builder.addInterceptor(new OkHttpInterceptor(prop));
         }
         return builder
             // 设置连接超时
