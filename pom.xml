@@ -15,6 +15,7 @@
         <module>ticho-starter-rabbitmq</module>
         <module>ticho-starter-security</module>
         <module>ticho-starter-redis</module>
+        <module>ticho-starter-json</module>
     </modules>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ticho-boot</artifactId>

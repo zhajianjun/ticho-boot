@@ -2,11 +2,10 @@ package com.ticho.boot.security.handle.load;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.extra.spring.SpringUtil;
+import com.ticho.boot.json.JsonUtil;
 import com.ticho.boot.security.constant.SecurityConst;
 import com.ticho.boot.security.prop.TichoSecurityProperty;
 import com.ticho.boot.view.core.TichoSecurityUser;
-import com.ticho.boot.web.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

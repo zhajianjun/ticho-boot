@@ -1,8 +1,8 @@
 package com.ticho.boot.security.view;
 
+import com.ticho.boot.json.JsonUtil;
 import com.ticho.boot.view.core.HttpErrCode;
 import com.ticho.boot.view.core.Result;
-import com.ticho.boot.web.util.JsonUtil;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
