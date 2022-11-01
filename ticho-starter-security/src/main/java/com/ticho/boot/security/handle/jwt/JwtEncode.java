@@ -1,12 +1,12 @@
 package com.ticho.boot.security.handle.jwt;
 
+import com.ticho.boot.json.JsonUtil;
 import com.ticho.boot.security.constant.SecurityConst;
 import com.ticho.boot.security.dto.Oauth2AccessToken;
 import com.ticho.boot.security.prop.TichoOauthProperty;
 import com.ticho.boot.view.core.BizErrCode;
 import com.ticho.boot.view.core.TichoSecurityUser;
 import com.ticho.boot.view.util.Assert;
-import com.ticho.boot.web.util.JsonUtil;
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.jwt.crypto.sign.Signer;
 import org.springframework.util.CollectionUtils;

@@ -1,4 +1,4 @@
-package com.ticho.boot.web.converter;
+package com.ticho.boot.json;
 
 /**
  * 日期相关常量

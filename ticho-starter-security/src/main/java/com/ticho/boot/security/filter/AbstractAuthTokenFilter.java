@@ -1,6 +1,7 @@
 package com.ticho.boot.security.filter;
 
 import cn.hutool.core.util.StrUtil;
+import com.ticho.boot.json.JsonUtil;
 import com.ticho.boot.security.auth.AntPatternsAuthHandle;
 import com.ticho.boot.security.constant.SecurityConst;
 import com.ticho.boot.security.handle.jwt.JwtDecode;
@@ -10,7 +11,6 @@ import com.ticho.boot.view.core.Result;
 import com.ticho.boot.view.core.TichoSecurityUser;
 import com.ticho.boot.view.exception.BizException;
 import com.ticho.boot.view.util.Assert;
-import com.ticho.boot.web.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
