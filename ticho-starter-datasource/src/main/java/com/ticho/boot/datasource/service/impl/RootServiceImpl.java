@@ -107,7 +107,7 @@ public class RootServiceImpl<M extends RootMapper<T>, T> extends ServiceImpl<M, 
     @Override
     public T getById(Serializable id) {
         if (id == null) {
-            log.info("{}功能号信息为空，主键ID为null", getTableName());
+            log.info("{}查询异常，主键ID为null", getTableName());
             return null;
         }
         return baseMapper.selectById(id);
@@ -123,7 +123,7 @@ public class RootServiceImpl<M extends RootMapper<T>, T> extends ServiceImpl<M, 
     @Override
     public boolean saveOrUpdate(T entity) {
         if (entity == null) {
-            log.info("{}为空，主键ID为null", getTableName());
+            log.info("{}保存更新异常，对象为null", getTableName());
             return false;
         }
         return super.saveOrUpdate(entity);
@@ -133,7 +133,7 @@ public class RootServiceImpl<M extends RootMapper<T>, T> extends ServiceImpl<M, 
     @Override
     public boolean saveOrUpdateBatch(Collection<T> entityList, int batchSize) {
         if (CollUtil.isEmpty(entityList)) {
-            log.info("{}批量修改异常，集合为null或者大小为0", getTableName());
+            log.info("{}批量保存更新异常，集合为null或者大小为0", getTableName());
             return false;
         }
         if (batchSize <= 0 || batchSize > 1000) {
