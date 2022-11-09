@@ -2,7 +2,6 @@ package com.ticho.boot.security.handle;
 
 import com.ticho.boot.security.dto.LoginRequest;
 import com.ticho.boot.security.dto.Oauth2AccessToken;
-import org.springframework.stereotype.Component;
 
 /**
  * 登录处理接口
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Component;
  * @author zhajianjun
  * @date 2022-09-22 18:12
  */
-@Component
 public interface LoginUserHandle {
 
     /**
