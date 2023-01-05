@@ -1,4 +1,4 @@
-package com.ticho.boot.feign.log;
+package com.ticho.boot.feign.interceptor;
 
 import com.ticho.boot.feign.prop.TichoFeignProperty;
 import lombok.extern.slf4j.Slf4j;
@@ -18,11 +18,11 @@ import java.util.Optional;
  * @date 2022-11-01 14:46
  */
 @Slf4j
-public class OkHttpInterceptor implements Interceptor {
+public class OkHttpLogInterceptor implements Interceptor {
 
     private final TichoFeignProperty tichoFeignProperty;
 
-    public OkHttpInterceptor(TichoFeignProperty tichoFeignProperty) {
+    public OkHttpLogInterceptor(TichoFeignProperty tichoFeignProperty) {
         this.tichoFeignProperty = tichoFeignProperty;
     }
 

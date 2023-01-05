@@ -11,11 +11,12 @@
         <module>ticho-starter-cloud</module>
         <module>ticho-starter-minio</module>
         <module>ticho-starter-swagger</module>
-        <module>ticho-starter-feign</module>
+        <module>ticho-starter-http</module>
         <module>ticho-starter-rabbitmq</module>
         <module>ticho-starter-security</module>
         <module>ticho-starter-redis</module>
         <module>ticho-starter-json</module>
+        <module>ticho-starter-log</module>
     </modules>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ticho-boot</artifactId>
@@ -30,7 +31,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.compiler.compilerVersion>1.8</maven.compiler.compilerVersion>
         <java.version>1.8</java.version>
     </properties>
 

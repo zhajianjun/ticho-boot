@@ -3,9 +3,11 @@ package com.ticho.boot.web.config;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.TaskDecorator;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -49,13 +51,16 @@ public class TichoAsyncConfig implements AsyncConfigurer {
      */
     private String threadNamePrefix = "ticho";
 
+    @Autowired
+    private TaskDecorator taskDecorator;
+
     // @formatter:off
 
     /**
      * 获取异步线程池执行对象
      */
     @Override
-    @Bean("asyncTaskExecutor")
+    @Bean("asyncTask")
     public Executor getAsyncExecutor() {
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
         // 设置核心线程数
@@ -68,6 +73,8 @@ public class TichoAsyncConfig implements AsyncConfigurer {
         taskExecutor.setKeepAliveSeconds(keepAliveSeconds);
         // 设置线程名称前缀
         taskExecutor.setThreadNamePrefix(threadNamePrefix);
+        // 处理子线程与主线程间数据传递
+        taskExecutor.setTaskDecorator(taskDecorator);
         // 设置拒绝策略
         // setRejectedExecutionHandler：当pool已经达到max size的时候，如何处理新任务
         // CallerRunsPolicy：不在新线程中执行任务，而是由调用者所在的线程来执行
@@ -88,4 +95,5 @@ public class TichoAsyncConfig implements AsyncConfigurer {
             log.error(errorMessage, ex);
         };
     }
+
 }

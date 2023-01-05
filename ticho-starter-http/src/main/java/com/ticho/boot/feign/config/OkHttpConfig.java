@@ -1,9 +1,10 @@
 package com.ticho.boot.feign.config;
 
-import com.ticho.boot.feign.log.OkHttpInterceptor;
+import com.ticho.boot.feign.interceptor.OkHttpLogInterceptor;
 import com.ticho.boot.feign.prop.TichoFeignProperty;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.ConnectionPool;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -40,11 +42,12 @@ public class OkHttpConfig {
     @Bean
     @ConditionalOnProperty(value = "ticho.feign.enable", havingValue = "true", matchIfMissing = true)
     @ConditionalOnMissingBean({OkHttpClient.class})
-    public OkHttpClient okHttpClient(TichoFeignProperty prop) {
+    public OkHttpClient okHttpClient(TichoFeignProperty prop, List<Interceptor> interceptors) {
         // @formatter:off
         OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
+        interceptors.forEach(builder::addInterceptor);
         if (Boolean.TRUE.equals(prop.getOpenLog())) {
-            builder.addInterceptor(new OkHttpInterceptor(prop));
+            builder.addInterceptor(new OkHttpLogInterceptor(prop));
         }
         return builder
             // 设置连接超时

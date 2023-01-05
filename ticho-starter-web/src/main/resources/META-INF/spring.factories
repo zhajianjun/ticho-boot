@@ -11,6 +11,7 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.ticho.boot.web.converter.LocalDateConverter,\
   com.ticho.boot.web.converter.LocalDateTimeConverter,\
   com.ticho.boot.web.event.TichoApplicationReadyEvent,\
-  com.ticho.boot.web.util.CloudIdUtil
+  com.ticho.boot.web.util.CloudIdUtil,\
+  com.ticho.boot.web.config.TaskDecoratorConfig
 
 
