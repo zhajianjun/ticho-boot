@@ -17,8 +17,4 @@ public class OAuth2Const {
 
     public static final String OAUTH2_CONTROLLER = "oauth2_controller";
 
-    public static final String INNER = "inner";
-
-    public static final String INNER_VALUE = "true";
-
 }

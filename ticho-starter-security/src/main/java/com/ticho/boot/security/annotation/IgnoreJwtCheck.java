@@ -38,13 +38,6 @@ import java.lang.annotation.Target;
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface IgnoreAuth {
-
-    /** 是否内部服务调用 true-是，false-否 */
-    @AliasFor("inner")
-    boolean value() default false;
-
-    @AliasFor("value")
-    boolean inner() default false;
+public @interface IgnoreJwtCheck {
 
 }

@@ -1,4 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.ticho.boot.feign.config.OkHttpConfig,\
-  com.ticho.boot.feign.config.TichoRequestInterceptor
-
