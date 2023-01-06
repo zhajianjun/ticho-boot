@@ -1,6 +1,6 @@
 package com.ticho.boot.security.handle.jwt;
 
-import com.ticho.boot.json.JsonUtil;
+import com.ticho.boot.json.util.JsonUtil;
 import com.ticho.boot.security.constant.SecurityConst;
 import com.ticho.boot.security.dto.Oauth2AccessToken;
 import com.ticho.boot.security.prop.TichoOauthProperty;

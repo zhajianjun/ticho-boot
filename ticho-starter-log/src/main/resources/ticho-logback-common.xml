@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <included>
     <!-- @formatter:off -->
+    <contextListener class="com.yomahub.tlog.core.enhance.logback.TLogLogbackTTLMdcListener"/>
+
     <!--1.日志格式和颜色渲染 -->
     <!-- 彩色日志依赖的渲染类 -->
     <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
     <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
     <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+    <!-- 增加如下的TLog MDC Listener -->
     <!-- 3.一些属性值定义 -->
     <!-- 彩色日志格式 -->
-    <property name="console.log.pattern" value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}) %clr([%thread]) %highlight(%-5level) %boldMagenta(%logger{50})- %clr([%tid]) - %cyan(%msg%n)"/>
+    <property name="console.log.pattern" value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}) %clr([%thread]) %highlight(%-5level) %boldMagenta(%logger{50}) %clr(&lt;%X{tlogSpanId},%X{tlogTraceId}>) - %cyan(%msg%n)"/>
     <!--日志格式-->
-    <property name="log.pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - [%tid] - %msg%n"/>"
+    <property name="log.pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} %clr(&lt;%X{tlogSpanId},%X{tlogTraceId}>) %msg%n"/>"
     <!--日志最大的历史 7天-->
     <property name="log.maxHistory" value="7"/>
     <!--日志最大的文件大小 100MB-->
@@ -18,7 +21,7 @@
     <!-- 4.日志输出 -->
     <!-- 4.1.控制台打印 -->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${console.log.pattern}</pattern>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -29,7 +32,7 @@
     <!-- 4.2.debug日志 -->
     <appender name="debug" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${log.home}/debug.log</file>
-        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${log.pattern}</pattern>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -55,7 +58,7 @@
     <!-- 4.3.info日志 -->
     <appender name="info" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${log.home}/info.log</file>
-        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${log.pattern}</pattern>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -81,7 +84,7 @@
     <!-- 4.4.warn日志 -->
     <appender name="warn" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${log.home}/warn.log</file>
-        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${log.pattern}</pattern>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -107,7 +110,7 @@
     <!-- 4.5.error日志 -->
     <appender name="error" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${log.home}/error.log</file>
-        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${log.pattern}</pattern>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -134,7 +137,7 @@
     <!-- 4.6. 所有日志 -->
     <appender name="all" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${log.home}/all.log</file>
-        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${log.pattern}</pattern>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">

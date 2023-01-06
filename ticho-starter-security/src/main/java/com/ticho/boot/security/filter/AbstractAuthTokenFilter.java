@@ -1,7 +1,7 @@
 package com.ticho.boot.security.filter;
 
 import cn.hutool.core.util.StrUtil;
-import com.ticho.boot.json.JsonUtil;
+import com.ticho.boot.json.util.JsonUtil;
 import com.ticho.boot.security.auth.AntPatternsAuthHandle;
 import com.ticho.boot.security.constant.SecurityConst;
 import com.ticho.boot.security.handle.jwt.JwtDecode;

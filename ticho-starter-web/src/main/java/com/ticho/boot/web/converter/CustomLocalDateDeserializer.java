@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.ticho.boot.json.DateFormatConsant;
+import com.ticho.boot.json.constant.DateFormatConst;
 
 import java.io.IOException;
 import java.time.DateTimeException;
@@ -94,8 +94,8 @@ public class CustomLocalDateDeserializer extends JSR310DateTimeDeserializerBase<
             DateTimeFormatter format = _formatter;
             try {
                 // fixme 添加的内容在这
-                if (string.matches(DateFormatConsant.YYYY_MM_DD_HH_MM_SS_REGEX)) {
-                    LocalDateTime localDateTime = LocalDateTime.parse(string, DateTimeFormatter.ofPattern(DateFormatConsant.YYYY_MM_DD_HH_MM_SS));
+                if (string.matches(DateFormatConst.YYYY_MM_DD_HH_MM_SS_REGEX)) {
+                    LocalDateTime localDateTime = LocalDateTime.parse(string, DateTimeFormatter.ofPattern(DateFormatConst.YYYY_MM_DD_HH_MM_SS));
                     return localDateTime.toLocalDate();
                 }
                 if (_formatter == DEFAULT_FORMATTER) {

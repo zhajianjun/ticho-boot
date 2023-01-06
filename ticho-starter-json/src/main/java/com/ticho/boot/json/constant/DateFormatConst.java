@@ -1,4 +1,4 @@
-package com.ticho.boot.json;
+package com.ticho.boot.json.constant;
 
 /**
  * 日期相关常量
@@ -6,7 +6,7 @@ package com.ticho.boot.json;
  * @author zhajianjun
  * @date 2022-07-10 15:56:30
  */
-public class DateFormatConsant {
+public class DateFormatConst {
     /**
      * HH:mm:ss
      */

@@ -2,7 +2,7 @@ package com.ticho.boot.security.handle.load;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.IdUtil;
-import com.ticho.boot.json.JsonUtil;
+import com.ticho.boot.json.util.JsonUtil;
 import com.ticho.boot.security.constant.SecurityConst;
 import com.ticho.boot.security.prop.TichoSecurityProperty;
 import com.ticho.boot.view.core.TichoSecurityUser;

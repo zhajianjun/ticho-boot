@@ -2,7 +2,7 @@ package com.ticho.boot.security.handle.jwt;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.NumberUtil;
-import com.ticho.boot.json.JsonUtil;
+import com.ticho.boot.json.util.JsonUtil;
 import com.ticho.boot.security.constant.SecurityConst;
 import com.ticho.boot.view.core.BizErrCode;
 import com.ticho.boot.view.exception.BizException;
