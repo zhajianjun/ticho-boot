@@ -1,7 +1,7 @@
 package com.ticho.boot.web.converter;
 
 import cn.hutool.core.text.CharSequenceUtil;
-import com.ticho.boot.json.DateFormatConsant;
+import com.ticho.boot.json.constant.DateFormatConst;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
@@ -28,11 +28,11 @@ public class DateConverter implements Converter<String, Date> {
         if (CharSequenceUtil.isBlank(source)) {
             return null;
         }
-        if (source.matches(DateFormatConsant.YYYY_MM_DD_REGEX)) {
-            return parseDate(source.trim(), DateFormatConsant.YYYY_MM_DD);
+        if (source.matches(DateFormatConst.YYYY_MM_DD_REGEX)) {
+            return parseDate(source.trim(), DateFormatConst.YYYY_MM_DD);
         }
-        if (source.matches(DateFormatConsant.YYYY_MM_DD_HH_MM_SS_REGEX)) {
-            return parseDate(source.trim(), DateFormatConsant.YYYY_MM_DD_HH_MM_SS);
+        if (source.matches(DateFormatConst.YYYY_MM_DD_HH_MM_SS_REGEX)) {
+            return parseDate(source.trim(), DateFormatConst.YYYY_MM_DD_HH_MM_SS);
         }
         throw new IllegalArgumentException("Invalid value '" + source + "'");
     }

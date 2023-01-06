@@ -1,7 +1,7 @@
 package com.ticho.boot.web.converter;
 
 import cn.hutool.core.text.CharSequenceUtil;
-import com.ticho.boot.json.DateFormatConsant;
+import com.ticho.boot.json.constant.DateFormatConst;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -24,8 +24,8 @@ public class LocalDateConverter implements Converter<String, LocalDate> {
         if (CharSequenceUtil.isBlank(source)) {
             return null;
         }
-        if (source.matches(DateFormatConsant.YYYY_MM_DD_REGEX)) {
-            return LocalDate.parse(source, DateTimeFormatter.ofPattern(DateFormatConsant.YYYY_MM_DD));
+        if (source.matches(DateFormatConst.YYYY_MM_DD_REGEX)) {
+            return LocalDate.parse(source, DateTimeFormatter.ofPattern(DateFormatConst.YYYY_MM_DD));
         }
         throw new IllegalArgumentException("Invalid value '" + source + "'");
     }

@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.ticho.boot.json.DateFormatConsant;
+import com.ticho.boot.json.constant.DateFormatConst;
 
 import java.io.IOException;
 import java.time.DateTimeException;
@@ -64,8 +64,8 @@ public class CustomLocalDateTimeDeserializer extends JSR310DateTimeDeserializerB
                 return !this.isLenient() ? (LocalDateTime)this._failForNotLenient(parser, context, JsonToken.VALUE_STRING) : null;
             } else {
                 try {
-                    if (string.matches(DateFormatConsant.YYYY_MM_DD_REGEX)) {
-                        LocalDate localDate = LocalDate.parse(string, DateTimeFormatter.ofPattern(DateFormatConsant.YYYY_MM_DD));
+                    if (string.matches(DateFormatConst.YYYY_MM_DD_REGEX)) {
+                        LocalDate localDate = LocalDate.parse(string, DateTimeFormatter.ofPattern(DateFormatConst.YYYY_MM_DD));
                         return LocalDateTime.of(localDate, LocalTime.MIN);
                     }
                     if (this._formatter == DEFAULT_FORMATTER && string.length() > 10 && string.charAt(10) == 'T') {

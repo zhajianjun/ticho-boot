@@ -1,7 +1,7 @@
 package com.ticho.boot.security.auth;
 
 import cn.hutool.core.util.ArrayUtil;
-import com.ticho.boot.json.JsonUtil;
+import com.ticho.boot.json.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
