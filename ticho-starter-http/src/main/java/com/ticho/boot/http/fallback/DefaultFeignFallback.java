@@ -1,4 +1,4 @@
-package com.ticho.boot.feign.fallback;
+package com.ticho.boot.http.fallback;
 
 import com.ticho.boot.view.core.BizErrCode;
 import com.ticho.boot.view.core.Result;
