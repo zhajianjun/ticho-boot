@@ -31,7 +31,7 @@
 
     <!-- 4.2.debug日志 -->
     <appender name="debug" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}//debug.log</file>
+        <file>${log.path}/debug.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${log.pattern}</pattern>
         </encoder>
@@ -45,7 +45,7 @@
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>${LOG_PATH}//debug.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <fileNamePattern>${log.path}/debug.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
             <!-- keep 30 days' worth of history -->
             <maxHistory>${log.maxHistory}</maxHistory>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
@@ -57,7 +57,7 @@
 
     <!-- 4.3.info日志 -->
     <appender name="info" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}//info.log</file>
+        <file>${log.path}/info.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${log.pattern}</pattern>
         </encoder>
@@ -71,7 +71,7 @@
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>${LOG_PATH}//info.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <fileNamePattern>${log.path}/info.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
             <!-- keep ${log.maxHistory} days' worth of history -->
             <maxHistory>${log.maxHistory}</maxHistory>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
@@ -83,7 +83,7 @@
 
     <!-- 4.4.warn日志 -->
     <appender name="warn" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}//warn.log</file>
+        <file>${log.path}/warn.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${log.pattern}</pattern>
         </encoder>
@@ -97,7 +97,7 @@
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>${LOG_PATH}//warn.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <fileNamePattern>${log.path}/warn.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
             <!-- keep ${log.maxHistory} days' worth of history -->
             <maxHistory>${log.maxHistory}</maxHistory>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
@@ -109,7 +109,7 @@
 
     <!-- 4.5.error日志 -->
     <appender name="error" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}//error.log</file>
+        <file>${log.path}/error.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${log.pattern}</pattern>
         </encoder>
@@ -123,7 +123,7 @@
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>${LOG_PATH}//error.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <fileNamePattern>${log.path}/error.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
             <!-- keep 30 days' worth of history -->
             <maxHistory>${log.maxHistory}</maxHistory>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
@@ -136,7 +136,7 @@
 
     <!-- 4.6. 所有日志 -->
     <appender name="all" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}//all.log</file>
+        <file>${log.path}/all.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${log.pattern}</pattern>
         </encoder>
@@ -145,7 +145,7 @@
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- rollover daily -->
-            <fileNamePattern>${LOG_PATH}//all.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <fileNamePattern>${log.path}/all.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>${log.maxFileSize}</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
