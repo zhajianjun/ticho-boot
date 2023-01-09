@@ -2,6 +2,7 @@ package com.ticho.boot.feign.interceptor;
 
 import com.ticho.boot.feign.prop.TichoFeignProperty;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.Headers;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -9,6 +10,8 @@ import okhttp3.ResponseBody;
 import org.springframework.lang.NonNull;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -33,7 +36,6 @@ public class OkHttpLogInterceptor implements Interceptor {
         Request req = chain.request();
         long t1 = System.currentTimeMillis();
         String reqBody = Optional.ofNullable(req.body()).map(Object::toString).orElse("body is empty");
-        log("[http请求开始] 地址:{} --headers:{} --body:{}", req.url(), req.headers(), reqBody);
         Response res = chain.proceed(req);
         long t2 = System.currentTimeMillis();
         //这里不能直接使用response.body().string()的方式输出日志
@@ -42,7 +44,18 @@ public class OkHttpLogInterceptor implements Interceptor {
         int byteCount = 1024 * 1024;
         ResponseBody body = res.peekBody(byteCount);
         String resBody = body.string();
-        log("[http请求结束] 地址:{} headers:{} --响应时间:{}ms --body:{}", req.url(), res.headers(), (t2 - t1), resBody);
+        Headers headers = req.headers();
+        StringBuilder builder = new StringBuilder();
+        Map<String,List<String>> headersMap = headers.toMultimap();
+        headersMap.forEach((k,v) -> builder.append("\n    ").append(k).append(": ").append(String.join(",", v)));
+        log("\n[------http 请求开始------]\n1.地址:{} {}\n2.请求体:{}\n3.请求头:{}\n4.响应体:{}\n5.响应时间:{}ms\n[------http 请求结束------]",
+            req.method(),
+            req.url(),
+            reqBody,
+            builder,
+            resBody,
+            (t2 - t1)
+        );
         return res;
         // @formatter:on
     }

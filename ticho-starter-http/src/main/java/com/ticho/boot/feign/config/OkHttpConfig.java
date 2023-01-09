@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import okhttp3.ConnectionPool;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -37,6 +38,15 @@ public class OkHttpConfig {
     @ConfigurationProperties(prefix = "ticho.feign")
     public TichoFeignProperty tichoFeignProperty() {
         return new TichoFeignProperty();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(Interceptor.class)
+    public Interceptor defaultInterceptor() {
+        return chain -> {
+            Request req = chain.request();
+            return chain.proceed(req);
+        };
     }
 
     @Bean
