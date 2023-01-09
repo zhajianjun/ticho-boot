@@ -1,6 +1,6 @@
-package com.ticho.boot.feign.interceptor;
+package com.ticho.boot.http.interceptor;
 
-import com.ticho.boot.feign.prop.TichoFeignProperty;
+import com.ticho.boot.http.prop.TichoHttpProperty;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Headers;
 import okhttp3.Interceptor;
@@ -23,10 +23,10 @@ import java.util.Optional;
 @Slf4j
 public class OkHttpLogInterceptor implements Interceptor {
 
-    private final TichoFeignProperty tichoFeignProperty;
+    private final TichoHttpProperty tichoHttpProperty;
 
-    public OkHttpLogInterceptor(TichoFeignProperty tichoFeignProperty) {
-        this.tichoFeignProperty = tichoFeignProperty;
+    public OkHttpLogInterceptor(TichoHttpProperty tichoHttpProperty) {
+        this.tichoHttpProperty = tichoHttpProperty;
     }
 
     @Override
@@ -61,12 +61,12 @@ public class OkHttpLogInterceptor implements Interceptor {
     }
 
     public void log(String format, Object... arguments) {
-        TichoFeignProperty.Level level = tichoFeignProperty.getLevel();
-        if (level.compareTo(TichoFeignProperty.Level.INFO) == 0 && log.isInfoEnabled()) {
+        TichoHttpProperty.Level level = tichoHttpProperty.getLevel();
+        if (level.compareTo(TichoHttpProperty.Level.INFO) == 0 && log.isInfoEnabled()) {
             log.info(format, arguments);
             return;
         }
-        if (level.compareTo(TichoFeignProperty.Level.WARN) == 0 && log.isWarnEnabled()) {
+        if (level.compareTo(TichoHttpProperty.Level.WARN) == 0 && log.isWarnEnabled()) {
             log.warn(format, arguments);
             return;
         }

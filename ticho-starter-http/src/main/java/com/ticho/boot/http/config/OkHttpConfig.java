@@ -1,7 +1,7 @@
-package com.ticho.boot.feign.config;
+package com.ticho.boot.http.config;
 
-import com.ticho.boot.feign.interceptor.OkHttpLogInterceptor;
-import com.ticho.boot.feign.prop.TichoFeignProperty;
+import com.ticho.boot.http.interceptor.OkHttpLogInterceptor;
+import com.ticho.boot.http.prop.TichoHttpProperty;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.ConnectionPool;
 import okhttp3.Interceptor;
@@ -34,10 +34,10 @@ public class OkHttpConfig {
      * 用于修改okhttp
      */
     @Bean
-    @ConditionalOnProperty(value = "ticho.feign.enable", havingValue = "true", matchIfMissing = true)
-    @ConfigurationProperties(prefix = "ticho.feign")
-    public TichoFeignProperty tichoFeignProperty() {
-        return new TichoFeignProperty();
+    @ConditionalOnProperty(value = "ticho.http.enable", havingValue = "true", matchIfMissing = true)
+    @ConfigurationProperties(prefix = "ticho.http")
+    public TichoHttpProperty tichoFeignProperty() {
+        return new TichoHttpProperty();
     }
 
     @Bean
@@ -50,9 +50,9 @@ public class OkHttpConfig {
     }
 
     @Bean
-    @ConditionalOnProperty(value = "ticho.feign.enable", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(value = "ticho.http.enable", havingValue = "true", matchIfMissing = true)
     @ConditionalOnMissingBean({OkHttpClient.class})
-    public OkHttpClient okHttpClient(TichoFeignProperty prop, List<Interceptor> interceptors) {
+    public OkHttpClient okHttpClient(TichoHttpProperty prop, List<Interceptor> interceptors) {
         // @formatter:off
         OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
         interceptors.forEach(builder::addInterceptor);
@@ -74,7 +74,7 @@ public class OkHttpConfig {
     }
 
     @Bean
-    @ConditionalOnProperty(value = "ticho.feign.enable", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(value = "ticho.http.enable", havingValue = "true", matchIfMissing = true)
     @ConditionalOnMissingBean({OkHttp3ClientHttpRequestFactory.class})
     public OkHttp3ClientHttpRequestFactory httpRequestFactory(OkHttpClient okHttpClient) {
         return new OkHttp3ClientHttpRequestFactory(okHttpClient);
@@ -84,7 +84,7 @@ public class OkHttpConfig {
      * 基于OkHttp3配置RestTemplate
      */
     @Bean
-    @ConditionalOnProperty(value = "ticho.feign.enable", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(value = "ticho.http.enable", havingValue = "true", matchIfMissing = true)
     @ConditionalOnMissingBean({RestTemplate.class})
     public RestTemplate restTemplate(OkHttp3ClientHttpRequestFactory httpRequestFactory) {
         return new RestTemplate(httpRequestFactory);

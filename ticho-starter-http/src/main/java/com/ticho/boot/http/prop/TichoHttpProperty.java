@@ -1,15 +1,15 @@
-package com.ticho.boot.feign.prop;
+package com.ticho.boot.http.prop;
 
 import lombok.Data;
 
 /**
- *
+ * http参数
  *
  * @author zhajianjun
  * @date 2022-11-01 13:12
  */
 @Data
-public class TichoFeignProperty {
+public class TichoHttpProperty {
 
     /** 开启ticho feign，默认使用okhttp */
     private Boolean enable = true;

@@ -1,4 +1,4 @@
-package com.ticho.boot.feign.interceptor;
+package com.ticho.boot.http.interceptor;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
