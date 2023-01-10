@@ -5,9 +5,9 @@
 
     <!--1.日志格式和颜色渲染 -->
     <!-- 彩色日志依赖的渲染类 -->
-    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
-    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
-    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"/>
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+    <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+    <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
     <!-- 增加如下的TLog MDC Listener -->
     <!-- 3.一些属性值定义 -->
     <!-- 彩色日志格式 -->
@@ -24,6 +24,7 @@
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${console.log.pattern}</pattern>
         </encoder>
+        <!-- 按临界值过滤日志：低于DEBUG以下级别被抛弃 -->
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>DEBUG</level>
         </filter>
@@ -35,23 +36,22 @@
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${log.pattern}</pattern>
         </encoder>
+        <!-- 按指定规则过滤日志 -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <!-- 过滤的级别 -->
-            <level>debug</level>
+            <level>DEBUG</level>
             <!-- 匹配时的操作：接收（记录） -->
             <onMatch>ACCEPT</onMatch>
             <!-- 不匹配时的操作：拒绝（不记录） -->
             <onMismatch>DENY</onMismatch>
         </filter>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- daily rollover -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 滚动日志文件保存格式 -->
             <fileNamePattern>${log.path}/debug.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
-            <!-- keep 30 days' worth of history -->
+            <!-- 最大保存历史时间 -->
             <maxHistory>${log.maxHistory}</maxHistory>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <!-- or whenever the file size reaches ${log.maxFileSize} -->
-                <maxFileSize>${log.maxFileSize}</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- 最大文件大小 -->
+            <maxFileSize>${log.maxFileSize}</maxFileSize>
         </rollingPolicy>
     </appender>
 
@@ -61,6 +61,7 @@
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${log.pattern}</pattern>
         </encoder>
+        <!-- 按指定规则过滤日志 -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <!-- 过滤的级别 -->
             <level>INFO</level>
@@ -69,15 +70,13 @@
             <!-- 不匹配时的操作：拒绝（不记录） -->
             <onMismatch>DENY</onMismatch>
         </filter>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- daily rollover -->
-            <fileNamePattern>${log.path}/info.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
-            <!-- keep ${log.maxHistory} days' worth of history -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 滚动日志文件保存格式 -->
+            <fileNamePattern>${log.path}/info.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <!-- 最大保存历史时间 -->
             <maxHistory>${log.maxHistory}</maxHistory>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <!-- or whenever the file size reaches ${log.maxFileSize} -->
-                <maxFileSize>${log.maxFileSize}</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- 最大文件大小 -->
+            <maxFileSize>${log.maxFileSize}</maxFileSize>
         </rollingPolicy>
     </appender>
 
@@ -95,15 +94,13 @@
             <!-- 不匹配时的操作：拒绝（不记录） -->
             <onMismatch>DENY</onMismatch>
         </filter>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- daily rollover -->
-            <fileNamePattern>${log.path}/warn.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
-            <!-- keep ${log.maxHistory} days' worth of history -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 滚动日志文件保存格式 -->
+            <fileNamePattern>${log.path}/warn.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <!-- 最大保存历史时间 -->
             <maxHistory>${log.maxHistory}</maxHistory>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <!-- or whenever the file size reaches ${log.maxFileSize} -->
-                <maxFileSize>${log.maxFileSize}</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- 最大文件大小 -->
+            <maxFileSize>${log.maxFileSize}</maxFileSize>
         </rollingPolicy>
     </appender>
 
@@ -113,6 +110,7 @@
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${log.pattern}</pattern>
         </encoder>
+        <!-- 按指定规则过滤日志 -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <!-- 过滤的级别 -->
             <level>ERROR</level>
@@ -121,18 +119,15 @@
             <!-- 不匹配时的操作：拒绝（不记录） -->
             <onMismatch>DENY</onMismatch>
         </filter>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- daily rollover -->
-            <fileNamePattern>${log.path}/error.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
-            <!-- keep 30 days' worth of history -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 滚动日志文件保存格式 -->
+            <fileNamePattern>${log.path}/error.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <!-- 最大保存历史时间 -->
             <maxHistory>${log.maxHistory}</maxHistory>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <!-- or whenever the file size reaches ${log.maxFileSize} -->
-                <maxFileSize>${log.maxFileSize}</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
+            <!-- 最大文件大小 -->
+            <maxFileSize>${log.maxFileSize}</maxFileSize>
         </rollingPolicy>
     </appender>
-
 
     <!-- 4.6. 所有日志 -->
     <appender name="all" class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -140,20 +135,46 @@
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${log.pattern}</pattern>
         </encoder>
+        <!-- 按临界值过滤日志：低于DEBUG以下级别被抛弃 -->
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>debug</level>
+            <level>DEBUG</level>
         </filter>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- rollover daily -->
-            <fileNamePattern>${log.path}/all.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>${log.maxFileSize}</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- 滚动日志文件保存格式 -->
+            <fileNamePattern>${log.path}/all.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <!-- 最大保存历史时间 -->
+            <maxHistory>${log.maxHistory}</maxHistory>
+            <!-- 最大文件大小 -->
+            <maxFileSize>${log.maxFileSize}</maxFileSize>
         </rollingPolicy>
     </appender>
 
     <!-- 5.异步日志输出 -->
-    <!-- 5.1. 异步info日志 -->
+    <!-- 5.1. 异步console日志 -->
+    <appender name="async-console" class="com.yomahub.tlog.core.enhance.logback.async.AspectLogbackAsyncAppender">
+        <!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>1024</queueSize>
+        <!--打印堆栈信息-->
+        <includeCallerData>true</includeCallerData>
+        <!-- 添加附加的appender,最多只能添加一个 -->
+        <appender-ref ref="console"/>
+    </appender>
+
+    <!-- 5.2. 异步degug日志 -->
+    <appender name="async-debug" class="com.yomahub.tlog.core.enhance.logback.async.AspectLogbackAsyncAppender">
+        <!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
+        <discardingThreshold>0</discardingThreshold>
+        <!-- 更改默认的队列的深度,该值会影响性能.默认值为256 -->
+        <queueSize>1024</queueSize>
+        <!--打印堆栈信息-->
+        <includeCallerData>true</includeCallerData>
+        <!-- 添加附加的appender,最多只能添加一个 -->
+        <appender-ref ref="debug"/>
+    </appender>
+
+    <!-- 5.3. 异步info日志 -->
     <appender name="async-info" class="com.yomahub.tlog.core.enhance.logback.async.AspectLogbackAsyncAppender">
         <!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
         <discardingThreshold>0</discardingThreshold>
@@ -165,7 +186,7 @@
         <appender-ref ref="info"/>
     </appender>
 
-    <!-- 5.3. 异步warn日志 -->
+    <!-- 5.4. 异步warn日志 -->
     <appender name="async-warn" class="com.yomahub.tlog.core.enhance.logback.async.AspectLogbackAsyncAppender">
         <!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
         <discardingThreshold>0</discardingThreshold>
@@ -177,7 +198,7 @@
         <appender-ref ref="warn"/>
     </appender>
 
-    <!-- 5.3. 异步error日志 -->
+    <!-- 5.5. 异步error日志 -->
     <appender name="async-error" class="com.yomahub.tlog.core.enhance.logback.async.AspectLogbackAsyncAppender">
         <!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
         <discardingThreshold>0</discardingThreshold>
@@ -189,7 +210,7 @@
         <appender-ref ref="error"/>
     </appender>
 
-    <!-- 5.4. 异步all日志 -->
+    <!-- 5.6. 异步all日志 -->
     <appender name="async-all" class="com.yomahub.tlog.core.enhance.logback.async.AspectLogbackAsyncAppender">
         <!-- 不丢失日志.默认的,如果队列的80%已满,则会丢弃TRACT、DEBUG、INFO级别的日志 -->
         <discardingThreshold>0</discardingThreshold>
@@ -201,24 +222,24 @@
         <appender-ref ref="all"/>
     </appender>
 
-    <!--配置业务系统日志,根据包名配置，需要自行设置-->
-    <springProfile name="local,dev,st,uat">
-        <root level="INFO" additivity="false">
-            <appender-ref ref="console"/>
-            <appender-ref ref="debug"/>
+    <springProfile name="local,dev,test,st">
+        <!-- 日志输出级别 -->
+        <root level="INFO">
+            <appender-ref ref="async-console"/>
+            <appender-ref ref="async-debug"/>
             <appender-ref ref="async-info"/>
             <appender-ref ref="async-warn"/>
             <appender-ref ref="async-error"/>
             <appender-ref ref="async-all"/>
         </root>
     </springProfile>
-
-    <springProfile name="prod">
-        <root level="INFO" additivity="false">
-            <appender-ref ref="console"/>
+    <springProfile name="prod,uat">
+        <!-- 日志输出级别 -->
+        <root level="INFO">
             <appender-ref ref="async-info"/>
             <appender-ref ref="async-warn"/>
             <appender-ref ref="async-error"/>
+            <appender-ref ref="async-all"/>
         </root>
     </springProfile>
 
