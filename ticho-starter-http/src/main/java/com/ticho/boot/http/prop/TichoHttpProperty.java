@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 public class TichoHttpProperty {
 
-    /** 开启ticho feign，默认使用okhttp */
+    /** 开启ticho http，默认使用okhttp */
     private Boolean enable = true;
 
     /** 开启日志拦截 */
@@ -19,6 +19,9 @@ public class TichoHttpProperty {
 
     /* 日志拦截是否打印日志 */
     private Boolean printLog = true;
+
+    /** 日志打印前缀 */
+    private String requestPrefixText = "[HTTP]";
 
     /** 设置连接超时，单位:秒(s) */
     private Long connectTimeout = 10L;
