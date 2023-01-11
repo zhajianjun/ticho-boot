@@ -1,5 +1,5 @@
 ticho:
   swagger:
     enable: true
-    securityUrl: http://localhost:7010
+    securityUrl: http://localhost:8010
     type: default
