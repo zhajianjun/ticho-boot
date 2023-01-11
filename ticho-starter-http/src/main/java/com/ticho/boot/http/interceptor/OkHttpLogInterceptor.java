@@ -1,8 +1,8 @@
 package com.ticho.boot.http.interceptor;
 
 import com.ticho.boot.http.prop.TichoHttpProperty;
+import com.ticho.boot.json.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.Headers;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -10,6 +10,7 @@ import okhttp3.ResponseBody;
 import org.springframework.lang.NonNull;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -23,6 +24,10 @@ import java.util.Optional;
 @Slf4j
 public class OkHttpLogInterceptor implements Interceptor {
 
+    public static final String NONE = "NONE";
+
+    private static final String requestPrefixText = "[HTTP]";
+
     private final TichoHttpProperty tichoHttpProperty;
 
     public OkHttpLogInterceptor(TichoHttpProperty tichoHttpProperty) {
@@ -34,8 +39,18 @@ public class OkHttpLogInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         // @formatter:off
         Request req = chain.request();
+        // 如果不打印日志，则直接返回
+        if (!Boolean.TRUE.equals(tichoHttpProperty.getPrintLog())) {
+            return chain.proceed(req);
+        }
         long t1 = System.currentTimeMillis();
-        String reqBody = Optional.ofNullable(req.body()).map(Object::toString).orElse("body is empty");
+        String reqBody = Optional.ofNullable(req.body()).map(Object::toString).orElse(NONE);
+        Map<String,List<String>> headersMap = req.headers().toMultimap();
+        Map<String, Object> headers = new HashMap<>();
+        headersMap.forEach((k,v) -> headers.put(k, String.join(",",v)));
+        log.info("{} 请求地址: {} {}", requestPrefixText,  req.method(), req.url());
+        log.info("{} 请求体: {}", requestPrefixText, reqBody);
+        log.info("{} 请求头: {}", requestPrefixText, JsonUtil.toJsonString(headers));
         Response res = chain.proceed(req);
         long t2 = System.currentTimeMillis();
         //这里不能直接使用response.body().string()的方式输出日志
@@ -44,36 +59,11 @@ public class OkHttpLogInterceptor implements Interceptor {
         int byteCount = 1024 * 1024;
         ResponseBody body = res.peekBody(byteCount);
         String resBody = body.string();
-        Headers headers = req.headers();
-        StringBuilder builder = new StringBuilder();
-        Map<String,List<String>> headersMap = headers.toMultimap();
-        headersMap.forEach((k,v) -> builder.append("\n    ").append(k).append(": ").append(String.join(",", v)));
-        log("\n[------http 请求开始------]\n1.地址:{} {}\n2.请求体:{}\n3.请求头:{}\n4.响应体:{}\n5.响应时间:{}ms\n[------http 请求结束------]",
-            req.method(),
-            req.url(),
-            reqBody,
-            builder,
-            resBody,
-            (t2 - t1)
-        );
+        log.info("{} 响应体: {}", requestPrefixText, resBody);
+        log.info("{} 耗时: {}ms", requestPrefixText, t2 - t1);
+        log.info("{} 日志结束", requestPrefixText);
         return res;
         // @formatter:on
-    }
-
-    public void log(String format, Object... arguments) {
-        TichoHttpProperty.Level level = tichoHttpProperty.getLevel();
-        if (level.compareTo(TichoHttpProperty.Level.INFO) == 0 && log.isInfoEnabled()) {
-            log.info(format, arguments);
-            return;
-        }
-        if (level.compareTo(TichoHttpProperty.Level.WARN) == 0 && log.isWarnEnabled()) {
-            log.warn(format, arguments);
-            return;
-        }
-        if (log.isDebugEnabled()) {
-            log.debug(format, arguments);
-        }
-
     }
 
 }

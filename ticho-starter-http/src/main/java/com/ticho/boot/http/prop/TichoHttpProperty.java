@@ -14,9 +14,11 @@ public class TichoHttpProperty {
     /** 开启ticho feign，默认使用okhttp */
     private Boolean enable = true;
 
+    /** 开启日志拦截 */
     private Boolean openLog = false;
 
-    private Level level = Level.DEBUG;
+    /* 日志拦截是否打印日志 */
+    private Boolean printLog = true;
 
     /** 设置连接超时，单位:秒(s) */
     private Long connectTimeout = 10L;
@@ -35,9 +37,5 @@ public class TichoHttpProperty {
 
     /** 存活时间，单位:分钟(min) */
     private Long keepAliveDuration = 5L;
-
-    public enum Level {
-        DEBUG, INFO, WARN, ERROR
-    }
 
 }
