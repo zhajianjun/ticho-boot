@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Configuration
 @Slf4j
-@PropertySource(value = "classpath:ticho-feign.properties")
+@PropertySource(value = "classpath:ticho-http.properties")
 public class OkHttpConfig {
 
     /**

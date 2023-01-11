@@ -26,8 +26,6 @@ public class OkHttpLogInterceptor implements Interceptor {
 
     public static final String NONE = "NONE";
 
-    private static final String requestPrefixText = "[HTTP]";
-
     private final TichoHttpProperty tichoHttpProperty;
 
     public OkHttpLogInterceptor(TichoHttpProperty tichoHttpProperty) {
@@ -43,6 +41,7 @@ public class OkHttpLogInterceptor implements Interceptor {
         if (!Boolean.TRUE.equals(tichoHttpProperty.getPrintLog())) {
             return chain.proceed(req);
         }
+        String requestPrefixText = tichoHttpProperty.getRequestPrefixText();
         long t1 = System.currentTimeMillis();
         String reqBody = Optional.ofNullable(req.body()).map(Object::toString).orElse(NONE);
         Map<String,List<String>> headersMap = req.headers().toMultimap();

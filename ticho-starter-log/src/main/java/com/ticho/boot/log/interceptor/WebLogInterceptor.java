@@ -38,8 +38,6 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
 
     private static final String NONE = "NONE";
 
-    private static final String requestPrefixText = "[REQUEST]";
-
     private static TransmittableThreadLocal<LogInfo> logThreadLocal;
 
     private final TransmittableThreadLocal<LogInfo> theadLocal;
@@ -74,6 +72,7 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
             return true;
         }
         long millis = System.currentTimeMillis();
+        String requestPrefixText = tichoLogProperty.getRequestPrefixText();
         log.info("{} 请求日志 开始", requestPrefixText);
         String method = request.getMethod();
         String requestURI = request.getRequestURI();
@@ -112,6 +111,7 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
         Map<String, Object> resBodyMap = getResBody(request, response);
         logInfo.setResBody(resBodyMap);
         String resBody = toJsonOfDefault(resBodyMap);
+        String requestPrefixText = tichoLogProperty.getRequestPrefixText();
         log.info("{} 响应体: {}", requestPrefixText, resBody);
         theadLocal.remove();
         logInfo.setEnd(System.currentTimeMillis());
@@ -122,9 +122,9 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
 
     private Map<String, Object> getResBody(HttpServletRequest request, HttpServletResponse response) {
         String contentType = request.getContentType();
-        boolean flag = contentType.equals(MediaType.APPLICATION_JSON_VALUE) ||
+        boolean flag = contentType != null && (contentType.equals(MediaType.APPLICATION_JSON_VALUE) ||
             contentType.equals(MediaType.APPLICATION_JSON_UTF8_VALUE) ||
-            contentType.equals(MediaType.APPLICATION_FORM_URLENCODED_VALUE);
+            contentType.equals(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
         if (!flag) {
             return Collections.emptyMap();
         }
