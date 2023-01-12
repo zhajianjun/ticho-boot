@@ -1,5 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.ticho.boot.web.config.TichoAsyncConfig,\
   com.ticho.boot.web.config.TichoMvcConfig,\
   com.ticho.boot.web.config.TichoCorsConfig,\
   com.ticho.boot.web.config.TichoActuatorConifg,\
@@ -12,6 +11,6 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.ticho.boot.web.converter.LocalDateTimeConverter,\
   com.ticho.boot.web.event.TichoApplicationReadyEvent,\
   com.ticho.boot.web.util.CloudIdUtil,\
-  com.ticho.boot.web.config.TaskDecoratorConfig
+  com.ticho.boot.web.config.TichoWebBeanConfig
 
 

@@ -1,6 +1,5 @@
 package com.ticho.boot.log.wrapper;
 
-import com.ticho.boot.json.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.ReadListener;
@@ -28,19 +27,24 @@ public class RequestWrapper extends HttpServletRequestWrapper {
 
     private final String body;
 
-    private final Map<String, Object> bodyMap;
+    private final Map<String, String[]> parameterMap;
 
     /**
      * Wrapper的构造方法，主要是将body里的内容取出来，然后存储到对象中的body变量中，方便
      * 后续复用
+     * <p>
+     *  io.undertow.servlet.spec.HttpServletRequestImpl#parseFormData()
+     *  查看上述的方法，需要执行下request.getParameterMap()，才能正常解析form-data类型的参数数据
+     * </p>
      *
      * @param request The request to wrap
      * @throws IllegalArgumentException if the request is null
      */
     public RequestWrapper(HttpServletRequest request) {
         super(request);
+        // 需要执行下request.getParameterMap()，才能正常解析form-data类型的参数数据
+        this.parameterMap = request.getParameterMap();
         body = getBodyString(request);
-        bodyMap = JsonUtil.toMap(body, String.class, Object.class);
     }
 
     /**
@@ -51,7 +55,8 @@ public class RequestWrapper extends HttpServletRequestWrapper {
      */
     public String getBodyString(ServletRequest request) {
         try {
-            return inputStream2String(request.getInputStream());
+            ServletInputStream inputStream = request.getInputStream();
+            return inputStream2String(inputStream);
         } catch (IOException e) {
             log.error("{}", e.getMessage(), e);
             throw new RuntimeException(e);
@@ -75,7 +80,12 @@ public class RequestWrapper extends HttpServletRequestWrapper {
             log.error("{}", e.getMessage(), e);
             throw new RuntimeException(e);
         }
-        return sb.toString();
+        return sb.toString().trim();
+    }
+
+    @Override
+    public Map<String, String[]> getParameterMap() {
+        return this.parameterMap;
     }
 
     /**
@@ -86,7 +96,7 @@ public class RequestWrapper extends HttpServletRequestWrapper {
      */
     @Override
     public ServletInputStream getInputStream() {
-        final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body.getBytes(StandardCharsets.UTF_8));
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body.getBytes(StandardCharsets.UTF_8));
         return new ServletInputStream() {
             @Override
             public boolean isFinished() {
@@ -116,8 +126,9 @@ public class RequestWrapper extends HttpServletRequestWrapper {
      */
     @Override
     public BufferedReader getReader() {
-        return new BufferedReader(new InputStreamReader(this.getInputStream(), StandardCharsets.UTF_8));
+        return new BufferedReader(new InputStreamReader(getInputStream()));
     }
+
 
 
     /**
@@ -127,15 +138,6 @@ public class RequestWrapper extends HttpServletRequestWrapper {
      */
     public String getBody() {
         return this.body;
-    }
-
-    /**
-     * 获取bodyMap
-     *
-     * @return {@link String}
-     */
-    public Map<String, Object> getBodyMap() {
-        return this.bodyMap;
     }
 
 }
