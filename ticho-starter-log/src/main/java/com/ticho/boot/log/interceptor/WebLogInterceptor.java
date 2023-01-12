@@ -82,7 +82,6 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
         // body
         RequestWrapper requestWrapper = (RequestWrapper) request;
         String body = nullOfDefault(requestWrapper.getBody());
-        Map<String,Object> bodyMap = requestWrapper.getBodyMap();
         // header
         Map<String, Object> headersMap = getHeaders(request);
         String headers = toJsonOfDefault(headersMap);
@@ -93,9 +92,9 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
         LogInfo logInfo = LogInfo.builder()
             .type(method)
             .url(requestURI)
-            .reqParams(paramsMap)
-            .reqBody(bodyMap)
-            .headers(headersMap)
+            .reqParams(params)
+            .reqBody(body)
+            .headers(headers)
             .start(millis)
             .build();
         theadLocal.set(logInfo);
@@ -109,8 +108,8 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
             return;
         }
         Map<String, Object> resBodyMap = getResBody(request, response);
-        logInfo.setResBody(resBodyMap);
         String resBody = toJsonOfDefault(resBodyMap);
+        logInfo.setResBody(resBody);
         String requestPrefixText = tichoLogProperty.getRequestPrefixText();
         log.info("{} 响应体: {}", requestPrefixText, resBody);
         theadLocal.remove();
@@ -186,16 +185,16 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
         private String url;
 
         /** 请求参数 */
-        private Map<String, Object> reqParams;
+        private String reqParams;
 
         /** 请求体 */
-        private Map<String, Object> reqBody;
+        private String reqBody;
 
         /** 请求头 */
-        private Map<String, Object> headers;
+        private String headers;
 
         /** 响应体 */
-        private Map<String, Object> resBody;
+        private String resBody;
 
         /* 请求开始时间 */
         private Long start;
