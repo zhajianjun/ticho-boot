@@ -3,13 +3,12 @@ package com.ticho.boot.log.config;
 import com.ticho.boot.log.filter.WapperRequestFilter;
 import com.ticho.boot.log.interceptor.WebLogInterceptor;
 import com.ticho.boot.log.prop.TichoLogProperty;
-import com.yomahub.tlog.okhttp.TLogOkHttpInterceptor;
-import okhttp3.Interceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.Ordered;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -28,18 +27,13 @@ public class LogConfig implements WebMvcConfigurer {
     private TichoLogProperty tichoLogProperty;
 
     @Bean
-    public Interceptor tLogOkHttpInterceptor() {
-        return new TLogOkHttpInterceptor();
-    }
-
-    @Bean
     public WapperRequestFilter wapperRequestFilter() {
         return new WapperRequestFilter();
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new WebLogInterceptor(tichoLogProperty));
+        registry.addInterceptor(new WebLogInterceptor(tichoLogProperty)).order(Ordered.HIGHEST_PRECEDENCE + 10);
     }
 
 }
