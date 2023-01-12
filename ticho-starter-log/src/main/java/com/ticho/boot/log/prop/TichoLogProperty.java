@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
- * Miniio连接对象
+ * 日志配置
  *
  * @author zhajianjun
  * @date 2022-07-13 22:40:25
