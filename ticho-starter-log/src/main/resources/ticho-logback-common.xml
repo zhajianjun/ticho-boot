@@ -28,20 +28,6 @@
         </filter>
     </appender>
 
-    <!-- 使用kafka启用下面配置 -->
-    <appender name="plumelog" class="com.plumelog.logback.appender.RedisAppender">
-        <appName>${appName}</appName>
-        <redisHost>${redis.host}</redisHost>
-        <redisPort>${redis.port}</redisPort>
-        <redisAuth>${redis.auth}</redisAuth>
-        <redisDb>${redis.db}</redisDb>
-        <env>${env}</env>
-        <!-- 按临界值过滤日志：低于DEBUG以下级别被抛弃 -->
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>INFO</level>
-        </filter>
-    </appender>
-
     <!-- 4.2.debug日志 -->
     <appender name="debug" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${log.path}/debug.log</file>
@@ -238,7 +224,6 @@
         <!-- 日志输出级别 -->
         <root level="INFO">
             <appender-ref ref="async-console"/>
-            <appender-ref ref="plumelog"/>
             <appender-ref ref="async-debug"/>
             <appender-ref ref="async-info"/>
             <appender-ref ref="async-warn"/>
@@ -253,7 +238,6 @@
             <appender-ref ref="async-warn"/>
             <appender-ref ref="async-error"/>
             <appender-ref ref="async-all"/>
-            <appender-ref ref="plumelog"/>
         </root>
     </springProfile>
 
