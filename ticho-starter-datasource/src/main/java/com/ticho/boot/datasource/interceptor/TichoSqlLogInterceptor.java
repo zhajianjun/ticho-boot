@@ -1,4 +1,4 @@
-package com.ticho.boot.datasource.config;
+package com.ticho.boot.datasource.interceptor;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
@@ -19,7 +19,9 @@ import org.apache.ibatis.reflection.SystemMetaObject;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
 import java.sql.Statement;
@@ -44,9 +46,13 @@ import java.util.regex.Matcher;
 })
 @Slf4j
 @Component
-@ConditionalOnProperty(value = "ticho.datasource.print-sql", havingValue = "true")
+@RefreshScope
+@ConditionalOnProperty(value = "ticho.datasource.log.enable", havingValue = "true")
 public class TichoSqlLogInterceptor implements Interceptor {
     // @formatter:on
+
+    @Value("${ticho.datasource.log.print-sql:false}")
+    private Boolean printSql;
 
     /**
      * 拦截类型StatementHandler
@@ -63,6 +69,9 @@ public class TichoSqlLogInterceptor implements Interceptor {
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
+        if (!Boolean.TRUE.equals(printSql)) {
+            return invocation.proceed();
+        }
         Object target = PluginUtils.realTarget(invocation.getTarget());
         MetaObject metaObject = SystemMetaObject.forObject(target);
         MappedStatement ms = (MappedStatement) metaObject.getValue("delegate.mappedStatement");
