@@ -26,10 +26,16 @@
       "description": "Description for ticho.datasource.type-aliases-package."
     },
     {
-      "name": "ticho.datasource.print-sql",
+      "name": "ticho.datasource.log.enable",
       "type": "java.lang.Boolean",
-      "defaultValue":  "false",
-      "description": "Description for ticho.datasource.print-sql."
+      "defaultValue": "false",
+      "description": "Description for ticho.datasource.log.enable."
+    },
+    {
+      "name": "ticho.datasource.log.print-sql",
+      "type": "java.lang.Boolean",
+      "defaultValue": "false",
+      "description": "Description for ticho.datasource.log.print-sql."
     }
   ]
 }

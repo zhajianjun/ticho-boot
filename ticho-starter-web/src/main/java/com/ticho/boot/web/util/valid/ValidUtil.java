@@ -18,6 +18,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 /**
@@ -228,22 +229,22 @@ public class ValidUtil {
         if (validate == null || (size = validate.size()) == 0) {
             return;
         }
+        StringJoiner joiner = new StringJoiner(",","{","}");
         if (size == 1) {
             Iterator<ConstraintViolation<T>> violation = validate.iterator();
             ConstraintViolation<T> next = violation.next();
             String message = next.getMessage();
             String propertyPath = next.getPropertyPath().toString();
-            log.warn("参数校验异常，property=【{}】,message=【{}】", propertyPath, message);
+            joiner.add(propertyPath + ":" + message);
+            log.warn("参数校验异常，{}", joiner);
             throw new BizException(BizErrCode.PARAM_ERROR, message);
         }
         List<ConstraintViolation<T>> validated = validate
             .stream()
             .sorted(Comparator.comparing(ConstraintViolation::getMessage))
-            .peek(next -> {
-                String message = next.getMessage();
-                String propertyPath = next.getPropertyPath().toString();
-                log.warn("参数校验异常，property=【{}】,message=【{}】", propertyPath, message);
-            }).collect(Collectors.toList());
+            .peek(next -> joiner.add(next.getPropertyPath() + ":" + next.getMessage()))
+            .collect(Collectors.toList());
+        log.warn("参数校验异常，{}", joiner);
         ConstraintViolation<T> violation = validated.get(0);
         throw new BizException(BizErrCode.PARAM_ERROR, violation.getMessage());
         // @formatter:on

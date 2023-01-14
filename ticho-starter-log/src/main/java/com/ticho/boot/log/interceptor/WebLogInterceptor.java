@@ -1,5 +1,6 @@
 package com.ticho.boot.log.interceptor;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.ticho.boot.json.util.JsonUtil;
 import com.ticho.boot.log.prop.TichoLogProperty;
@@ -21,10 +22,13 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -72,10 +76,8 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
             return true;
         }
         long millis = System.currentTimeMillis();
-        String requestPrefixText = tichoLogProperty.getRequestPrefixText();
-        log.info("{} 请求日志 开始", requestPrefixText);
         String method = request.getMethod();
-        String requestURI = request.getRequestURI();
+        String url = request.getRequestURI();
         // params
         Map<String, Object> paramsMap = getParams(request);
         String params = toJsonOfDefault(paramsMap);
@@ -85,16 +87,14 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
         // header
         Map<String, Object> headersMap = getHeaders(request);
         String headers = toJsonOfDefault(headersMap);
-        log.info("{} 请求地址: {} {}", requestPrefixText,  method, requestURI);
-        log.info("{} 请求参数: {}", requestPrefixText, params);
-        log.info("{} 请求体: {}", requestPrefixText, body);
-        log.info("{} 请求头: {}", requestPrefixText, headers);
+        String requestPrefixText = tichoLogProperty.getRequestPrefixText();
+        log.info("{} {} {} 请求开始, 请求参数={}, 请求体={}, 请求头={}", requestPrefixText, method, url, params, body, headers);
         LogInfo logInfo = LogInfo.builder()
             .type(method)
-            .url(requestURI)
+            .url(url)
             .reqParams(params)
             .reqBody(body)
-            .headers(headers)
+            .reqHeaders(headers)
             .start(millis)
             .build();
         theadLocal.set(logInfo);
@@ -107,15 +107,17 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
         if (logInfo == null) {
             return;
         }
+        String method = request.getMethod();
+        String url = request.getRequestURI();
         Map<String, Object> resBodyMap = getResBody(request, response);
         String resBody = toJsonOfDefault(resBodyMap);
         logInfo.setResBody(resBody);
         String requestPrefixText = tichoLogProperty.getRequestPrefixText();
-        log.info("{} 响应体: {}", requestPrefixText, resBody);
         theadLocal.remove();
         logInfo.setEnd(System.currentTimeMillis());
-        log.info("{} 耗时: {}ms", requestPrefixText, logInfo.getTime());
-        log.info("{} 日志结束", requestPrefixText);
+        int status = response.getStatus();
+        Long time = logInfo.getTime();
+        log.info("{} {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}", requestPrefixText, method, url, status, time, resBody);
         // 如果是mapping
     }
 
@@ -139,8 +141,8 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
             String name = parameteNames.nextElement();
             //根据文本域的name来获取值
             //因为无法判断文本域是否是单值或者双值，所以我们全部使用双值接收
-            String[] parameteValues = request.getParameterValues(name);
-            String value = String.join(",", parameteValues);
+            String[] values = request.getParameterValues(name);
+            String value = String.join(",", Arrays.stream(values).filter(StrUtil::isNotBlank).collect(Collectors.joining(",")));
             map.put(name, value);
         }
         return map;
@@ -155,6 +157,16 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
             //根据文本域的name来获取值
             //因为无法判断文本域是否是单值或者双值，所以我们全部使用双值接收
             String value = request.getHeader(name);
+            map.put(name, value);
+        }
+        return map;
+    }
+
+    public Map<String, Object> getHeaders(HttpServletResponse response) {
+        Map<String, Object> map = new HashMap<>();
+        Collection<String> headerNames = response.getHeaderNames();
+        for (String name : headerNames) {
+            String value = response.getHeader(name);
             map.put(name, value);
         }
         return map;
@@ -191,10 +203,13 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
         private String reqBody;
 
         /** 请求头 */
-        private String headers;
+        private String reqHeaders;
 
         /** 响应体 */
         private String resBody;
+
+        /** 响应头 */
+        private String resHeaders;
 
         /* 请求开始时间 */
         private Long start;

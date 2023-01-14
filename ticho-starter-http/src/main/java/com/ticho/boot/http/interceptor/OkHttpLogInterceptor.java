@@ -1,8 +1,9 @@
 package com.ticho.boot.http.interceptor;
 
+import cn.hutool.core.util.StrUtil;
 import com.ticho.boot.http.prop.TichoHttpProperty;
-import com.ticho.boot.json.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -14,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -35,7 +38,7 @@ public class OkHttpLogInterceptor implements Interceptor {
     @Override
     @NonNull
     public Response intercept(Chain chain) throws IOException {
-        // @formatter:off
+        // @formatter:of
         Request req = chain.request();
         // 如果不打印日志，则直接返回
         if (!Boolean.TRUE.equals(tichoHttpProperty.getPrintLog())) {
@@ -47,9 +50,11 @@ public class OkHttpLogInterceptor implements Interceptor {
         Map<String,List<String>> headersMap = req.headers().toMultimap();
         Map<String, Object> headers = new HashMap<>();
         headersMap.forEach((k,v) -> headers.put(k, String.join(",",v)));
-        log.info("{} 请求地址: {} {}", requestPrefixText,  req.method(), req.url());
-        log.info("{} 请求体: {}", requestPrefixText, reqBody);
-        log.info("{} 请求头: {}", requestPrefixText, JsonUtil.toJsonString(headers));
+        String method = req.method();
+        HttpUrl httpUrl = req.url();
+        String url = StrUtil.subBefore(httpUrl.toString(), "?", false);
+        Map<String, Object> params = getParams(httpUrl);
+        log.info("{} {} {} 请求开始, 请求参数={}, 请求体={}, 请求头={}", requestPrefixText, method, url, params, reqBody, headers);
         Response res = chain.proceed(req);
         long t2 = System.currentTimeMillis();
         //这里不能直接使用response.body().string()的方式输出日志
@@ -58,11 +63,20 @@ public class OkHttpLogInterceptor implements Interceptor {
         int byteCount = 1024 * 1024;
         ResponseBody body = res.peekBody(byteCount);
         String resBody = body.string();
-        log.info("{} 响应体: {}", requestPrefixText, resBody);
-        log.info("{} 耗时: {}ms", requestPrefixText, t2 - t1);
-        log.info("{} 日志结束", requestPrefixText);
+        int status = res.code();
+        log.info("{} {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}", requestPrefixText, method, url, status, t2-t1, resBody);
         return res;
         // @formatter:on
+    }
+
+    public Map<String, Object> getParams(HttpUrl httpUrl) {
+        Map<String, Object> map = new HashMap<>();
+        Set<String> parameterNames = httpUrl.queryParameterNames();
+        for (String parameterName : parameterNames) {
+            List<String> values = httpUrl.queryParameterValues(parameterName);
+            map.put(parameterName, values.stream().filter(StrUtil::isNotBlank).collect(Collectors.joining(",")));
+        }
+        return map;
     }
 
 }
