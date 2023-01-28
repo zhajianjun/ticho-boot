@@ -6,8 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import okio.Buffer;
 import org.springframework.lang.NonNull;
 
 import java.io.IOException;
@@ -46,7 +48,7 @@ public class OkHttpLogInterceptor implements Interceptor {
         }
         String requestPrefixText = tichoHttpProperty.getRequestPrefixText();
         long t1 = System.currentTimeMillis();
-        String reqBody = Optional.ofNullable(req.body()).map(Object::toString).orElse(NONE);
+        String reqBody = getReqBody(req);
         Map<String,List<String>> headersMap = req.headers().toMultimap();
         Map<String, Object> headers = new HashMap<>();
         headersMap.forEach((k,v) -> headers.put(k, String.join(",",v)));
@@ -77,6 +79,20 @@ public class OkHttpLogInterceptor implements Interceptor {
             map.put(parameterName, values.stream().filter(StrUtil::isNotBlank).collect(Collectors.joining(",")));
         }
         return map;
+    }
+
+    private String getReqBody(Request req) {
+        RequestBody body = req.body();
+        if (body == null) {
+            return NONE;
+        }
+        try (Buffer buffer = new Buffer()) {
+            body.writeTo(buffer);
+            return buffer.readUtf8();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return NONE;
     }
 
 }
