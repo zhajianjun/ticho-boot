@@ -1,10 +1,8 @@
 package com.ticho.boot.log.wrapper;
 
 import com.ticho.boot.json.util.JsonUtil;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.NonNull;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.WriteListener;
@@ -12,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
@@ -27,13 +25,25 @@ import java.util.Map;
 @Slf4j
 public class ResponseWrapper extends HttpServletResponseWrapper {
 
-    private final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-
-    private final HttpServletResponse response;
+    private final ByteArrayOutputStream outputStream;
+    private final ServletOutputStream servletOutputStream;
+    private final PrintWriter printWriter;
 
     public ResponseWrapper(HttpServletResponse response) {
         super(response);
-        this.response = response;
+        outputStream = new ByteArrayOutputStream(2048);
+        servletOutputStream = new WrapperOutputStream(outputStream, response);
+        printWriter = new WrapperWriter(outputStream, response);
+    }
+
+    @Override
+    public ServletOutputStream getOutputStream() {
+        return servletOutputStream;
+    }
+
+    @Override
+    public PrintWriter getWriter() {
+        return printWriter;
     }
 
     public Map<String, Object> getBodyMap() {
@@ -42,56 +52,90 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
 
     public String getBody() {
         try {
-            return byteArrayOutputStream.toString(StandardCharsets.UTF_8.name());
+            return outputStream.toString(StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             log.error("{}", e.getMessage(), e);
             throw new RuntimeException(e);
         }
     }
 
+    static class WrapperWriter extends PrintWriter {
 
-    @Override
-    public ServletOutputStream getOutputStream() {
-        return new ServletOutputStreamWrapper(this.byteArrayOutputStream, this.response);
-    }
+        private final HttpServletResponse response;
+        private final ByteArrayOutputStream output;
 
-    @Override
-    public PrintWriter getWriter() throws IOException {
-        return new PrintWriter(new OutputStreamWriter(this.byteArrayOutputStream, this.response.getCharacterEncoding()));
-    }
-
-
-    @EqualsAndHashCode(callSuper = true)
-    @Data
-    @AllArgsConstructor
-    private static class ServletOutputStreamWrapper extends ServletOutputStream {
-
-        private ByteArrayOutputStream outputStream;
-        private HttpServletResponse response;
-
-        @Override
-        public boolean isReady() {
-            return true;
-        }
-
-        @Override
-        public void setWriteListener(WriteListener listener) {
-
+        public WrapperWriter(ByteArrayOutputStream out, HttpServletResponse response) {
+            super(out);
+            this.response = response;
+            this.output = out;
         }
 
         @Override
         public void write(int b) {
-            this.outputStream.write(b);
+            super.write(b);
+            try {
+                response.getWriter().write(b);
+            } catch (IOException e) {
+                e.printStackTrace();
+                this.setError();
+            }
         }
 
         @Override
-        public void flush() throws IOException {
-            if (!this.response.isCommitted()) {
-                byte[] body = this.outputStream.toByteArray();
-                ServletOutputStream outputStream = this.response.getOutputStream();
-                outputStream.write(body);
-                outputStream.flush();
+        public void write(@NonNull String s, int off, int len) {
+            super.write(s, off, len);
+            try {
+                response.getWriter().write(s, off, len);
+            } catch (IOException e) {
+                e.printStackTrace();
+                this.setError();
             }
         }
+    }
+
+    static class WrapperOutputStream extends ServletOutputStream {
+
+        private final OutputStream outputStream;
+        private final HttpServletResponse response;
+
+        public WrapperOutputStream(OutputStream outputStream, HttpServletResponse response) {
+            super();
+            this.response = response;
+            this.outputStream = outputStream;
+        }
+
+        @Override
+        public boolean isReady() {
+            if (response == null) {
+                return false;
+            }
+            try {
+                return response.getOutputStream().isReady();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+        @Override
+        public void setWriteListener(WriteListener listener) {
+            if (response != null) {
+                try {
+                    response.getOutputStream().setWriteListener(listener);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+
+        @Override
+        public void write(int b) throws IOException {
+            if (response != null) {
+                response.getOutputStream().write(b);
+            }
+            outputStream.write(b);
+        }
+
     }
 }
