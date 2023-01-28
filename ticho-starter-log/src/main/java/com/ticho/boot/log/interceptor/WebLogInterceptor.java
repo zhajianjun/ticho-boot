@@ -109,7 +109,7 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
         }
         String method = request.getMethod();
         String url = request.getRequestURI();
-        Map<String, Object> resBodyMap = getResBody(request, response);
+        Map<String, Object> resBodyMap = getResBody(response);
         String resBody = toJsonOfDefault(resBodyMap);
         logInfo.setResBody(resBody);
         String requestPrefixText = tichoLogProperty.getRequestPrefixText();
@@ -121,8 +121,8 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
         // 如果是mapping
     }
 
-    private Map<String, Object> getResBody(HttpServletRequest request, HttpServletResponse response) {
-        String contentType = request.getContentType();
+    private Map<String, Object> getResBody(HttpServletResponse response) {
+        String contentType = response.getContentType();
         boolean flag = contentType != null && (contentType.equals(MediaType.APPLICATION_JSON_VALUE) ||
             contentType.equals(MediaType.APPLICATION_JSON_UTF8_VALUE) ||
             contentType.equals(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
