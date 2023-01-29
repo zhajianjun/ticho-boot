@@ -1,6 +1,5 @@
 package com.ticho.boot.log.wrapper;
 
-import com.ticho.boot.json.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 
@@ -14,7 +13,6 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.util.Map;
 
 /**
  *
@@ -44,10 +42,6 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
     @Override
     public PrintWriter getWriter() {
         return printWriter;
-    }
-
-    public Map<String, Object> getBodyMap() {
-        return JsonUtil.toMap(getBody(), String.class, Object.class);
     }
 
     public String getBody() {
