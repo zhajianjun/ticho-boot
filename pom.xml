@@ -35,8 +35,8 @@
     </properties>
 
     <dependencyManagement>
-        <dependencies>
 
+        <dependencies>
             <dependency>
                 <groupId>com.ticho.boot</groupId>
                 <artifactId>ticho-dependencies</artifactId>
@@ -44,7 +44,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
         </dependencies>
 
     </dependencyManagement>

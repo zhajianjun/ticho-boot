@@ -24,7 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -109,8 +108,7 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
         }
         String method = request.getMethod();
         String url = request.getRequestURI();
-        Map<String, Object> resBodyMap = getResBody(response);
-        String resBody = toJsonOfDefault(resBodyMap);
+        String resBody = nullOfDefault(getResBody(response));
         logInfo.setResBody(resBody);
         String requestPrefixText = tichoLogProperty.getRequestPrefixText();
         theadLocal.remove();
@@ -121,16 +119,16 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
         // 如果是mapping
     }
 
-    private Map<String, Object> getResBody(HttpServletResponse response) {
+    private String getResBody(HttpServletResponse response) {
         String contentType = response.getContentType();
         boolean flag = contentType != null && (contentType.equals(MediaType.APPLICATION_JSON_VALUE) ||
             contentType.equals(MediaType.APPLICATION_JSON_UTF8_VALUE) ||
             contentType.equals(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
         if (!flag) {
-            return Collections.emptyMap();
+            return NONE;
         }
         ResponseWrapper responseWrapper = (ResponseWrapper)response;
-        return responseWrapper.getBodyMap();
+        return responseWrapper.getBody();
     }
 
     public Map<String, Object> getParams(HttpServletRequest request) {
