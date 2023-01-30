@@ -8,6 +8,9 @@ import com.ticho.boot.view.exception.BizException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.Optional;
+import java.util.function.Supplier;
+
 /**
  * 断言工具类
  *
@@ -35,6 +38,13 @@ public class Assert {
         }
     }
 
+    public static void isTrue(boolean condition, IErrCode errCode, Supplier<String> stringSupplier) {
+        if (!condition) {
+            String errMsg = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMsg());
+            cast(errCode, errMsg);
+        }
+    }
+
     /*  ----------- ------------- */
 
 
@@ -50,6 +60,13 @@ public class Assert {
         }
     }
 
+    public static void isNull(Object obj, IErrCode errCode, Supplier<String> stringSupplier) {
+        if (ObjectUtil.isNotNull(obj)) {
+            String errMsg = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMsg());
+            cast(errCode, errMsg);
+        }
+    }
+
     /*  ----------- ------------- */
 
     public static void isNotNull(Object obj, IErrCode errCode) {
@@ -60,6 +77,13 @@ public class Assert {
 
     public static void isNotNull(Object obj, IErrCode errCode, String errMsg) {
         if (ObjectUtil.isNull(obj)) {
+            cast(errCode, errMsg);
+        }
+    }
+
+    public static void isNotNull(Object obj, IErrCode errCode, Supplier<String> stringSupplier) {
+        if (ObjectUtil.isNull(obj)) {
+            String errMsg = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMsg());
             cast(errCode, errMsg);
         }
     }
@@ -79,6 +103,13 @@ public class Assert {
         }
     }
 
+    public static void isEmpty(Object obj, IErrCode errCode, Supplier<String> stringSupplier) {
+        if (ObjectUtil.isNotEmpty(obj)) {
+            String errMsg = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMsg());
+            cast(errCode, errMsg);
+        }
+    }
+
     /*  ----------- ------------- */
 
     public static void isNotEmpty(Object obj, IErrCode errCode) {
@@ -93,17 +124,31 @@ public class Assert {
         }
     }
 
+    public static void isNotEmpty(Object obj, IErrCode errCode, Supplier<String> stringSupplier) {
+        if (ObjectUtil.isEmpty(obj)) {
+            String errMsg = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMsg());
+            cast(errCode, errMsg);
+        }
+    }
+
     /*  ----------- ------------- */
 
 
-    public static void isBlank(String obj, IErrCode errCode) {
-        if (CharSequenceUtil.isNotBlank(obj)) {
+    public static void isBlank(String str, IErrCode errCode) {
+        if (CharSequenceUtil.isNotBlank(str)) {
             cast(errCode);
         }
     }
 
-    public static void isBlank(String obj, IErrCode errCode, String errMsg) {
-        if (CharSequenceUtil.isNotBlank(obj)) {
+    public static void isBlank(String str, IErrCode errCode, String errMsg) {
+        if (CharSequenceUtil.isNotBlank(str)) {
+            cast(errCode, errMsg);
+        }
+    }
+
+    public static void isBlank(String str, IErrCode errCode, Supplier<String> stringSupplier) {
+        if (CharSequenceUtil.isNotBlank(str)) {
+            String errMsg = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMsg());
             cast(errCode, errMsg);
         }
     }
@@ -122,6 +167,13 @@ public class Assert {
         }
     }
 
+    public static void isNotBlank(String str, IErrCode errCode, Supplier<String> stringSupplier) {
+        if (CharSequenceUtil.isBlank(str)) {
+            String errMsg = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMsg());
+            cast(errCode, errMsg);
+        }
+    }
+
     /*  ----------- ------------- */
 
     public static void cast(IErrCode errCode) {
@@ -129,6 +181,11 @@ public class Assert {
     }
 
     public static void cast(IErrCode errCode, String errMsg) {
+        throw new BizException(errCode, errMsg);
+    }
+
+    public static void cast(IErrCode errCode, Supplier<String> stringSupplier) {
+        String errMsg = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMsg());
         throw new BizException(errCode, errMsg);
     }
 
