@@ -34,7 +34,7 @@ import java.util.List;
  */
 @ConditionalOnProperty(value = "ticho.swagger.enable", havingValue = "true")
 @Configuration
-@PropertySource(value = "/DefaultKnife4jConfig.properties")
+@PropertySource(value = "classpath:DefaultKnife4jConfig.properties")
 @AutoConfigureBefore(Knife4jAutoConfiguration.class)
 @EnableSwagger2WebMvc
 public class TichoSwaggerConfig {

@@ -93,7 +93,7 @@ public class CustomLocalDateDeserializer extends JSR310DateTimeDeserializerBase<
             // if we are using default formatter
             DateTimeFormatter format = _formatter;
             try {
-                // fixme 添加的内容在这
+                // 添加的内容在这
                 if (string.matches(DateFormatConst.YYYY_MM_DD_HH_MM_SS_REGEX)) {
                     LocalDateTime localDateTime = LocalDateTime.parse(string, DateTimeFormatter.ofPattern(DateFormatConst.YYYY_MM_DD_HH_MM_SS));
                     return localDateTime.toLocalDate();
