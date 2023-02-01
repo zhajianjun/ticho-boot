@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 public class RedisUtil<K, V> {
     public static final long DEFAULT_EXPIRE_TIME = -1;
     public static final long DEFAULT_COUNT = 0;
-    private final Logger log = LoggerFactory.getLogger(RedisUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(RedisUtil.class);
     private final RedisTemplate<K, V> redisTemplate;
 
     public RedisUtil(RedisTemplate<K, V> redisTemplate) {
