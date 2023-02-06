@@ -7,7 +7,6 @@ import com.ticho.boot.security.dto.LoginRequest;
 import com.ticho.boot.security.dto.Oauth2AccessToken;
 import com.ticho.boot.security.handle.LoginUserHandle;
 import com.ticho.boot.view.core.Result;
-import com.ticho.boot.web.annotation.View;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,27 +36,25 @@ public class OauthController {
     @Autowired
     private LoginUserHandle loginUserHandle;
 
-    @View(ignore = true)
     @ApiOperation("登录")
     @ApiOperationSupport(order = 10)
     @PostMapping("token")
-    public Oauth2AccessToken token(LoginRequest loginRequest) {
-        return loginUserHandle.token(loginRequest);
+    public Result<Oauth2AccessToken> token(LoginRequest loginRequest) {
+        return Result.ok(loginUserHandle.token(loginRequest));
     }
 
-    @View(ignore = true)
     @ApiOperation("刷新token")
     @ApiOperationSupport(order = 20)
     @PostMapping("refreshToken")
-    public Oauth2AccessToken refreshToken(String refreshToken) {
-        return loginUserHandle.refreshToken(refreshToken);
+    public Result<Oauth2AccessToken> refreshToken(String refreshToken) {
+        return Result.ok(loginUserHandle.refreshToken(refreshToken));
     }
 
-    @ApiOperation(value = "用户信息查询")
+    @ApiOperation(value = "token信息查询")
     @ApiOperationSupport(order = 30)
     @GetMapping
-    public Principal principal() {
-        return SecurityContextHolder.getContext().getAuthentication();
+    public Result<Principal> principal() {
+        return Result.ok(SecurityContextHolder.getContext().getAuthentication());
     }
 
     @ApiOperation("获取公钥")
