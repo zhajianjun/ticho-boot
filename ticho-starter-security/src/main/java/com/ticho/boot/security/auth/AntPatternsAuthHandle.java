@@ -1,8 +1,7 @@
 package com.ticho.boot.security.auth;
 
 import com.ticho.boot.security.annotation.IgnoreJwtCheck;
-import com.ticho.boot.security.constant.OAuth2Const;
-import com.ticho.boot.security.prop.TichoSecurityProperty;
+import com.ticho.boot.security.prop.BaseSecurityProperty;
 import com.ticho.boot.web.util.SpringContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -10,7 +9,6 @@ import org.springframework.web.method.HandlerMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 接口匹配过滤处理
@@ -21,14 +19,14 @@ import java.util.Objects;
 public class AntPatternsAuthHandle {
 
     @Autowired
-    private TichoSecurityProperty tichoSecurityProperty;
+    private BaseSecurityProperty baseSecurityProperty;
 
     public boolean ignoreAuth(HttpServletRequest request) throws Exception {
         // @formatter:off
         if (ignoreHandleMethodJwtCheck(request)) {
             return true;
         }
-        List<AntPathRequestMatcher> antPathRequestMatchers = tichoSecurityProperty.getAntPathRequestMatchers();
+        List<AntPathRequestMatcher> antPathRequestMatchers = baseSecurityProperty.getAntPathRequestMatchers();
         return antPathRequestMatchers.stream().anyMatch(x -> x.matches(request));
         // @formatter:on
     }

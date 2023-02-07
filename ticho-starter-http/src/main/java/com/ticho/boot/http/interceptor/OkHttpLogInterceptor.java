@@ -1,7 +1,7 @@
 package com.ticho.boot.http.interceptor;
 
 import cn.hutool.core.util.StrUtil;
-import com.ticho.boot.http.prop.TichoHttpProperty;
+import com.ticho.boot.http.prop.BaseHttpProperty;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
@@ -30,10 +30,10 @@ public class OkHttpLogInterceptor implements Interceptor {
 
     public static final String NONE = "NONE";
 
-    private final TichoHttpProperty tichoHttpProperty;
+    private final BaseHttpProperty baseHttpProperty;
 
-    public OkHttpLogInterceptor(TichoHttpProperty tichoHttpProperty) {
-        this.tichoHttpProperty = tichoHttpProperty;
+    public OkHttpLogInterceptor(BaseHttpProperty baseHttpProperty) {
+        this.baseHttpProperty = baseHttpProperty;
     }
 
     @Override
@@ -42,10 +42,10 @@ public class OkHttpLogInterceptor implements Interceptor {
         // @formatter:of
         Request req = chain.request();
         // 如果不打印日志，则直接返回
-        if (!Boolean.TRUE.equals(tichoHttpProperty.getPrintLog())) {
+        if (!Boolean.TRUE.equals(baseHttpProperty.getPrintLog())) {
             return chain.proceed(req);
         }
-        String requestPrefixText = tichoHttpProperty.getRequestPrefixText();
+        String requestPrefixText = baseHttpProperty.getRequestPrefixText();
         long t1 = System.currentTimeMillis();
         String reqBody = getReqBody(req);
         Map<String,List<String>> headersMap = req.headers().toMultimap();

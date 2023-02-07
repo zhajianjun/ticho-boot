@@ -1,7 +1,7 @@
 package com.ticho.boot.security.handle.login;
 
 
-import com.ticho.boot.view.core.TichoSecurityUser;
+import com.ticho.boot.view.core.BaseSecurityUser;
 
 /**
  * 用户登录策略
@@ -18,6 +18,6 @@ public interface LoginUserStragety {
      * @param credentials 凭证
      * @return 用户信息
      */
-    TichoSecurityUser login(String account, String credentials);
+    BaseSecurityUser login(String account, String credentials);
 
 }

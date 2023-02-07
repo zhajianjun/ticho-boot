@@ -5,7 +5,7 @@ import com.ticho.boot.security.dto.Oauth2AccessToken;
 import com.ticho.boot.security.handle.jwt.JwtSigner;
 import com.ticho.boot.security.handle.jwt.JwtEncode;
 import com.ticho.boot.security.handle.jwt.JwtExtra;
-import com.ticho.boot.view.core.TichoSecurityUser;
+import com.ticho.boot.view.core.BaseSecurityUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -49,15 +49,15 @@ public abstract class AbstractLoginUserHandle implements LoginUserHandle {
     /**
      * 根据权限用户获取token返回信息
      *
-     * @param tichoSecurityUser 权限用户
+     * @param baseSecurityUser 权限用户
      * @return token返回信息
      */
-    protected Oauth2AccessToken getOauth2TokenAndSetAuthentication(TichoSecurityUser tichoSecurityUser) {
+    protected Oauth2AccessToken getOauth2TokenAndSetAuthentication(BaseSecurityUser baseSecurityUser) {
         // @formatter:off
-        List<String> authoritieStrs = Optional.ofNullable(tichoSecurityUser.getRoleIds()).orElseGet(ArrayList::new);
-        tichoSecurityUser.setPassword("N/A");
+        List<String> authoritieStrs = Optional.ofNullable(baseSecurityUser.getRoleCodes()).orElseGet(ArrayList::new);
+        baseSecurityUser.setPassword("N/A");
         List<SimpleGrantedAuthority> authorities = authoritieStrs.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(tichoSecurityUser, tichoSecurityUser.getPassword(), authorities);
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(baseSecurityUser, baseSecurityUser.getPassword(), authorities);
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (requestAttributes != null) {
             HttpServletRequest httpServletRequest = requestAttributes.getRequest();
@@ -68,7 +68,7 @@ public abstract class AbstractLoginUserHandle implements LoginUserHandle {
         Map<String, Object> map = getAllJwtExtInfo();
         // jwt扩展接口的所有数据放入token中
         oAuth2AccessToken.setExtInfo(map);
-        jwtEncode.encode(oAuth2AccessToken, tichoSecurityUser);
+        jwtEncode.encode(oAuth2AccessToken, baseSecurityUser);
         return oAuth2AccessToken;
         // @formatter:on
     }

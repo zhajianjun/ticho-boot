@@ -3,7 +3,7 @@ package com.ticho.boot.security.handle.jwt;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.NumberUtil;
 import com.ticho.boot.json.util.JsonUtil;
-import com.ticho.boot.security.constant.SecurityConst;
+import com.ticho.boot.security.constant.BaseSecurityConst;
 import com.ticho.boot.view.core.BizErrCode;
 import com.ticho.boot.view.exception.BizException;
 import com.ticho.boot.view.util.Assert;
@@ -50,11 +50,11 @@ public class JwtDecode {
         Assert.isNotNull(claims, BizErrCode.FAIL, "TOKEN 失效");
         Map<String, Object> map = JsonUtil.toMap(claims, String.class, Object.class);
         boolean isExpired = false;
-        if (CollUtil.isEmpty(map) || !map.containsKey(SecurityConst.EXP)) {
+        if (CollUtil.isEmpty(map) || !map.containsKey(BaseSecurityConst.EXP)) {
             isExpired = true;
         }
         if (!isExpired) {
-            String numberStr = Optional.ofNullable(map.get(SecurityConst.EXP)).map(Object::toString).orElse(null);
+            String numberStr = Optional.ofNullable(map.get(BaseSecurityConst.EXP)).map(Object::toString).orElse(null);
             BigDecimal exp = NumberUtil.toBigDecimal(numberStr);
             isExpired = exp.longValue() < TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
         }

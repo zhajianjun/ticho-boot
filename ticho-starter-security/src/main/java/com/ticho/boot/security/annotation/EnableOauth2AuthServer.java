@@ -1,12 +1,12 @@
 package com.ticho.boot.security.annotation;
 
 import com.ticho.boot.security.controller.OauthController;
-import com.ticho.boot.security.handle.TichoLoginUserHandle;
+import com.ticho.boot.security.handle.BaseLoginUserHandle;
 import com.ticho.boot.security.handle.jwt.JwtEncode;
-import com.ticho.boot.security.handle.load.TichoPhoneLoadUserService;
-import com.ticho.boot.security.handle.load.TichoUsernameLoadUserService;
-import com.ticho.boot.security.handle.login.TichoUsernameLoginUserStragety;
-import com.ticho.boot.security.prop.TichoOauthProperty;
+import com.ticho.boot.security.handle.load.BasePhoneLoadUserService;
+import com.ticho.boot.security.handle.load.BaseUsernameLoadUserService;
+import com.ticho.boot.security.handle.login.BaseUsernameLoginUserStragety;
+import com.ticho.boot.security.prop.BaseOauthProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Import;
 
@@ -26,14 +26,14 @@ import java.lang.annotation.Target;
 @Target(value = {java.lang.annotation.ElementType.TYPE})
 @Documented
 @Import({
-    TichoOauthProperty.class,
+    BaseOauthProperty.class,
     JwtEncode.class,
-    TichoUsernameLoadUserService.class,
-    TichoPhoneLoadUserService.class,
-    TichoLoginUserHandle.class,
-    TichoUsernameLoginUserStragety.class,
-    TichoUsernameLoginUserStragety.class,
-    TichoUsernameLoginUserStragety.class,
+    BaseUsernameLoadUserService.class,
+    BasePhoneLoadUserService.class,
+    BaseLoginUserHandle.class,
+    BaseUsernameLoginUserStragety.class,
+    BaseUsernameLoginUserStragety.class,
+    BaseUsernameLoginUserStragety.class,
     OauthController.class,
 })
 @ConditionalOnWebApplication

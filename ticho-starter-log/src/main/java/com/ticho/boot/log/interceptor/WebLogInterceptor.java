@@ -3,7 +3,7 @@ package com.ticho.boot.log.interceptor;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.ticho.boot.json.util.JsonUtil;
-import com.ticho.boot.log.prop.TichoLogProperty;
+import com.ticho.boot.log.prop.BaseLogProperty;
 import com.ticho.boot.log.wrapper.RequestWrapper;
 import com.ticho.boot.log.wrapper.ResponseWrapper;
 import lombok.AllArgsConstructor;
@@ -45,11 +45,11 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
 
     private final TransmittableThreadLocal<LogInfo> theadLocal;
 
-    private final TichoLogProperty tichoLogProperty;
+    private final BaseLogProperty baseLogProperty;
 
-    public WebLogInterceptor(TichoLogProperty tichoLogProperty) {
+    public WebLogInterceptor(BaseLogProperty baseLogProperty) {
         this.theadLocal = new TransmittableThreadLocal<>();
-        this.tichoLogProperty = tichoLogProperty;
+        this.baseLogProperty = baseLogProperty;
     }
 
     @Override
@@ -70,7 +70,7 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
         // 是否打印日志
-        boolean print = Boolean.TRUE.equals(tichoLogProperty.getPrint());
+        boolean print = Boolean.TRUE.equals(baseLogProperty.getPrint());
         if (!print || !(request instanceof RequestWrapper) || !(handler instanceof HandlerMethod)) {
             return true;
         }
@@ -86,7 +86,7 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
         // header
         Map<String, Object> headersMap = getHeaders(request);
         String headers = toJsonOfDefault(headersMap);
-        String requestPrefixText = tichoLogProperty.getRequestPrefixText();
+        String requestPrefixText = baseLogProperty.getRequestPrefixText();
         log.info("{} {} {} 请求开始, 请求参数={}, 请求体={}, 请求头={}", requestPrefixText, method, url, params, body, headers);
         LogInfo logInfo = LogInfo.builder()
             .type(method)
@@ -110,7 +110,7 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
         String url = request.getRequestURI();
         String resBody = nullOfDefault(getResBody(response));
         logInfo.setResBody(resBody);
-        String requestPrefixText = tichoLogProperty.getRequestPrefixText();
+        String requestPrefixText = baseLogProperty.getRequestPrefixText();
         theadLocal.remove();
         logInfo.setEnd(System.currentTimeMillis());
         int status = response.getStatus();

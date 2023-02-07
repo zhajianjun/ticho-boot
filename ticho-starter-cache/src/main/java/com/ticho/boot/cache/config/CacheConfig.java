@@ -1,11 +1,10 @@
 package com.ticho.boot.cache.config;
 
 import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.RemovalCause;
 import com.github.benmanes.caffeine.cache.RemovalListener;
-import com.ticho.boot.cache.TichoCache;
+import com.ticho.boot.cache.BaseCache;
 import com.ticho.boot.redis.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -17,7 +16,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,17 +39,17 @@ public class CacheConfig {
      */
     @Bean
     @Primary
-    public CacheManager cacheManager(List<TichoCache> tichoCaches, RedisUtil<String, String> redisUtil) {
+    public CacheManager cacheManager(List<BaseCache> baseCaches, RedisUtil<String, String> redisUtil) {
         // @formatter:off
         List<CaffeineCache> caches = new ArrayList<>();
-        for (TichoCache tichoCache : tichoCaches) {
+        for (BaseCache baseCache : baseCaches) {
             Cache<Object, Object> build = Caffeine.newBuilder()
                 .recordStats()
-                .expireAfterWrite(tichoCache.getTtl(), TimeUnit.SECONDS)
-                .maximumSize(tichoCache.getMaxSize())
+                .expireAfterWrite(baseCache.getTtl(), TimeUnit.SECONDS)
+                .maximumSize(baseCache.getMaxSize())
                 .removalListener(new DefaultRemovalListener())
                 .build();
-            CaffeineCache caffeineCache = new CaffeineCache(tichoCache.getName(), build);
+            CaffeineCache caffeineCache = new CaffeineCache(baseCache.getName(), build);
             caches.add(caffeineCache);
         }
         SimpleCacheManager cacheManager = new SimpleCacheManager();
@@ -61,9 +59,9 @@ public class CacheConfig {
     }
 
     @Bean
-    @ConditionalOnMissingBean(TichoCache.class)
-    public TichoCache defaultTichoCache() {
-        return new TichoCache("test", 1, 1);
+    @ConditionalOnMissingBean(BaseCache.class)
+    public BaseCache defaultBaseCache() {
+        return new BaseCache("test", 1, 1);
     }
 
     static class DefaultRemovalListener implements RemovalListener<Object, Object> {
