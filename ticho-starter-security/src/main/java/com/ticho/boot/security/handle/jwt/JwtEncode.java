@@ -1,11 +1,11 @@
 package com.ticho.boot.security.handle.jwt;
 
 import com.ticho.boot.json.util.JsonUtil;
-import com.ticho.boot.security.constant.SecurityConst;
+import com.ticho.boot.security.constant.BaseSecurityConst;
 import com.ticho.boot.security.dto.Oauth2AccessToken;
-import com.ticho.boot.security.prop.TichoOauthProperty;
+import com.ticho.boot.security.prop.BaseOauthProperty;
 import com.ticho.boot.view.core.BizErrCode;
-import com.ticho.boot.view.core.TichoSecurityUser;
+import com.ticho.boot.view.core.BaseSecurityUser;
 import com.ticho.boot.view.util.Assert;
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.jwt.crypto.sign.Signer;
@@ -27,15 +27,15 @@ import java.util.concurrent.TimeUnit;
 public class JwtEncode {
 
     public final JwtSigner jwtSigner;
-    public final TichoOauthProperty oauthProperty;
+    public final BaseOauthProperty oauthProperty;
 
-    public JwtEncode(JwtSigner jwtSigner, TichoOauthProperty oauthProperty) {
+    public JwtEncode(JwtSigner jwtSigner, BaseOauthProperty oauthProperty) {
         Assert.isNotNull(jwtSigner, BizErrCode.FAIL, "signer is null");
         this.jwtSigner = jwtSigner;
         this.oauthProperty = oauthProperty;
     }
 
-    public void encode(Oauth2AccessToken oAuth2AccessToken, TichoSecurityUser tichoSecurityUser) {
+    public void encode(Oauth2AccessToken oAuth2AccessToken, BaseSecurityUser baseSecurityUser) {
         // @formatter:off
         Signer signer = jwtSigner.getSigner();
         Assert.isNotNull(signer, BizErrCode.FAIL, "signer is null");
@@ -47,14 +47,14 @@ public class JwtEncode {
         oAuth2AccessToken.setIat(iat);
         oAuth2AccessToken.setExp(exp);
         oAuth2AccessToken.setExpiresIn(oAuth2AccessToken.getExpiresIn());
-        oAuth2AccessToken.setTokenType(SecurityConst.BEARER.toLowerCase());
-        List<String> authorities = Optional.ofNullable(tichoSecurityUser.getRoleIds()).orElseGet(ArrayList::new);
+        oAuth2AccessToken.setTokenType(BaseSecurityConst.BEARER.toLowerCase());
+        List<String> authorities = Optional.ofNullable(baseSecurityUser.getRoleCodes()).orElseGet(ArrayList::new);
         // access token信息
         Map<String, Object> accessTokenInfo = new HashMap<>();
-        accessTokenInfo.put(SecurityConst.TYPE, SecurityConst.ACCESS_TOKEN);
-        accessTokenInfo.put(SecurityConst.EXP, exp);
-        accessTokenInfo.put(SecurityConst.USERNAME, tichoSecurityUser.getUsername());
-        accessTokenInfo.put(SecurityConst.AUTHORITIES, authorities);
+        accessTokenInfo.put(BaseSecurityConst.TYPE, BaseSecurityConst.ACCESS_TOKEN);
+        accessTokenInfo.put(BaseSecurityConst.EXP, exp);
+        accessTokenInfo.put(BaseSecurityConst.USERNAME, baseSecurityUser.getUsername());
+        accessTokenInfo.put(BaseSecurityConst.AUTHORITIES, authorities);
         // access token 加载扩展信息
         Map<String, Object> extInfo = oAuth2AccessToken.getExtInfo();
         if (!CollectionUtils.isEmpty(extInfo)) {
@@ -62,9 +62,9 @@ public class JwtEncode {
         }
         // refresh token信息
         Map<String, Object> refreshTokenInfo = new HashMap<>();
-        refreshTokenInfo.put(SecurityConst.TYPE, SecurityConst.REFRESH_TOKEN);
-        refreshTokenInfo.put(SecurityConst.EXP, refreTokenExp);
-        refreshTokenInfo.put(SecurityConst.USERNAME, tichoSecurityUser.getUsername());
+        refreshTokenInfo.put(BaseSecurityConst.TYPE, BaseSecurityConst.REFRESH_TOKEN);
+        refreshTokenInfo.put(BaseSecurityConst.EXP, refreTokenExp);
+        refreshTokenInfo.put(BaseSecurityConst.USERNAME, baseSecurityUser.getUsername());
         String accessToken = JwtHelper.encode(JsonUtil.toJsonString(accessTokenInfo), signer).getEncoded();
         String refreshToken = JwtHelper.encode(JsonUtil.toJsonString(refreshTokenInfo), signer).getEncoded();
         oAuth2AccessToken.setAccessToken(accessToken);

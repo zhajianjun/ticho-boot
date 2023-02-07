@@ -1,7 +1,7 @@
 package com.ticho.boot.http.config;
 
 import com.ticho.boot.http.interceptor.OkHttpLogInterceptor;
-import com.ticho.boot.http.prop.TichoHttpProperty;
+import com.ticho.boot.http.prop.BaseHttpProperty;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.ConnectionPool;
 import okhttp3.Interceptor;
@@ -36,8 +36,8 @@ public class OkHttpConfig {
     @Bean
     @ConditionalOnProperty(value = "ticho.http.enable", havingValue = "true", matchIfMissing = true)
     @ConfigurationProperties(prefix = "ticho.http")
-    public TichoHttpProperty tichoFeignProperty() {
-        return new TichoHttpProperty();
+    public BaseHttpProperty tichoFeignProperty() {
+        return new BaseHttpProperty();
     }
 
     @Bean
@@ -52,7 +52,7 @@ public class OkHttpConfig {
     @Bean
     @ConditionalOnProperty(value = "ticho.http.enable", havingValue = "true", matchIfMissing = true)
     @ConditionalOnMissingBean({OkHttpClient.class})
-    public OkHttpClient okHttpClient(TichoHttpProperty prop, List<Interceptor> interceptors) {
+    public OkHttpClient okHttpClient(BaseHttpProperty prop, List<Interceptor> interceptors) {
         // @formatter:off
         OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
         interceptors.forEach(builder::addInterceptor);

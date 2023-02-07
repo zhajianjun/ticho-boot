@@ -2,7 +2,7 @@ package com.ticho.boot.security.controller;
 
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSort;
-import com.ticho.boot.security.constant.OAuth2Const;
+import com.ticho.boot.security.constant.BaseOAuth2Const;
 import com.ticho.boot.security.dto.LoginRequest;
 import com.ticho.boot.security.dto.Oauth2AccessToken;
 import com.ticho.boot.security.handle.LoginUserHandle;
@@ -26,8 +26,8 @@ import java.security.Principal;
  * @author zhajianjun
  * @date 2022-09-22 15:36
  */
-@ConditionalOnMissingBean(name = OAuth2Const.OAUTH2_CONTROLLER)
-@RestController(OAuth2Const.OAUTH2_CONTROLLER)
+@ConditionalOnMissingBean(name = BaseOAuth2Const.OAUTH2_CONTROLLER)
+@RestController(BaseOAuth2Const.OAUTH2_CONTROLLER)
 @RequestMapping("oauth")
 @ApiSort(Ordered.HIGHEST_PRECEDENCE + 200)
 @Api(tags = "权限登录")

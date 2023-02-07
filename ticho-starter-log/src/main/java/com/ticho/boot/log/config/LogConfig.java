@@ -2,7 +2,7 @@ package com.ticho.boot.log.config;
 
 import com.ticho.boot.log.filter.WapperRequestFilter;
 import com.ticho.boot.log.interceptor.WebLogInterceptor;
-import com.ticho.boot.log.prop.TichoLogProperty;
+import com.ticho.boot.log.prop.BaseLogProperty;
 import com.yomahub.tlog.springboot.lifecircle.TLogPropertyConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -27,7 +27,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class LogConfig implements WebMvcConfigurer {
 
     @Autowired
-    private TichoLogProperty tichoLogProperty;
+    private BaseLogProperty baseLogProperty;
 
     @Bean
     public WapperRequestFilter wapperRequestFilter() {
@@ -36,7 +36,7 @@ public class LogConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new WebLogInterceptor(tichoLogProperty)).order(Ordered.HIGHEST_PRECEDENCE + 10);
+        registry.addInterceptor(new WebLogInterceptor(baseLogProperty)).order(Ordered.HIGHEST_PRECEDENCE + 10);
     }
 
 }

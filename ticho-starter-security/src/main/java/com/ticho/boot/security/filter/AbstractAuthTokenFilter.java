@@ -3,12 +3,12 @@ package com.ticho.boot.security.filter;
 import cn.hutool.core.util.StrUtil;
 import com.ticho.boot.json.util.JsonUtil;
 import com.ticho.boot.security.auth.AntPatternsAuthHandle;
-import com.ticho.boot.security.constant.SecurityConst;
+import com.ticho.boot.security.constant.BaseSecurityConst;
 import com.ticho.boot.security.handle.jwt.JwtDecode;
 import com.ticho.boot.view.core.BizErrCode;
 import com.ticho.boot.view.core.HttpErrCode;
 import com.ticho.boot.view.core.Result;
-import com.ticho.boot.view.core.TichoSecurityUser;
+import com.ticho.boot.view.core.BaseSecurityUser;
 import com.ticho.boot.view.exception.BizException;
 import com.ticho.boot.view.util.Assert;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
  * @date 2022-09-22 08:38:17
  */
 @Slf4j
-public abstract class AbstractAuthTokenFilter<T extends TichoSecurityUser> extends OncePerRequestFilter {
+public abstract class AbstractAuthTokenFilter<T extends BaseSecurityUser> extends OncePerRequestFilter {
 
     @Autowired
     private JwtDecode jwtDecode;
@@ -85,16 +85,16 @@ public abstract class AbstractAuthTokenFilter<T extends TichoSecurityUser> exten
             }
             String token = request.getHeader(HttpHeaders.AUTHORIZATION);
             Assert.isNotNull(token, HttpErrCode.NOT_LOGIN);
-            token = StrUtil.removePrefixIgnoreCase(token, SecurityConst.BEARER);
+            token = StrUtil.removePrefixIgnoreCase(token, BaseSecurityConst.BEARER);
             token = StrUtil.trimStart(token);
             Map<String, Object> decodeAndVerify = jwtDecode.decodeAndVerify(token);
-            Object type = decodeAndVerify.getOrDefault(SecurityConst.TYPE, "");
-            Assert.isTrue(Objects.equals(type, SecurityConst.ACCESS_TOKEN), BizErrCode.FAIL, "token不合法");
+            Object type = decodeAndVerify.getOrDefault(BaseSecurityConst.TYPE, "");
+            Assert.isTrue(Objects.equals(type, BaseSecurityConst.ACCESS_TOKEN), BizErrCode.FAIL, "token不合法");
             T securityUser = convert(decodeAndVerify);
             Assert.isNotNull(securityUser, BizErrCode.FAIL, "token不合法");
             if (securityUser != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 securityUser.setPassword("N/A");
-                List<String> authoritieStrs = Optional.ofNullable(securityUser.getRoleIds()).orElseGet(ArrayList::new);
+                List<String> authoritieStrs = Optional.ofNullable(securityUser.getRoleCodes()).orElseGet(ArrayList::new);
                 List<SimpleGrantedAuthority> authorities = authoritieStrs.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(securityUser, securityUser.getPassword(), authorities);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
