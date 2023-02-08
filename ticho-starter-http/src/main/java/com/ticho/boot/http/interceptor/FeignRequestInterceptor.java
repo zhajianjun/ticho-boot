@@ -1,5 +1,6 @@
 package com.ticho.boot.http.interceptor;
 
+import com.ticho.boot.http.constant.HttpConst;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,8 @@ public class FeignRequestInterceptor implements RequestInterceptor {
 
     @Override
     public void apply(RequestTemplate template) {
-        // 如果header中没有有inner=true，则需要在feign请求header中传递token信息
+        // feign则是内部调用，添加header inner = true
+        template.header(HttpConst.INNER, HttpConst.INNER_VALUE);
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         if (requestAttributes == null) {
             return;
