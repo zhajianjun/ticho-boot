@@ -33,7 +33,7 @@ public class BaseSecurityControllerAdvice {
      * @return Result
      */
     @ExceptionHandler(AccessDeniedException.class)
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     public Result<String> accessDeniedException(AccessDeniedException e, HttpServletRequest request) {
         log.warn("权限不足 e={}", e.getMessage());
         return Result.of(HttpErrCode.ACCESS_DENIED, e.getMessage(), request.getRequestURI());
@@ -46,7 +46,7 @@ public class BaseSecurityControllerAdvice {
      * @return Result
      */
     @ExceptionHandler(AuthenticationException.class)
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public Result<String> authenticationException(AuthenticationException e, HttpServletRequest request) {
         log.warn("登录异常 e={}", e.getMessage());
         return Result.of(HttpErrCode.NOT_LOGIN, e.getMessage(), request.getRequestURI());
