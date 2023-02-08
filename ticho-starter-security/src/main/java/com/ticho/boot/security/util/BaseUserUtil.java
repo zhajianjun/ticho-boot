@@ -17,7 +17,7 @@ import java.util.Optional;
  * @date 2022-09-30 10:45
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class BaseSecurityUtil {
+public class BaseUserUtil {
 
 
     public static <T extends BaseSecurityUser> T getCurrentUser() {
