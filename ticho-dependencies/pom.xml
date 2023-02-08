@@ -327,6 +327,13 @@
                 <version>1.5.0</version>
             </dependency>
 
+            <!-- 获取浏览器信息https://mvnrepository.com/artifact/eu.bitwalker/UserAgentUtils -->
+            <dependency>
+                <groupId>eu.bitwalker</groupId>
+                <artifactId>UserAgentUtils</artifactId>
+                <version>1.21</version>
+            </dependency>
+
         </dependencies>
 
     </dependencyManagement>
