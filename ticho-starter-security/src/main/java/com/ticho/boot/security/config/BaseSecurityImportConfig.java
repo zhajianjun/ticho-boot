@@ -1,16 +1,16 @@
 package com.ticho.boot.security.config;
 
 import com.ticho.boot.security.auth.AntPatternsAuthHandle;
-import com.ticho.boot.security.auth.PermissionService;
 import com.ticho.boot.security.auth.BasePermissionServiceImpl;
+import com.ticho.boot.security.auth.PermissionService;
 import com.ticho.boot.security.constant.BaseOAuth2Const;
 import com.ticho.boot.security.constant.BaseSecurityConst;
 import com.ticho.boot.security.filter.BaseAccessDecisionManager;
 import com.ticho.boot.security.filter.BaseTokenAuthenticationTokenFilter;
+import com.ticho.boot.security.handle.jwt.BaseJwtExtra;
 import com.ticho.boot.security.handle.jwt.JwtDecode;
 import com.ticho.boot.security.handle.jwt.JwtExtra;
 import com.ticho.boot.security.handle.jwt.JwtSigner;
-import com.ticho.boot.security.handle.jwt.BaseJwtExtra;
 import com.ticho.boot.security.prop.BaseSecurityProperty;
 import com.ticho.boot.security.view.BaseAccessDeniedHandler;
 import com.ticho.boot.security.view.BaseAuthenticationEntryPoint;
@@ -54,7 +54,7 @@ public class BaseSecurityImportConfig {
      */
     @Bean
     @ConditionalOnMissingBean(JwtSigner.class)
-    public JwtSigner jwtSinger() {
+    public JwtSigner jwtSigner() {
         return new JwtSigner("ticho");
     }
 

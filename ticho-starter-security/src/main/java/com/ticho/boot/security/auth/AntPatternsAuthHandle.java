@@ -1,6 +1,7 @@
 package com.ticho.boot.security.auth;
 
 import com.ticho.boot.security.annotation.IgnoreJwtCheck;
+import com.ticho.boot.security.constant.BaseOAuth2Const;
 import com.ticho.boot.security.prop.BaseSecurityProperty;
 import com.ticho.boot.web.util.SpringContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.web.method.HandlerMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 接口匹配过滤处理
@@ -45,7 +47,16 @@ public class AntPatternsAuthHandle {
         }
         // IgnoreJwtCheck注解不存在返回false
         IgnoreJwtCheck methodAnnotation = handlerMethod.getMethodAnnotation(IgnoreJwtCheck.class);
-        return methodAnnotation != null;
+        if (methodAnnotation == null) {
+            return false;
+        }
+        // IgnoreAuth注解存在，且inner=false,则不是内部服务访问，则jwt校验完全放开
+        boolean inner = methodAnnotation.value();
+        if (!inner) {
+            return true;
+        }
+        // inner=true,内部服务访问，则header中存在 inner = true,则权限放开
+        return Objects.equals(request.getHeader(BaseOAuth2Const.INNER), BaseOAuth2Const.INNER_VALUE);
     }
 
 }
