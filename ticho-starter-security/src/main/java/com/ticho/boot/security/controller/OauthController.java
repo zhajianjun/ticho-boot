@@ -3,6 +3,7 @@ package com.ticho.boot.security.controller;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSort;
 import com.ticho.boot.security.constant.BaseOAuth2Const;
+import com.ticho.boot.security.dto.BaseLoginRequest;
 import com.ticho.boot.security.dto.LoginRequest;
 import com.ticho.boot.security.dto.Oauth2AccessToken;
 import com.ticho.boot.security.handle.LoginUserHandle;
@@ -39,7 +40,7 @@ public class OauthController {
     @ApiOperation("登录")
     @ApiOperationSupport(order = 10)
     @PostMapping("token")
-    public Result<Oauth2AccessToken> token(LoginRequest loginRequest) {
+    public Result<Oauth2AccessToken> token(BaseLoginRequest loginRequest) {
         return Result.ok(loginUserHandle.token(loginRequest));
     }
 
