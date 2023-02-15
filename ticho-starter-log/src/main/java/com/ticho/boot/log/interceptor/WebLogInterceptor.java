@@ -1,18 +1,19 @@
 package com.ticho.boot.log.interceptor;
 
+import cn.hutool.core.date.SystemClock;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
+import cn.hutool.http.useragent.UserAgent;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.ticho.boot.json.util.JsonUtil;
+import com.ticho.boot.log.event.LogInfoEvent;
 import com.ticho.boot.log.prop.BaseLogProperty;
+import com.ticho.boot.log.util.IpUtil;
 import com.ticho.boot.log.wrapper.RequestWrapper;
 import com.ticho.boot.log.wrapper.ResponseWrapper;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
@@ -70,11 +71,10 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
         // 是否打印日志
-        boolean print = Boolean.TRUE.equals(baseLogProperty.getPrint());
-        if (!print || !(request instanceof RequestWrapper) || !(handler instanceof HandlerMethod)) {
+        if (!(request instanceof RequestWrapper) || !(handler instanceof HandlerMethod)) {
             return true;
         }
-        long millis = System.currentTimeMillis();
+        long millis = SystemClock.now();
         String method = request.getMethod();
         String url = request.getRequestURI();
         // params
@@ -87,16 +87,23 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
         Map<String, Object> headersMap = getHeaders(request);
         String headers = toJsonOfDefault(headersMap);
         String requestPrefixText = baseLogProperty.getRequestPrefixText();
-        log.info("{} {} {} 请求开始, 请求参数={}, 请求体={}, 请求头={}", requestPrefixText, method, url, params, body, headers);
+        UserAgent userAgent = IpUtil.getUserAgent(request);
         LogInfo logInfo = LogInfo.builder()
             .type(method)
             .url(url)
+            .ip(IpUtil.getIp(request))
             .reqParams(params)
             .reqBody(body)
             .reqHeaders(headers)
             .start(millis)
+            .userAgent(userAgent)
+            .handlerMethod((HandlerMethod) handler)
             .build();
         theadLocal.set(logInfo);
+        boolean print = Boolean.TRUE.equals(baseLogProperty.getPrint());
+        if (print) {
+            log.info("{} {} {} 请求开始, 请求参数={}, 请求体={}, 请求头={}", requestPrefixText, method, url, params, body, headers);
+        }
         return true;
     }
 
@@ -112,11 +119,15 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
         logInfo.setResBody(resBody);
         String requestPrefixText = baseLogProperty.getRequestPrefixText();
         theadLocal.remove();
-        logInfo.setEnd(System.currentTimeMillis());
+        logInfo.setEnd(SystemClock.now());
         int status = response.getStatus();
         Long time = logInfo.getTime();
-        log.info("{} {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}", requestPrefixText, method, url, status, time, resBody);
-        // 如果是mapping
+        boolean print = Boolean.TRUE.equals(baseLogProperty.getPrint());
+        if (print) {
+            log.info("{} {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}", requestPrefixText, method, url, status, time, resBody);
+        }
+        ApplicationContext applicationContext = SpringUtil.getApplicationContext();
+        applicationContext.publishEvent(new LogInfoEvent(applicationContext, logInfo));
     }
 
     private String getResBody(HttpServletResponse response) {
@@ -181,52 +192,4 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
         }
         return result;
     }
-
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Getter
-    @Setter
-    public static class LogInfo {
-        /** 请求类型 */
-        private String type;
-
-        /** 请求地址 */
-        private String url;
-
-        /** 请求参数 */
-        private String reqParams;
-
-        /** 请求体 */
-        private String reqBody;
-
-        /** 请求头 */
-        private String reqHeaders;
-
-        /** 响应体 */
-        private String resBody;
-
-        /** 响应头 */
-        private String resHeaders;
-
-        /* 请求开始时间 */
-        private Long start;
-
-        /* 请求结束时间 */
-        private Long end;
-
-        /* 请求间隔 */
-        private Long time;
-
-        /* 额外的信息 */
-        private Map<String, Object> extra = new HashMap<>();
-
-        public Long getTime() {
-            if (start == null || end == null) {
-                return -1L;
-            }
-            return end - start;
-        }
-    }
-
 }
