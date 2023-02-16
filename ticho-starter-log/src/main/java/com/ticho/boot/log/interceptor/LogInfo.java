@@ -59,8 +59,8 @@ public class LogInfo {
     /* 请求间隔 */
     private Long time;
 
-    /* 额外的信息 */
-    private Map<String, Object> extra = new HashMap<>();
+    /* 用户信息 */
+    private String username;
 
     /* User-Agent信息对象 */
     @JsonIgnore

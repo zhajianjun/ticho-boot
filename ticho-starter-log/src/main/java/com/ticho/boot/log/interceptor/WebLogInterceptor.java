@@ -23,6 +23,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -88,6 +89,7 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
         String headers = toJsonOfDefault(headersMap);
         String requestPrefixText = baseLogProperty.getRequestPrefixText();
         UserAgent userAgent = IpUtil.getUserAgent(request);
+        Principal principal = request.getUserPrincipal();
         LogInfo logInfo = LogInfo.builder()
             .type(method)
             .url(url)
@@ -96,6 +98,7 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
             .reqBody(body)
             .reqHeaders(headers)
             .start(millis)
+            .username((principal != null ? principal.getName() : null))
             .userAgent(userAgent)
             .handlerMethod((HandlerMethod) handler)
             .build();

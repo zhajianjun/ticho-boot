@@ -16,10 +16,10 @@ import org.springframework.stereotype.Component;
 public class BaseLogProperty {
 
     /** 是否开启日志拦截器 */
-    private Boolean enable = false;
+    private Boolean enable = true;
 
     /** 是否打印日志 */
-    private Boolean print = true;
+    private Boolean print = false;
 
     /** 日志打印前缀 */
     private String requestPrefixText = "[REQUEST]";
