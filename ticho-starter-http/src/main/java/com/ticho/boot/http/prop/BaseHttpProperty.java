@@ -15,10 +15,10 @@ public class BaseHttpProperty {
     private Boolean enable = true;
 
     /** 开启日志拦截 */
-    private Boolean openLog = false;
+    private Boolean openLog = true;
 
     /* 日志拦截是否打印日志 */
-    private Boolean printLog = true;
+    private Boolean printLog = false;
 
     /** 日志打印前缀 */
     private String requestPrefixText = "[HTTP]";
