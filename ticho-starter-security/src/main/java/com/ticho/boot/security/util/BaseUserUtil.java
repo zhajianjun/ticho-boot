@@ -43,7 +43,7 @@ public class BaseUserUtil {
 
     public static List<String> getRoleIds() {
         BaseSecurityUser user = getCurrentUser();
-        return Optional.ofNullable(user).map(BaseSecurityUser::getRoleCodes).orElseGet(ArrayList::new);
+        return Optional.ofNullable(user).map(BaseSecurityUser::getRoles).orElseGet(ArrayList::new);
     }
 
 }

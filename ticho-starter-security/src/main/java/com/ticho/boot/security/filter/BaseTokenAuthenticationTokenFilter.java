@@ -23,7 +23,7 @@ public class BaseTokenAuthenticationTokenFilter extends AbstractAuthTokenFilter<
         List<String> authorities = Optional.ofNullable(decodeAndVerify.get(BaseSecurityConst.AUTHORITIES)).map(x-> Convert.toList(String.class, x)).orElse(null);
         BaseSecurityUser user = new BaseSecurityUser();
         user.setUsername(username);
-        user.setRoleCodes(authorities);
+        user.setRoles(authorities);
         return user;
         // @formatter:on
     }

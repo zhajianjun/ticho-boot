@@ -29,7 +29,7 @@ public class BaseSecurityUser implements Serializable {
     private String password;
 
     @ApiModelProperty(value = "角色编码信息", position = 30)
-    private List<String> roleCodes;
+    private List<String> roles;
 
 
     public String toString() {

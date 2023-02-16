@@ -48,7 +48,7 @@ public class JwtEncode {
         oAuth2AccessToken.setExp(exp);
         oAuth2AccessToken.setExpiresIn(oAuth2AccessToken.getExpiresIn());
         oAuth2AccessToken.setTokenType(BaseSecurityConst.BEARER.toLowerCase());
-        List<String> authorities = Optional.ofNullable(baseSecurityUser.getRoleCodes()).orElseGet(ArrayList::new);
+        List<String> authorities = Optional.ofNullable(baseSecurityUser.getRoles()).orElseGet(ArrayList::new);
         // access token信息
         Map<String, Object> accessTokenInfo = new HashMap<>();
         accessTokenInfo.put(BaseSecurityConst.TYPE, BaseSecurityConst.ACCESS_TOKEN);
