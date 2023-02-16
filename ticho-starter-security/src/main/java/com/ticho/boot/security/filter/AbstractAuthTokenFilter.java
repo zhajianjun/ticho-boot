@@ -94,7 +94,7 @@ public abstract class AbstractAuthTokenFilter<T extends BaseSecurityUser> extend
             Assert.isNotNull(securityUser, BizErrCode.FAIL, "token不合法");
             if (securityUser != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 securityUser.setPassword("N/A");
-                List<String> authoritieStrs = Optional.ofNullable(securityUser.getRoleCodes()).orElseGet(ArrayList::new);
+                List<String> authoritieStrs = Optional.ofNullable(securityUser.getRoles()).orElseGet(ArrayList::new);
                 List<SimpleGrantedAuthority> authorities = authoritieStrs.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(securityUser, securityUser.getPassword(), authorities);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

@@ -54,7 +54,7 @@ public abstract class AbstractLoginUserHandle implements LoginUserHandle {
      */
     protected Oauth2AccessToken getOauth2TokenAndSetAuthentication(BaseSecurityUser baseSecurityUser) {
         // @formatter:off
-        List<String> authoritieStrs = Optional.ofNullable(baseSecurityUser.getRoleCodes()).orElseGet(ArrayList::new);
+        List<String> authoritieStrs = Optional.ofNullable(baseSecurityUser.getRoles()).orElseGet(ArrayList::new);
         baseSecurityUser.setPassword("N/A");
         List<SimpleGrantedAuthority> authorities = authoritieStrs.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(baseSecurityUser, baseSecurityUser.getPassword(), authorities);

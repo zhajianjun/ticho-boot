@@ -64,7 +64,7 @@ public class BaseUsernameLoadUserService implements LoadUserService, Initializin
         userInfo.setUsername(BaseSecurityConst.DEFAULT_USERNAME);
         String password = IdUtil.fastUUID();
         userInfo.setPassword(passwordEncoder.encode(password));
-        userInfo.setRoleCodes(Collections.singletonList(BaseSecurityConst.DEFAULT_ROLE));
+        userInfo.setRoles(Collections.singletonList(BaseSecurityConst.DEFAULT_ROLE));
         users.add(userInfo);
         user = userInfo;
         log.info("默认用户信息：{}， 密码：{}", BaseSecurityConst.DEFAULT_USERNAME, password);
