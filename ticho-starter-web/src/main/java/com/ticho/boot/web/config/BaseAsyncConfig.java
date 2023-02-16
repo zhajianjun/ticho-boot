@@ -26,7 +26,7 @@ import java.util.concurrent.Executor;
 public class BaseAsyncConfig implements AsyncConfigurer {
 
     @Autowired
-    @Qualifier("tichoAsyncTask")
+    @Qualifier("asyncTaskExecutor")
     private Executor executor;
     // @formatter:off
 

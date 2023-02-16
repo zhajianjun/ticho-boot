@@ -31,7 +31,7 @@ public class BaseWebBeanConfig {
         return new BaseAsyncProperty();
     }
 
-    @Bean("tichoAsyncTask")
+    @Bean("asyncTaskExecutor")
     public Executor executor(BaseAsyncProperty property, TaskDecorator taskDecorator) {
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
         // 设置核心线程数
