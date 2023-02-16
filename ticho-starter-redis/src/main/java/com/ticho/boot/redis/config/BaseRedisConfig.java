@@ -1,15 +1,21 @@
 package com.ticho.boot.redis.config;
 
+import com.ticho.boot.redis.component.RedissonManager;
+import com.ticho.boot.redis.prop.BaseRedissonProperty;
 import com.ticho.boot.redis.util.RedisUtil;
+import com.ticho.boot.redis.util.RedissonUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
-import org.redisson.config.Config;
-import org.redisson.config.SingleServerConfig;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.redis.core.StringRedisTemplate;
+
+import java.util.concurrent.Executor;
 
 /**
  * redis 配置
@@ -20,6 +26,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
  */
 @Configuration
 @PropertySource(value = "classpath:ticho-redis.properties")
+@Slf4j
 public class BaseRedisConfig {
 
     @Bean
@@ -28,16 +35,23 @@ public class BaseRedisConfig {
         return new RedisUtil<>(stringRedisTemplate);
     }
 
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnProperty(value = "ticho.redisson.enable", havingValue = "true")
+    public RedissonManager redissonManager(BaseRedissonProperty property) {
+        return new RedissonManager(property);
+    }
+
     @Bean(destroyMethod = "shutdown")
-    public Redisson redisson(RedisProperties redisProperties) {
-        Config config = new Config();
-        SingleServerConfig singleServerConfig = config.useSingleServer();
-        String host = redisProperties.getHost();
-        int port = redisProperties.getPort();
-        String password = redisProperties.getPassword();
-        singleServerConfig.setAddress("redis://" + host + ":" + port);
-        singleServerConfig.setPassword(password);
-        return (Redisson) Redisson.create(config);
+    @ConditionalOnBean(RedissonManager.class)
+    public Redisson redisson(RedissonManager redissonManager) {
+        return (Redisson) redissonManager.getRedisson();
+    }
+
+    @Bean
+    @ConditionalOnBean(Redisson.class)
+    public RedissonUtil redissonUtil(Redisson redisson, @Qualifier("asyncTaskExecutor") Executor executor) {
+        return new RedissonUtil(redisson, executor);
     }
 
 }
