@@ -1,4 +1,4 @@
-package com.ticho.boot.redis.annotation;
+package com.ticho.boot.redisson.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * Redis锁
  *
  * @author zhajianjun
- * @date 2022-09-30 08:58:16
+ * @date 2023-02-17 16:42
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

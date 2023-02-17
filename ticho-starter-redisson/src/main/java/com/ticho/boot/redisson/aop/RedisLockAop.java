@@ -1,11 +1,12 @@
-package com.ticho.boot.redis.aop;
+package com.ticho.boot.redisson.aop;
 
-import com.ticho.boot.redis.annotation.RedisLock;
-import com.ticho.boot.redis.util.RedissonUtil;
+import com.ticho.boot.redisson.annotation.RedisLock;
+import com.ticho.boot.redisson.util.RedissonUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -15,11 +16,12 @@ import org.springframework.stereotype.Component;
  * 该order必须设置
  *
  * @author zhajianjun
- * @date 2022-09-30 09:05:21
+ * @date 2023-02-17 16:42
  */
 @Aspect
 @Component
 @Order(1)
+@ConditionalOnClass(Aspect.class)
 public class RedisLockAop {
 
     @Autowired

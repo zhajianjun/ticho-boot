@@ -1,8 +1,8 @@
-package com.ticho.boot.redis.component.strategy;
+package com.ticho.boot.redisson.component.strategy;
 
 import cn.hutool.core.util.StrUtil;
-import com.ticho.boot.redis.constant.BaseRedisConst;
-import com.ticho.boot.redis.prop.BaseRedissonProperty;
+import com.ticho.boot.redisson.constant.BaseRedissonConst;
+import com.ticho.boot.redisson.prop.BaseRedissonProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.config.Config;
 
@@ -32,7 +32,7 @@ public class SentinelRedissonConfigStrategyImpl implements RedissonConfigStrateg
             }
             // 设置sentinel节点的服务IP和端口
             for (int i = 1; i < addrTokens.length; i++) {
-                config.useSentinelServers().addSentinelAddress(BaseRedisConst.prefix + addrTokens[i]);
+                config.useSentinelServers().addSentinelAddress(BaseRedissonConst.prefix + addrTokens[i]);
             }
             log.info("初始化[sentinel]方式Config,redisAddress:" + address);
         } catch (Exception e) {

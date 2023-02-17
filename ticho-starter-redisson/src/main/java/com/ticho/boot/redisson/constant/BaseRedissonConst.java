@@ -1,4 +1,4 @@
-package com.ticho.boot.redis.constant;
+package com.ticho.boot.redisson.constant;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
  *
  *
  * @author zhajianjun
- * @date 2023-02-16 15:59
+ * @date 2023-02-17 16:42
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class BaseRedisConst {
+public class BaseRedissonConst {
 
     public static final String prefix = "redis://";
 

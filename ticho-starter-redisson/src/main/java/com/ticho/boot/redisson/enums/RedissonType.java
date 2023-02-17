@@ -1,4 +1,4 @@
-package com.ticho.boot.redis.enums;
+package com.ticho.boot.redisson.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import lombok.Getter;
  * </p>
  *
  * @author zhajianjun
- * @date 2023-02-16 15:54
+ * @date 2023-02-17 16:42
  */
 @Getter
 @AllArgsConstructor
