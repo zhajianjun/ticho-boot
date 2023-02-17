@@ -1,6 +1,6 @@
-package com.ticho.boot.redis.prop;
+package com.ticho.boot.redisson.prop;
 
-import com.ticho.boot.redis.enums.RedissonType;
+import com.ticho.boot.redisson.enums.RedissonType;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
  *
  *
  * @author zhajianjun
- * @date 2023-02-16 15:40
+ * @date 2023-02-17 16:42
  */
 @Data
 @Configuration

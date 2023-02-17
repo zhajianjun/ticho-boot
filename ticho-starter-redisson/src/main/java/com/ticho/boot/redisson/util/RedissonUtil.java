@@ -1,6 +1,6 @@
-package com.ticho.boot.redis.util;
+package com.ticho.boot.redisson.util;
 
-import com.ticho.boot.redis.thread.RedisDelayRunnable;
+import com.ticho.boot.redisson.thread.RedisDelayRunnable;
 import com.ticho.boot.view.core.BizErrCode;
 import com.ticho.boot.view.exception.BizException;
 import lombok.AllArgsConstructor;
@@ -19,7 +19,7 @@ import java.util.function.Supplier;
  *
  *
  * @author zhajianjun
- * @date 2023-02-16 16:42
+ * @date 2023-02-17 16:42
  */
 @Slf4j
 @AllArgsConstructor

@@ -1,6 +1,6 @@
-package com.ticho.boot.redis.component.strategy;
+package com.ticho.boot.redisson.component.strategy;
 
-import com.ticho.boot.redis.prop.BaseRedissonProperty;
+import com.ticho.boot.redisson.prop.BaseRedissonProperty;
 import org.redisson.config.Config;
 
 /**

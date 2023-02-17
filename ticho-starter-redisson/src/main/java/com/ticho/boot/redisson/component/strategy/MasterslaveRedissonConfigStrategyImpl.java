@@ -1,8 +1,8 @@
-package com.ticho.boot.redis.component.strategy;
+package com.ticho.boot.redisson.component.strategy;
 
 import cn.hutool.core.util.StrUtil;
-import com.ticho.boot.redis.constant.BaseRedisConst;
-import com.ticho.boot.redis.prop.BaseRedissonProperty;
+import com.ticho.boot.redisson.constant.BaseRedissonConst;
+import com.ticho.boot.redisson.prop.BaseRedissonProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.config.Config;
 
@@ -35,7 +35,7 @@ public class MasterslaveRedissonConfigStrategyImpl implements RedissonConfigStra
             // 设置从节点，移除第一个节点，默认第一个为主节点
             List<String> slaveList = new ArrayList<>();
             for (String addrToken : addrTokens) {
-                slaveList.add(BaseRedisConst.prefix + addrToken);
+                slaveList.add(BaseRedissonConst.prefix + addrToken);
             }
             slaveList.remove(0);
 

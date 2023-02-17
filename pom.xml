@@ -19,6 +19,7 @@
         <module>ticho-starter-log</module>
         <module>ticho-starter-cache</module>
         <module>ticho-starter-gateway</module>
+        <module>ticho-starter-redisson</module>
     </modules>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ticho-boot</artifactId>

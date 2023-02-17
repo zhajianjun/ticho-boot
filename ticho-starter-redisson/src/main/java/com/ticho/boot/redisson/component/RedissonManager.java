@@ -1,12 +1,12 @@
-package com.ticho.boot.redis.component;
+package com.ticho.boot.redisson.component;
 
-import com.ticho.boot.redis.component.strategy.ClusterRedissonConfigStrategyImpl;
-import com.ticho.boot.redis.component.strategy.MasterslaveRedissonConfigStrategyImpl;
-import com.ticho.boot.redis.component.strategy.RedissonConfigContext;
-import com.ticho.boot.redis.component.strategy.SentinelRedissonConfigStrategyImpl;
-import com.ticho.boot.redis.component.strategy.StandaloneRedissonConfigStrategyImpl;
-import com.ticho.boot.redis.enums.RedissonType;
-import com.ticho.boot.redis.prop.BaseRedissonProperty;
+import com.ticho.boot.redisson.component.strategy.ClusterRedissonConfigStrategyImpl;
+import com.ticho.boot.redisson.component.strategy.MasterslaveRedissonConfigStrategyImpl;
+import com.ticho.boot.redisson.component.strategy.RedissonConfigContext;
+import com.ticho.boot.redisson.component.strategy.SentinelRedissonConfigStrategyImpl;
+import com.ticho.boot.redisson.component.strategy.StandaloneRedissonConfigStrategyImpl;
+import com.ticho.boot.redisson.enums.RedissonType;
+import com.ticho.boot.redisson.prop.BaseRedissonProperty;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
