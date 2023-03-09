@@ -26,7 +26,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @ConditionalOnProperty(value = "ticho.log.enable", havingValue = "true", matchIfMissing = true)
 @PropertySource(value = "classpath:ticho-log.properties")
 @AutoConfigureAfter(TLogPropertyConfiguration.class)
-public class LogConfig implements WebMvcConfigurer {
+public class BaseLogConfig implements WebMvcConfigurer {
 
     @Autowired
     private BaseLogProperty baseLogProperty;
