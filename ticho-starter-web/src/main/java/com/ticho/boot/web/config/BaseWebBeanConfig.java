@@ -27,7 +27,7 @@ public class BaseWebBeanConfig {
 
     @Bean
     @ConfigurationProperties(prefix = "ticho.async")
-    public BaseAsyncProperty tichoAsyncProperty() {
+    public BaseAsyncProperty baseAsyncProperty() {
         return new BaseAsyncProperty();
     }
 

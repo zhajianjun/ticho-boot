@@ -1,4 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.ticho.boot.log.config.LogConfig,\
+  com.ticho.boot.log.config.BaseLogConfig,\
   com.ticho.boot.log.prop.BaseLogProperty
 
