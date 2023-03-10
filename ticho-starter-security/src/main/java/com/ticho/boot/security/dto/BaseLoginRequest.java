@@ -21,9 +21,4 @@ public class BaseLoginRequest implements LoginRequest {
     /** 密码 */
     @ApiModelProperty(value = "密码", position = 20)
     private String password;
-
-    /** 登录类型 */
-    @ApiModelProperty(value = "登录类型", position = 30)
-    private String type;
-
 }

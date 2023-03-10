@@ -3,9 +3,7 @@ package com.ticho.boot.security.annotation;
 import com.ticho.boot.security.controller.OauthController;
 import com.ticho.boot.security.handle.BaseLoginUserHandle;
 import com.ticho.boot.security.handle.jwt.JwtEncode;
-import com.ticho.boot.security.handle.load.BasePhoneLoadUserService;
-import com.ticho.boot.security.handle.load.BaseUsernameLoadUserService;
-import com.ticho.boot.security.handle.login.BaseUsernameLoginUserStragety;
+import com.ticho.boot.security.handle.load.BaseLoadUserService;
 import com.ticho.boot.security.prop.BaseOauthProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Import;
@@ -28,12 +26,8 @@ import java.lang.annotation.Target;
 @Import({
     BaseOauthProperty.class,
     JwtEncode.class,
-    BaseUsernameLoadUserService.class,
-    BasePhoneLoadUserService.class,
+    BaseLoadUserService.class,
     BaseLoginUserHandle.class,
-    BaseUsernameLoginUserStragety.class,
-    BaseUsernameLoginUserStragety.class,
-    BaseUsernameLoginUserStragety.class,
     OauthController.class,
 })
 @ConditionalOnWebApplication

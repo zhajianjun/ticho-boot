@@ -23,10 +23,10 @@ import java.util.Objects;
  * @author zhajianjun
  * @date 2022-09-22 11:17
  */
-@Component(BaseSecurityConst.LOAD_USER_TYPE_USERNAME)
-@ConditionalOnMissingBean(name = BaseSecurityConst.LOAD_USER_TYPE_USERNAME)
+@Component
+@ConditionalOnMissingBean(LoadUserService.class)
 @Slf4j
-public class BaseUsernameLoadUserService implements LoadUserService, InitializingBean {
+public class BaseLoadUserService implements LoadUserService, InitializingBean {
     private BaseSecurityUser user = null;
 
     @Resource

@@ -11,22 +11,11 @@ public interface LoginRequest {
     /** 用户名 */
     String getUsername();
 
-    void setUsername(String username) ;
+    void setUsername(String username);
 
     /** 密码 */
-    String getPassword() ;
+    String getPassword();
 
-    void setPassword(String password) ;
-
-    /** 登录类型 */
-    String getType();
-
-    void setType(String type) ;
-
-
-
-
-
-
+    void setPassword(String password);
 
 }
