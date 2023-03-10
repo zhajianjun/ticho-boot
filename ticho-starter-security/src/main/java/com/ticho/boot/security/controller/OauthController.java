@@ -4,7 +4,6 @@ import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSort;
 import com.ticho.boot.security.constant.BaseOAuth2Const;
 import com.ticho.boot.security.dto.BaseLoginRequest;
-import com.ticho.boot.security.dto.LoginRequest;
 import com.ticho.boot.security.dto.Oauth2AccessToken;
 import com.ticho.boot.security.handle.LoginUserHandle;
 import com.ticho.boot.view.core.Result;
