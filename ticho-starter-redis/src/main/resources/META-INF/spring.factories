@@ -1,5 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.ticho.boot.redis.config.BaseRedisConfig,\
-  com.ticho.boot.redis.prop.BaseRedisProperty,\
-  com.ticho.boot.redis.prop.BaseRedissonProperty
-
+  com.ticho.boot.redis.prop.BaseRedisProperty
