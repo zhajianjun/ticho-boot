@@ -60,7 +60,7 @@ public class BaseSecurityImportConfig {
 
     @Bean(BaseOAuth2Const.OAUTH2_TOKEN_FILTER_BEAN_NAME)
     @ConditionalOnMissingBean(name = BaseOAuth2Const.OAUTH2_TOKEN_FILTER_BEAN_NAME)
-    public OncePerRequestFilter tichoToenAuthenticationTokenFilter() {
+    public OncePerRequestFilter baseTokenAuthenticationTokenFilter() {
         return new BaseTokenAuthenticationTokenFilter();
     }
 
