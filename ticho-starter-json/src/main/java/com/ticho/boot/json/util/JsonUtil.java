@@ -2,7 +2,6 @@ package com.ticho.boot.json.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -140,41 +139,6 @@ public class JsonUtil {
     }
 
     /**
-     * json格式的String 转换成对象
-     *
-     * @param jsonStr jsonStr
-     * @param typeReference 泛型类
-     * @return T
-     */
-    public static <T> T toJavaObject(String jsonStr, TypeReference<T> typeReference) {
-        checkNotNull(typeReference);
-        try {
-            return isEmpty(jsonStr) ? null : MAPPER.readValue(jsonStr, typeReference);
-        } catch (Exception e) {
-            log.error("str toJavaObject error, param={}, catch error {}", jsonStr, e.getMessage(), e);
-            return null;
-        }
-    }
-
-    /**
-     * json格式的String 转换成对象
-     *
-     * @param obj Object
-     * @param typeReference 泛型类
-     * @return T
-     */
-    public static <T> T toJavaObject(Object obj, TypeReference<T> typeReference) {
-        checkNotNull(typeReference);
-        String jsonStr = objToString(obj);
-        try {
-            return isEmpty(jsonStr) ? null : MAPPER.readValue(jsonStr, typeReference);
-        } catch (Exception e) {
-            log.error("obj toJavaObject error, param={}, catch error {}", obj, e.getMessage(), e);
-            return null;
-        }
-    }
-
-    /**
      * json格式的String 转换成集合
      *
      * @param jsonStr String
@@ -266,12 +230,8 @@ public class JsonUtil {
         }
     }
 
-    public static <T> T convert(Object obj, Class<T> clazz) {
+    public static <T> T copy(Object obj, Class<T> clazz) {
         return obj != null ? toJavaObject(toJsonString(obj), clazz) : null;
-    }
-
-    public static <T> T convert(Object obj, TypeReference<T> typeReference) {
-        return obj != null ? toJavaObject(toJsonString(obj), typeReference) : null;
     }
 
     public static boolean isEmpty(CharSequence str) {
