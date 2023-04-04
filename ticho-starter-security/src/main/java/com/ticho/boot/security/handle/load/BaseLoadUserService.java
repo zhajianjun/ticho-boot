@@ -45,7 +45,7 @@ public class BaseLoadUserService implements LoadUserService, InitializingBean {
             .findFirst()
             .orElse(null);
         // 拷贝一份对象进行返回，防止对源对象进行属性修改
-        return JsonUtil.convert(baseSecurityUser, BaseSecurityUser.class);
+        return JsonUtil.copy(baseSecurityUser, BaseSecurityUser.class);
         // @formatter:on
     }
 
