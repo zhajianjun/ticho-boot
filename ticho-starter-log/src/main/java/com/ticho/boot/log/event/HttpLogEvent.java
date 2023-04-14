@@ -1,6 +1,6 @@
 package com.ticho.boot.log.event;
 
-import com.ticho.boot.log.interceptor.LogInfo;
+import com.ticho.boot.log.interceptor.HttpLog;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
@@ -14,13 +14,13 @@ import org.springframework.context.event.ApplicationContextEvent;
  */
 @Slf4j
 @Getter
-public class LogInfoEvent extends ApplicationContextEvent {
+public class HttpLogEvent extends ApplicationContextEvent {
 
-    private final LogInfo logInfo;
+    private final HttpLog httpLog;
 
-    public LogInfoEvent(ApplicationContext source, LogInfo logInfo) {
+    public HttpLogEvent(ApplicationContext source, HttpLog httpLog) {
         super(source);
-        this.logInfo = logInfo;
+        this.httpLog = httpLog;
     }
 
 }
