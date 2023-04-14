@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
@@ -37,14 +36,13 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- *
+ * 日志拦截器
  *
  * @author zhajianjun
  * @date 2023-01-11 09:44
  */
 @Slf4j
-@Order(Ordered.HIGHEST_PRECEDENCE + 10)
-public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
+public class WebLogInterceptor implements HandlerInterceptor, InitializingBean, Ordered {
     /** NONE */
     private static final String NONE = "NONE";
     /** 用户代理key */
@@ -216,6 +214,11 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
             return NONE;
         }
         return result;
+    }
+
+    @Override
+    public int getOrder() {
+        return baseLogProperty.getOrder();
     }
 
 }

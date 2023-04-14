@@ -9,7 +9,6 @@ import com.ticho.boot.view.log.BaseLogProperty;
 import com.ticho.boot.view.log.HttpLog;
 import lombok.extern.slf4j.Slf4j;
 import org.reactivestreams.Publisher;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -45,14 +44,17 @@ import java.util.Objects;
 @ConditionalOnProperty(value = "ticho.log.enable", havingValue = "true", matchIfMissing = true)
 public class ApiGlobalFilter implements GlobalFilter, Ordered {
     public static final String USER_AGENT = "User-Agent";
-
+    /** 日志线程变量 */
     private final TransmittableThreadLocal<HttpLog> theadLocal = new TransmittableThreadLocal<>();
+    /** 日志配置 */
+    private final BaseLogProperty baseLogProperty;
+    /** 环境变量 */
+    private final Environment environment;
 
-    @Autowired
-    private Environment environment;
-
-    @Autowired
-    private BaseLogProperty baseLogProperty;
+    public ApiGlobalFilter(BaseLogProperty baseLogProperty, Environment environment) {
+        this.environment = environment;
+        this.baseLogProperty = baseLogProperty;
+    }
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -143,7 +145,7 @@ public class ApiGlobalFilter implements GlobalFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return Ordered.HIGHEST_PRECEDENCE;
+        return baseLogProperty.getOrder();
     }
 
 
