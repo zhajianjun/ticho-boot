@@ -7,14 +7,13 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.annotation.Resource;
 
 /**
- *
+ * 日志MVC配置
  *
  * @author zhajianjun
  * @date 2022-11-01 14:46
@@ -24,14 +23,14 @@ import javax.annotation.Resource;
 @ConditionalOnProperty(value = "ticho.log.enable", havingValue = "true", matchIfMissing = true)
 @ConditionalOnBean(WebLogInterceptor.class)
 @AutoConfigureAfter(TLogPropertyConfiguration.class)
-public class BaseLogConfig implements WebMvcConfigurer {
+public class BaseLogMvcConfig implements WebMvcConfigurer {
 
     @Resource
     private WebLogInterceptor webLogInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(webLogInterceptor).order(Ordered.HIGHEST_PRECEDENCE + 10);
+        registry.addInterceptor(webLogInterceptor).order(webLogInterceptor.getOrder());
     }
 
 }

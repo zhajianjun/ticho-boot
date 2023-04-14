@@ -14,11 +14,11 @@ public class BaseLogProperty {
 
     /** 是否开启日志拦截器 */
     private Boolean enable = true;
-
     /** 是否打印日志 */
     private Boolean print = false;
-
     /** 日志打印前缀 */
     private String reqPrefix = "[REQ]";
+    /** 拦截器排序 */
+    private Integer order = Integer.MAX_VALUE;
 
 }
