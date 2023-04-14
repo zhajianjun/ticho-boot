@@ -1,17 +1,13 @@
-package com.ticho.boot.log.interceptor;
+package com.ticho.boot.view.log;
 
 import cn.hutool.http.useragent.UserAgent;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.web.method.HandlerMethod;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 接口日志
