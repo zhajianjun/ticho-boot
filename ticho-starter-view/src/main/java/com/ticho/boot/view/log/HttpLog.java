@@ -1,17 +1,13 @@
-package com.ticho.boot.log.interceptor;
+package com.ticho.boot.view.log;
 
 import cn.hutool.http.useragent.UserAgent;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.web.method.HandlerMethod;
 
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 接口日志
@@ -25,15 +21,16 @@ import java.util.Map;
 @Getter
 @Setter
 @ToString
-public class LogInfo {
+public class HttpLog {
+
     /** 请求类型 */
     private String type;
 
     /** 请求地址 */
     private String url;
 
-    /** 请求ip地址 */
-    private String ip;
+    /** 端口号 */
+    private String port;
 
     /** 请求参数 */
     private String reqParams;
@@ -50,28 +47,27 @@ public class LogInfo {
     /** 响应头 */
     private String resHeaders;
 
-    /* 请求开始时间 */
+    /** 响应状态 */
+    private Integer status;
+
+    /* 请求开始时间戳 */
     private Long start;
 
-    /* 请求结束时间 */
+    /* 请求结束时间戳 */
     private Long end;
 
     /* 请求间隔 */
-    private Long time;
+    private Long consume;
 
     /* 用户信息 */
     private String username;
 
     /* User-Agent信息对象 */
-    @JsonIgnore
     private UserAgent userAgent;
 
-    @JsonIgnore
-    private HandlerMethod handlerMethod;
-
-    public Long getTime() {
+    public Long getConsume() {
         if (start == null || end == null) {
-            return -1L;
+            return 0L;
         }
         return end - start;
     }
