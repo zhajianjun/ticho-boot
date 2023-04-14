@@ -22,6 +22,6 @@ public class BaseLogProperty {
     private Boolean print = false;
 
     /** 日志打印前缀 */
-    private String requestPrefixText = "[REQUEST]";
+    private String reqPrefix = "[REQ]";
 
 }

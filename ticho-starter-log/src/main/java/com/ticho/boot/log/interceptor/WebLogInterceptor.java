@@ -4,11 +4,11 @@ import cn.hutool.core.date.SystemClock;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.http.useragent.UserAgent;
+import cn.hutool.http.useragent.UserAgentUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.ticho.boot.json.util.JsonUtil;
-import com.ticho.boot.log.event.LogInfoEvent;
+import com.ticho.boot.log.event.HttpLogEvent;
 import com.ticho.boot.log.prop.BaseLogProperty;
-import com.ticho.boot.log.util.IpUtil;
 import com.ticho.boot.log.wrapper.RequestWrapper;
 import com.ticho.boot.log.wrapper.ResponseWrapper;
 import lombok.extern.slf4j.Slf4j;
@@ -16,9 +16,13 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,18 +44,23 @@ import java.util.stream.Collectors;
 @Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE + 10)
 public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
-
+    /** NONE */
     private static final String NONE = "NONE";
-
-    private static TransmittableThreadLocal<LogInfo> logThreadLocal;
-
-    private final TransmittableThreadLocal<LogInfo> theadLocal;
-
+    /** 用户代理key */
+    private static final String USER_AGENT = "User-Agent";
+    /** 日志信息线程变量(静态) */
+    private static TransmittableThreadLocal<HttpLog> logThreadLocal;
+    /** 日志信息线程变量 */
+    private final TransmittableThreadLocal<HttpLog> theadLocal;
+    /** 日志配置 */
     private final BaseLogProperty baseLogProperty;
+    /** 环境变量 */
+    private final Environment environment;
 
-    public WebLogInterceptor(BaseLogProperty baseLogProperty) {
+    public WebLogInterceptor(BaseLogProperty baseLogProperty, Environment environment) {
         this.theadLocal = new TransmittableThreadLocal<>();
         this.baseLogProperty = baseLogProperty;
+        this.environment = environment;
     }
 
     @Override
@@ -59,85 +68,97 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
         logThreadLocal = this.theadLocal;
     }
 
-    public LogInfo getLogInfo() {
+    public HttpLog getLogInfo() {
         return theadLocal.get();
     }
 
-    public static LogInfo logInfo() {
+    public static HttpLog logInfo() {
         return logThreadLocal.get();
     }
 
     // @formatter:off
-
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
-        // 是否打印日志
+        Map<String, Object> paramsMap = null;
+        if (request instanceof StandardMultipartHttpServletRequest){
+            paramsMap = new HashMap<>();
+            StandardMultipartHttpServletRequest sr = (StandardMultipartHttpServletRequest) request;
+            request = sr.getRequest();
+            MultiValueMap<String,MultipartFile> multiFileMap = sr.getMultiFileMap();
+            Map<String,Object> finalParamsMap = paramsMap;
+            multiFileMap.forEach((x, y)-> finalParamsMap.put(x, y.stream().map(MultipartFile::getOriginalFilename).collect(Collectors.joining(",", "文件：",""))));
+        }
         if (!(request instanceof RequestWrapper) || !(handler instanceof HandlerMethod)) {
             return true;
         }
         long millis = SystemClock.now();
-        String method = request.getMethod();
+        String type = request.getMethod();
         String url = request.getRequestURI();
+        if (paramsMap == null) {
+            paramsMap = new HashMap<>();
+        }
         // params
-        Map<String, Object> paramsMap = getParams(request);
+        Map<String, Object> paramsMapFromRequest = getParams(request);
+        paramsMap.putAll(paramsMapFromRequest);
         String params = toJsonOfDefault(paramsMap);
         // body
         RequestWrapper requestWrapper = (RequestWrapper) request;
         String body = nullOfDefault(requestWrapper.getBody());
         // header
-        Map<String, Object> headersMap = getHeaders(request);
+        Map<String, String> headersMap = getHeaders(request);
         String headers = toJsonOfDefault(headersMap);
-        String requestPrefixText = baseLogProperty.getRequestPrefixText();
-        UserAgent userAgent = IpUtil.getUserAgent(request);
+        String requestPrefixText = baseLogProperty.getReqPrefix();
+        String header = request.getHeader(USER_AGENT);
+        UserAgent userAgent =  UserAgentUtil.parse(header);
         Principal principal = request.getUserPrincipal();
-        LogInfo logInfo = LogInfo.builder()
-            .type(method)
+        String port = environment.getProperty("server.port");
+        HttpLog httpLog = HttpLog.builder()
+            .type(type)
             .url(url)
-            .ip(IpUtil.getIp(request))
+            .port(port)
             .reqParams(params)
             .reqBody(body)
             .reqHeaders(headers)
             .start(millis)
             .username((principal != null ? principal.getName() : null))
             .userAgent(userAgent)
-            .handlerMethod((HandlerMethod) handler)
             .build();
-        theadLocal.set(logInfo);
+        theadLocal.set(httpLog);
         boolean print = Boolean.TRUE.equals(baseLogProperty.getPrint());
         if (print) {
-            log.info("{} {} {} 请求开始, 请求参数={}, 请求体={}, 请求头={}", requestPrefixText, method, url, params, body, headers);
+            log.info("{} {} {} 请求开始, 请求参数={}, 请求体={}, 请求头={}", requestPrefixText, type, url, params, body, headers);
         }
         return true;
     }
 
     @Override
     public void afterCompletion(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, Exception ex) {
-        LogInfo logInfo = theadLocal.get();
-        if (logInfo == null) {
+        HttpLog httpLog = theadLocal.get();
+        if (httpLog == null) {
             return;
         }
-        String method = request.getMethod();
+        String type = request.getMethod();
         String url = request.getRequestURI();
         String resBody = nullOfDefault(getResBody(response));
-        logInfo.setResBody(resBody);
-        String requestPrefixText = baseLogProperty.getRequestPrefixText();
-        theadLocal.remove();
-        logInfo.setEnd(SystemClock.now());
+        httpLog.setResBody(resBody);
+        String reqPrefix = baseLogProperty.getReqPrefix();
+        long end = SystemClock.now();
+        httpLog.setEnd(end);
         int status = response.getStatus();
-        Long time = logInfo.getTime();
+        Long consume = httpLog.getConsume();
         boolean print = Boolean.TRUE.equals(baseLogProperty.getPrint());
         if (print) {
-            log.info("{} {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}", requestPrefixText, method, url, status, time, resBody);
+            log.info("{} {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}", reqPrefix, type, url, status, consume, resBody);
         }
         ApplicationContext applicationContext = SpringUtil.getApplicationContext();
-        applicationContext.publishEvent(new LogInfoEvent(applicationContext, logInfo));
+        applicationContext.publishEvent(new HttpLogEvent(applicationContext, httpLog));
+        theadLocal.remove();
     }
 
     private String getResBody(HttpServletResponse response) {
         String contentType = response.getContentType();
-        boolean flag = contentType != null && (contentType.equals(MediaType.APPLICATION_JSON_VALUE) ||
-            contentType.equals(MediaType.APPLICATION_JSON_UTF8_VALUE) ||
-            contentType.equals(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
+        boolean flag = contentType != null && (contentType.startsWith(MediaType.APPLICATION_JSON_VALUE) ||
+                contentType.equals(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
         if (!flag) {
             return NONE;
         }
@@ -160,8 +181,8 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
         return map;
     }
 
-    public Map<String, Object> getHeaders(HttpServletRequest request) {
-        Map<String, Object> map = new HashMap<>();
+    public Map<String, String> getHeaders(HttpServletRequest request) {
+        Map<String, String> map = new HashMap<>();
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
             //获得每个文本域的name
@@ -174,8 +195,8 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
         return map;
     }
 
-    public Map<String, Object> getHeaders(HttpServletResponse response) {
-        Map<String, Object> map = new HashMap<>();
+    public Map<String, String> getHeaders(HttpServletResponse response) {
+        Map<String, String> map = new HashMap<>();
         Collection<String> headerNames = response.getHeaderNames();
         for (String name : headerNames) {
             String value = response.getHeader(name);
@@ -184,7 +205,7 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
         return map;
     }
 
-    private String toJsonOfDefault(Map<String, Object> map) {
+    private String toJsonOfDefault(Map<String, ?> map) {
         String result = JsonUtil.toJsonString(map);
         return nullOfDefault(result);
     }
@@ -195,4 +216,5 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean {
         }
         return result;
     }
+
 }
