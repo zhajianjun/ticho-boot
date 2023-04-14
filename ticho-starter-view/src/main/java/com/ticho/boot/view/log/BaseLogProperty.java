@@ -1,8 +1,7 @@
-package com.ticho.boot.log.prop;
+package com.ticho.boot.view.log;
+
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
 
 /**
  * 日志配置
@@ -10,8 +9,6 @@ import org.springframework.stereotype.Component;
  * @author zhajianjun
  * @date 2022-07-13 22:40:25
  */
-@ConfigurationProperties(prefix = "ticho.log")
-@Component
 @Data
 public class BaseLogProperty {
 

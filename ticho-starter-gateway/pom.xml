@@ -57,6 +57,16 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>transmittable-thread-local</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ticho.boot</groupId>
+            <artifactId>ticho-starter-json</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

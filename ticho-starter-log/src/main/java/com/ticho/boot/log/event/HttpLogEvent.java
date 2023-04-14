@@ -1,6 +1,6 @@
 package com.ticho.boot.log.event;
 
-import com.ticho.boot.log.interceptor.HttpLog;
+import com.ticho.boot.view.log.HttpLog;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
