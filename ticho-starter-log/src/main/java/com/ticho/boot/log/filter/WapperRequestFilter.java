@@ -16,12 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- *
+ * web过滤器
  *
  * @author zhajianjun
  * @date 2023-01-11 10:25
  */
-@Component
 @WebFilter(urlPatterns = "/*", filterName = "wapperRequestFilter")
 public class WapperRequestFilter implements Filter {
 
