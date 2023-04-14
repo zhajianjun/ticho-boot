@@ -19,6 +19,6 @@ public class BaseLogProperty {
     /** 日志打印前缀 */
     private String reqPrefix = "[REQ]";
     /** 拦截器排序 */
-    private Integer order = Integer.MAX_VALUE;
+    private Integer order = Integer.MIN_VALUE;
 
 }
