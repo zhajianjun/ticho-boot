@@ -107,7 +107,9 @@ public abstract class AbstractAuthTokenFilter<T extends BaseSecurityUser> extend
             if (e instanceof BizException) {
                 message = ((BizException) e).getMsg();
             }
-            Result<String> result = Result.of(HttpErrCode.TOKEN_INVALID, message, request.getRequestURI());
+            HttpErrCode tokenInvalid = HttpErrCode.TOKEN_INVALID;
+            Result<String> result = Result.of(tokenInvalid, message, request.getRequestURI());
+            response.setStatus(tokenInvalid.getCode());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
             response.getWriter().write(JsonUtil.toJsonString(result));
