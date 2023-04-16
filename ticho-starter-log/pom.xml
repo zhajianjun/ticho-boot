@@ -53,20 +53,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.yomahub</groupId>
-            <artifactId>tlog-feign-spring-boot-starter</artifactId>
-            <version>1.5.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.yomahub</groupId>
-            <artifactId>tlog-web-spring-boot-starter</artifactId>
-            <version>1.5.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.yomahub</groupId>
-            <artifactId>tlog-gateway-spring-boot-starter</artifactId>
+            <groupId>com.ticho.trace</groupId>
+            <artifactId>ticho-trace-spring</artifactId>
         </dependency>
 
         <dependency>
