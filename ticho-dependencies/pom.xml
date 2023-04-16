@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <groupId>com.ticho.boot</groupId>
     <artifactId>ticho-dependencies</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
@@ -37,103 +37,103 @@
             <dependency>
                 <groupId>com.ticho.boot</groupId>
                 <artifactId>ticho-starter-cloud</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.ticho.boot</groupId>
                 <artifactId>ticho-starter-view</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.ticho.boot</groupId>
                 <artifactId>ticho-starter-json</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.ticho.boot</groupId>
                 <artifactId>ticho-starter-swagger</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.ticho.boot</groupId>
                 <artifactId>ticho-starter-http</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.ticho.boot</groupId>
                 <artifactId>ticho-starter-web</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.ticho.boot</groupId>
                 <artifactId>ticho-starter-datasource</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.ticho.boot</groupId>
                 <artifactId>ticho-starter-email</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.ticho.boot</groupId>
                 <artifactId>ticho-starter-minio</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.ticho.boot</groupId>
                 <artifactId>ticho-starter-security</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.ticho.boot</groupId>
                 <artifactId>ticho-starter-log</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.ticho.boot</groupId>
                 <artifactId>ticho-starter-rabbitmq</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.ticho.boot</groupId>
                 <artifactId>ticho-starter-redis</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.ticho.boot</groupId>
                 <artifactId>ticho-starter-gateway</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.ticho.boot</groupId>
                 <artifactId>ticho-starter-cache</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.ticho.boot</groupId>
                 <artifactId>ticho-starter-redisson</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.ticho.boot</groupId>
                 <artifactId>ticho-starter-es</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <!-- SpringBoot -->
