@@ -64,6 +64,11 @@
         </dependency>
 
         <dependency>
+            <groupId>com.ticho.trace</groupId>
+            <artifactId>ticho-trace-feign</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
