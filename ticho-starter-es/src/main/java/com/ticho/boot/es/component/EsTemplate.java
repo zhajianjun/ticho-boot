@@ -1,20 +1,56 @@
-package com.ticho.boot.es.service;
+package com.ticho.boot.es.component;
 
-import com.ticho.boot.es.entity.Entity;
 import com.ticho.boot.es.page.PageInfo;
 import com.ticho.boot.es.query.EsQuery;
+import com.ticho.boot.view.core.Entity;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 /**
- * es数据操作接口
+ *
  *
  * @author zhajianjun
- * @date 2023-04-15 12:25:51
+ * @date 2023-04-17 15:08
  */
-public interface ElasticSearchService {
+public interface EsTemplate {
+
+    /**
+     * 保存es数据
+     *
+     * @param type 文档
+     * @param index 索引
+     * @param entity 对象
+     */
+    void save(String type, String index, Entity entity);
+
+    /**
+     * 保存es数据 map
+     *
+     * @param type 文档
+     * @param index 索引
+     * @param entity 对象
+     */
+    void save(String type, String index, Map<String, Object> entity);
+
+    /**
+     * 批量保存数据
+     *
+     * @param type 类型
+     * @param index 指数
+     * @param entities 实体
+     */
+    void saveBatch(String type, String index, List<? extends Entity> entities);
+
+    /**
+     * 批量保存数据 map
+     *
+     * @param type 类型
+     * @param index 指数
+     * @param entities 实体
+     */
+    void saveBatchForMap(String type, String index, List<Map<String, Object>> entities);
 
     /**
      * 保存或者更新es数据
@@ -32,7 +68,7 @@ public interface ElasticSearchService {
      * @param index 索引
      * @param entity 对象
      */
-    void saveOrUpdate(String type, String index, Map<String, String> entity);
+    void saveOrUpdate(String type, String index, Map<String, Object> entity);
 
     /**
      * 批量保存或者更新es数据
@@ -50,7 +86,7 @@ public interface ElasticSearchService {
      * @param index 索引
      * @param entities 对象列表
      */
-    void saveOrUpdateBatchForMap(String type, String index, List<Map<String, String>> entities);
+    void saveOrUpdateBatchForMap(String type, String index, List<Map<String, Object>> entities);
 
     /**
      * 根据id删除es数据
@@ -79,7 +115,6 @@ public interface ElasticSearchService {
      */
     void updateById(String type, String index, Entity entity);
 
-
     /**
      * 根据id更改数据
      *
@@ -87,7 +122,7 @@ public interface ElasticSearchService {
      * @param index 索引
      * @param entity 对象
      */
-    void updateById(String type, String index, Map<String, String> entity);
+    void updateById(String type, String index, Map<String, Object> entity);
 
     /**
      * 根据id更改数据
@@ -98,7 +133,6 @@ public interface ElasticSearchService {
      */
     void updateBatch(String type, String index, List<? extends Entity> entities);
 
-
     /**
      * 根据id更改数据
      *
@@ -106,7 +140,7 @@ public interface ElasticSearchService {
      * @param index 索引
      * @param entities 对象列表
      */
-    void updateBatchForMap(String type, String index, List<Map<String, String>> entities);
+    void updateBatchForMap(String type, String index, List<Map<String, Object>> entities);
 
 
     /**
@@ -127,5 +161,5 @@ public interface ElasticSearchService {
      * @return 查询数据
      */
     <T> PageInfo<T> getPageInfo(EsQuery<T> esQuery);
-}
 
+}
