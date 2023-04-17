@@ -5,7 +5,6 @@ import com.ticho.boot.security.annotation.IgnoreType;
 import com.ticho.boot.security.constant.BaseOAuth2Const;
 import com.ticho.boot.security.prop.BaseSecurityProperty;
 import com.ticho.boot.web.util.SpringContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.method.HandlerMethod;
 
@@ -21,8 +20,11 @@ import java.util.Objects;
  */
 public class AntPatternsAuthHandle {
 
-    @Autowired
-    private BaseSecurityProperty baseSecurityProperty;
+    private final BaseSecurityProperty baseSecurityProperty;
+
+    public AntPatternsAuthHandle(BaseSecurityProperty baseSecurityProperty){
+        this.baseSecurityProperty = baseSecurityProperty;
+    }
 
     public boolean ignoreAuth(HttpServletRequest request) throws Exception {
         // @formatter:off

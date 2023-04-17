@@ -129,8 +129,8 @@ public class BaseSecurityImportConfig {
     }
 
     @Bean
-    public AntPatternsAuthHandle antPatternsAuthHandle() {
-        return new AntPatternsAuthHandle();
+    public AntPatternsAuthHandle antPatternsAuthHandle(BaseSecurityProperty baseSecurityProperty) {
+        return new AntPatternsAuthHandle(baseSecurityProperty);
     }
 
     /**
