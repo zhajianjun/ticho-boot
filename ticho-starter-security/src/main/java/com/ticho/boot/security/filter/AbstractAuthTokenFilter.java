@@ -68,6 +68,22 @@ public abstract class AbstractAuthTokenFilter<T extends BaseSecurityUser> extend
     protected void complete(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response) {
     }
 
+    /**
+     * 解析token，获取token信息
+     *
+     * @param token 令牌
+     * @return {@link Map}<{@link String},{@link Object}>
+     */
+    protected Map<String,Object> parseTokenToMap(String token) {
+        return jwtDecode.decodeAndVerify(token);
+    }
+
+    /**
+     * map信息转换为用户信息
+     *
+     * @param decodeAndVerify 解码和验证
+     * @return {@link T}
+     */
     protected abstract T convert(Map<String, Object> decodeAndVerify);
 
     // @formatter:off
@@ -87,7 +103,7 @@ public abstract class AbstractAuthTokenFilter<T extends BaseSecurityUser> extend
             Assert.isNotNull(token, HttpErrCode.NOT_LOGIN);
             token = StrUtil.removePrefixIgnoreCase(token, BaseSecurityConst.BEARER);
             token = StrUtil.trimStart(token);
-            Map<String, Object> decodeAndVerify = jwtDecode.decodeAndVerify(token);
+            Map<String, Object> decodeAndVerify = parseTokenToMap(token);
             Object type = decodeAndVerify.getOrDefault(BaseSecurityConst.TYPE, "");
             Assert.isTrue(Objects.equals(type, BaseSecurityConst.ACCESS_TOKEN), BizErrCode.FAIL, "token不合法");
             T securityUser = convert(decodeAndVerify);
