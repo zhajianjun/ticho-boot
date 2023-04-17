@@ -67,6 +67,11 @@
             <artifactId>ticho-starter-json</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.ticho.trace</groupId>
+            <artifactId>ticho-trace-gateway</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>
