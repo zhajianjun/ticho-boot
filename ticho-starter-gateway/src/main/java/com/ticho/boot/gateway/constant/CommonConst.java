@@ -19,6 +19,6 @@ public class CommonConst {
 
     public static final String INNER = "inner";
 
-    public static final String INNER_VALUE = "true";
+    public static final String INNER_VALUE_FALSE = "false";
 
 }

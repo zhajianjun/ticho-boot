@@ -24,11 +24,11 @@ import java.lang.annotation.Target;
 @Documented
 public @interface IgnoreJwtCheck {
 
-    /** 是否内部服务调用 true-是，false-否 */
-    @AliasFor("inner")
-    boolean value() default false;
+    /** 忽略检查类型 */
+    @AliasFor("type")
+    IgnoreType value() default IgnoreType.ALL;
 
     @AliasFor("value")
-    boolean inner() default false;
+    IgnoreType type() default IgnoreType.ALL;
 
 }

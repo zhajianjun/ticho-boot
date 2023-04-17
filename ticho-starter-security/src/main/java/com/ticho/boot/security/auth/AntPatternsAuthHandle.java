@@ -1,6 +1,7 @@
 package com.ticho.boot.security.auth;
 
 import com.ticho.boot.security.annotation.IgnoreJwtCheck;
+import com.ticho.boot.security.annotation.IgnoreType;
 import com.ticho.boot.security.constant.BaseOAuth2Const;
 import com.ticho.boot.security.prop.BaseSecurityProperty;
 import com.ticho.boot.web.util.SpringContext;
@@ -51,8 +52,8 @@ public class AntPatternsAuthHandle {
             return false;
         }
         // IgnoreAuth注解存在，且inner=false,则不是内部服务访问，则jwt校验完全放开
-        boolean inner = methodAnnotation.value();
-        if (!inner) {
+        IgnoreType value = methodAnnotation.value();
+        if (IgnoreType.ALL.compareTo(value) == 0) {
             return true;
         }
         // inner=true,内部服务访问，则header中存在 inner = true,则权限放开

@@ -20,7 +20,8 @@ public class SecurityHeaderFilter extends AbstractGatewayFilterFactory<Object> {
     public GatewayFilter apply(Object config) {
         return (exchange, chain) -> {
             ServerHttpRequest request = exchange.getRequest();
-            ServerHttpRequest newRequest = request.mutate().header(CommonConst.INNER, CommonConst.INNER_VALUE).build();
+            // 网关调用的接口都是外部接口，强制更改inner=false
+            ServerHttpRequest newRequest = request.mutate().header(CommonConst.INNER, CommonConst.INNER_VALUE_FALSE).build();
             ServerWebExchange newExchange = exchange.mutate().request(newRequest).build();
             return chain.filter(newExchange);
         };
