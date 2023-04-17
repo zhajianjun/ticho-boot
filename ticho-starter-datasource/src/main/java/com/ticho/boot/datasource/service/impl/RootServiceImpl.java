@@ -43,17 +43,21 @@ public class RootServiceImpl<M extends RootMapper<T>, T> extends ServiceImpl<M, 
 
     @Transactional(rollbackFor = {Exception.class})
     @Override
-    public boolean saveBatch(Collection<T> dictTypes, int batchSize) {
-        if (CollUtil.isEmpty(dictTypes)) {
+    public boolean saveBatch(Collection<T> entityList, int batchSize) {
+        if (CollUtil.isEmpty(entityList)) {
             log.info("{}批量保存异常，集合为null或者大小为0", getTableName());
             return false;
         }
         if (batchSize <= 0 || batchSize > 1000) {
             batchSize = 200;
         }
-        List<List<T>> split = CollUtil.split(dictTypes, batchSize);
+        int size = entityList.size();
+        if (size <= batchSize) {
+            return size == baseMapper.insertBatch(entityList);
+        }
+        List<List<T>> split = CollUtil.split(entityList, batchSize);
         Integer total = split.stream().map(baseMapper::insertBatch).reduce(0, Integer::sum);
-        return total == dictTypes.size();
+        return total == entityList.size();
     }
 
     @Override
@@ -78,9 +82,13 @@ public class RootServiceImpl<M extends RootMapper<T>, T> extends ServiceImpl<M, 
         if (batchSize <= 0 || batchSize > 1000) {
             batchSize = 200;
         }
+        int size = ids.size();
+        if (size <= batchSize) {
+            return size == baseMapper.deleteBatchIds(ids);
+        }
         List<? extends List<? extends Serializable>> split = CollUtil.split(ids, batchSize);
         Integer total = split.stream().map(baseMapper::deleteBatchIds).reduce(0, Integer::sum);
-        return total == ids.size();
+        return total == size;
     }
 
     @Override
