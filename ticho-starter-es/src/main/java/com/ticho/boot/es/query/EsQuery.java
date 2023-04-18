@@ -32,8 +32,7 @@ public class EsQuery<T> extends EsSimpleQuery {
             return null;
         }
         EsQuery<T> objectEsQuery = new EsQuery<>();
-        objectEsQuery.setTypes(esSimpleQuery.getTypes());
-        objectEsQuery.setIndex(esSimpleQuery.getIndex());
+        objectEsQuery.setIndexs(esSimpleQuery.getIndexs());
         objectEsQuery.setFrom(esSimpleQuery.getFrom());
         objectEsQuery.setSize(esSimpleQuery.getSize());
         objectEsQuery.setFields(esSimpleQuery.getFields());
