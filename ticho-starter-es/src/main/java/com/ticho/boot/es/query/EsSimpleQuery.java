@@ -2,8 +2,6 @@ package com.ticho.boot.es.query;
 
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -18,10 +16,8 @@ public class EsSimpleQuery {
 
     public static final int DEFAULT_MAX_PAGE_SIZE = 10000;
 
-    /** 文档 */
-    private List<String> types;
     /** 索引 */
-    private String index;
+    private List<String> indexs;
     /** 起始行 */
     private Integer from;
     /** 记录大小 */
@@ -84,36 +80,6 @@ public class EsSimpleQuery {
         if (this.size == null || this.size < 0) {
             this.size = DEFAULT_PAGE_SIZE;
         }
-    }
-
-    public void setTypes(String types) {
-        if (this.types == null) {
-            this.types = new ArrayList<>();
-        }
-        if (types == null) {
-            return;
-        }
-        this.types.add(types);
-    }
-
-    public void setTypes(List<String> types) {
-        if (this.types == null) {
-            this.types = new ArrayList<>();
-        }
-        if (types == null) {
-            return;
-        }
-        this.types.addAll(types);
-    }
-
-    public void setTypes(String... types) {
-        if (this.types == null) {
-            this.types = new ArrayList<>();
-        }
-        if (types == null || types.length == 0) {
-            return;
-        }
-        this.types.addAll(Arrays.asList(types));
     }
 
 }

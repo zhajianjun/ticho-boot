@@ -16,8 +16,6 @@ import java.util.Set;
 public class PageInfo<T> {
     /** 索引 */
     private Set<String> indexs;
-    /** 文档 */
-    private Set<String> types;
     /** 当前页 */
     private Integer pageNum;
     /** 记录大小 */
