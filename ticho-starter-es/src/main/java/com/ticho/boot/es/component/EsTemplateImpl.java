@@ -50,6 +50,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.StringJoiner;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * es操作
@@ -522,25 +523,21 @@ public class EsTemplateImpl implements EsTemplate {
      */
     public <T> EsPageResult<T> page(EsQuery<T> esQuery) {
         SearchResponse searchResponse = searchResponse(esQuery);
-        EsPageResult<T> pageInfo = new EsPageResult<>();
-        List<T> data = new ArrayList<>();
+        List<T> rows = new ArrayList<>();
         Set<String> indexs = new HashSet<>();
-        pageInfo.setRows(data);
-        pageInfo.setIndexs(indexs);
-        pageInfo.setPageNum(esQuery.getPageNum());
-        pageInfo.setPageSize(esQuery.getPageSize());
+        AtomicInteger total = new AtomicInteger();
         Class<T> clazz = esQuery.getClazz();
         Optional.ofNullable(searchResponse).map(x -> {
             SearchHits hits = x.getHits();
-            pageInfo.setTotal(Long.valueOf(hits.getTotalHits().value).intValue());
+            total.set(Long.valueOf(hits.getTotalHits().value).intValue());
             return hits;
         }).map(SearchHits::getHits).ifPresent(hits -> {
             for (SearchHit searchHit : hits) {
                 indexs.add(searchHit.getIndex());
-                data.add(JsonUtil.toJavaObject(searchHit.getSourceAsString(), clazz));
+                rows.add(JsonUtil.toJavaObject(searchHit.getSourceAsString(), clazz));
             }
         });
-        return pageInfo;
+        return new EsPageResult<>(esQuery.getPageNum(), esQuery.getPageSize(), total, indexs, rows);
     }
 
     /**
@@ -551,24 +548,20 @@ public class EsTemplateImpl implements EsTemplate {
      */
     public EsPageResult<Map<String, Object>> pageForMap(EsQuery<Map<String, Object>> esQuery) {
         SearchResponse searchResponse = searchResponse(esQuery);
-        EsPageResult<Map<String, Object>> pageInfo = new EsPageResult<>();
-        List<Map<String, Object>> data = new ArrayList<>();
+        List<Map<String, Object>> rows = new ArrayList<>();
         Set<String> indexs = new HashSet<>();
-        pageInfo.setRows(data);
-        pageInfo.setIndexs(indexs);
-        pageInfo.setPageNum(esQuery.getPageNum());
-        pageInfo.setPageSize(esQuery.getPageSize());
+        AtomicInteger total = new AtomicInteger();
         Optional.ofNullable(searchResponse).map(x -> {
             SearchHits hits = x.getHits();
-            pageInfo.setTotal(Long.valueOf(hits.getTotalHits().value).intValue());
+            total.set(Long.valueOf(hits.getTotalHits().value).intValue());
             return hits;
         }).map(SearchHits::getHits).ifPresent(hits -> {
             for (SearchHit searchHit : hits) {
                 indexs.add(searchHit.getIndex());
-                data.add(searchHit.getSourceAsMap());
+                rows.add(searchHit.getSourceAsMap());
             }
         });
-        return pageInfo;
+        return new EsPageResult<>(esQuery.getPageNum(), esQuery.getPageSize(), total, indexs, rows);
     }
 
     /**
