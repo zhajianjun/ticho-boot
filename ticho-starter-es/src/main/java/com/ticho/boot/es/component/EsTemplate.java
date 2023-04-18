@@ -1,10 +1,8 @@
 package com.ticho.boot.es.component;
 
-import com.ticho.boot.es.page.PageInfo;
 import com.ticho.boot.es.query.EsQuery;
 import com.ticho.boot.view.core.Entity;
 import com.ticho.boot.view.core.EsPageResult;
-import com.ticho.boot.view.core.PageResult;
 
 import java.util.Collection;
 import java.util.List;
@@ -153,7 +151,7 @@ public interface EsTemplate {
      * 根据条件查询
      *
      * @param esQuery es查询条件
-     * @return 查询数据
+     * @return {@link EsPageResult}<{@link Map}<{@link String}, {@link Object}>>
      */
     <T> EsPageResult<T> page(EsQuery<T> esQuery);
 
@@ -161,7 +159,7 @@ public interface EsTemplate {
      * 根据条件查询
      *
      * @param esQuery es查询
-     * @return {@link PageInfo}<{@link Map}<{@link String}, {@link Object}>>
+     * @return {@link EsPageResult}<{@link Map}<{@link String}, {@link Object}>>
      */
     EsPageResult<Map<String, Object>> pageForMap(EsQuery<Map<String, Object>> esQuery);
 
