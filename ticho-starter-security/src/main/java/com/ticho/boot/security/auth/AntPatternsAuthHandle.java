@@ -1,11 +1,12 @@
 package com.ticho.boot.security.auth;
 
+import cn.hutool.core.collection.CollUtil;
 import com.ticho.boot.security.annotation.IgnoreJwtCheck;
 import com.ticho.boot.security.annotation.IgnoreType;
 import com.ticho.boot.security.constant.BaseOAuth2Const;
 import com.ticho.boot.security.prop.BaseSecurityProperty;
 import com.ticho.boot.web.util.SpringContext;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.method.HandlerMethod;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,10 +20,12 @@ import java.util.Objects;
  * @date 2022-09-26 15:22
  */
 public class AntPatternsAuthHandle {
-
+    /** security参数配置对象 */
     private final BaseSecurityProperty baseSecurityProperty;
+    /** url地址匹配 */
+    private final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
-    public AntPatternsAuthHandle(BaseSecurityProperty baseSecurityProperty){
+    public AntPatternsAuthHandle(BaseSecurityProperty baseSecurityProperty) {
         this.baseSecurityProperty = baseSecurityProperty;
     }
 
@@ -31,8 +34,8 @@ public class AntPatternsAuthHandle {
         if (ignoreHandleMethodJwtCheck(request)) {
             return true;
         }
-        List<AntPathRequestMatcher> antPathRequestMatchers = baseSecurityProperty.getAntPathRequestMatchers();
-        return antPathRequestMatchers.stream().anyMatch(x -> x.matches(request));
+        List<String> antPatterns = baseSecurityProperty.getAntPatterns();
+        return antPatterns.stream().anyMatch(x -> antPathMatcher.match(x, request.getRequestURI()));
         // @formatter:on
     }
 
