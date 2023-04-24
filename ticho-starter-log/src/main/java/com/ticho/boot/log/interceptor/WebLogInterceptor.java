@@ -19,6 +19,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,6 +33,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -51,13 +53,18 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean, 
     private static TransmittableThreadLocal<HttpLog> logThreadLocal;
     /** 日志信息线程变量 */
     private final TransmittableThreadLocal<HttpLog> theadLocal;
+    /** 日志信息线程变量 */
+    private final TransmittableThreadLocal<Boolean> antPathMatchLocal;
     /** 日志配置 */
     private final BaseLogProperty baseLogProperty;
+    /** url地址匹配 */
+    private final AntPathMatcher antPathMatcher = new AntPathMatcher();
     /** 环境变量 */
     private final Environment environment;
 
     public WebLogInterceptor(BaseLogProperty baseLogProperty, Environment environment) {
         this.theadLocal = new TransmittableThreadLocal<>();
+        this.antPathMatchLocal = new TransmittableThreadLocal<>();
         this.baseLogProperty = baseLogProperty;
         this.environment = environment;
     }
@@ -106,7 +113,7 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean, 
         // header
         Map<String, String> headersMap = getHeaders(request);
         String headers = toJsonOfDefault(headersMap);
-        String requestPrefixText = baseLogProperty.getReqPrefix();
+        String reqPrefix = baseLogProperty.getReqPrefix();
         String header = request.getHeader(USER_AGENT);
         UserAgent userAgent =  UserAgentUtil.parse(header);
         Principal principal = request.getUserPrincipal();
@@ -124,8 +131,11 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean, 
             .build();
         theadLocal.set(httpLog);
         boolean print = Boolean.TRUE.equals(baseLogProperty.getPrint());
-        if (print) {
-            log.info("{} {} {} 请求开始, 请求参数={}, 请求体={}, 请求头={}", requestPrefixText, type, url, params, body, headers);
+        List<String> antPatterns = baseLogProperty.getAntPatterns();
+        boolean anyMatch = antPatterns.stream().anyMatch(x -> antPathMatcher.match(x, url));
+        antPathMatchLocal.set(anyMatch);
+        if (print && !anyMatch) {
+            log.info("{} {} {} 请求开始, 请求参数={}, 请求体={}, 请求头={}", reqPrefix, type, url, params, body, headers);
         }
         return true;
     }
@@ -146,12 +156,14 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean, 
         int status = response.getStatus();
         Long consume = httpLog.getConsume();
         boolean print = Boolean.TRUE.equals(baseLogProperty.getPrint());
-        if (print) {
+        Boolean anyMatch = antPathMatchLocal.get();
+        if (print && !anyMatch) {
             log.info("{} {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}", reqPrefix, type, url, status, consume, resBody);
         }
         ApplicationContext applicationContext = SpringUtil.getApplicationContext();
         applicationContext.publishEvent(new HttpLogEvent(applicationContext, httpLog));
         theadLocal.remove();
+        antPathMatchLocal.remove();
     }
 
     private String getResBody(HttpServletResponse response) {

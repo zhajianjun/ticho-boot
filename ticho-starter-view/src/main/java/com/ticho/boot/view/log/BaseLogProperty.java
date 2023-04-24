@@ -3,6 +3,9 @@ package com.ticho.boot.view.log;
 
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 日志配置
  *
@@ -18,6 +21,8 @@ public class BaseLogProperty {
     private Boolean print = false;
     /** 日志打印前缀 */
     private String reqPrefix = "[REQ]";
+    /** 日志过滤地址 */
+    private List<String> antPatterns = new ArrayList<>();
     /** 拦截器排序 */
     private Integer order = Integer.MIN_VALUE + 10000;
 
