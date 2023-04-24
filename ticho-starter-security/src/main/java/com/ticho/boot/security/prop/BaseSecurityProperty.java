@@ -1,20 +1,17 @@
 package com.ticho.boot.security.prop;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import com.ticho.boot.view.core.BaseSecurityUser;
 import com.ticho.boot.web.util.SpringContext;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * security参数配置对象
@@ -32,20 +29,8 @@ public class BaseSecurityProperty {
 
     /** 权限过滤地址 */
     @Getter
-    private String[] antPatterns = {"/health"};
-
-    @Getter
-    private List<AntPathRequestMatcher> antPathRequestMatchers = new ArrayList<>();
-
-    public void setAntPatterns(String[] antPatterns) {
-        // @formatter:off
-        if (ArrayUtil.isEmpty(antPatterns)) {
-            antPatterns = new String[]{"/health"};
-        }
-        this.antPatterns = antPatterns;
-        this.antPathRequestMatchers = Arrays.stream(antPatterns).map(AntPathRequestMatcher::new).collect(Collectors.toList());
-        // @formatter:on
-    }
+    @Setter
+    private List<String> antPatterns = new ArrayList<>();
 
     public void setUsers(List<BaseSecurityUser> users) {
         // @formatter:off
