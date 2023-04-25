@@ -49,7 +49,7 @@ public class RootServiceImpl<M extends RootMapper<T>, T> extends ServiceImpl<M, 
             return false;
         }
         if (batchSize <= 0 || batchSize > 1000) {
-            batchSize = 200;
+            batchSize = RootService.DEFAULT_BATCH_SIZE;
         }
         int size = entityList.size();
         if (size <= batchSize) {
@@ -71,7 +71,7 @@ public class RootServiceImpl<M extends RootMapper<T>, T> extends ServiceImpl<M, 
 
     @Override
     public boolean removeByIds(Collection<? extends Serializable> ids) {
-        return removeByIds(ids, 200);
+        return removeByIds(ids, RootService.DEFAULT_BATCH_SIZE);
     }
 
     public boolean removeByIds(Collection<? extends Serializable> ids, int batchSize) {
@@ -80,7 +80,7 @@ public class RootServiceImpl<M extends RootMapper<T>, T> extends ServiceImpl<M, 
             return false;
         }
         if (batchSize <= 0 || batchSize > 1000) {
-            batchSize = 200;
+            batchSize = RootService.DEFAULT_BATCH_SIZE;
         }
         int size = ids.size();
         if (size <= batchSize) {
@@ -98,7 +98,7 @@ public class RootServiceImpl<M extends RootMapper<T>, T> extends ServiceImpl<M, 
             return false;
         }
         if (batchSize <= 0 || batchSize > 1000) {
-            batchSize = 200;
+            batchSize = RootService.DEFAULT_BATCH_SIZE;
         }
         return super.updateBatchById(entityList, batchSize);
     }
@@ -145,7 +145,7 @@ public class RootServiceImpl<M extends RootMapper<T>, T> extends ServiceImpl<M, 
             return false;
         }
         if (batchSize <= 0 || batchSize > 1000) {
-            batchSize = 200;
+            batchSize = RootService.DEFAULT_BATCH_SIZE;
         }
         return super.saveOrUpdateBatch(entityList, batchSize);
     }
