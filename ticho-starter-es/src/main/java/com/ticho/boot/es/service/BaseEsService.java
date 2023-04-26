@@ -1,7 +1,9 @@
 package com.ticho.boot.es.service;
 
 import cn.easyes.core.biz.EntityInfo;
+import cn.easyes.core.conditions.LambdaEsQueryWrapper;
 import cn.easyes.core.conditions.interfaces.BaseEsMapper;
+import cn.easyes.core.toolkit.EsWrappers;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -263,5 +265,63 @@ public interface BaseEsService<T> {
      * @return 是否删除成功
      */
     boolean removeByIds(Collection<? extends Serializable> idList, int batchSize, String... indexNames);
+
+    /**
+     * 列表查询
+     *
+     * @param wrapper 包装器
+     * @return {@link List}<{@link T}>
+     */
+    List<T> list(LambdaEsQueryWrapper<T> wrapper);
+
+    /**
+     * 列表查询
+     *
+     * @param indexNames 索引名称
+     * @return {@link List}<{@link T}>
+     */
+    default List<T> list(String... indexNames) {
+        LambdaEsQueryWrapper<T> wrapper = EsWrappers.lambdaQuery(null);
+        wrapper.index(indexNames);
+        return list(wrapper);
+    }
+
+    /**
+     * 列表查询
+     *
+     * @return {@link List}<{@link T}>
+     */
+    default List<T> list() {
+        return list(EsWrappers.lambdaQuery(null));
+    }
+
+    /**
+     * 统计数量
+     *
+     * @param wrapper 包装器
+     * @return {@link Long}
+     */
+    Long count(LambdaEsQueryWrapper<T> wrapper);
+
+    /**
+     * 统计数量
+     *
+     * @param indexNames 索引名称
+     * @return {@link Long}
+     */
+    default Long count(String... indexNames) {
+        LambdaEsQueryWrapper<T> wrapper = EsWrappers.lambdaQuery(null);
+        wrapper.index(indexNames);
+        return count(wrapper);
+    }
+
+    /**
+     * 统计数量
+     *
+     * @return {@link Long}
+     */
+    default Long count() {
+        return count(EsWrappers.lambdaQuery(null));
+    }
 
 }
