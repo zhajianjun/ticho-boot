@@ -1,6 +1,7 @@
 package com.ticho.boot.es.service.impl;
 
 import cn.easyes.core.biz.EntityInfo;
+import cn.easyes.core.conditions.LambdaEsQueryWrapper;
 import cn.easyes.core.conditions.interfaces.BaseEsMapper;
 import cn.hutool.core.collection.CollUtil;
 import com.ticho.boot.es.service.BaseEsService;
@@ -127,6 +128,16 @@ public class BaseEsServiceImpl<M extends BaseEsMapper<T>, T> implements BaseEsSe
         List<? extends List<? extends Serializable>> split = CollUtil.split(idList, batchSize);
         Integer total = split.stream().map(x -> baseEsMapper.deleteBatchIds(x, indexNames)).reduce(0, Integer::sum);
         return total == size;
+    }
+
+    @Override
+    public List<T> list(LambdaEsQueryWrapper<T> wrapper) {
+        return baseEsMapper.selectList(wrapper);
+    }
+
+    @Override
+    public Long count(LambdaEsQueryWrapper<T> wrapper) {
+        return baseEsMapper.selectCount(wrapper);
     }
 
 
