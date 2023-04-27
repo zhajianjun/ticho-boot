@@ -222,6 +222,7 @@
 
     <springProperty scope="context" name="logUrl" source="ticho.trace.logUrl" defaultValue = ""/>
     <springProperty scope="context" name="pushLog" source="ticho.trace.pushLog" defaultValue = "false"/>
+    <springProperty scope="context" name="secret" source="ticho.trace.secret" defaultValue = ""/>
     <springProperty scope="context" name="appName" source="spring.application.name" defaultValue = "UNKNOWN"/>
     <springProperty scope="context" name="env" source="spring.profiles.active" defaultValue = "UNKNOWN"/>
 
@@ -230,8 +231,9 @@
         <env>${env}</env>
         <url>${logUrl}</url>
         <pushLog>${pushLog}</pushLog>
+        <secret>${secret}</secret>
         <pushSize>50</pushSize>
-        <flushInterval>500</flushInterval>
+        <flushInterval>1000</flushInterval>
     </appender>
 
     <springProfile name="local,dev,test,st">
