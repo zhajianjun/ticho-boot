@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * redis分布式锁 延时类 (守护线程)
  *
- * @author AdoroTutto
+ * @author zhajianjun
  * @date 2023-02-17 16:42
  */
 public class RedisDelayRunnable implements Runnable {
