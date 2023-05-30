@@ -52,7 +52,7 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean, 
     /** 日志信息线程变量(静态) */
     private static TransmittableThreadLocal<HttpLog> logThreadLocal;
     /** 日志信息线程变量 */
-    private final TransmittableThreadLocal<HttpLog> theadLocal;
+    private final TransmittableThreadLocal<HttpLog> logTheadLocal;
     /** 日志信息线程变量 */
     private final TransmittableThreadLocal<Boolean> antPathMatchLocal;
     /** 日志配置 */
@@ -63,7 +63,7 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean, 
     private final Environment environment;
 
     public WebLogInterceptor(BaseLogProperty baseLogProperty, Environment environment) {
-        this.theadLocal = new TransmittableThreadLocal<>();
+        this.logTheadLocal = new TransmittableThreadLocal<>();
         this.antPathMatchLocal = new TransmittableThreadLocal<>();
         this.baseLogProperty = baseLogProperty;
         this.environment = environment;
@@ -71,11 +71,11 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean, 
 
     @Override
     public void afterPropertiesSet() {
-        logThreadLocal = this.theadLocal;
+        logThreadLocal = this.logTheadLocal;
     }
 
     public HttpLog getLogInfo() {
-        return theadLocal.get();
+        return logTheadLocal.get();
     }
 
     public static HttpLog logInfo() {
@@ -129,7 +129,7 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean, 
             .username((principal != null ? principal.getName() : null))
             .userAgent(userAgent)
             .build();
-        theadLocal.set(httpLog);
+        logTheadLocal.set(httpLog);
         boolean print = Boolean.TRUE.equals(baseLogProperty.getPrint());
         List<String> antPatterns = baseLogProperty.getAntPatterns();
         boolean anyMatch = antPatterns.stream().anyMatch(x -> antPathMatcher.match(x, url));
@@ -142,7 +142,7 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean, 
 
     @Override
     public void afterCompletion(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, Exception ex) {
-        HttpLog httpLog = theadLocal.get();
+        HttpLog httpLog = logTheadLocal.get();
         if (httpLog == null) {
             return;
         }
@@ -162,7 +162,7 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean, 
         }
         ApplicationContext applicationContext = SpringUtil.getApplicationContext();
         applicationContext.publishEvent(new HttpLogEvent(applicationContext, httpLog));
-        theadLocal.remove();
+        logTheadLocal.remove();
         antPathMatchLocal.remove();
     }
 
