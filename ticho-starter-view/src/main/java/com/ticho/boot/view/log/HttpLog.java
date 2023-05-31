@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Objects;
+
 
 /**
  * 接口日志
@@ -26,11 +28,17 @@ public class HttpLog {
     /** 请求类型 */
     private String type;
 
+    /** ip */
+    private String ip;
+
     /** 请求地址 */
     private String url;
 
     /** 端口号 */
     private String port;
+
+    /** 全路径接口 */
+    private String fullUrl;
 
     /** 请求参数 */
     private String reqParams;
@@ -71,4 +79,15 @@ public class HttpLog {
         }
         return end - start;
     }
+
+    public String getFullUrl() {
+        if (Objects.nonNull(fullUrl)) {
+            return fullUrl;
+        }
+        if (url == null || port == null || ip == null) {
+            return null;
+        }
+        return String.format("%s:%s%s", ip, port, url);
+    }
+
 }

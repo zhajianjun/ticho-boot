@@ -1,7 +1,12 @@
 package com.ticho.boot.http.interceptor;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.URLUtil;
+import cn.hutool.extra.spring.SpringUtil;
+import com.ticho.boot.http.event.HttpLogEvent;
 import com.ticho.boot.http.prop.BaseHttpProperty;
+import com.ticho.boot.json.util.JsonUtil;
+import com.ticho.boot.view.log.HttpLog;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
@@ -10,12 +15,19 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okio.Buffer;
+import org.springframework.context.ApplicationContext;
 import org.springframework.lang.NonNull;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.net.URI;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -45,17 +57,19 @@ public class OkHttpLogInterceptor implements Interceptor {
         if (!Boolean.TRUE.equals(baseHttpProperty.getPrintLog())) {
             return chain.proceed(req);
         }
-        String requestPrefixText = baseHttpProperty.getRequestPrefixText();
+        String reqPrefix = baseHttpProperty.getReqPrefix();
         long t1 = System.currentTimeMillis();
         String reqBody = getReqBody(req);
-        Map<String,List<String>> headersMap = req.headers().toMultimap();
-        Map<String, Object> headers = new HashMap<>();
-        headersMap.forEach((k,v) -> headers.put(k, String.join(",",v)));
+        Map<String,List<String>> headersGroupMap = req.headers().toMultimap();
+        Map<String, Object> headersMap = new HashMap<>();
+        headersGroupMap.forEach((k,v) -> headersMap.put(k, String.join(",",v)));
+        String headers = toJsonOfDefault(headersMap);
         String method = req.method();
         HttpUrl httpUrl = req.url();
-        String url = StrUtil.subBefore(httpUrl.toString(), "?", false);
-        Map<String, Object> params = getParams(httpUrl);
-        log.info("{} {} {} 请求开始, 请求参数={}, 请求体={}, 请求头={}", requestPrefixText, method, url, params, reqBody, headers);
+        String fullUrl = StrUtil.subBefore(httpUrl.toString(), "?", false);
+        Map<String, Object> paramsMap = getParams(httpUrl);
+        String params = toJsonOfDefault(paramsMap);
+        log.info("{} {} {} 请求开始, 请求参数={}, 请求体={}, 请求头={}", reqPrefix, method, fullUrl, params, reqBody, headers);
         Response res = chain.proceed(req);
         long t2 = System.currentTimeMillis();
         //这里不能直接使用response.body().string()的方式输出日志
@@ -65,8 +79,44 @@ public class OkHttpLogInterceptor implements Interceptor {
         ResponseBody body = res.peekBody(byteCount);
         String resBody = body.string();
         int status = res.code();
-        log.info("{} {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}", requestPrefixText, method, url, status, t2-t1, resBody);
+        long millis = t2 - t1;
+        log.info("{} {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}", reqPrefix, method, fullUrl, status, millis, resBody);
+        URI uri = URLUtil.toURI(fullUrl);
+        String host = uri.getHost();
+        String port = Integer.toString(uri.getPort());
+        String url = uri.getPath();
+        HttpLog httpLog = HttpLog.builder()
+            .type(method)
+            .ip(host)
+            .url(url)
+            .port(port)
+            .fullUrl(url)
+            .reqParams(params)
+            .reqBody(reqBody)
+            .reqHeaders(headers)
+            .resBody(resBody)
+            .start(t1)
+            .end(t2)
+            .consume(millis)
+            .status(status)
+            .username(getUsername())
+            .build();
+        ApplicationContext applicationContext = SpringUtil.getApplicationContext();
+        applicationContext.publishEvent(new HttpLogEvent(applicationContext, httpLog));
         return res;
+        // @formatter:on
+    }
+
+    public String getUsername() {
+        // @formatter:off
+        ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (requestAttributes == null) {
+            return null;
+        }
+        HttpServletRequest request = requestAttributes.getRequest();
+        return Optional.ofNullable(request.getUserPrincipal())
+            .map(Principal::getName)
+            .orElse(null);
         // @formatter:on
     }
 
@@ -92,6 +142,18 @@ public class OkHttpLogInterceptor implements Interceptor {
             e.printStackTrace();
         }
         return NONE;
+    }
+
+    private String toJsonOfDefault(Map<String, ?> map) {
+        String result = JsonUtil.toJsonString(map);
+        return nullOfDefault(result);
+    }
+
+    private String nullOfDefault(String result) {
+        if (result == null || result.isEmpty()) {
+            return NONE;
+        }
+        return result;
     }
 
 }
