@@ -46,6 +46,7 @@ public class BaseWebBeanConfig {
 
     /**
      * 下个跨度id的索引 上下文传递
+     * <p>虽然TransmittableThreadLocal可以进行父子线程的变量传递，但是子线程结束也得清除线程变量，所以还是手动方式注入，子线程结束进行清除</p>
      *
      * @return {@link BaseTaskDecortor}<{@link AtomicInteger}>
      */
