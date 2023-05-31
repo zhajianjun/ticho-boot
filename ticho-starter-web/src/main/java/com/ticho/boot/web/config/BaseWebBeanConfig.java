@@ -1,6 +1,6 @@
 package com.ticho.boot.web.config;
 
-import com.ticho.boot.web.handle.BaseTaskDecortor;
+import com.ticho.boot.view.task.BaseTaskDecortor;
 import com.ticho.boot.web.prop.BaseAsyncProperty;
 import org.slf4j.MDC;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -17,8 +17,6 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
- *
- *
  * @author zhajianjun
  * @date 2023-01-05 13:08
  */
