@@ -1,4 +1,4 @@
-package com.ticho.boot.log.event;
+package com.ticho.boot.http.event;
 
 import com.ticho.boot.view.log.HttpLog;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.ApplicationContextEvent;
 
 /**
- * 接口日志事件
+ * http接口调用日志事件
  *
  * @author zhajianjun
  * @date 2023-02-14 16:23

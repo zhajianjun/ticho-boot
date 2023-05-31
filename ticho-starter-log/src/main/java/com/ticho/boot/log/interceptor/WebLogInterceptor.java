@@ -7,11 +7,12 @@ import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.ticho.boot.json.util.JsonUtil;
-import com.ticho.boot.log.event.HttpLogEvent;
+import com.ticho.boot.log.event.WebLogEvent;
 import com.ticho.boot.log.wrapper.RequestWrapper;
 import com.ticho.boot.log.wrapper.ResponseWrapper;
 import com.ticho.boot.view.log.BaseLogProperty;
 import com.ticho.boot.view.log.HttpLog;
+import com.ticho.trace.spring.util.IpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
@@ -120,6 +121,7 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean, 
         String port = environment.getProperty("server.port");
         HttpLog httpLog = HttpLog.builder()
             .type(type)
+            .ip(IpUtil.getIp(request))
             .url(url)
             .port(port)
             .reqParams(params)
@@ -161,7 +163,7 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean, 
             log.info("{} {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}", reqPrefix, type, url, status, consume, resBody);
         }
         ApplicationContext applicationContext = SpringUtil.getApplicationContext();
-        applicationContext.publishEvent(new HttpLogEvent(applicationContext, httpLog));
+        applicationContext.publishEvent(new WebLogEvent(applicationContext, httpLog));
         logTheadLocal.remove();
         antPathMatchLocal.remove();
     }

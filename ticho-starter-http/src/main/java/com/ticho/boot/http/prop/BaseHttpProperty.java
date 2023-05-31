@@ -21,7 +21,7 @@ public class BaseHttpProperty {
     private Boolean printLog = false;
 
     /** 日志打印前缀 */
-    private String requestPrefixText = "[HTTP]";
+    private String reqPrefix = "[HTTP]";
 
     /** 设置连接超时，单位:秒(s) */
     private Long connectTimeout = 10L;
