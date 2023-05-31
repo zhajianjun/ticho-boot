@@ -3,15 +3,18 @@ package com.ticho.boot.log.config;
 import com.ticho.boot.log.filter.WapperRequestFilter;
 import com.ticho.boot.log.interceptor.WebLogInterceptor;
 import com.ticho.boot.view.log.BaseLogProperty;
+import com.ticho.boot.view.task.BaseTaskDecortor;
+import com.ticho.trace.core.util.TraceUtil;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 日志bean初始化配置
@@ -39,6 +42,20 @@ public class BaseWebBeanConfig {
     @ConditionalOnBean(WapperRequestFilter.class)
     public WebLogInterceptor webLogInterceptor(BaseLogProperty baseLogProperty, Environment environment) {
         return new WebLogInterceptor(baseLogProperty, environment);
+    }
+
+    /**
+     * 下个跨度id的索引 上下文传递
+     *
+     * @return {@link BaseTaskDecortor}<{@link AtomicInteger}>
+     */
+    @Bean
+    public BaseTaskDecortor<AtomicInteger> nextSpanIndex() {
+        BaseTaskDecortor<AtomicInteger> decortor = new BaseTaskDecortor<>();
+        decortor.setSupplier(TraceUtil::getNextSpanIndex);
+        decortor.setExecute(TraceUtil::setNextSpanIndex);
+        decortor.setComplete(x -> TraceUtil.clearNextSpanIndex());
+        return decortor;
     }
 
 }

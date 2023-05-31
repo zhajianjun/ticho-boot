@@ -1,4 +1,4 @@
-package com.ticho.boot.web.handle;
+package com.ticho.boot.view.task;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- *
+ * 上下文传递数据 对象
  *
  * @author zhajianjun
  * @date 2023-01-05 10:53
@@ -41,3 +41,4 @@ public class BaseTaskDecortor<T> {
     }
 
 }
+
