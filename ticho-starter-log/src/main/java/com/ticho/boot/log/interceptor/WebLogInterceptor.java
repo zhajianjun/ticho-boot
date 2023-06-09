@@ -14,7 +14,6 @@ import com.ticho.boot.view.log.BaseLogProperty;
 import com.ticho.boot.view.log.HttpLog;
 import com.ticho.trace.spring.util.IpUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
@@ -45,17 +44,15 @@ import java.util.stream.Collectors;
  * @date 2023-01-11 09:44
  */
 @Slf4j
-public class WebLogInterceptor implements HandlerInterceptor, InitializingBean, Ordered {
+public class WebLogInterceptor implements HandlerInterceptor, Ordered {
     /** NONE */
     private static final String NONE = "NONE";
     /** 用户代理key */
     private static final String USER_AGENT = "User-Agent";
-    /** 日志信息线程变量(静态) */
-    private static TransmittableThreadLocal<HttpLog> logThreadLocal;
     /** 日志信息线程变量 */
-    private final TransmittableThreadLocal<HttpLog> logTheadLocal;
+    private static final TransmittableThreadLocal<HttpLog> logTheadLocal = new TransmittableThreadLocal<>();
     /** 日志信息线程变量 */
-    private final TransmittableThreadLocal<Boolean> antPathMatchLocal;
+    private static final TransmittableThreadLocal<Boolean> antPathMatchLocal = new TransmittableThreadLocal<>();
     /** 日志配置 */
     private final BaseLogProperty baseLogProperty;
     /** url地址匹配 */
@@ -64,23 +61,12 @@ public class WebLogInterceptor implements HandlerInterceptor, InitializingBean, 
     private final Environment environment;
 
     public WebLogInterceptor(BaseLogProperty baseLogProperty, Environment environment) {
-        this.logTheadLocal = new TransmittableThreadLocal<>();
-        this.antPathMatchLocal = new TransmittableThreadLocal<>();
         this.baseLogProperty = baseLogProperty;
         this.environment = environment;
     }
 
-    @Override
-    public void afterPropertiesSet() {
-        logThreadLocal = this.logTheadLocal;
-    }
-
-    public HttpLog getLogInfo() {
-        return logTheadLocal.get();
-    }
-
     public static HttpLog logInfo() {
-        return logThreadLocal.get();
+        return logTheadLocal.get();
     }
 
     // @formatter:off

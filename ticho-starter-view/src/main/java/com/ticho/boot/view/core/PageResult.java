@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +47,7 @@ public class PageResult<T> {
         this.pageNum = NumberUtil.toBigDecimal(pageNum).intValue();
         this.pageSize = pageSizeDec.intValue();
         this.total = totalDec.intValue();
-        this.pages = pageSizeDec.intValue() <= 0 ? 0 : (int) Math.ceil(totalDec.divide(pageSizeDec, 2, BigDecimal.ROUND_HALF_UP).doubleValue());
+        this.pages = pageSizeDec.intValue() <= 0 ? 0 : (int) Math.ceil(totalDec.divide(pageSizeDec, 2, RoundingMode.HALF_UP).doubleValue());
         this.rows = Optional.ofNullable(rows).orElseGet(ArrayList::new);
         // @formatter:on
     }
