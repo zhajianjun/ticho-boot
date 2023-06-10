@@ -36,4 +36,14 @@ public class DateFormatConst {
      * yyyy-MM-dd HH:mm:ss 正则匹配
      */
     public static final String YYYY_MM_DD_HH_MM_SS_REGEX = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}$";
+
+        /**
+     * yyyy-MM-dd HH:mm:ss
+     */
+    public static final String YYYY_MM_DD_HH_MM_SS_SSS = "yyyy-MM-dd HH:mm:ss.SSS";
+
+    /**
+     * yyyy-MM-dd HH:mm:ss 正则匹配
+     */
+    public static final String YYYY_MM_DD_HH_MM_SS_SSS_REGEX = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}.\\d{3}$";
 }

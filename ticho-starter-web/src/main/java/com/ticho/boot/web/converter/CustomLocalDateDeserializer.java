@@ -98,6 +98,11 @@ public class CustomLocalDateDeserializer extends JSR310DateTimeDeserializerBase<
                     LocalDateTime localDateTime = LocalDateTime.parse(string, DateTimeFormatter.ofPattern(DateFormatConst.YYYY_MM_DD_HH_MM_SS));
                     return localDateTime.toLocalDate();
                 }
+                                // 添加的内容在这
+                if (string.matches(DateFormatConst.YYYY_MM_DD_HH_MM_SS_SSS_REGEX)) {
+                    LocalDateTime localDateTime = LocalDateTime.parse(string, DateTimeFormatter.ofPattern(DateFormatConst.YYYY_MM_DD_HH_MM_SS_SSS));
+                    return localDateTime.toLocalDate();
+                }
                 if (_formatter == DEFAULT_FORMATTER) {
                     // JavaScript by default includes time in JSON serialized Dates (UTC/ISO instant format).
                     if (string.length() > 10 && string.charAt(10) == 'T') {

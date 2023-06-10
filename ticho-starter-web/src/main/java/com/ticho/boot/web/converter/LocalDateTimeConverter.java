@@ -14,8 +14,9 @@ import java.time.format.DateTimeFormatter;
 /**
  * LocalDateTime转换
  * <p>
- *     GET请求，Query查询Date时间类型参数转换
+ * GET请求，Query查询Date时间类型参数转换
  * </p>
+ *
  * @author zhajianjun
  * @date 2022-07-10 15:56:30
  */
@@ -33,6 +34,9 @@ public class LocalDateTimeConverter implements Converter<String, LocalDateTime> 
         }
         if (source.matches(DateFormatConst.YYYY_MM_DD_HH_MM_SS_REGEX)) {
             return LocalDateTime.parse(source, DateTimeFormatter.ofPattern(DateFormatConst.YYYY_MM_DD_HH_MM_SS));
+        }
+        if (source.matches(DateFormatConst.YYYY_MM_DD_HH_MM_SS_SSS_REGEX)) {
+            return LocalDateTime.parse(source, DateTimeFormatter.ofPattern(DateFormatConst.YYYY_MM_DD_HH_MM_SS_SSS));
         }
         throw new IllegalArgumentException("Invalid value '" + source + "'");
     }
