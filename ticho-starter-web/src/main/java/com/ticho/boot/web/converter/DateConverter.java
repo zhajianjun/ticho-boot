@@ -34,6 +34,9 @@ public class DateConverter implements Converter<String, Date> {
         if (source.matches(DateFormatConst.YYYY_MM_DD_HH_MM_SS_REGEX)) {
             return parseDate(source.trim(), DateFormatConst.YYYY_MM_DD_HH_MM_SS);
         }
+        if (source.matches(DateFormatConst.YYYY_MM_DD_HH_MM_SS_SSS_REGEX)) {
+            return parseDate(source.trim(), DateFormatConst.YYYY_MM_DD_HH_MM_SS_SSS);
+        }
         throw new IllegalArgumentException("Invalid value '" + source + "'");
     }
 
