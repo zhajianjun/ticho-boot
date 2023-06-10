@@ -1,9 +1,9 @@
 package com.ticho.boot.es.service;
 
 import cn.easyes.core.biz.EntityInfo;
-import cn.easyes.core.conditions.LambdaEsQueryWrapper;
-import cn.easyes.core.conditions.interfaces.BaseEsMapper;
-import cn.easyes.core.toolkit.EsWrappers;
+import cn.easyes.core.conditions.select.LambdaEsQueryWrapper;
+import cn.easyes.core.core.BaseEsMapper;
+import cn.easyes.core.core.EsWrappers;
 
 import java.io.Serializable;
 import java.util.Collection;

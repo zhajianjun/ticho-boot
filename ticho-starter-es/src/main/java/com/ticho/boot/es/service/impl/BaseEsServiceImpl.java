@@ -1,8 +1,8 @@
 package com.ticho.boot.es.service.impl;
 
 import cn.easyes.core.biz.EntityInfo;
-import cn.easyes.core.conditions.LambdaEsQueryWrapper;
-import cn.easyes.core.conditions.interfaces.BaseEsMapper;
+import cn.easyes.core.conditions.select.LambdaEsQueryWrapper;
+import cn.easyes.core.core.BaseEsMapper;
 import cn.hutool.core.collection.CollUtil;
 import com.ticho.boot.es.service.BaseEsService;
 import lombok.extern.slf4j.Slf4j;
