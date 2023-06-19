@@ -137,6 +137,12 @@ public class RequestWrapper extends HttpServletRequestWrapper {
      * @return {@link String}
      */
     public String getBody() {
+        if (this.body == null) {
+            return null;
+        }
+        if (this.body.isEmpty()) {
+            return null;
+        }
         return this.body;
     }
 
