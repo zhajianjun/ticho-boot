@@ -1,6 +1,7 @@
 package com.ticho.boot.log.interceptor;
 
 import cn.hutool.core.date.SystemClock;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.http.useragent.UserAgent;
@@ -45,13 +46,12 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class WebLogInterceptor implements HandlerInterceptor, Ordered {
-    /** NONE */
-    private static final String NONE = "NONE";
+
     /** 用户代理key */
     private static final String USER_AGENT = "User-Agent";
     /** 日志信息线程变量 */
     private static final TransmittableThreadLocal<HttpLog> logTheadLocal = new TransmittableThreadLocal<>();
-    /** 日志信息线程变量 */
+    /** 日志过滤地址匹配线程变量 */
     private static final TransmittableThreadLocal<Boolean> antPathMatchLocal = new TransmittableThreadLocal<>();
     /** 日志配置 */
     private final BaseLogProperty baseLogProperty;
@@ -93,16 +93,16 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         // params
         Map<String, Object> paramsMapFromRequest = getParams(request);
         paramsMap.putAll(paramsMapFromRequest);
-        String params = toJsonOfDefault(paramsMap);
+        String params = toJson(paramsMap);
         // body
         RequestWrapper requestWrapper = (RequestWrapper) request;
-        String body = nullOfDefault(requestWrapper.getBody());
+        String body = requestWrapper.getBody();
         // header
         Map<String, String> headersMap = getHeaders(request);
-        String headers = toJsonOfDefault(headersMap);
+        String reqHeaders = toJson(headersMap);
         String reqPrefix = baseLogProperty.getReqPrefix();
-        String header = request.getHeader(USER_AGENT);
-        UserAgent userAgent =  UserAgentUtil.parse(header);
+        String userAgentHeader = request.getHeader(USER_AGENT);
+        UserAgent userAgent =  UserAgentUtil.parse(userAgentHeader);
         Principal principal = request.getUserPrincipal();
         String port = environment.getProperty("server.port");
         HttpLog httpLog = HttpLog.builder()
@@ -112,7 +112,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
             .port(port)
             .reqParams(params)
             .reqBody(body)
-            .reqHeaders(headers)
+            .reqHeaders(reqHeaders)
             .start(millis)
             .username((principal != null ? principal.getName() : null))
             .userAgent(userAgent)
@@ -123,7 +123,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         boolean anyMatch = antPatterns.stream().anyMatch(x -> antPathMatcher.match(x, url));
         antPathMatchLocal.set(anyMatch);
         if (print && !anyMatch) {
-            log.info("{} {} {} 请求开始, 请求参数={}, 请求体={}, 请求头={}", reqPrefix, type, url, params, body, headers);
+            log.info("{} {} {} 请求开始, 请求参数={}, 请求体={}, 请求头={}", reqPrefix, type, url, nullOfDefault(params), nullOfDefault(body), nullOfDefault(reqHeaders));
         }
         return true;
     }
@@ -137,7 +137,10 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         String type = request.getMethod();
         String url = request.getRequestURI();
         String resBody = nullOfDefault(getResBody(response));
+        Map<String,String> resHeaderMap = getHeaders(response);
+        String resHeaders = toJson(resHeaderMap);
         httpLog.setResBody(resBody);
+        httpLog.setResHeaders(resHeaders);
         String reqPrefix = baseLogProperty.getReqPrefix();
         long end = SystemClock.now();
         httpLog.setEnd(end);
@@ -146,7 +149,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         boolean print = Boolean.TRUE.equals(baseLogProperty.getPrint());
         Boolean anyMatch = antPathMatchLocal.get();
         if (print && !anyMatch) {
-            log.info("{} {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}", reqPrefix, type, url, status, consume, resBody);
+            log.info("{} {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}, 响应头={}", reqPrefix, type, url, status, consume, nullOfDefault(resBody), nullOfDefault(resHeaders));
         }
         ApplicationContext applicationContext = SpringUtil.getApplicationContext();
         applicationContext.publishEvent(new WebLogEvent(applicationContext, httpLog));
@@ -159,7 +162,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         boolean flag = contentType != null && (contentType.startsWith(MediaType.APPLICATION_JSON_VALUE) ||
                 contentType.equals(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
         if (!flag) {
-            return NONE;
+            return null;
         }
         ResponseWrapper responseWrapper = (ResponseWrapper)response;
         return responseWrapper.getBody();
@@ -204,14 +207,16 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         return map;
     }
 
-    private String toJsonOfDefault(Map<String, ?> map) {
-        String result = JsonUtil.toJsonString(map);
-        return nullOfDefault(result);
+    private String toJson(Map<String, ?> map) {
+        if (MapUtil.isEmpty(map)) {
+            return null;
+        }
+        return JsonUtil.toJsonString(map);
     }
 
     private String nullOfDefault(String result) {
-        if (result == null || result.isEmpty()) {
-            return NONE;
+        if (result == null) {
+            return StrUtil.EMPTY;
         }
         return result;
     }

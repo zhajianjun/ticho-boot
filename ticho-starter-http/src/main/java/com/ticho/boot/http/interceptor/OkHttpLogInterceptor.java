@@ -1,5 +1,6 @@
 package com.ticho.boot.http.interceptor;
 
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.extra.spring.SpringUtil;
@@ -8,6 +9,7 @@ import com.ticho.boot.http.prop.BaseHttpProperty;
 import com.ticho.boot.json.util.JsonUtil;
 import com.ticho.boot.view.log.HttpLog;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.Headers;
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -40,8 +42,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class OkHttpLogInterceptor implements Interceptor {
 
-    public static final String NONE = "NONE";
-
+    /** 日志配置 */
     private final BaseHttpProperty baseHttpProperty;
 
     public OkHttpLogInterceptor(BaseHttpProperty baseHttpProperty) {
@@ -60,17 +61,17 @@ public class OkHttpLogInterceptor implements Interceptor {
         String reqPrefix = baseHttpProperty.getReqPrefix();
         long t1 = System.currentTimeMillis();
         String reqBody = getReqBody(req);
-        Map<String,List<String>> headersGroupMap = req.headers().toMultimap();
-        Map<String, Object> headersMap = new HashMap<>();
-        headersGroupMap.forEach((k,v) -> headersMap.put(k, String.join(",",v)));
-        String headers = toJsonOfDefault(headersMap);
+        Map<String, Object> reqHeaderMap = getHeaderMap(req.headers());
+        String reqHeaders = toJson(reqHeaderMap);
         String method = req.method();
         HttpUrl httpUrl = req.url();
         String fullUrl = StrUtil.subBefore(httpUrl.toString(), "?", false);
         Map<String, Object> paramsMap = getParams(httpUrl);
-        String params = toJsonOfDefault(paramsMap);
-        log.info("{} {} {} 请求开始, 请求参数={}, 请求体={}, 请求头={}", reqPrefix, method, fullUrl, params, reqBody, headers);
+        String params = toJson(paramsMap);
+        log.info("{} {} {} 请求开始, 请求参数={}, 请求体={}, 请求头={}", reqPrefix, method, fullUrl, nullOfDefault(params), nullOfDefault(reqBody), nullOfDefault(reqHeaders));
         Response res = chain.proceed(req);
+        Map<String, Object> resHeaderMap = getHeaderMap(res.headers());
+        String resHeader = toJson(resHeaderMap);
         long t2 = System.currentTimeMillis();
         //这里不能直接使用response.body().string()的方式输出日志
         //因为response.body().string()之后，response中的流会被关闭，程序会报错，我们需要创建出一
@@ -80,7 +81,7 @@ public class OkHttpLogInterceptor implements Interceptor {
         String resBody = body.string();
         int status = res.code();
         long millis = t2 - t1;
-        log.info("{} {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}", reqPrefix, method, fullUrl, status, millis, resBody);
+        log.info("{} {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}", reqPrefix, method, fullUrl, status, millis, resBody, resHeader);
         URI uri = URLUtil.toURI(fullUrl);
         String host = uri.getHost();
         String port = Integer.toString(uri.getPort());
@@ -93,7 +94,7 @@ public class OkHttpLogInterceptor implements Interceptor {
             .fullUrl(url)
             .reqParams(params)
             .reqBody(reqBody)
-            .reqHeaders(headers)
+            .reqHeaders(reqHeaders)
             .resBody(resBody)
             .start(t1)
             .end(t2)
@@ -105,6 +106,13 @@ public class OkHttpLogInterceptor implements Interceptor {
         applicationContext.publishEvent(new HttpLogEvent(applicationContext, httpLog));
         return res;
         // @formatter:on
+    }
+
+    private Map<String, Object> getHeaderMap(Headers headers) {
+        Map<String,List<String>> headersGroupMap = headers.toMultimap();
+        Map<String, Object> headersMap = new HashMap<>();
+        headersGroupMap.forEach((k,v) -> headersMap.put(k, String.join(",",v)));
+        return headersMap;
     }
 
     public String getUsername() {
@@ -133,7 +141,7 @@ public class OkHttpLogInterceptor implements Interceptor {
     private String getReqBody(Request req) {
         RequestBody body = req.body();
         if (body == null) {
-            return NONE;
+            return null;
         }
         try (Buffer buffer = new Buffer()) {
             body.writeTo(buffer);
@@ -141,17 +149,19 @@ public class OkHttpLogInterceptor implements Interceptor {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return NONE;
+        return null;
     }
 
-    private String toJsonOfDefault(Map<String, ?> map) {
-        String result = JsonUtil.toJsonString(map);
-        return nullOfDefault(result);
+    private String toJson(Map<String, ?> map) {
+        if (MapUtil.isEmpty(map)) {
+            return null;
+        }
+        return JsonUtil.toJsonString(map);
     }
 
     private String nullOfDefault(String result) {
-        if (result == null || result.isEmpty()) {
-            return NONE;
+        if (result == null) {
+            return StrUtil.EMPTY;
         }
         return result;
     }
