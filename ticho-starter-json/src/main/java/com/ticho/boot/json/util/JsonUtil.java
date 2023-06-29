@@ -2,6 +2,7 @@ package com.ticho.boot.json.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -122,6 +123,73 @@ public class JsonUtil {
         checkNotNull(clazz);
         try {
             return isEmpty(jsonString) ? null : MAPPER.readValue(jsonString, clazz);
+        } catch (Exception e) {
+            log.error("str toJavaObject error, param={}, catch error {}", jsonString, e.getMessage(), e);
+            return null;
+        }
+    }
+
+    /**
+     * json格式的String 转换成对象
+     *
+     * @param jsonStr jsonStr
+     * @param typeReference 泛型类
+     * @return T
+     */
+    public static <T> T toJavaObject(String jsonStr, TypeReference<T> typeReference) {
+        checkNotNull(typeReference);
+        try {
+            return isEmpty(jsonStr) ? null : MAPPER.readValue(jsonStr, typeReference);
+        } catch (Exception e) {
+            log.error("str toJavaObject error, param={}, catch error {}", jsonStr, e.getMessage(), e);
+            return null;
+        }
+    }
+
+    /**
+     * json格式的String 转换成对象
+     *
+     * @param obj Object
+     * @param typeReference 泛型类
+     * @return T
+     */
+    public static <T> T toJavaObject(Object obj, TypeReference<T> typeReference) {
+        checkNotNull(typeReference);
+        String jsonStr = objToString(obj);
+        try {
+            return isEmpty(jsonStr) ? null : MAPPER.readValue(jsonStr, typeReference);
+        } catch (Exception e) {
+            log.error("obj toJavaObject error, param={}, catch error {}", obj, e.getMessage(), e);
+            return null;
+        }
+    }
+
+    /**
+     * json格式的String 转换成对象
+     *
+     * @param obj Object
+     * @return T
+     */
+    public static <T> T toJavaObject(Object obj) {
+        String jsonString;
+        jsonString = objToString(obj);
+        try {
+            return isEmpty(jsonString) ? null : MAPPER.readValue(jsonString, new TypeReference<T>() {});
+        } catch (Exception e) {
+            log.error("obj toJavaObject error, param={}, catch error {}", obj, e.getMessage(), e);
+            return null;
+        }
+    }
+
+    /**
+     * json格式的String 转换成对象
+     *
+     * @param jsonString jsonString
+     * @return T
+     */
+    public static <T> T toJavaObject(String jsonString) {
+        try {
+            return isEmpty(jsonString) ? null : MAPPER.readValue(jsonString, new TypeReference<T>() {});
         } catch (Exception e) {
             log.error("str toJavaObject error, param={}, catch error {}", jsonString, e.getMessage(), e);
             return null;
