@@ -170,11 +170,12 @@ public class JsonUtil {
      * @param obj Object
      * @return T
      */
-    public static <T> T toJavaObject(Object obj) {
+    public static <T> T toJavaObject(Object obj, Class<?> parametrized, Class<?>... parameterClasses) {
         String jsonString;
         jsonString = objToString(obj);
         try {
-            return isEmpty(jsonString) ? null : MAPPER.readValue(jsonString, new TypeReference<T>() {});
+            JavaType javaType = MAPPER.getTypeFactory().constructParametricType(parametrized, parameterClasses);
+            return isEmpty(jsonString) ? null : MAPPER.readValue(jsonString, javaType);
         } catch (Exception e) {
             log.error("obj toJavaObject error, param={}, catch error {}", obj, e.getMessage(), e);
             return null;
