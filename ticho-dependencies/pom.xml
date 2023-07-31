@@ -231,11 +231,11 @@
                 <version>${swagger-base.version}</version>
             </dependency>
 
-<!--            <dependency>-->
-<!--                <groupId>io.springfox</groupId>-->
-<!--                <artifactId>springfox-swagger2</artifactId>-->
-<!--                <version>${springfox.version}</version>-->
-<!--            </dependency>-->
+            <!--            <dependency>-->
+            <!--                <groupId>io.springfox</groupId>-->
+            <!--                <artifactId>springfox-swagger2</artifactId>-->
+            <!--                <version>${springfox.version}</version>-->
+            <!--            </dependency>-->
 
             <!-- mybatis plus -->
             <dependency>
@@ -363,6 +363,12 @@
                 <groupId>cn.easy-es</groupId>
                 <artifactId>easy-es-boot-starter</artifactId>
                 <version>2.0.0-beta1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ibeetl</groupId>
+                <artifactId>beetl</artifactId>
+                <version>3.14.1.RELEASE</version>
             </dependency>
 
         </dependencies>
