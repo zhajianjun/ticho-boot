@@ -6,21 +6,29 @@
     <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
     <conversionRule conversionWord="wex" converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
     <conversionRule conversionWord="wEx" converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
-    <!-- 增加如下的TLog MDC Listener -->
-    <!-- 3.一些属性值定义 -->
+
+    <!-- 2.属性值定义 -->
+    <!--控制台日志格式: console.log.path ->> console.log.pathProxy-->
+    <!--日志路径: log.path ->> log.pathProxy-->
+    <!--日志格式: log.pattern ->> log.patternProxy-->
+    <!--日志保存日期: log.maxHistory ->> log.maxHistoryProxy-->
+    <!--日志最大文件大小: log.maxFileSize ->> log.maxFileSizeProxy-->
+
+    <!-- 3.代理属性值定义 -->
     <!-- 彩色日志格式 -->
-    <property name="console.log.pattern" value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}) %clr([%thread]) %highlight(%-5level) %boldMagenta(%logger{50}) %L %clr(%X{trace}) : %msg%n"/>
     <!--日志格式-->
-    <property name="log.pattern" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} %L %X{trace} %msg%n"/>"
+    <property name="console.log.patternProxy" value="${console.log.pattern:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}) %clr([%thread]) %highlight(%-5level) %boldMagenta(%logger{50}) %L %clr(%X{trace}) : %msg%n}"/>
+    <property name="log.pathProxy" value="${log.path:-./logs}" />
+    <property name="log.patternProxy" value="${log.pattern:-%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} %L %X{trace} %msg%n}"/>"
     <!--日志最大的历史 7天-->
-    <property name="log.maxHistory" value="30"/>
-    <!--日志最大的文件大小 100MB-->
-    <property name="log.maxFileSize" value="10MB"/>
+    <property name="log.maxHistoryProxy" value="${log.maxHistory:-7}"/>
+    <!--日志最大的文件大小 20MB-->
+    <property name="log.maxFileSizeProxy" value="${log.maxFileSize:-20MB}"/>
     <!-- 4.日志输出 -->
     <!-- 4.1.控制台打印 -->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>${console.log.pattern}</pattern>
+            <pattern>${console.log.patternProxy}</pattern>
         </encoder>
         <!-- 按临界值过滤日志：低于DEBUG以下级别被抛弃 -->
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -30,9 +38,9 @@
 
     <!-- 4.2.debug日志 -->
     <appender name="debug" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/debug.log</file>
+        <file>${log.pathProxy}/debug.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>${log.pattern}</pattern>
+            <pattern>${log.patternProxy}</pattern>
         </encoder>
         <!-- 按指定规则过滤日志 -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -45,19 +53,19 @@
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!-- 滚动日志文件保存格式 -->
-            <fileNamePattern>${log.path}/debug.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <fileNamePattern>${log.pathProxy}/debug.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
             <!-- 最大保存历史时间 -->
-            <maxHistory>${log.maxHistory}</maxHistory>
+            <maxHistory>${log.maxHistoryProxy}</maxHistory>
             <!-- 最大文件大小 -->
-            <maxFileSize>${log.maxFileSize}</maxFileSize>
+            <maxFileSize>${log.maxFileSizeProxy}</maxFileSize>
         </rollingPolicy>
     </appender>
 
     <!-- 4.3.info日志 -->
     <appender name="info" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/info.log</file>
+        <file>${log.pathProxy}/info.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>${log.pattern}</pattern>
+            <pattern>${log.patternProxy}</pattern>
         </encoder>
         <!-- 按指定规则过滤日志 -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -70,19 +78,19 @@
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!-- 滚动日志文件保存格式 -->
-            <fileNamePattern>${log.path}/info.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <fileNamePattern>${log.pathProxy}/info.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
             <!-- 最大保存历史时间 -->
-            <maxHistory>${log.maxHistory}</maxHistory>
+            <maxHistory>${log.maxHistoryProxy}</maxHistory>
             <!-- 最大文件大小 -->
-            <maxFileSize>${log.maxFileSize}</maxFileSize>
+            <maxFileSize>${log.maxFileSizeProxy}</maxFileSize>
         </rollingPolicy>
     </appender>
 
     <!-- 4.4.warn日志 -->
     <appender name="warn" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/warn.log</file>
+        <file>${log.pathProxy}/warn.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>${log.pattern}</pattern>
+            <pattern>${log.patternProxy}</pattern>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <!-- 过滤的级别 -->
@@ -94,19 +102,19 @@
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!-- 滚动日志文件保存格式 -->
-            <fileNamePattern>${log.path}/warn.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <fileNamePattern>${log.pathProxy}/warn.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
             <!-- 最大保存历史时间 -->
-            <maxHistory>${log.maxHistory}</maxHistory>
+            <maxHistory>${log.maxHistoryProxy}</maxHistory>
             <!-- 最大文件大小 -->
-            <maxFileSize>${log.maxFileSize}</maxFileSize>
+            <maxFileSize>${log.maxFileSizeProxy}</maxFileSize>
         </rollingPolicy>
     </appender>
 
     <!-- 4.5.error日志 -->
     <appender name="error" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/error.log</file>
+        <file>${log.pathProxy}/error.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>${log.pattern}</pattern>
+            <pattern>${log.patternProxy}</pattern>
         </encoder>
         <!-- 按指定规则过滤日志 -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -119,19 +127,19 @@
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!-- 滚动日志文件保存格式 -->
-            <fileNamePattern>${log.path}/error.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <fileNamePattern>${log.pathProxy}/error.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
             <!-- 最大保存历史时间 -->
-            <maxHistory>${log.maxHistory}</maxHistory>
+            <maxHistory>${log.maxHistoryProxy}</maxHistory>
             <!-- 最大文件大小 -->
-            <maxFileSize>${log.maxFileSize}</maxFileSize>
+            <maxFileSize>${log.maxFileSizeProxy}</maxFileSize>
         </rollingPolicy>
     </appender>
 
     <!-- 4.6. 所有日志 -->
     <appender name="all" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${log.path}/all.log</file>
+        <file>${log.pathProxy}/all.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
-            <pattern>${log.pattern}</pattern>
+            <pattern>${log.patternProxy}</pattern>
         </encoder>
         <!-- 按临界值过滤日志：低于DEBUG以下级别被抛弃 -->
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -139,11 +147,11 @@
         </filter>
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!-- 滚动日志文件保存格式 -->
-            <fileNamePattern>${log.path}/all.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
+            <fileNamePattern>${log.pathProxy}/all.%d{yyyy-MM-dd}.%i.gz</fileNamePattern>
             <!-- 最大保存历史时间 -->
-            <maxHistory>${log.maxHistory}</maxHistory>
+            <maxHistory>${log.maxHistoryProxy}</maxHistory>
             <!-- 最大文件大小 -->
-            <maxFileSize>${log.maxFileSize}</maxFileSize>
+            <maxFileSize>${log.maxFileSizeProxy}</maxFileSize>
         </rollingPolicy>
     </appender>
 
