@@ -119,11 +119,11 @@ public abstract class AbstractAuthTokenFilter<T extends BaseSecurityUser> extend
             chain.doFilter(request, response);
         } catch (Exception e) {
             String message = e.getMessage();
-            log.warn("catch error\t{}", message);
+            HttpErrCode tokenInvalid = HttpErrCode.TOKEN_INVALID;
+            log.warn("{} {} {} catch error\t{}", request.getMethod(), request.getRequestURI(), tokenInvalid.getCode(), message);
             if (e instanceof BizException) {
                 message = ((BizException) e).getMsg();
             }
-            HttpErrCode tokenInvalid = HttpErrCode.TOKEN_INVALID;
             Result<String> result = Result.of(tokenInvalid, message, request.getRequestURI());
             response.setStatus(tokenInvalid.getCode());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
