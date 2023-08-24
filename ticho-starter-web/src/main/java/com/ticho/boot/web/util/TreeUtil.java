@@ -13,6 +13,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -24,18 +25,19 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TreeUtil {
 
+
     /**
-     * 获取该id以及子节点id的集合
+     * 获取树节点
      *
-     * @param data 所有的菜单集合
+     * @param data     所有的菜单集合
      * @param parentId 父id
-     * @return {@link Set}<{@link Serializable}> 树节点
+     * @return {@link List}<{@link T}> 树节点
      */
-    public static <T extends TreeNode<T>> List<T> tree(List<T> data, Serializable parentId, Consumer<T> consumer) {
+    public static <T extends TreeNode<T>> List<T> tree(List<T> data, Serializable parentId) {
         if (Objects.isNull(data) || Objects.isNull(parentId)) {
             return new ArrayList<>();
         }
-        Map<Boolean, List<T>> group = group(data, parentId, consumer);
+        Map<Boolean, List<T>> group = group(data, parentId);
         // 获取 parentId 下所有的根节点
         List<T> roots = Optional.ofNullable(group.get(Boolean.TRUE)).orElseGet(ArrayList::new);
         // 获取 parentId 下所有的非根节点
@@ -46,7 +48,7 @@ public class TreeUtil {
                 root.setChildren(new ArrayList<>());
             }
             // 获取子节点的子节点，递归
-            List<T> rootChilds = tree(childs, root.getId(), null);
+            List<T> rootChilds = tree(childs, root.getId());
             if (!rootChilds.isEmpty()) {
                 root.setHasChildren(true);
             }
@@ -58,17 +60,17 @@ public class TreeUtil {
     /**
      * 获取该id以及子节点id的集合
      *
-     * @param data 所有的菜单集合
+     * @param data     所有的菜单集合
      * @param parentId 父id
      * @return {@link Set}<{@link Serializable}> 树节点
      */
-    public static <T extends TreeNode<T>> Set<Serializable> getAllNodeIds(List<T> data, Serializable parentId, Consumer<T> consumer) {
+    public static <T extends TreeNode<T>> Set<Serializable> getAllNodeIds(List<T> data, Serializable parentId) {
         Set<Serializable> ids = new HashSet<>();
         ids.add(parentId);
         if (Objects.isNull(data) || Objects.isNull(parentId)) {
             return ids;
         }
-        Map<Boolean, List<T>> group = group(data, parentId, consumer);
+        Map<Boolean, List<T>> group = group(data, parentId);
         // 获取 parentId 下所有的根节点
         List<T> roots = Optional.ofNullable(group.get(Boolean.TRUE)).orElseGet(ArrayList::new);
         // 获取 parentId 下所有的非根节点
@@ -76,7 +78,7 @@ public class TreeUtil {
         // 遍历 root
         for (T root : roots) {
             // 获取子节点的子节点，递归
-            ids.addAll(getAllNodeIds(childs, root.getId(), null));
+            ids.addAll(getAllNodeIds(childs, root.getId()));
         }
         return ids;
     }
@@ -84,22 +86,49 @@ public class TreeUtil {
     /**
      * 集团
      *
-     * @param data 数据
+     * @param data     数据
      * @param parentId 父id
      * @return {@link Map}<{@link Boolean}, {@link List}<{@link T}>>
      */
-    private static <T extends TreeNode<T>> Map<Boolean, List<T>> group(List<T> data, Serializable parentId, Consumer<T> consumer) {
+    private static <T extends TreeNode<T>> Map<Boolean, List<T>> group(List<T> data, Serializable parentId) {
         // @formatter:off
-        if (consumer != null) {
-            return data
-                .stream()
-                .peek(consumer)
-                .collect(Collectors.groupingBy(x-> Objects.equals(x.getParentId(), parentId)));
-        }
         return data
             .stream()
             .collect(Collectors.groupingBy(x-> Objects.equals(x.getParentId(), parentId)));
         // @formatter:on
+    }
+
+    /**
+     * 树
+     *
+     * @param data          数据
+     * @param root          根节点数据
+     * @param filter        子节点过滤
+     * @param afterConsumer 父节点收集所有子节点后的处理
+     */
+    public static <T extends TreeNode<T>> void tree(List<T> data, T root, Predicate<T> filter, Consumer<T> afterConsumer) {
+        // @formatter:off
+        if (Objects.isNull(data) || Objects.isNull(root)) {
+            return;
+        }
+        Map<Boolean, List<T>> group = group(data, root.getId());
+        // 获取 root 下所有的节点
+        List<T> nodes = Optional.ofNullable(group.get(Boolean.TRUE)).orElseGet(ArrayList::new);
+        // 获取 非root 下所有的节点
+        List<T> nodeChilds = Optional.ofNullable(group.get(Boolean.FALSE)).orElseGet(ArrayList::new);
+        root.setChildren(nodes);
+        filter = Optional.ofNullable(filter).orElseGet(() -> (x) -> true);
+        // 遍历 root
+        Predicate<T> finalFilter = filter;
+        nodes
+            .stream()
+            .filter(filter)
+            .forEach(x -> tree(nodeChilds, x, finalFilter, afterConsumer));
+        // @formatter:on
+        if (afterConsumer == null) {
+            return;
+        }
+        afterConsumer.accept(root);
     }
 
 }
