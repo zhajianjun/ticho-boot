@@ -81,7 +81,7 @@ public class OkHttpLogInterceptor implements Interceptor {
         String resBody = body.string();
         int status = res.code();
         long millis = t2 - t1;
-        log.info("{} {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}", reqPrefix, method, fullUrl, status, millis, resBody, resHeader);
+        log.info("{} {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}, 响应头={}", reqPrefix, method, fullUrl, status, millis, resBody, resHeader);
         URI uri = URLUtil.toURI(fullUrl);
         String host = uri.getHost();
         String port = Integer.toString(uri.getPort());
@@ -147,7 +147,7 @@ public class OkHttpLogInterceptor implements Interceptor {
             body.writeTo(buffer);
             return buffer.readUtf8();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
         return null;
     }

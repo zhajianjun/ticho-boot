@@ -1,9 +1,11 @@
 package com.ticho.boot.http.interceptor;
 
+import cn.hutool.core.util.StrUtil;
 import com.ticho.boot.http.constant.HttpConst;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -29,11 +31,15 @@ public class FeignRequestInterceptor implements RequestInterceptor {
         // feign则是内部调用，添加header inner = true
         template.header(HttpConst.INNER, HttpConst.INNER_VALUE);
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        if (requestAttributes == null) {
-            return;
+        String authorization = null;
+        if (requestAttributes != null) {
+            HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
+            authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
         }
-        HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
-        template.header(HttpHeaders.AUTHORIZATION, request.getHeader(HttpHeaders.AUTHORIZATION));
+        if (StrUtil.isBlank(authorization)) {
+            authorization = MDC.get(HttpHeaders.AUTHORIZATION);
+        }
+        template.header(HttpHeaders.AUTHORIZATION, authorization);
     }
 
 }
