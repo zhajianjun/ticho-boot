@@ -43,7 +43,7 @@ public class BaseAccessDecisionManager implements AccessDecisionManager {
         }
         // 非放行的url没有权限信息 默认是 AnonymousAuthenticationToken
         if (authentication instanceof AnonymousAuthenticationToken) {
-            // 说明没有token传入，所以没有权限信息，即是没有用户信息，即没有登录，抛出异常会进入 FogTokenFailureEntryPoint 中去
+            // 说明没有token传入，所以没有权限信息，即是没有用户信息，即没有登录，抛出异常会
             throw new AccessDeniedException("无访问权限");
         }
     }

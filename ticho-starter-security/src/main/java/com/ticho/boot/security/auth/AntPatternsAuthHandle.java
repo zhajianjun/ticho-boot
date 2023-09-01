@@ -1,6 +1,5 @@
 package com.ticho.boot.security.auth;
 
-import cn.hutool.core.collection.CollUtil;
 import com.ticho.boot.security.annotation.IgnoreJwtCheck;
 import com.ticho.boot.security.annotation.IgnoreType;
 import com.ticho.boot.security.constant.BaseOAuth2Const;

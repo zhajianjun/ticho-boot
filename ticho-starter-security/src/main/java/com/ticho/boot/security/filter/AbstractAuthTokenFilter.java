@@ -69,16 +69,6 @@ public abstract class AbstractAuthTokenFilter<T extends BaseSecurityUser> extend
     }
 
     /**
-     * 解析token，获取token信息
-     *
-     * @param token 令牌
-     * @return {@link Map}<{@link String},{@link Object}>
-     */
-    protected Map<String,Object> parseTokenToMap(String token) {
-        return jwtDecode.decodeAndVerify(token);
-    }
-
-    /**
      * map信息转换为用户信息
      *
      * @param decodeAndVerify 解码和验证
@@ -86,7 +76,7 @@ public abstract class AbstractAuthTokenFilter<T extends BaseSecurityUser> extend
      */
     protected abstract T convert(Map<String, Object> decodeAndVerify);
 
-    // @formatter:off
+    // @formatter:on
     @Override
     protected void doFilterInternal(
         @NonNull HttpServletRequest request,
@@ -95,27 +85,27 @@ public abstract class AbstractAuthTokenFilter<T extends BaseSecurityUser> extend
     ) throws IOException {
         try {
             support(request, response);
-            if (antPatternsAuthHandle.ignoreAuth(request)) {
-                chain.doFilter(request, response);
-                return;
-            }
             String token = request.getHeader(HttpHeaders.AUTHORIZATION);
             Assert.isNotNull(token, HttpErrCode.NOT_LOGIN);
             token = StrUtil.removePrefixIgnoreCase(token, BaseSecurityConst.BEARER);
             token = StrUtil.trimStart(token);
-            Map<String, Object> decodeAndVerify = parseTokenToMap(token);
-            Object type = decodeAndVerify.getOrDefault(BaseSecurityConst.TYPE, "");
-            Assert.isTrue(Objects.equals(type, BaseSecurityConst.ACCESS_TOKEN), BizErrCode.FAIL, "token不合法");
-            T securityUser = convert(decodeAndVerify);
-            Assert.isNotNull(securityUser, BizErrCode.FAIL, "token不合法");
-            if (securityUser != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                securityUser.setPassword("N/A");
-                List<String> authoritieStrs = Optional.ofNullable(securityUser.getRoles()).orElseGet(ArrayList::new);
-                List<SimpleGrantedAuthority> authorities = authoritieStrs.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(securityUser, securityUser.getPassword(), authorities);
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+            if (antPatternsAuthHandle.ignoreAuth(request)) {
+                Map<String, Object> map = jwtDecode.decode(token);
+                boolean expired = jwtDecode.isExpired(map);
+                T securityUser = null;
+                if (!expired) {
+                    securityUser = convert(map);
+                }
+                setAuthentication(request, securityUser);
+                chain.doFilter(request, response);
+                return;
             }
+            Map<String, Object> map = jwtDecode.decodeAndVerify(token);
+            Object type = map.getOrDefault(BaseSecurityConst.TYPE, "");
+            Assert.isTrue(Objects.equals(type, BaseSecurityConst.ACCESS_TOKEN), BizErrCode.FAIL, "token不合法");
+            T securityUser = convert(map);
+            Assert.isNotNull(securityUser, BizErrCode.FAIL, "token不合法");
+            setAuthentication(request, securityUser);
             chain.doFilter(request, response);
         } catch (Exception e) {
             String message = e.getMessage();
@@ -131,6 +121,17 @@ public abstract class AbstractAuthTokenFilter<T extends BaseSecurityUser> extend
             response.getWriter().write(JsonUtil.toJsonString(result));
         } finally{
             complete(request, response);
+        }
+    }
+
+    private void setAuthentication(HttpServletRequest request, T securityUser) {
+        if (securityUser != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            securityUser.setPassword("N/A");
+            List<String> authoritieStrs = Optional.ofNullable(securityUser.getRoles()).orElseGet(ArrayList::new);
+            List<SimpleGrantedAuthority> authorities = authoritieStrs.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(securityUser, securityUser.getPassword(), authorities);
+            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         }
     }
 
