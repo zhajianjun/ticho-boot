@@ -86,20 +86,24 @@ public abstract class AbstractAuthTokenFilter<T extends BaseSecurityUser> extend
         try {
             support(request, response);
             String token = request.getHeader(HttpHeaders.AUTHORIZATION);
-            Assert.isNotNull(token, HttpErrCode.NOT_LOGIN);
-            token = StrUtil.removePrefixIgnoreCase(token, BaseSecurityConst.BEARER);
-            token = StrUtil.trimStart(token);
             if (antPatternsAuthHandle.ignoreAuth(request)) {
-                Map<String, Object> map = jwtDecode.decode(token);
-                boolean expired = jwtDecode.isExpired(map);
-                T securityUser = null;
-                if (!expired) {
-                    securityUser = convert(map);
+                if (Objects.nonNull(token)) {
+                    token = StrUtil.removePrefixIgnoreCase(token, BaseSecurityConst.BEARER);
+                    token = StrUtil.trimStart(token);
+                    Map<String, Object> map = jwtDecode.decode(token);
+                    boolean expired = jwtDecode.isExpired(map);
+                    T securityUser = null;
+                    if (!expired) {
+                        securityUser = convert(map);
+                    }
+                    setAuthentication(request, securityUser);
                 }
-                setAuthentication(request, securityUser);
                 chain.doFilter(request, response);
                 return;
             }
+            Assert.isNotNull(token, HttpErrCode.NOT_LOGIN);
+            token = StrUtil.removePrefixIgnoreCase(token, BaseSecurityConst.BEARER);
+            token = StrUtil.trimStart(token);
             Map<String, Object> map = jwtDecode.decodeAndVerify(token);
             Object type = map.getOrDefault(BaseSecurityConst.TYPE, "");
             Assert.isTrue(Objects.equals(type, BaseSecurityConst.ACCESS_TOKEN), BizErrCode.FAIL, "token不合法");
