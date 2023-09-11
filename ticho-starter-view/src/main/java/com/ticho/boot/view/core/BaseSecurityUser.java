@@ -31,6 +31,9 @@ public class BaseSecurityUser implements Serializable {
     @ApiModelProperty(value = "角色编码信息", position = 30)
     private List<String> roles;
 
+    @ApiModelProperty(value = "token", position = 10000)
+    private String token;
+
 
     public String toString() {
         return getUsername();

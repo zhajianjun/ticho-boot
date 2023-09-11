@@ -96,7 +96,7 @@ public abstract class AbstractAuthTokenFilter<T extends BaseSecurityUser> extend
                     if (!expired) {
                         securityUser = convert(map);
                     }
-                    setAuthentication(request, securityUser);
+                    setAuthentication(request, securityUser, token);
                 }
                 chain.doFilter(request, response);
                 return;
@@ -109,7 +109,7 @@ public abstract class AbstractAuthTokenFilter<T extends BaseSecurityUser> extend
             Assert.isTrue(Objects.equals(type, BaseSecurityConst.ACCESS_TOKEN), BizErrCode.FAIL, "token不合法");
             T securityUser = convert(map);
             Assert.isNotNull(securityUser, BizErrCode.FAIL, "token不合法");
-            setAuthentication(request, securityUser);
+            setAuthentication(request, securityUser, token);
             chain.doFilter(request, response);
         } catch (Exception e) {
             String message = e.getMessage();
@@ -128,9 +128,10 @@ public abstract class AbstractAuthTokenFilter<T extends BaseSecurityUser> extend
         }
     }
 
-    private void setAuthentication(HttpServletRequest request, T securityUser) {
+    private void setAuthentication(HttpServletRequest request, T securityUser, String token) {
         if (securityUser != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             securityUser.setPassword("N/A");
+            securityUser.setToken(token);
             List<String> authoritieStrs = Optional.ofNullable(securityUser.getRoles()).orElseGet(ArrayList::new);
             List<SimpleGrantedAuthority> authorities = authoritieStrs.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(securityUser, securityUser.getPassword(), authorities);

@@ -14,6 +14,7 @@ import com.ticho.boot.security.handle.jwt.JwtSigner;
 import com.ticho.boot.security.prop.BaseSecurityProperty;
 import com.ticho.boot.security.view.BaseAccessDeniedHandler;
 import com.ticho.boot.security.view.BaseAuthenticationEntryPoint;
+import com.ticho.boot.view.task.BaseTaskDecortor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
@@ -21,6 +22,8 @@ import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServic
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -153,6 +156,20 @@ public class BaseSecurityImportConfig {
     public void handleConsoleSecurityPrint(SecurityProperties properties) {
         SecurityProperties.User user = properties.getUser();
         user.setPassword("user");
+    }
+
+    /**
+     * 权限上下文传递
+     *
+     * @return {@link BaseTaskDecortor}<{@link Authentication}>
+     */
+    @Bean
+    public BaseTaskDecortor<Authentication> authenticationTaskDecortor() {
+        BaseTaskDecortor<Authentication> decortor = new BaseTaskDecortor<>();
+        decortor.setSupplier(() -> SecurityContextHolder.getContext().getAuthentication());
+        decortor.setExecute((x) -> SecurityContextHolder.getContext().setAuthentication(x));
+        decortor.setComplete(x -> SecurityContextHolder.clearContext());
+        return decortor;
     }
 
 }
