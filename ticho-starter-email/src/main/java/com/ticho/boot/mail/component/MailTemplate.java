@@ -1,7 +1,7 @@
 package com.ticho.boot.mail.component;
 
 import cn.hutool.core.collection.CollUtil;
-import com.ticho.boot.view.core.BizErrCode;
+import com.ticho.boot.view.enums.BizErrCode;
 import com.ticho.boot.view.util.Assert;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.mail.MailProperties;

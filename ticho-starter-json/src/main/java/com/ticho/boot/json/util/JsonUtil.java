@@ -96,7 +96,7 @@ public class JsonUtil {
     /**
      * json格式的String 转换成对象
      *
-     * @param obj Object
+     * @param obj   Object
      * @param clazz 该对象的类
      * @return T
      */
@@ -116,7 +116,7 @@ public class JsonUtil {
      * json格式的String 转换成对象
      *
      * @param jsonString jsonString
-     * @param clazz 该对象的类
+     * @param clazz      该对象的类
      * @return T
      */
     public static <T> T toJavaObject(String jsonString, Class<T> clazz) {
@@ -132,7 +132,7 @@ public class JsonUtil {
     /**
      * json格式的String 转换成对象
      *
-     * @param jsonStr jsonStr
+     * @param jsonStr       jsonStr
      * @param typeReference 泛型类
      * @return T
      */
@@ -149,7 +149,7 @@ public class JsonUtil {
     /**
      * json格式的String 转换成对象
      *
-     * @param obj Object
+     * @param obj           Object
      * @param typeReference 泛型类
      * @return T
      */
@@ -190,7 +190,8 @@ public class JsonUtil {
      */
     public static <T> T toJavaObject(String jsonString) {
         try {
-            return isEmpty(jsonString) ? null : MAPPER.readValue(jsonString, new TypeReference<T>() {});
+            return isEmpty(jsonString) ? null : MAPPER.readValue(jsonString, new TypeReference<T>() {
+            });
         } catch (Exception e) {
             log.error("str toJavaObject error, param={}, catch error {}", jsonString, e.getMessage(), e);
             return null;
@@ -227,7 +228,7 @@ public class JsonUtil {
      * json格式的String 转换成集合,带泛型
      *
      * @param jsonStr String
-     * @param clazz 集合的泛型对象类
+     * @param clazz   集合的泛型对象类
      * @return List<T>
      */
     public static <T> List<T> toList(String jsonStr, Class<T> clazz) {
@@ -262,8 +263,8 @@ public class JsonUtil {
      * json格式的String 转换成集合,带泛型
      *
      * @param jsonStr Object
-     * @param kClass Map K 的泛型对象类
-     * @param vClass Map V 的泛型对象类
+     * @param kClass  Map K 的泛型对象类
+     * @param vClass  Map V 的泛型对象类
      * @return Map<K, V>
      */
     public static <K, V> Map<K, V> toMap(String jsonStr, Class<K> kClass, Class<V> vClass) {
@@ -299,8 +300,27 @@ public class JsonUtil {
         }
     }
 
+    /**
+     * 深拷贝
+     *
+     * @param obj   对象
+     * @param clazz 对象类
+     * @return {@link T}
+     */
     public static <T> T copy(Object obj, Class<T> clazz) {
         return obj != null ? toJavaObject(toJsonString(obj), clazz) : null;
+    }
+
+    /**
+     * 深拷贝
+     *
+     * @param obj              对象
+     * @param parametrized     对象类
+     * @param parameterClasses 对象泛型类
+     * @return {@link T}
+     */
+    public static <T> T copy(Object obj, Class<?> parametrized, Class<?>... parameterClasses) {
+        return obj != null ? toJavaObject(toJsonString(obj), parametrized, parameterClasses) : null;
     }
 
     public static boolean isEmpty(CharSequence str) {

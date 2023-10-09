@@ -1,7 +1,7 @@
 package com.ticho.boot.minio.component;
 
 import com.ticho.boot.minio.prop.MinioProperty;
-import com.ticho.boot.view.core.BizErrCode;
+import com.ticho.boot.view.enums.BizErrCode;
 import com.ticho.boot.view.exception.SysException;
 import io.minio.BucketExistsArgs;
 import io.minio.GetObjectArgs;

@@ -1,7 +1,7 @@
 package com.ticho.boot.security.view;
 
 import com.ticho.boot.json.util.JsonUtil;
-import com.ticho.boot.view.core.HttpErrCode;
+import com.ticho.boot.view.enums.HttpErrCode;
 import com.ticho.boot.view.core.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;

@@ -1,7 +1,7 @@
 package com.ticho.boot.web.util.valid;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.ticho.boot.view.core.BizErrCode;
+import com.ticho.boot.view.enums.BizErrCode;
 import com.ticho.boot.view.exception.BizException;
 import org.hibernate.validator.BaseHibernateValidatorConfiguration;
 import org.hibernate.validator.HibernateValidator;

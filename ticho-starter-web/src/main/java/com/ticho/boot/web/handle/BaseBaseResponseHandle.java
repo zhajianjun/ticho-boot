@@ -1,6 +1,6 @@
 package com.ticho.boot.web.handle;
 
-import com.ticho.boot.view.core.HttpErrCode;
+import com.ticho.boot.view.enums.HttpErrCode;
 import com.ticho.boot.view.core.Result;
 import com.ticho.boot.view.enums.IErrCode;
 import com.ticho.boot.view.exception.BizException;

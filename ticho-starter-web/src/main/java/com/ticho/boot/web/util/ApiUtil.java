@@ -1,6 +1,6 @@
 package com.ticho.boot.web.util;
 
-import com.ticho.boot.view.core.BizErrCode;
+import com.ticho.boot.view.enums.BizErrCode;
 import com.ticho.boot.view.core.Result;
 import com.ticho.boot.view.exception.BizException;
 import com.ticho.boot.view.exception.SysException;

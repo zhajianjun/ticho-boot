@@ -1,5 +1,6 @@
 package com.ticho.boot.view.core;
 
+import com.ticho.boot.view.enums.BizErrCode;
 import com.ticho.boot.view.enums.IErrCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

@@ -1,4 +1,4 @@
-package com.ticho.boot.view.core;
+package com.ticho.boot.view.enums;
 
 
 import com.ticho.boot.view.enums.IErrCode;

@@ -1,6 +1,6 @@
 package com.ticho.boot.http.fallback;
 
-import com.ticho.boot.view.core.BizErrCode;
+import com.ticho.boot.view.enums.BizErrCode;
 import com.ticho.boot.view.core.Result;
 import feign.FeignException;
 import lombok.AllArgsConstructor;

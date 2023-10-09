@@ -4,7 +4,7 @@ import com.ticho.boot.json.util.JsonUtil;
 import com.ticho.boot.security.constant.BaseSecurityConst;
 import com.ticho.boot.security.dto.Oauth2AccessToken;
 import com.ticho.boot.security.prop.BaseOauthProperty;
-import com.ticho.boot.view.core.BizErrCode;
+import com.ticho.boot.view.enums.BizErrCode;
 import com.ticho.boot.view.core.BaseSecurityUser;
 import com.ticho.boot.view.util.Assert;
 import org.springframework.security.jwt.JwtHelper;

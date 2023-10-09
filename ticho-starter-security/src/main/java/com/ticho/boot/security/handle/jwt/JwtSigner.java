@@ -2,7 +2,7 @@ package com.ticho.boot.security.handle.jwt;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.StrUtil;
-import com.ticho.boot.view.core.BizErrCode;
+import com.ticho.boot.view.enums.BizErrCode;
 import com.ticho.boot.view.util.Assert;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

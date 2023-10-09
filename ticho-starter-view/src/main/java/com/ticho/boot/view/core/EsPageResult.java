@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -22,7 +23,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @ApiModel("es分页对象")
-public class EsPageResult<T> extends PageResult<T> {
+public class EsPageResult<T> extends PageResult<T> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /** 索引列表 */

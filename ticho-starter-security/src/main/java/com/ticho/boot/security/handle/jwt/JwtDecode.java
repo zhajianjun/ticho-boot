@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.NumberUtil;
 import com.ticho.boot.json.util.JsonUtil;
 import com.ticho.boot.security.constant.BaseSecurityConst;
-import com.ticho.boot.view.core.BizErrCode;
+import com.ticho.boot.view.enums.BizErrCode;
 import com.ticho.boot.view.exception.BizException;
 import com.ticho.boot.view.util.Assert;
 import lombok.extern.slf4j.Slf4j;

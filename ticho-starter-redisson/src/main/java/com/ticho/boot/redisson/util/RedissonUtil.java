@@ -1,7 +1,7 @@
 package com.ticho.boot.redisson.util;
 
 import com.ticho.boot.redisson.thread.RedisDelayRunnable;
-import com.ticho.boot.view.core.BizErrCode;
+import com.ticho.boot.view.enums.BizErrCode;
 import com.ticho.boot.view.exception.BizException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
