@@ -24,13 +24,10 @@ import lombok.Data;
 import okhttp3.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,20 +41,18 @@ import java.util.concurrent.TimeUnit;
  * @date 2022-07-13 22:40:25
  */
 @SuppressWarnings("all")
-@Component
 @Data
-public class MinioTemplate implements InitializingBean {
+public class MinioTemplate {
     private static final Logger log = LoggerFactory.getLogger(MinioTemplate.class);
 
     // @formatter:off
 
-    @Autowired
     private MinioProperty minioProperty;
 
     private MinioClient client;
 
-    @Override
-    public void afterPropertiesSet() {
+    public MinioTemplate(MinioProperty minioProperty){
+        this.minioProperty = minioProperty;
         this.client = MinioClient
             .builder()
             .credentials(minioProperty.getAccessKey(), minioProperty.getSecretKey())
@@ -262,8 +257,8 @@ public class MinioTemplate implements InitializingBean {
                 ErrorResponseException e1 = (ErrorResponseException) e;
                 Response response = e1.response();
                 int code = response.code();
-                if (HttpStatus.NOT_FOUND.value() == code) {
-                    log.warn("bucket={},object={}文件信息不存在", "default", "1.jpg");
+                if (HttpURLConnection.HTTP_NOT_FOUND == code) {
+                    log.warn("bucket={},object={}文件信息不存在", bucketName, objectName);
                     return null;
                 }
             }
