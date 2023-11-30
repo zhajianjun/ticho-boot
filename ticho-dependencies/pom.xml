@@ -371,6 +371,12 @@
                 <version>3.14.1.RELEASE</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel</artifactId>
+                <version>3.2.1</version>
+            </dependency>
+
         </dependencies>
 
     </dependencyManagement>
