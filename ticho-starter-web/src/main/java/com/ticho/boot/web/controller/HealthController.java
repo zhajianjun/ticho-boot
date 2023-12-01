@@ -2,6 +2,7 @@ package com.ticho.boot.web.controller;
 
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.github.xiaoymin.knife4j.annotations.ApiSort;
+import com.ticho.boot.view.core.Result;
 import com.ticho.boot.web.annotation.View;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,8 +40,8 @@ public class HealthController {
     @ApiOperation(value = "健康检查", notes = "健康检查")
     @ApiOperationSupport(order = 10)
     @GetMapping
-    public String health() {
-        return String.format("【应用名：%s。端口：%s。健康配置参数内容：%s】", applicationName, port, health);
+    public Result<String> health() {
+        return Result.ok(String.format("【应用名：%s。端口：%s。健康配置参数内容：%s】", applicationName, port, health));
     }
 
 }
