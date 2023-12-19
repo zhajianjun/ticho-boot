@@ -259,6 +259,7 @@
     <springProfile name="prod,uat">
         <!-- 日志输出级别 -->
         <root level="INFO">
+            <appender-ref ref="async-console"/>
             <appender-ref ref="async-info"/>
             <appender-ref ref="async-warn"/>
             <appender-ref ref="async-error"/>
