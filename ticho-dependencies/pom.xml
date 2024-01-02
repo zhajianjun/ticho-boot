@@ -2,7 +2,7 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <groupId>com.ticho.boot</groupId>
+    <groupId>top.ticho.boot</groupId>
     <artifactId>ticho-dependencies</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <modelVersion>4.0.0</modelVersion>
@@ -35,127 +35,127 @@
 
         <dependencies>
             <dependency>
-                <groupId>com.ticho.boot</groupId>
+                <groupId>top.ticho.boot</groupId>
                 <artifactId>ticho-starter-cloud</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>com.ticho.boot</groupId>
+                <groupId>top.ticho.boot</groupId>
                 <artifactId>ticho-starter-view</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>com.ticho.boot</groupId>
+                <groupId>top.ticho.boot</groupId>
                 <artifactId>ticho-starter-json</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>com.ticho.boot</groupId>
+                <groupId>top.ticho.boot</groupId>
                 <artifactId>ticho-starter-swagger</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>com.ticho.boot</groupId>
+                <groupId>top.ticho.boot</groupId>
                 <artifactId>ticho-starter-http</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>com.ticho.boot</groupId>
+                <groupId>top.ticho.boot</groupId>
                 <artifactId>ticho-starter-web</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>com.ticho.boot</groupId>
+                <groupId>top.ticho.boot</groupId>
                 <artifactId>ticho-starter-datasource</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>com.ticho.boot</groupId>
+                <groupId>top.ticho.boot</groupId>
                 <artifactId>ticho-starter-email</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>com.ticho.boot</groupId>
+                <groupId>top.ticho.boot</groupId>
                 <artifactId>ticho-starter-minio</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>com.ticho.boot</groupId>
+                <groupId>top.ticho.boot</groupId>
                 <artifactId>ticho-starter-security</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>com.ticho.boot</groupId>
+                <groupId>top.ticho.boot</groupId>
                 <artifactId>ticho-starter-log</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>com.ticho.boot</groupId>
+                <groupId>top.ticho.boot</groupId>
                 <artifactId>ticho-starter-rabbitmq</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>com.ticho.boot</groupId>
+                <groupId>top.ticho.boot</groupId>
                 <artifactId>ticho-starter-redis</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>com.ticho.boot</groupId>
+                <groupId>top.ticho.boot</groupId>
                 <artifactId>ticho-starter-gateway</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>com.ticho.boot</groupId>
+                <groupId>top.ticho.boot</groupId>
                 <artifactId>ticho-starter-cache</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>com.ticho.boot</groupId>
+                <groupId>top.ticho.boot</groupId>
                 <artifactId>ticho-starter-redisson</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>com.ticho.boot</groupId>
+                <groupId>top.ticho.boot</groupId>
                 <artifactId>ticho-starter-es</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>com.ticho.trace</groupId>
+                <groupId>top.ticho.trace</groupId>
                 <artifactId>ticho-trace-spring</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>com.ticho.trace</groupId>
+                <groupId>top.ticho.trace</groupId>
                 <artifactId>ticho-trace-gateway</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>com.ticho.trace</groupId>
+                <groupId>top.ticho.trace</groupId>
                 <artifactId>ticho-trace-feign</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
             <dependency>
-                <groupId>com.ticho.trace</groupId>
+                <groupId>top.ticho.trace</groupId>
                 <artifactId>ticho-trace-okhttp</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>

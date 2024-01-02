@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-    com.ticho.boot.minio.config.DefaultMinioConfig
+    top.ticho.boot.minio.config.DefaultMinioConfig

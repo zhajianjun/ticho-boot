@@ -1,16 +1,16 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.ticho.boot.web.config.BaseMvcConfig,\
-  com.ticho.boot.web.config.BaseCorsConfig,\
-  com.ticho.boot.web.config.BaseActuatorConifg,\
-  com.ticho.boot.web.util.SpringContext,\
-  com.ticho.boot.web.config.BaseJacksonCustomizerConfig,\
-  com.ticho.boot.web.controller.HealthController,\
-  com.ticho.boot.web.handle.BaseBaseResponseHandle,\
-  com.ticho.boot.web.converter.DateConverter,\
-  com.ticho.boot.web.converter.LocalDateConverter,\
-  com.ticho.boot.web.converter.LocalDateTimeConverter,\
-  com.ticho.boot.web.event.BaseApplicationReadyEvent,\
-  com.ticho.boot.web.util.CloudIdUtil,\
-  com.ticho.boot.web.config.BaseWebBeanConfig
+  top.ticho.boot.web.config.BaseMvcConfig,\
+  top.ticho.boot.web.config.BaseCorsConfig,\
+  top.ticho.boot.web.config.BaseActuatorConifg,\
+  top.ticho.boot.web.util.SpringContext,\
+  top.ticho.boot.web.config.BaseJacksonCustomizerConfig,\
+  top.ticho.boot.web.controller.HealthController,\
+  top.ticho.boot.web.handle.BaseBaseResponseHandle,\
+  top.ticho.boot.web.converter.DateConverter,\
+  top.ticho.boot.web.converter.LocalDateConverter,\
+  top.ticho.boot.web.converter.LocalDateTimeConverter,\
+  top.ticho.boot.web.event.BaseApplicationReadyEvent,\
+  top.ticho.boot.web.util.CloudIdUtil,\
+  top.ticho.boot.web.config.BaseWebBeanConfig
 
 

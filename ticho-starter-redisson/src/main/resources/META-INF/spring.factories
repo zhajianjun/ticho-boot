@@ -1,4 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.ticho.boot.redisson.prop.BaseRedissonProperty,\
-  com.ticho.boot.redisson.config.BaseRedissonConfig
+  top.ticho.boot.redisson.prop.BaseRedissonProperty,\
+  top.ticho.boot.redisson.config.BaseRedissonConfig
 

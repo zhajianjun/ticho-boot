@@ -4,5 +4,5 @@ ticho:
     username: root
     password: mysql1511ticho.
     driver-class-name: com.mysql.cj.jdbc.Driver
-    type-aliases-package: com.ticho.**.entity
+    type-aliases-package: top.ticho.**.entity
     print-sql: true

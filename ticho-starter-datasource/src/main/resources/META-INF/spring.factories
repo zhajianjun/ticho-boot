@@ -1,5 +1,5 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-    com.ticho.boot.datasource.config.BaseDataSourceConfig,\
-    com.ticho.boot.datasource.config.BaseMybatisPlusConfig,\
-    com.ticho.boot.datasource.interceptor.BaseSqlLogInterceptor,\
-    com.ticho.boot.datasource.component.BaseIdGenerator
+    top.ticho.boot.datasource.config.BaseDataSourceConfig,\
+    top.ticho.boot.datasource.config.BaseMybatisPlusConfig,\
+    top.ticho.boot.datasource.interceptor.BaseSqlLogInterceptor,\
+    top.ticho.boot.datasource.component.BaseIdGenerator

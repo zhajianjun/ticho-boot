@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-    com.ticho.boot.es.config.BaseEsBeanConfig
+    top.ticho.boot.es.config.BaseEsBeanConfig
