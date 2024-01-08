@@ -24,8 +24,8 @@ import org.springframework.stereotype.Component;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class BaseApplicationReadyEvent implements ApplicationListener<ApplicationReadyEvent> {
 
-
     public static final String SPRING_APPLICATION_NAME_KEY = "spring.application.name";
+    public static final String SERVER_PORT = "server.port";
 
     /**
      * 默认事件
@@ -37,7 +37,8 @@ public class BaseApplicationReadyEvent implements ApplicationListener<Applicatio
     public void onApplicationEvent(@NonNull ApplicationReadyEvent event) {
         ConfigurableApplicationContext applicationContext = event.getApplicationContext();
         Environment env = applicationContext.getEnvironment();
-        String property = env.getProperty(SPRING_APPLICATION_NAME_KEY, "application");
-        log.info("{} is ready", property);
+        String application = env.getProperty(SPRING_APPLICATION_NAME_KEY, "application");
+        String port = env.getProperty(SERVER_PORT);
+        log.info("{}:{} is ready", application, port);
     }
 }
