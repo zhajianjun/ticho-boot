@@ -36,6 +36,12 @@
       "type": "java.lang.Boolean",
       "defaultValue": "false",
       "description": "Description for ticho.datasource.log.print-sql."
+    },
+    {
+      "name": "ticho.datasource.log.print-simple",
+      "type": "java.lang.Boolean",
+      "defaultValue": "true",
+      "description": "Description for ticho.datasource.log.print-simple."
     }
   ]
 }

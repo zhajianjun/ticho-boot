@@ -1,6 +1,7 @@
 package top.ticho.boot.datasource.interceptor;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.baomidou.mybatisplus.core.toolkit.SystemClock;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
+import top.ticho.boot.json.util.JsonUtil;
 
 import java.sql.Statement;
 import java.text.DateFormat;
@@ -51,8 +53,13 @@ import java.util.regex.Matcher;
 public class BaseSqlLogInterceptor implements Interceptor {
     // @formatter:on
 
+    /** 是否打印sql */
     @Value("${ticho.datasource.log.print-sql:false}")
     private Boolean printSql;
+
+    /** 是否简单打印 */
+    @Value("${ticho.datasource.log.print-simple:true}")
+    private Boolean printSimple;
 
     /**
      * 拦截类型StatementHandler
@@ -81,7 +88,11 @@ public class BaseSqlLogInterceptor implements Interceptor {
         long start = SystemClock.now();
         Object result = invocation.proceed();
         long timing = SystemClock.now() - start;
-        log.info("sql日志打印 =>【{}】-【 {} 】-【耗时: {}ms】", ms.getId(), sql, timing);
+        if (Boolean.TRUE.equals(printSimple)) {
+            log.info("【SQL】=>【{}】-【{}】-【计数:{}】-【耗时:{}ms】", ms.getId(), sql, ObjectUtil.length(result), timing);
+        } else {
+            log.info("【SQL】=>【{}】-【{}】-【计数:{}】-【耗时:{}ms】-【记录:{}】", ms.getId(), sql, ObjectUtil.length(result), timing, JsonUtil.toJsonString(result));
+        }
         return result;
     }
 
@@ -91,7 +102,7 @@ public class BaseSqlLogInterceptor implements Interceptor {
         Object parameterObject = boundSql.getParameterObject();
         List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
         // sql语句中多个空格都用一个空格代替
-        String sql = boundSql.getSql().replaceAll("[\\s]+", " ");
+        String sql = boundSql.getSql().replaceAll("\\s+", " ");
         if (CollUtil.isNotEmpty(parameterMappings) && parameterObject != null) {
             // 获取类型处理器注册器，类型处理器的功能是进行java类型和数据库类型的转换
             TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
@@ -126,7 +137,7 @@ public class BaseSqlLogInterceptor implements Interceptor {
      */
     private static String getParameterValue(Object obj) {
         if (obj instanceof String) {
-            return "'" + obj.toString() + "'";
+            return "'" + obj + "'";
         }
         if (obj instanceof Date) {
             DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.CHINA);
