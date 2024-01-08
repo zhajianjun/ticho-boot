@@ -58,7 +58,6 @@ public class OkHttpLogInterceptor implements Interceptor {
         if (!Boolean.TRUE.equals(baseHttpProperty.getPrintLog())) {
             return chain.proceed(req);
         }
-        String reqPrefix = baseHttpProperty.getReqPrefix();
         long t1 = System.currentTimeMillis();
         String reqBody = getReqBody(req);
         Map<String, Object> reqHeaderMap = getHeaderMap(req.headers());
@@ -68,7 +67,7 @@ public class OkHttpLogInterceptor implements Interceptor {
         String fullUrl = StrUtil.subBefore(httpUrl.toString(), "?", false);
         Map<String, Object> paramsMap = getParams(httpUrl);
         String params = toJson(paramsMap);
-        log.info("{} {} {} 请求开始, 请求参数={}, 请求体={}, 请求头={}", reqPrefix, method, fullUrl, nullOfDefault(params), nullOfDefault(reqBody), nullOfDefault(reqHeaders));
+        log.info("[HTTP] {} {} 请求开始, 请求参数={}, 请求体={}, 请求头={}", method, fullUrl, nullOfDefault(params), nullOfDefault(reqBody), nullOfDefault(reqHeaders));
         Response res = chain.proceed(req);
         Map<String, Object> resHeaderMap = getHeaderMap(res.headers());
         String resHeader = toJson(resHeaderMap);
@@ -81,7 +80,7 @@ public class OkHttpLogInterceptor implements Interceptor {
         String resBody = body.string();
         int status = res.code();
         long millis = t2 - t1;
-        log.info("{} {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}, 响应头={}", reqPrefix, method, fullUrl, status, millis, resBody, resHeader);
+        log.info("[HTTP] {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}, 响应头={}", method, fullUrl, status, millis, resBody, resHeader);
         URI uri = URLUtil.toURI(fullUrl);
         String host = uri.getHost();
         String port = Integer.toString(uri.getPort());

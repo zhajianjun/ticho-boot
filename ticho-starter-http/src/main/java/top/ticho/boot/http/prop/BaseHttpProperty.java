@@ -20,9 +20,6 @@ public class BaseHttpProperty {
     /* 日志拦截是否打印日志 */
     private Boolean printLog = false;
 
-    /** 日志打印前缀 */
-    private String reqPrefix = "[HTTP]";
-
     /** 设置连接超时，单位:秒(s) */
     private Long connectTimeout = 10L;
 

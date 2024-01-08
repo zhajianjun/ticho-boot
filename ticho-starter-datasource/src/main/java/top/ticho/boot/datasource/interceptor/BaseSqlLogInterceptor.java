@@ -89,9 +89,9 @@ public class BaseSqlLogInterceptor implements Interceptor {
         Object result = invocation.proceed();
         long timing = SystemClock.now() - start;
         if (Boolean.TRUE.equals(printSimple)) {
-            log.info("【SQL】=>【{}】-【{}】-【计数:{}】-【耗时:{}ms】", ms.getId(), sql, ObjectUtil.length(result), timing);
+            log.info("[SQL] 【{}】-【{}】-【计数:{}】-【耗时:{}ms】", ms.getId(), sql, ObjectUtil.length(result), timing);
         } else {
-            log.info("【SQL】=>【{}】-【{}】-【计数:{}】-【耗时:{}ms】-【记录:{}】", ms.getId(), sql, ObjectUtil.length(result), timing, JsonUtil.toJsonString(result));
+            log.info("[SQL] 【{}】-【{}】-【计数:{}】-【耗时:{}ms】-【记录:{}】", ms.getId(), sql, ObjectUtil.length(result), timing, JsonUtil.toJsonString(result));
         }
         return result;
     }

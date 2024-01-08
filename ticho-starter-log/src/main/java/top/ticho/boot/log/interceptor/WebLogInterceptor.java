@@ -100,7 +100,6 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         // header
         Map<String, String> headersMap = getHeaders(request);
         String reqHeaders = toJson(headersMap);
-        String reqPrefix = baseLogProperty.getReqPrefix();
         String userAgentHeader = request.getHeader(USER_AGENT);
         UserAgent userAgent =  UserAgentUtil.parse(userAgentHeader);
         Principal principal = request.getUserPrincipal();
@@ -123,7 +122,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         boolean anyMatch = antPatterns.stream().anyMatch(x -> antPathMatcher.match(x, url));
         antPathMatchLocal.set(anyMatch);
         if (print && !anyMatch) {
-            log.info("{} {} {} 请求开始, 请求参数={}, 请求体={}, 请求头={}", reqPrefix, type, url, nullOfDefault(params), nullOfDefault(body), nullOfDefault(reqHeaders));
+            log.info("[REQ] {} {} 请求开始, 请求参数={}, 请求体={}, 请求头={}", type, url, nullOfDefault(params), nullOfDefault(body), nullOfDefault(reqHeaders));
         }
         return true;
     }
@@ -141,7 +140,6 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         String resHeaders = toJson(resHeaderMap);
         httpLog.setResBody(resBody);
         httpLog.setResHeaders(resHeaders);
-        String reqPrefix = baseLogProperty.getReqPrefix();
         long end = SystemClock.now();
         httpLog.setEnd(end);
         int status = response.getStatus();
@@ -149,7 +147,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         boolean print = Boolean.TRUE.equals(baseLogProperty.getPrint());
         Boolean anyMatch = antPathMatchLocal.get();
         if (print && !anyMatch) {
-            log.info("{} {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}, 响应头={}", reqPrefix, type, url, status, consume, nullOfDefault(resBody), nullOfDefault(resHeaders));
+            log.info("[REQ] {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}, 响应头={}", type, url, status, consume, nullOfDefault(resBody), nullOfDefault(resHeaders));
         }
         ApplicationContext applicationContext = SpringUtil.getApplicationContext();
         applicationContext.publishEvent(new WebLogEvent(applicationContext, httpLog));

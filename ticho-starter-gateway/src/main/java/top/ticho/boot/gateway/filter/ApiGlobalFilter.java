@@ -83,10 +83,9 @@ public class ApiGlobalFilter implements GlobalFilter, Ordered {
         httpLogInfo.setReqParams(params);
         httpLogInfo.setUserAgent(userAgent);
         boolean print = Boolean.TRUE.equals(baseLogProperty.getPrint());
-        String requestPrefixText = baseLogProperty.getReqPrefix();
         if (print) {
             String reqBody = httpLogInfo.getReqBody();
-            log.info("{} {} {} 请求开始, 请求参数={}, 请求体={}, 请求头={}", requestPrefixText, type, url, params, reqBody, headers);
+            log.info("[REQ] {} {} 请求开始, 请求参数={}, 请求体={}, 请求头={}", type, url, params, reqBody, headers);
         }
         ServerHttpResponse response = getResponse(exchange, httpLogInfo);
         return exchange.mutate().request(request).response(response).build();
@@ -131,14 +130,13 @@ public class ApiGlobalFilter implements GlobalFilter, Ordered {
 
     private void complete(HttpLog httpLogInfo) {
         boolean print = Boolean.TRUE.equals(baseLogProperty.getPrint());
-        String requestPrefixText = baseLogProperty.getReqPrefix();
         String type = httpLogInfo.getType();
         String url = httpLogInfo.getUrl();
         Long consume = httpLogInfo.getConsume();
         Integer status = httpLogInfo.getStatus();
         String resBody = httpLogInfo.getResBody();
         if (print) {
-            log.info("{} {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}", requestPrefixText, type, url, status, consume, resBody);
+            log.info("[REQ] {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}", type, url, status, consume, resBody);
         }
         theadLocal.remove();
     }
