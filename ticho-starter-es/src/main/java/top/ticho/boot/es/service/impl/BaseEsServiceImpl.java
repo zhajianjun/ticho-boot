@@ -65,7 +65,7 @@ public class BaseEsServiceImpl<M extends BaseEsMapper<T>, T> implements BaseEsSe
     @Override
     public boolean updateById(T entity, String... indexNames) {
         if (entity == null) {
-            log.info("索引{}更新异常，角色为null", String.join(",", indexNames));
+            log.info("索引{}更新异常，对象为null", String.join(",", indexNames));
             return false;
         }
         return baseEsMapper.updateById(entity, indexNames) > 0;

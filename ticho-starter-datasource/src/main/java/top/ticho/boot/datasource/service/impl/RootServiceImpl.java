@@ -106,7 +106,7 @@ public class RootServiceImpl<M extends RootMapper<T>, T> extends ServiceImpl<M, 
     @Override
     public boolean updateById(T func) {
         if (func == null) {
-            log.info("{}更新异常，角色为null", getTableName());
+            log.info("{}更新异常，对象为null", getTableName());
             return false;
         }
         return baseMapper.updateById(func) > 0;
