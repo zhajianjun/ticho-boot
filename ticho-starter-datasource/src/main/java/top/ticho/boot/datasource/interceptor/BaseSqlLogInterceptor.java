@@ -1,7 +1,8 @@
 package top.ticho.boot.datasource.interceptor;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.baomidou.mybatisplus.core.toolkit.SystemClock;
@@ -88,10 +89,16 @@ public class BaseSqlLogInterceptor implements Interceptor {
         long start = SystemClock.now();
         Object result = invocation.proceed();
         long timing = SystemClock.now() - start;
-        if (Boolean.TRUE.equals(printSimple)) {
-            log.info("[SQL]【{}】-【{}】-【计数:{}】-【耗时:{}ms】", ms.getId(), sql, ObjectUtil.length(result), timing);
+        int length;
+        if (ClassUtil.isSimpleValueType(result.getClass())) {
+            length = 1;
         } else {
-            log.info("[SQL]【{}】-【{}】-【计数:{}】-【耗时:{}ms】-【记录:{}】", ms.getId(), sql, ObjectUtil.length(result), timing, JsonUtil.toJsonString(result));
+            length = ObjUtil.length(result);
+        }
+        if (Boolean.TRUE.equals(printSimple)) {
+            log.info("[SQL]【{}】-【{}】-【计数:{}】-【耗时:{}ms】", ms.getId(), sql, length, timing);
+        } else {
+            log.info("[SQL]【{}】-【{}】-【计数:{}】-【耗时:{}ms】-【记录:{}】", ms.getId(), sql, length, timing, JsonUtil.toJsonString(result));
         }
         return result;
     }
