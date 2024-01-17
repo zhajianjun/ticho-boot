@@ -1,12 +1,12 @@
 package top.ticho.boot.web.util.valid;
 
-import cn.hutool.core.util.ObjectUtil;
-import top.ticho.boot.view.enums.BizErrCode;
-import top.ticho.boot.view.exception.BizException;
+import cn.hutool.core.util.ObjUtil;
 import org.hibernate.validator.BaseHibernateValidatorConfiguration;
 import org.hibernate.validator.HibernateValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.ticho.boot.view.enums.BizErrCode;
+import top.ticho.boot.view.exception.BizException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -285,7 +285,7 @@ public class ValidUtil {
      */
     @SuppressWarnings("all")
     private static <T> T preCheck(T obj) {
-        if (ObjectUtil.isEmpty(obj)) {
+        if (ObjUtil.isEmpty(obj)) {
             throw new BizException(BizErrCode.PARAM_ERROR);
         }
         if (obj instanceof Collection<?>) {
@@ -311,7 +311,7 @@ public class ValidUtil {
      */
     @SuppressWarnings("all")
     private static <T> T preCheck(T obj, String customMessage) {
-        if (ObjectUtil.isEmpty(obj)) {
+        if (ObjUtil.isEmpty(obj)) {
             throw new BizException(BizErrCode.PARAM_ERROR, customMessage);
         }
         if (obj instanceof Collection<?>) {

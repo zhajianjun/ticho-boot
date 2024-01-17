@@ -1,14 +1,14 @@
 package top.ticho.boot.http.fallback;
 
-import top.ticho.boot.view.enums.BizErrCode;
-import top.ticho.boot.view.core.Result;
+import cn.hutool.core.util.StrUtil;
 import feign.FeignException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
 import org.springframework.lang.Nullable;
-import org.springframework.util.ObjectUtils;
+import top.ticho.boot.view.core.Result;
+import top.ticho.boot.view.enums.BizErrCode;
 
 import java.lang.reflect.Method;
 import java.util.Objects;
@@ -46,7 +46,7 @@ public class DefaultFeignFallback<T> implements MethodInterceptor {
         FeignException exception = (FeignException) cause;
         String content = exception.contentUTF8();
         // 如果返回的数据为空
-        if (ObjectUtils.isEmpty(content)) {
+        if (StrUtil.isBlank(content)) {
             return Result.of(BizErrCode.APP_SERVICE_ERR, errorMessage);
         }
         return Result.fail(content);

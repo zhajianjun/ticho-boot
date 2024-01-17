@@ -1,13 +1,13 @@
 package top.ticho.boot.view.util;
 
 
-import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import top.ticho.boot.view.enums.BizErrCode;
 import top.ticho.boot.view.enums.IErrCode;
 import top.ticho.boot.view.exception.BizException;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -64,32 +64,32 @@ public class Assert {
 
 
     public static void isNull(Object obj, IErrCode errCode) {
-        if (ObjectUtil.isNotNull(obj)) {
+        if (ObjUtil.isNotNull(obj)) {
             cast(errCode);
         }
     }
 
     public static void isNull(Object obj, String message) {
-        if (ObjectUtil.isNotNull(obj)) {
+        if (ObjUtil.isNotNull(obj)) {
             cast(BizErrCode.PARAM_ERROR, message);
         }
     }
 
     public static void isNull(Object obj, IErrCode errCode, String errMsg) {
-        if (ObjectUtil.isNotNull(obj)) {
+        if (ObjUtil.isNotNull(obj)) {
             cast(errCode, errMsg);
         }
     }
 
     public static void isNull(Object obj, IErrCode errCode, Supplier<String> stringSupplier) {
-        if (ObjectUtil.isNotNull(obj)) {
+        if (ObjUtil.isNotNull(obj)) {
             String errMsg = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMsg());
             cast(errCode, errMsg);
         }
     }
 
     public static void isNull(Object obj, Supplier<String> stringSupplier) {
-        if (ObjectUtil.isNotNull(obj)) {
+        if (ObjUtil.isNotNull(obj)) {
             IErrCode errCode = BizErrCode.PARAM_ERROR;
             String errMsg = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMsg());
             cast(errCode, errMsg);
@@ -99,32 +99,32 @@ public class Assert {
     /*  ----------- ------------- */
 
     public static void isNotNull(Object obj, IErrCode errCode) {
-        if (ObjectUtil.isNull(obj)) {
+        if (ObjUtil.isNull(obj)) {
             cast(errCode);
         }
     }
 
     public static void isNotNull(Object obj, String message) {
-        if (ObjectUtil.isNull(obj)) {
+        if (ObjUtil.isNull(obj)) {
             cast(BizErrCode.PARAM_ERROR, message);
         }
     }
 
     public static void isNotNull(Object obj, IErrCode errCode, String errMsg) {
-        if (ObjectUtil.isNull(obj)) {
+        if (ObjUtil.isNull(obj)) {
             cast(errCode, errMsg);
         }
     }
 
     public static void isNotNull(Object obj, IErrCode errCode, Supplier<String> stringSupplier) {
-        if (ObjectUtil.isNull(obj)) {
+        if (ObjUtil.isNull(obj)) {
             String errMsg = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMsg());
             cast(errCode, errMsg);
         }
     }
 
     public static void isNotNull(Object obj, Supplier<String> stringSupplier) {
-        if (ObjectUtil.isNull(obj)) {
+        if (ObjUtil.isNull(obj)) {
             IErrCode errCode = BizErrCode.PARAM_ERROR;
             String errMsg = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMsg());
             cast(errCode, errMsg);
@@ -135,32 +135,32 @@ public class Assert {
 
 
     public static void isEmpty(Object obj, IErrCode errCode) {
-        if (ObjectUtil.isNotEmpty(obj)) {
+        if (ObjUtil.isNotEmpty(obj)) {
             cast(errCode);
         }
     }
 
     public static void isEmpty(Object obj, String message) {
-        if (ObjectUtil.isNotEmpty(obj)) {
+        if (ObjUtil.isNotEmpty(obj)) {
             cast(BizErrCode.PARAM_ERROR, message);
         }
     }
 
     public static void isEmpty(Object obj, IErrCode errCode, String errMsg) {
-        if (ObjectUtil.isNotEmpty(obj)) {
+        if (ObjUtil.isNotEmpty(obj)) {
             cast(errCode, errMsg);
         }
     }
 
     public static void isEmpty(Object obj, IErrCode errCode, Supplier<String> stringSupplier) {
-        if (ObjectUtil.isNotEmpty(obj)) {
+        if (ObjUtil.isNotEmpty(obj)) {
             String errMsg = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMsg());
             cast(errCode, errMsg);
         }
     }
 
     public static void isEmpty(Object obj, Supplier<String> stringSupplier) {
-        if (ObjectUtil.isNotEmpty(obj)) {
+        if (ObjUtil.isNotEmpty(obj)) {
             IErrCode errCode = BizErrCode.PARAM_ERROR;
             String errMsg = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMsg());
             cast(errCode, errMsg);
@@ -170,32 +170,32 @@ public class Assert {
     /*  ----------- ------------- */
 
     public static void isNotEmpty(Object obj, IErrCode errCode) {
-        if (ObjectUtil.isEmpty(obj)) {
+        if (ObjUtil.isEmpty(obj)) {
             cast(errCode);
         }
     }
 
     public static void isNotEmpty(Object obj, String message) {
-        if (ObjectUtil.isEmpty(obj)) {
+        if (ObjUtil.isEmpty(obj)) {
             cast(BizErrCode.PARAM_ERROR, message);
         }
     }
 
     public static void isNotEmpty(Object obj, IErrCode errCode, String errMsg) {
-        if (ObjectUtil.isEmpty(obj)) {
+        if (ObjUtil.isEmpty(obj)) {
             cast(errCode, errMsg);
         }
     }
 
     public static void isNotEmpty(Object obj, IErrCode errCode, Supplier<String> stringSupplier) {
-        if (ObjectUtil.isEmpty(obj)) {
+        if (ObjUtil.isEmpty(obj)) {
             String errMsg = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMsg());
             cast(errCode, errMsg);
         }
     }
 
     public static void isNotEmpty(Object obj, Supplier<String> stringSupplier) {
-        if (ObjectUtil.isEmpty(obj)) {
+        if (ObjUtil.isEmpty(obj)) {
             IErrCode errCode = BizErrCode.PARAM_ERROR;
             String errMsg = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMsg());
             cast(errCode, errMsg);

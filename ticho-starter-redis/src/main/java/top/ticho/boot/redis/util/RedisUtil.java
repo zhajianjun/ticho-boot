@@ -1,5 +1,6 @@
 package top.ticho.boot.redis.util;
 
+import cn.hutool.core.util.ObjUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.HashOperations;
@@ -8,7 +9,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.core.ZSetOperations;
-import org.springframework.util.ObjectUtils;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -49,8 +49,8 @@ public class RedisUtil<K, V> {
     /**
      * 设置过期时间
      *
-     * @param key 键
-     * @param timeout 过期时间
+     * @param key      键
+     * @param timeout  过期时间
      * @param timeUnit 时间单位
      * @return true-成功，false-失败
      */
@@ -68,7 +68,7 @@ public class RedisUtil<K, V> {
      * 获取过期时间
      *
      * @param key 键
-     @return long
+     * @return long
      */
     public long getExpire(K key) {
         try {
@@ -83,7 +83,7 @@ public class RedisUtil<K, V> {
     /**
      * 设置过期时间
      *
-     * @param key 键
+     * @param key     键
      * @param timeout 过期时间
      * @return true-成功，false-失败
      */
@@ -145,7 +145,7 @@ public class RedisUtil<K, V> {
     /**
      * 自增
      *
-     * @param key 键
+     * @param key   键
      * @param delta 步长
      */
     public void increment(K key, long delta) {
@@ -159,7 +159,7 @@ public class RedisUtil<K, V> {
     /**
      * 自减
      *
-     * @param key 键
+     * @param key   键
      * @param delta 步长
      */
     public void decrement(K key, long delta) {
@@ -173,7 +173,7 @@ public class RedisUtil<K, V> {
     /**
      * 存入普通键值对象
      *
-     * @param key 键
+     * @param key   键
      * @param value 值
      */
     public void vSet(final K key, final V value) {
@@ -187,9 +187,9 @@ public class RedisUtil<K, V> {
     /**
      * 存入普通键值对象
      *
-     * @param key 键
-     * @param value 值
-     * @param timeout 过期时间
+     * @param key      键
+     * @param value    值
+     * @param timeout  过期时间
      * @param timeUnit 时间单位
      */
     public void vSet(final K key, final V value, final long timeout, TimeUnit timeUnit) {
@@ -264,7 +264,7 @@ public class RedisUtil<K, V> {
     /**
      * 查询Hash中的某个对象是否存在
      *
-     * @param key 键
+     * @param key     键
      * @param hashKey hash键
      * @return boolean
      */
@@ -281,8 +281,8 @@ public class RedisUtil<K, V> {
     /**
      * Hash中存入数据
      *
-     * @param key 键
-     * @param hKey hash键
+     * @param key   键
+     * @param hKey  hash键
      * @param value 值
      */
     public <HK, HV> void hPut(final K key, final HK hKey, final HV value) {
@@ -296,7 +296,7 @@ public class RedisUtil<K, V> {
     /**
      * Hash中批量存入数据
      *
-     * @param key 键
+     * @param key    键
      * @param values Hash键值对
      */
     public <HK, HV> void hPutAll(final K key, final Map<HK, HV> values) {
@@ -310,7 +310,7 @@ public class RedisUtil<K, V> {
     /**
      * 获取Hash中的数据
      *
-     * @param key 键
+     * @param key  键
      * @param hKey Hash键
      * @return Hash中的对象
      */
@@ -327,7 +327,7 @@ public class RedisUtil<K, V> {
     /**
      * 删除Hash中的数据
      *
-     * @param key 键
+     * @param key  键
      * @param hKey Hash键
      * @return <HK>
      */
@@ -343,7 +343,7 @@ public class RedisUtil<K, V> {
     /**
      * 获取多个Hash中的数据
      *
-     * @param key 键
+     * @param key   键
      * @param hKeys Hash键集合
      * @return List
      */
@@ -393,13 +393,15 @@ public class RedisUtil<K, V> {
     /**
      * Set集合中存入数据
      *
-     * @param key 键
+     * @param key    键
      * @param values 值
      * @return 存入个数
      */
     public final long sAdd(final K key, final V... values) {
         Long count;
-        try { count = this.opsForSet().add(key, values); } catch (Exception e) {
+        try {
+            count = this.opsForSet().add(key, values);
+        } catch (Exception e) {
             log.error("{}键的Set对象存入数据失败,异常：{}", key, e.getMessage(), e);
             return DEFAULT_COUNT;
         }
@@ -443,13 +445,15 @@ public class RedisUtil<K, V> {
     /**
      * 随机从Set集合查询对象
      *
-     * @param key 键
+     * @param key  键
      * @param size 大小
      * @return List<V>
      */
     public List<V> randomMembers(K key, long size) {
         List<V> result;
-        try { result = this.opsForSet().randomMembers(key, size); } catch (Exception e) {
+        try {
+            result = this.opsForSet().randomMembers(key, size);
+        } catch (Exception e) {
             log.error("随机查询{}键的Set对象失败,异常：{}", key, e.getMessage(), e);
             return Collections.emptyList();
         }
@@ -460,7 +464,7 @@ public class RedisUtil<K, V> {
     /**
      * 随机(不重复)从Set集合查询对象
      *
-     * @param key 关键
+     * @param key  关键
      * @param size 大小
      * @return {@link Set}<{@link V}>
      */
@@ -481,7 +485,9 @@ public class RedisUtil<K, V> {
      * @return {@link Set}<{@link V}>
      */
     public Set<V> members(K key) {
-        try { return this.opsForSet().members(key); } catch (Exception e) {
+        try {
+            return this.opsForSet().members(key);
+        } catch (Exception e) {
             log.error("获取{}键的Set对象失败,异常：{}", key, e.getMessage(), e);
             return new HashSet<>();
         }
@@ -490,13 +496,15 @@ public class RedisUtil<K, V> {
     /**
      * 删除Set中的数据
      *
-     * @param key 键
+     * @param key    键
      * @param values 值
      * @return 删除个数
      */
     public long sRemove(final K key, final Object... values) {
         Long count;
-        try { count = this.opsForSet().remove(key, values); } catch (Exception e) {
+        try {
+            count = this.opsForSet().remove(key, values);
+        } catch (Exception e) {
             log.error("{}键的Set对象删除数据失败,异常：{}", key, e.getMessage(), e);
             return DEFAULT_COUNT;
         }
@@ -507,7 +515,7 @@ public class RedisUtil<K, V> {
     /**
      * 获取两个Set集合中的交集元素
      *
-     * @param key 键
+     * @param key      键
      * @param otherKey 其他关键
      * @return {@link Set}<{@link V}>
      */
@@ -526,7 +534,7 @@ public class RedisUtil<K, V> {
      * 两个Set集合交集元素存入新的Set集合中
      *
      * @param destKey 存储键
-     * @param keys 交集键
+     * @param keys    交集键
      * @return 存储对象个数
      */
     public long intersectAndStore(K destKey, K... keys) {
@@ -548,7 +556,7 @@ public class RedisUtil<K, V> {
      * @return {@link Set}<{@link V}>
      */
     public final Set<V> difference(K... keys) {
-        if (ObjectUtils.isEmpty(keys)) {
+        if (ObjUtil.isEmpty(keys)) {
             return Collections.emptySet();
         }
         Set<K> keySet = Arrays.stream(keys).collect(Collectors.toSet());
@@ -565,7 +573,7 @@ public class RedisUtil<K, V> {
      * 两个Set集合差集元素存入新的Set集合中
      *
      * @param destKey 存储键
-     * @param keys 差集键
+     * @param keys    差集键
      * @return 存储对象个数
      */
     public long differenceAndStore(K destKey, K... keys) {
@@ -586,7 +594,7 @@ public class RedisUtil<K, V> {
      * @return {@link Set}<{@link V}>
      */
     public final Set<V> union(K... keys) {
-        if (ObjectUtils.isEmpty(keys)) {
+        if (ObjUtil.isEmpty(keys)) {
             return Collections.emptySet();
         }
         Set<K> keySet = Arrays.stream(keys).collect(Collectors.toSet());
@@ -603,7 +611,7 @@ public class RedisUtil<K, V> {
      * 两个Set集合交集元素存入新的Set集合中
      *
      * @param destKey 存储键
-     * @param keys 交集键
+     * @param keys    交集键
      * @return 存储对象个数
      */
     public long unionAndStore(K destKey, K... keys) {
@@ -622,7 +630,7 @@ public class RedisUtil<K, V> {
     /**
      * 从左边往List中存入数据
      *
-     * @param key 键
+     * @param key   键
      * @param value 值
      * @return 存储对象个数
      */
@@ -639,7 +647,7 @@ public class RedisUtil<K, V> {
     /**
      * 从左边往List中存入多个数据
      *
-     * @param key 键
+     * @param key    键
      * @param values 多个数据
      * @return 存储对象个数
      */
@@ -656,7 +664,7 @@ public class RedisUtil<K, V> {
     /**
      * 从左边往List中存入多个数据
      *
-     * @param key 键
+     * @param key    键
      * @param values 多个数据
      * @return 存储对象个数
      */
@@ -673,7 +681,7 @@ public class RedisUtil<K, V> {
     /**
      * 从右边往List中存入数据
      *
-     * @param key 键
+     * @param key   键
      * @param value 值
      * @return 存储对象个数
      */
@@ -690,7 +698,7 @@ public class RedisUtil<K, V> {
     /**
      * 从右边往List中存入多个数据
      *
-     * @param key 键
+     * @param key    键
      * @param values 多个数据
      * @return 存储对象个数
      */
@@ -707,7 +715,7 @@ public class RedisUtil<K, V> {
     /**
      * 从右边往List中存入多个数据
      *
-     * @param key 键
+     * @param key    键
      * @param values 多个数据
      * @return 存储对象个数
      */
@@ -740,9 +748,9 @@ public class RedisUtil<K, V> {
     /**
      * 从List中获取begin到end之间的元素
      *
-     * @param key 键
+     * @param key   键
      * @param start 开始位置
-     * @param end 结束位置（start=DEFAULT_COUNT，end=INT表示获取全部元素）
+     * @param end   结束位置（start=DEFAULT_COUNT，end=INT表示获取全部元素）
      * @return List对象
      */
     public List<V> lGet(final K key, final int start, final int end) {
