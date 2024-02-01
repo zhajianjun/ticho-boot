@@ -64,7 +64,7 @@
         </dependency>
 
         <dependency>
-            <groupId>top.ticho.trace</groupId>
+            <groupId>top.ticho.tool</groupId>
             <artifactId>ticho-trace-feign</artifactId>
         </dependency>
 

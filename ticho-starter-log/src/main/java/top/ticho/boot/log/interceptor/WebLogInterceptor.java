@@ -13,7 +13,7 @@ import top.ticho.boot.log.wrapper.RequestWrapper;
 import top.ticho.boot.log.wrapper.ResponseWrapper;
 import top.ticho.boot.view.log.BaseLogProperty;
 import top.ticho.boot.view.log.HttpLog;
-import top.ticho.trace.spring.util.IpUtil;
+import top.ticho.tool.trace.spring.util.IpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.Ordered;
