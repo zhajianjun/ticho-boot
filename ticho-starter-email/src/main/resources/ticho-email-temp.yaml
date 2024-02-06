@@ -1,5 +1,5 @@
 # 配置模版
-spring:
+ticho:
   mail:
     #配置 SMTP 服务器地址
     host: smtp.qq.com

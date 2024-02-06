@@ -1,23 +1,25 @@
 package top.ticho.boot.mail.component;
 
 import cn.hutool.core.collection.CollUtil;
-import top.ticho.boot.view.enums.BizErrCode;
-import top.ticho.boot.view.util.Assert;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.lang.NonNull;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+import top.ticho.boot.mail.prop.MailProperty;
+import top.ticho.boot.view.enums.BizErrCode;
+import top.ticho.boot.view.util.Assert;
 
-import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 
 /**
  * 邮件工具
@@ -25,29 +27,38 @@ import java.util.Optional;
  * @author zhajianjun
  * @date 2022-07-13 22:40:25
  */
-@Component
 @Slf4j
 public class MailTemplate {
 
-    @Resource
-    private MailProperties mailProperties;
+    private final MailProperty mailProperty;
 
-    @Resource
-    private JavaMailSender javaMailSender;
+    private final JavaMailSender javaMailSender;
+
+    public MailTemplate(MailProperty mailProperty) {
+        this.mailProperty = mailProperty;
+        JavaMailSenderImpl sender = new JavaMailSenderImpl();
+        applyProperties(mailProperty, sender);
+        this.javaMailSender = sender;
+    }
 
     /**
      * 发送邮件
      *
      * @param mailContent 邮件内容
      */
-    public void sendSimpleMail(MailContent mailContent) {
-        Assert.isNotNull(mailProperties, BizErrCode.FAIL, "请检查邮件配置");
+    public void sendMail(MailContent mailContent) {
+        Assert.isNotNull(mailProperty, BizErrCode.FAIL, "请检查邮件配置");
         Assert.isNotNull(javaMailSender, BizErrCode.FAIL, "请检查邮件配置");
+        MimeMessage mimeMessage = getMimeMessage(mailContent);
+        javaMailSender.send(mimeMessage);
+    }
+
+    private MimeMessage getMimeMessage(MailContent mailContent) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = null;
         try {
             helper = new MimeMessageHelper(mimeMessage, true);
-            helper.setFrom(mailProperties.getUsername());
+            helper.setFrom(mailProperty.getUsername(), mailContent.getFromName());
             helper.setTo(mailContent.getTo());
             helper.setSubject(mailContent.getSubject());
             helper.setText(mailContent.getContent(), true);
@@ -55,7 +66,7 @@ public class MailTemplate {
             if (CollUtil.isNotEmpty(cc)) {
                 helper.setCc(cc.toArray(new String[0]));
             }
-        } catch (MessagingException e) {
+        } catch (MessagingException | UnsupportedEncodingException e ) {
             log.error(e.getMessage(), e);
             Assert.cast(BizErrCode.FAIL, "创建邮件MimeMessageHelper失败");
         }
@@ -69,7 +80,17 @@ public class MailTemplate {
             MimeMessageHelper finalHelper = helper;
             files.forEach(file -> addAttachment(finalHelper, file));
         }
-        javaMailSender.send(mimeMessage);
+        return mimeMessage;
+    }
+
+    public void sendMailBatch(List<MailContent> mailContents) {
+        Assert.isNotNull(mailProperty, BizErrCode.FAIL, "请检查邮件配置");
+        Assert.isNotNull(javaMailSender, BizErrCode.FAIL, "请检查邮件配置");
+        MimeMessage[] mimeMessages = mailContents
+            .stream()
+            .map(this::getMimeMessage)
+            .toArray(MimeMessage[]::new);
+        javaMailSender.send(mimeMessages);
     }
 
     private void addAttachment(@NonNull MimeMessageHelper finalHelper, @NonNull MultipartFile file) {
@@ -92,6 +113,28 @@ public class MailTemplate {
             log.error(e.getMessage(), e);
             Assert.cast(BizErrCode.FAIL, "添加邮件静态资源失败");
         }
+    }
+
+    private void applyProperties(MailProperty mailProperty, JavaMailSenderImpl sender) {
+        sender.setHost(mailProperty.getHost());
+        if (mailProperty.getPort() != null) {
+            sender.setPort(mailProperty.getPort());
+        }
+        sender.setUsername(mailProperty.getUsername());
+        sender.setPassword(mailProperty.getPassword());
+        sender.setProtocol(mailProperty.getProtocol());
+        if (mailProperty.getDefaultEncoding() != null) {
+            sender.setDefaultEncoding(mailProperty.getDefaultEncoding().name());
+        }
+        if (!mailProperty.getProperties().isEmpty()) {
+            sender.setJavaMailProperties(asProperties(mailProperty.getProperties()));
+        }
+    }
+
+    private Properties asProperties(Map<String, String> source) {
+        Properties properties = new Properties();
+        properties.putAll(source);
+        return properties;
     }
 
 

@@ -17,22 +17,25 @@ import java.util.List;
 @ApiModel("邮件内容")
 public class MailContent {
 
-    @ApiModelProperty(value = "收件人地址", position = 10)
+    @ApiModelProperty(value = "发件人名称", position = 10)
+    private String fromName;
+
+    @ApiModelProperty(value = "收件人地址", position = 20)
     private String to;
 
-    @ApiModelProperty(value = "邮件主题", position = 20)
+    @ApiModelProperty(value = "邮件主题", position = 30)
     private String subject;
 
-    @ApiModelProperty(value = "邮件内容", position = 30)
+    @ApiModelProperty(value = "邮件内容", position = 40)
     private String content;
 
-    @ApiModelProperty(value = "抄送地址", position = 40)
+    @ApiModelProperty(value = "抄送地址", position = 50)
     private List<String> cc;
 
-    @ApiModelProperty(value = "静态资源列表", position = 50)
+    @ApiModelProperty(value = "静态资源列表", position = 60)
     private List<MailInines> inlines;
 
-    @ApiModelProperty(value = "附件信息", position = 60)
+    @ApiModelProperty(value = "附件信息", position = 70)
     private List<MultipartFile> files;
 
 }

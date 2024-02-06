@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-    top.ticho.boot.mail.component.MailTemplate
+    top.ticho.boot.mail.config.DefaultEmailConfig
