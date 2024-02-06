@@ -1,6 +1,7 @@
 package top.ticho.boot.mail.component;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -58,7 +59,8 @@ public class MailTemplate {
         MimeMessageHelper helper = null;
         try {
             helper = new MimeMessageHelper(mimeMessage, true);
-            helper.setFrom(mailProperty.getUsername(), mailContent.getFromName());
+            String senderName = StrUtil.isBlank(mailProperty.getSenderName()) ? mailProperty.getUsername() : mailProperty.getSenderName();
+            helper.setFrom(mailProperty.getUsername(), senderName);
             helper.setTo(mailContent.getTo());
             helper.setSubject(mailContent.getSubject());
             helper.setText(mailContent.getContent(), true);

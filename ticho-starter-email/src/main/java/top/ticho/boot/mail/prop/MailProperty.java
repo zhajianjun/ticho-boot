@@ -29,6 +29,9 @@ public class MailProperty {
     /** 用户名 */
     private String username;
 
+    /** 发件人名称 */
+    private String senderName;
+
     /** 密码 */
     private String password;
 

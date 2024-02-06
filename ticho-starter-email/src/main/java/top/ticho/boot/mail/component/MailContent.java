@@ -17,9 +17,6 @@ import java.util.List;
 @ApiModel("邮件内容")
 public class MailContent {
 
-    @ApiModelProperty(value = "发件人名称", position = 10)
-    private String fromName;
-
     @ApiModelProperty(value = "收件人地址", position = 20)
     private String to;
 
