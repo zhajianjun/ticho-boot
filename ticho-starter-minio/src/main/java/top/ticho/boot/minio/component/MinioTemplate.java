@@ -2,7 +2,7 @@ package top.ticho.boot.minio.component;
 
 import top.ticho.boot.minio.prop.MinioProperty;
 import top.ticho.boot.view.enums.BizErrCode;
-import top.ticho.boot.view.exception.SysException;
+import top.ticho.boot.view.exception.BizException;
 import io.minio.BucketExistsArgs;
 import io.minio.GetObjectArgs;
 import io.minio.GetObjectResponse;
@@ -71,7 +71,7 @@ public class MinioTemplate {
             return client.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
         } catch (Exception e) {
             log.error("查询文件存储桶是否存在异常，异常:{}", e.getMessage(), e);
-            throw new SysException(BizErrCode.FAIL, "查询文件存储桶是否存在异常");
+            throw new BizException(BizErrCode.FAIL, "查询文件存储桶是否存在异常");
         }
     }
 
@@ -88,7 +88,7 @@ public class MinioTemplate {
             client.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
         } catch (Exception e) {
             log.error("创建文件桶异常，{}", e.getMessage(), e);
-            throw new SysException(BizErrCode.FAIL, "创建文件桶异常");
+            throw new BizException(BizErrCode.FAIL, "创建文件桶异常");
         }
     }
 
@@ -102,7 +102,7 @@ public class MinioTemplate {
             client.removeBucket(RemoveBucketArgs.builder().bucket(bucketName).build());
         } catch (Exception e) {
             log.error("删除文件桶异常，{}", e.getMessage(), e);
-            throw new SysException(BizErrCode.FAIL, "删除文件桶异常");
+            throw new BizException(BizErrCode.FAIL, "删除文件桶异常");
         }
     }
 
@@ -123,7 +123,7 @@ public class MinioTemplate {
             return client.listBuckets();
         } catch (Exception e) {
             log.error("查询全部文件桶异常，{}", e.getMessage(), e);
-            throw new SysException(BizErrCode.FAIL, "查询全部文件桶异常");
+            throw new BizException(BizErrCode.FAIL, "查询全部文件桶异常");
         }
     }
 
@@ -146,7 +146,7 @@ public class MinioTemplate {
                 .build());
         } catch (Exception e) {
             log.error("上传文件异常，{}", e.getMessage(), e);
-            throw new SysException(BizErrCode.FAIL, "上传文件异常");
+            throw new BizException(BizErrCode.FAIL, "上传文件异常");
         }
     }
 
@@ -172,7 +172,7 @@ public class MinioTemplate {
             );
         } catch (Exception e) {
             log.error("上传文件异常，{}", e.getMessage(), e);
-            throw new SysException(BizErrCode.FAIL, "上传文件异常");
+            throw new BizException(BizErrCode.FAIL, "上传文件异常");
         }
     }
 
@@ -187,7 +187,7 @@ public class MinioTemplate {
             client.removeObject(RemoveObjectArgs.builder().bucket(bucketName).object(objectName).build());
         } catch (Exception e) {
             log.error("删除文件异常，{}", e.getMessage(), e);
-            throw new SysException(BizErrCode.FAIL, "删除文件异常");
+            throw new BizException(BizErrCode.FAIL, "删除文件异常");
         }
     }
 
@@ -206,10 +206,10 @@ public class MinioTemplate {
             if (e instanceof ErrorResponseException) {
                 ErrorResponseException ex = (ErrorResponseException) e;
                 if (ex.errorResponse().code().equals("NoSuchKey")) {
-                    throw new SysException(BizErrCode.FAIL, "文件下载异常");
+                    throw new BizException(BizErrCode.FAIL, "文件下载异常");
                 }
             }
-            throw new SysException(BizErrCode.FAIL, "文件下载异常");
+            throw new BizException(BizErrCode.FAIL, "文件下载异常");
         }
     }
 
@@ -235,10 +235,10 @@ public class MinioTemplate {
             if (e instanceof ErrorResponseException) {
                 ErrorResponseException ex = (ErrorResponseException) e;
                 if (ex.errorResponse().code().equals("NoSuchKey")) {
-                    throw new SysException(BizErrCode.FAIL);
+                    throw new BizException(BizErrCode.FAIL);
                 }
             }
-            throw new SysException(BizErrCode.FAIL, "文件下载异常");
+            throw new BizException(BizErrCode.FAIL, "文件下载异常");
         }
     }
 
@@ -263,7 +263,7 @@ public class MinioTemplate {
                 }
             }
             log.error("查询文件信息异常，{}", e.getMessage(), e);
-            throw new SysException(BizErrCode.FAIL, "查询文件信息异常");
+            throw new BizException(BizErrCode.FAIL, "查询文件信息异常");
         }
     }
 
@@ -289,7 +289,7 @@ public class MinioTemplate {
             }
         } catch (Exception e) {
             log.error("根据文件前缀查询文件信息异常，{}", e.getMessage(), e);
-            throw new SysException(BizErrCode.FAIL, "查询文件信息异常");
+            throw new BizException(BizErrCode.FAIL, "查询文件信息异常");
         }
         return objectList;
     }
@@ -318,7 +318,7 @@ public class MinioTemplate {
             return client.getPresignedObjectUrl(urlArgs);
         } catch (Exception e) {
             log.error("获取文件外链异常，{}", e.getMessage(), e);
-            throw new SysException(BizErrCode.FAIL, "获取文件外链异常");
+            throw new BizException(BizErrCode.FAIL, "获取文件外链异常");
         }
     }
 
@@ -346,7 +346,7 @@ public class MinioTemplate {
             return client.getPresignedObjectUrl(urlArgs);
         } catch (Exception e) {
             log.error("获取文件外链异常，{}", e.getMessage(), e);
-            throw new SysException(BizErrCode.FAIL, "获取文件外链异常");
+            throw new BizException(BizErrCode.FAIL, "获取文件外链异常");
         }
     }
 }
