@@ -20,6 +20,7 @@ import io.minio.UploadObjectArgs;
 import io.minio.errors.ErrorResponseException;
 import io.minio.http.Method;
 import io.minio.messages.Bucket;
+import io.minio.messages.DeleteError;
 import io.minio.messages.DeleteObject;
 import io.minio.messages.Item;
 import lombok.Data;
@@ -239,7 +240,20 @@ public class MinioTemplate {
             .bucket(bucketName)
             .objects(deleteObjects)
             .build();
-        client.removeObjects(objectsArgs);
+        boolean isError = false;
+        Iterable<Result<DeleteError>> results = client.removeObjects(objectsArgs);
+        for (Result<DeleteError> result : results) {
+            try {
+                DeleteError error = result.get();
+                log.info("Error in deleting object " + error.objectName() + "; " + error.message());
+            } catch (Exception e) {
+                log.error("批量删除对象异常，{}", e.getMessage(), e);
+                isError = true;
+            }
+       }
+        if (isError) {
+            throw new BizException(BizErrCode.FAIL, "批量删除对象异常");
+        }
     }
 
     /**
