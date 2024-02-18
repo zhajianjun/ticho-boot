@@ -15,7 +15,7 @@ import org.springframework.context.annotation.PropertySource;
  * @date 2022-09-13 15:54
  */
 @Configuration
-@ConditionalOnProperty(value = "ticho.minio", name = "endpoint")
+@ConditionalOnProperty(value = "ticho.minio.enable", havingValue = "true")
 @PropertySource("classpath:DefaultSevletMultiartConfig.properties")
 public class DefaultMinioConfig {
 

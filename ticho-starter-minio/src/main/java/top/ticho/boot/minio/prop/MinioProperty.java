@@ -12,6 +12,9 @@ import org.springframework.util.unit.DataSize;
 @Data
 public class MinioProperty {
 
+    /** 是否开启配置 */
+    private Boolean enable;
+
     /** minio的地址 */
     private String endpoint;
 

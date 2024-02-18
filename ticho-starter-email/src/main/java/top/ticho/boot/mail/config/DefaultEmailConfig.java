@@ -13,7 +13,7 @@ import top.ticho.boot.mail.prop.MailProperty;
  * @date 2024-02-06 10:12
  */
 @Configuration
-@ConditionalOnProperty(prefix = "ticho.mail", name = "host")
+@ConditionalOnProperty(value = "ticho.mail.enable", havingValue = "true")
 public class DefaultEmailConfig {
 
     @Bean

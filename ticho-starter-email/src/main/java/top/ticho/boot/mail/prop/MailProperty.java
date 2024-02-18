@@ -17,8 +17,10 @@ import java.util.Map;
 @Data
 @ConfigurationProperties(prefix = "ticho.mail")
 public class MailProperty {
-
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
+
+    /** 是否开启配置 */
+    private Boolean enable;
 
     /** 地址 */
     private String host;
