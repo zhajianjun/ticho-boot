@@ -33,4 +33,7 @@ public class MinioProperty {
     /** 默认桶 */
     private String defaultBucket = "default";
 
+    /** 分片桶 */
+    private String chunkBucket = "chunk";
+
 }
