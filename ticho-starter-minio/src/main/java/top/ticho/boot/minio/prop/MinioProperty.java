@@ -30,6 +30,9 @@ public class MinioProperty {
     /** 文件大小限制，默认20MB */
     private DataSize maxFileSize = DataSize.ofMegabytes(20L);
 
+    /** 分段上传大小，最小5MB,最大5GB */
+    private Long partSize = 5 * 1024 * 1024L;
+
     /** 默认桶 */
     private String defaultBucket = "default";
 

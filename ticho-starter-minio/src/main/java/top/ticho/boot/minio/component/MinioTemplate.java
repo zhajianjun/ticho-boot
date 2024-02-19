@@ -3,6 +3,8 @@ package top.ticho.boot.minio.component;
 import io.minio.BucketExistsArgs;
 import io.minio.ComposeObjectArgs;
 import io.minio.ComposeSource;
+import io.minio.CopyObjectArgs;
+import io.minio.CopySource;
 import io.minio.GetObjectArgs;
 import io.minio.GetObjectResponse;
 import io.minio.GetPresignedObjectUrlArgs;
@@ -24,6 +26,7 @@ import io.minio.messages.DeleteError;
 import io.minio.messages.DeleteObject;
 import io.minio.messages.Item;
 import lombok.Data;
+import lombok.Getter;
 import okhttp3.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,11 +61,12 @@ public class MinioTemplate {
 
     private MinioProperty minioProperty;
 
-    private MinioClient client;
+    @Getter
+    private MinioClient minioClient;
 
     public MinioTemplate(MinioProperty minioProperty){
         this.minioProperty = minioProperty;
-        this.client = MinioClient
+        this.minioClient = MinioClient
             .builder()
             .credentials(minioProperty.getAccessKey(), minioProperty.getSecretKey())
             .endpoint(minioProperty.getEndpoint())
@@ -77,7 +81,7 @@ public class MinioTemplate {
      */
     public boolean bucketExists(String bucketName) {
         try {
-            return client.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
+            return minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
         } catch (Exception e) {
             log.error("查询文件存储桶是否存在异常，异常:{}", e.getMessage(), e);
             throw new BizException(BizErrCode.FAIL, "查询文件存储桶是否存在异常");
@@ -94,7 +98,7 @@ public class MinioTemplate {
             if(this.bucketExists(bucketName)){
                 return;
             }
-            client.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+            minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
         } catch (Exception e) {
             log.error("创建文件桶异常，{}", e.getMessage(), e);
             throw new BizException(BizErrCode.FAIL, "创建文件桶异常");
@@ -108,7 +112,7 @@ public class MinioTemplate {
      */
     public void removeBucket(String bucketName) {
         try {
-            client.removeBucket(RemoveBucketArgs.builder().bucket(bucketName).build());
+            minioClient.removeBucket(RemoveBucketArgs.builder().bucket(bucketName).build());
         } catch (Exception e) {
             log.error("删除文件桶异常，{}", e.getMessage(), e);
             throw new BizException(BizErrCode.FAIL, "删除文件桶异常");
@@ -129,7 +133,7 @@ public class MinioTemplate {
      */
     public List<Bucket> listBuckets() {
         try {
-            return client.listBuckets();
+            return minioClient.listBuckets();
         } catch (Exception e) {
             log.error("查询全部文件桶异常，{}", e.getMessage(), e);
             throw new BizException(BizErrCode.FAIL, "查询全部文件桶异常");
@@ -146,12 +150,12 @@ public class MinioTemplate {
      */
     public void putObject(String bucketName, String objectName, String contentType, Map<String, String> userMetadata, InputStream stream) {
         try {
-            client.putObject(PutObjectArgs.builder()
+            minioClient.putObject(PutObjectArgs.builder()
                 .bucket(bucketName)
                 .object(objectName)
                 .userMetadata(userMetadata)
                 // 分段上传中允许的最小分段大小为5MiB。
-                .stream(stream, stream.available(), 5242880L)
+                .stream(stream, stream.available(), minioProperty.getPartSize())
                 .contentType(contentType)
                 .build());
         } catch (Exception e) {
@@ -171,13 +175,13 @@ public class MinioTemplate {
     public void putObject(String bucketName, String objectName, Map<String, String> userMetadata, MultipartFile multipartFile) {
         try {
             InputStream stream = multipartFile.getInputStream();
-            client.putObject(
+            minioClient.putObject(
                 PutObjectArgs.builder()
                 .bucket(bucketName)
                 .object(objectName)
                 .userMetadata(userMetadata)
                 // 分段上传中允许的最小分段大小为5MiB。
-                .stream(stream, stream.available(), 5242880L)
+                .stream(stream, stream.available(), minioProperty.getPartSize())
                 .contentType(multipartFile.getContentType()).build()
             );
         } catch (Exception e) {
@@ -196,7 +200,7 @@ public class MinioTemplate {
      */
     public void uploadObject(String bucketName, String filename, String objectName, String contentType, Map<String, String> userMetadata) {
         try {
-            client.uploadObject(UploadObjectArgs.builder()
+            minioClient.uploadObject(UploadObjectArgs.builder()
                 .bucket(bucketName)
                 .object(objectName)
                 .filename(filename)
@@ -217,7 +221,7 @@ public class MinioTemplate {
      */
     public void removeObject(String bucketName, String objectName) {
         try {
-            client.removeObject(RemoveObjectArgs.builder().bucket(bucketName).object(objectName).build());
+            minioClient.removeObject(RemoveObjectArgs.builder().bucket(bucketName).object(objectName).build());
         } catch (Exception e) {
             log.error("删除文件异常，{}", e.getMessage(), e);
             throw new BizException(BizErrCode.FAIL, "删除文件异常");
@@ -241,7 +245,7 @@ public class MinioTemplate {
             .objects(deleteObjects)
             .build();
         boolean isError = false;
-        Iterable<Result<DeleteError>> results = client.removeObjects(objectsArgs);
+        Iterable<Result<DeleteError>> results = minioClient.removeObjects(objectsArgs);
         for (Result<DeleteError> result : results) {
             try {
                 DeleteError error = result.get();
@@ -253,31 +257,6 @@ public class MinioTemplate {
        }
         if (isError) {
             throw new BizException(BizErrCode.FAIL, "批量删除对象异常");
-        }
-    }
-
-    /**
-     * 获取对象文件名称列表
-     *
-     * @param bucketName 存储桶名称
-     * @param prefix 对象名称前缀
-     * @param sort 是否排序(升序)
-     * @return objectNames
-     */
-    public List<String> listObjectNames(String bucketName, String prefix, Boolean sort) {
-        List<Result<Item>> chunks = listObjects(bucketName, prefix, true);
-        try {
-            List<String> chunkPaths = new ArrayList<>();
-            for (Result<Item> item : chunks){
-                chunkPaths.add(item.get().objectName());
-            }
-            if (sort) {
-                Collections.sort(chunkPaths);
-            }
-            return chunkPaths;
-        } catch (Exception e) {
-            log.error("获取对象文件名称列表异常，{}", e.getMessage(), e);
-            throw new BizException(BizErrCode.FAIL, "获取对象文件名称列表异常");
         }
     }
 
@@ -308,6 +287,7 @@ public class MinioTemplate {
 
     /**
      * 合并文件
+     * 分块文件必须大于5mb
      *
      * @param chunkBucKetName   分片文件所在存储桶名称
      * @param composeBucketName 合并后的对象文件存储的存储桶名称
@@ -320,6 +300,7 @@ public class MinioTemplate {
         List<String> chunkNames,
         String objectName,
         String contentType,
+        Map<String, String> userMetadata,
         boolean isDeleteChunkObject
     ){
         try {
@@ -338,8 +319,9 @@ public class MinioTemplate {
                 .object(objectName)
                 .sources(sourceObjectList)
                 .headers(headers)
+                .userMetadata(userMetadata)
                 .build();
-            client.composeObject(composeObjectArgs);
+            minioClient.composeObject(composeObjectArgs);
             if(isDeleteChunkObject){
                 removeObjects(chunkBucKetName, chunkNames);
             }
@@ -358,7 +340,7 @@ public class MinioTemplate {
      */
     public GetObjectResponse getObject(String bucketName, String objectName) {
         try {
-            return client.getObject(GetObjectArgs.builder().bucket(bucketName).object(objectName).build());
+            return minioClient.getObject(GetObjectArgs.builder().bucket(bucketName).object(objectName).build());
         } catch (Exception e) {
             log.error("文件下载异常，{}", e.getMessage(), e);
             if (e instanceof ErrorResponseException) {
@@ -382,12 +364,12 @@ public class MinioTemplate {
      */
     public GetObjectResponse getObject(String bucketName, String objectName, Long offset, Long length) {
         try {
-            return client.getObject(GetObjectArgs.builder()
-                    .bucket(bucketName)
-                    .object(objectName)
-                    .offset(offset)
-                    .length(length)
-                    .build());
+            return minioClient.getObject(GetObjectArgs.builder()
+                .bucket(bucketName)
+                .object(objectName)
+                .offset(offset)
+                .length(length)
+                .build());
         } catch (Exception e) {
             log.error("文件下载异常，{}", e.getMessage(), e);
             if (e instanceof ErrorResponseException) {
@@ -409,7 +391,7 @@ public class MinioTemplate {
      */
     public StatObjectResponse getObjectInfo(String bucketName, String objectName) {
         try {
-            return client.statObject(StatObjectArgs.builder().bucket(bucketName).object(objectName).build());
+            return minioClient.statObject(StatObjectArgs.builder().bucket(bucketName).object(objectName).build());
         } catch (Exception e) {
             if (e instanceof ErrorResponseException) {
                 ErrorResponseException e1 = (ErrorResponseException) e;
@@ -437,7 +419,7 @@ public class MinioTemplate {
     public List<Result<Item>> listObjects(String bucketName, String prefix, boolean recursive) {
         List<Result<Item>> objectList = new ArrayList<>();
         try {
-            Iterable<Result<Item>> objectsIterator = client.listObjects(ListObjectsArgs.builder()
+            Iterable<Result<Item>> objectsIterator = minioClient.listObjects(ListObjectsArgs.builder()
                 .bucket(bucketName)
                 .prefix(prefix)
                 .recursive(recursive)
@@ -450,6 +432,31 @@ public class MinioTemplate {
             throw new BizException(BizErrCode.FAIL, "查询文件信息异常");
         }
         return objectList;
+    }
+
+    /**
+     * 获取对象文件名称列表
+     *
+     * @param bucketName 存储桶名称
+     * @param prefix 对象名称前缀
+     * @param sort 是否排序(升序)
+     * @return objectNames
+     */
+    public List<String> listObjectNames(String bucketName, String prefix, Boolean sort) {
+        List<Result<Item>> chunks = listObjects(bucketName, prefix, true);
+        try {
+            List<String> chunkPaths = new ArrayList<>();
+            for (Result<Item> item : chunks){
+                chunkPaths.add(item.get().objectName());
+            }
+            if (sort) {
+                Collections.sort(chunkPaths);
+            }
+            return chunkPaths;
+        } catch (Exception e) {
+            log.error("获取对象文件名称列表异常，{}", e.getMessage(), e);
+            throw new BizException(BizErrCode.FAIL, "获取对象文件名称列表异常");
+        }
     }
 
     /**
@@ -473,7 +480,7 @@ public class MinioTemplate {
                  .object(objectName)
                  .expiry(expiry, timeUnit)
                  .build();
-            return client.getPresignedObjectUrl(urlArgs);
+            return minioClient.getPresignedObjectUrl(urlArgs);
         } catch (Exception e) {
             log.error("获取文件外链异常，{}", e.getMessage(), e);
             throw new BizException(BizErrCode.FAIL, "获取文件外链异常");
@@ -491,7 +498,7 @@ public class MinioTemplate {
      */
     public String getObjectUrl(String bucketName, String objectName, Integer expires, TimeUnit timeUnit) {
         try {
-            if(Objects.isNull(expires)){
+            if (Objects.isNull(expires)) {
                 expires = 24;
                 timeUnit = TimeUnit.HOURS;
             }
@@ -501,10 +508,39 @@ public class MinioTemplate {
                  .object(objectName)
                  .expiry(expires, timeUnit)
                  .build();
-            return client.getPresignedObjectUrl(urlArgs);
+            return minioClient.getPresignedObjectUrl(urlArgs);
         } catch (Exception e) {
             log.error("获取文件外链异常，{}", e.getMessage(), e);
             throw new BizException(BizErrCode.FAIL, "获取文件外链异常");
         }
     }
+
+
+    /**
+     * 拷贝文件
+     *
+     * @param sourceBucket 源桶名称
+     * @param sourceObject 源文件
+     * @param targetBucket 目标桶名称
+     * @param targetObject 目标文件
+     */
+    public void copyObject(String sourceBucket, String sourceObject, String targetBucket, String targetObject) {
+        try {
+            CopyObjectArgs copyObjectArgs = CopyObjectArgs.builder()
+                .bucket(targetBucket)
+                .object(targetObject)
+                .source(
+                    CopySource.builder()
+                        .bucket(sourceBucket)
+                        .object(sourceObject)
+                        .build()
+                )
+                .build();
+            minioClient.copyObject(copyObjectArgs);
+        } catch (Exception e) {
+            log.error("拷贝文件异常，{}", e.getMessage(), e);
+            throw new BizException(BizErrCode.FAIL, "拷贝文件异常");
+        }
+    }
+
 }

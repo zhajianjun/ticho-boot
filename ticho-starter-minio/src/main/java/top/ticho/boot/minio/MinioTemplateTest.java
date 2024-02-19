@@ -14,7 +14,8 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Minio文件下载,https://docs.minio.io/cn/java-client-api-reference.html#removeObject
+ * Minio文件下载
+ * 文档{@see https://docs.minio.io/cn/java-client-api-reference.html}
  *
  * @author zhajianjun
  * @date 2022-07-13 22:40:25
@@ -29,6 +30,8 @@ public class MinioTemplateTest {
         this.minioTemplate = minioTemplate;
     }
 
+    // @formatter:off
+
     /**
      * 大文件分割
      *
@@ -42,7 +45,7 @@ public class MinioTemplateTest {
         }
         if (!localChunkFolder.exists()) {
             boolean mkdirs = localChunkFolder.mkdirs();
-            log.info("分块文件夹｛｝不存在，创建文件夹结果｛｝", localChunkFolder.getAbsolutePath(), mkdirs);
+            log.info("分块文件夹{}不存在，创建文件夹结果{}", localChunkFolder.getAbsolutePath(), mkdirs);
         }
         // 分块大小 1MB
         long chunkSize = 1024 * 1024 * 5;
@@ -59,7 +62,7 @@ public class MinioTemplateTest {
             File chunkFile = new File(localChunkFolder.getAbsolutePath() + File.separator + i);
             if (chunkFile.exists()) {
                 boolean delete = chunkFile.delete();
-                log.info("索引为{}分块文件｛｝已存在，删除块文件结果｛｝", localChunkFolder.getAbsolutePath(), delete);
+                log.info("索引为{}分块文件｛｝已存在，删除块文件结果{}", localChunkFolder.getAbsolutePath(), delete);
             }
             boolean newFile = chunkFile.createNewFile();
             if (newFile) {
@@ -73,7 +76,7 @@ public class MinioTemplateTest {
                     }
                 }
                 raf_write.close();
-                log.info("索引为{}分块文件｛｝已完成", i, localChunkFolder.getAbsolutePath());
+                log.info("索引为{}分块文件{}已完成", i, localChunkFolder.getAbsolutePath());
             }
         }
         raf_read.close();
@@ -103,6 +106,7 @@ public class MinioTemplateTest {
             partFile.close();
         }
         mergedFile.close();
+        log.info("【{}】本地文件合并成功", filePath);
     }
 
     /**
@@ -118,9 +122,9 @@ public class MinioTemplateTest {
             return;
         }
         // 将分块文件上传至minio
-        for (int i = 0; i < files.length; i++) {
-            String objectName = prefix + "/" + i;
-            minioTemplate.uploadObject(bucket, files[i].getAbsolutePath(), objectName, "application/octet-stream", null);
+        for (File file : files) {
+            String objectName = prefix + "/" + file.getName();
+            minioTemplate.uploadObject(bucket, file.getAbsolutePath(), objectName, "application/octet-stream", null);
             log.info("上传分块成功{}", objectName);
         }
     }
@@ -136,22 +140,21 @@ public class MinioTemplateTest {
      * @param isDeleteChunkObject 是否删除分片
      */
     public void composeMinioObject(
-            String chunkBucKetName,
-            String composeBucketName,
-            String prefix,
-            String objectName,
-            String contentType,
-            boolean isDeleteChunkObject
+        String chunkBucKetName,
+        String composeBucketName,
+        String prefix,
+        String objectName,
+        String contentType,
+        boolean isDeleteChunkObject
     ) {
-
         List<String> strings = minioTemplate.listObjectNames(chunkBucKetName, prefix, false);
-        minioTemplate.composeObject(chunkBucKetName, composeBucketName, strings, objectName, contentType, isDeleteChunkObject);
-        log.info("【｛｝】文件合并成功", objectName);
+        minioTemplate.composeObject(chunkBucKetName, composeBucketName, strings, objectName, contentType, null, isDeleteChunkObject);
+        log.info("【{}】minio文件合并成功", objectName);
     }
 
 
     public static void main(String[] args) throws IOException {
-        String localFilePath = "E:\\test\\20240218_193644.mp4";
+        String localFilePath = "/Users/zhajianjun/developing/1/055596953ae67a1e4eba6bd91a5e1e5e.zip";
         // 20240218_193644.mp4
         String fileName = FileNameUtil.getName(localFilePath);
         // 20240218_193644
