@@ -109,7 +109,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         ApiOperation annotation = handlerMethod.getMethodAnnotation(ApiOperation.class);
         String name = Optional.ofNullable(annotation).map(ApiOperation::value).orElse(null);
-        String position = handlerMethod.getMethod().getDeclaringClass().getName() + "." + handlerMethod.getMethod().getName();
+        String position = handlerMethod.getMethod().getDeclaringClass().getName() + "." + handlerMethod.getMethod().getName() + "()";
         HttpLog httpLog = HttpLog.builder()
             .type(type)
             .name(name)
