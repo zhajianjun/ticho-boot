@@ -40,6 +40,9 @@ public class HttpLog {
     /** 全路径接口 */
     private String fullUrl;
 
+    /** 请求名称 */
+    private String name;
+
     /** 请求参数 */
     private String reqParams;
 
@@ -66,6 +69,9 @@ public class HttpLog {
 
     /* 请求间隔 */
     private Long consume;
+
+    /** 代码位置 */
+    private String position;
 
     /* 用户信息 */
     private String username;

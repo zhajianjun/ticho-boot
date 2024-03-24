@@ -7,6 +7,7 @@ import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
+import io.swagger.annotations.ApiOperation;
 import top.ticho.boot.json.util.JsonUtil;
 import top.ticho.boot.log.event.WebLogEvent;
 import top.ticho.boot.log.wrapper.RequestWrapper;
@@ -36,6 +37,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -104,8 +106,14 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         UserAgent userAgent =  UserAgentUtil.parse(userAgentHeader);
         Principal principal = request.getUserPrincipal();
         String port = environment.getProperty("server.port");
+        HandlerMethod handlerMethod = (HandlerMethod) handler;
+        ApiOperation annotation = handlerMethod.getMethodAnnotation(ApiOperation.class);
+        String name = Optional.ofNullable(annotation).map(ApiOperation::value).orElse(null);
+        String position = handlerMethod.getMethod().getDeclaringClass().getSimpleName() + "." + handlerMethod.getMethod().getName();
         HttpLog httpLog = HttpLog.builder()
             .type(type)
+            .type(name)
+            .position(position)
             .ip(IpUtil.getIp(request))
             .url(url)
             .port(port)
