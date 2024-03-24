@@ -112,7 +112,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         String position = handlerMethod.getMethod().getDeclaringClass().getName() + "." + handlerMethod.getMethod().getName();
         HttpLog httpLog = HttpLog.builder()
             .type(type)
-            .type(name)
+            .name(name)
             .position(position)
             .ip(IpUtil.getIp(request))
             .url(url)
