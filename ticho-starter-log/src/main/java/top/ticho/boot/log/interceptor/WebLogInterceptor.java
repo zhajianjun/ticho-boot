@@ -153,6 +153,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         httpLog.setEnd(end);
         int status = response.getStatus();
         Long consume = httpLog.getConsume();
+        httpLog.setStatus(status);
         boolean print = Boolean.TRUE.equals(baseLogProperty.getPrint());
         Boolean anyMatch = antPathMatchLocal.get();
         if (print && !anyMatch) {
