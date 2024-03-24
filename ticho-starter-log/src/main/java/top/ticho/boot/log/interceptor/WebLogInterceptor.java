@@ -148,6 +148,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         String resHeaders = toJson(resHeaderMap);
         httpLog.setResBody(resBody);
         httpLog.setResHeaders(resHeaders);
+        httpLog.setErrMessage(ex== null ? null : ex.getMessage());
         long end = SystemClock.now();
         httpLog.setEnd(end);
         int status = response.getStatus();

@@ -73,6 +73,9 @@ public class HttpLog {
     /** 代码位置 */
     private String position;
 
+    /** 错误信息 */
+    private String errMessage;
+
     /* 用户信息 */
     private String username;
 
