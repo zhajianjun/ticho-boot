@@ -307,7 +307,7 @@ public class JsonUtil {
      * @param obj Object
      * @return {@link JsonNode}
      */
-    public JsonNode toJsonNode(Object obj) {
+    public static JsonNode toJsonNode(Object obj) {
         try {
             return MAPPER.valueToTree(obj);
         } catch (Exception e) {
@@ -322,7 +322,7 @@ public class JsonUtil {
      * @param jsonStr json字符串
      * @return boolean
      */
-    public boolean isJson(String jsonStr) {
+    public static boolean isJson(String jsonStr) {
         if (isEmpty(jsonStr)) {
             return false;
         }
