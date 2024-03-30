@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -14,9 +15,9 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import top.ticho.boot.json.constant.DateFormatConst;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.ticho.boot.json.constant.DateFormatConst;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -298,6 +299,34 @@ public class JsonUtil {
             log.error("toMap exception {}", obj, e);
             return new LinkedHashMap<>();
         }
+    }
+
+    /**
+     * 转换成JsonNode
+     *
+     * @param obj Object
+     * @return {@link JsonNode}
+     */
+    public JsonNode toJsonNode(Object obj) {
+        try {
+            return MAPPER.valueToTree(obj);
+        } catch (Exception e) {
+            log.error("toJsonNode exception {}", obj, e);
+            return null;
+        }
+    }
+
+    /**
+     * 判断字符串是否为json格式
+     *
+     * @param jsonStr json字符串
+     * @return boolean
+     */
+    public boolean isJson(String jsonStr) {
+        if (isEmpty(jsonStr)) {
+            return false;
+        }
+        return Objects.nonNull(toJsonNode(jsonStr));
     }
 
     /**
