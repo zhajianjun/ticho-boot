@@ -114,7 +114,7 @@ public abstract class AbstractAuthTokenFilter<T extends BaseSecurityUser> extend
         } catch (Exception e) {
             String message = e.getMessage();
             HttpErrCode tokenInvalid = HttpErrCode.TOKEN_INVALID;
-            log.warn("{} {} {} catch error\t{}", request.getMethod(), request.getRequestURI(), tokenInvalid.getCode(), message);
+            log.warn("{} {} {} catch error\t{}", request.getMethod(), request.getRequestURI(), tokenInvalid.getCode(), message, e);
             if (e instanceof BizException) {
                 message = ((BizException) e).getMsg();
             }
