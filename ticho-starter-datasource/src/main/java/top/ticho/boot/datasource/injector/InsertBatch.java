@@ -27,6 +27,7 @@ import java.util.function.Predicate;
  * @author zhajianjun
  * @date 2022-10-17 11:24
  */
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Slf4j
@@ -35,7 +36,6 @@ public class InsertBatch extends AbstractMethod {
     /**
      * 字段筛选条件
      */
-    @Setter
     @Accessors(chain = true)
     private Predicate<TableFieldInfo> predicate;
 
