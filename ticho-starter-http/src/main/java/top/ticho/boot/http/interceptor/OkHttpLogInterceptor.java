@@ -4,6 +4,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import org.slf4j.MDC;
 import top.ticho.boot.http.event.HttpLogEvent;
 import top.ticho.boot.http.prop.BaseHttpProperty;
 import top.ticho.boot.json.util.JsonUtil;
@@ -100,6 +101,7 @@ public class OkHttpLogInterceptor implements Interceptor {
             .consume(millis)
             .status(status)
             .username(getUsername())
+            .mdcMap(MDC.getCopyOfContextMap())
             .build();
         ApplicationContext applicationContext = SpringUtil.getApplicationContext();
         applicationContext.publishEvent(new HttpLogEvent(applicationContext, httpLog));

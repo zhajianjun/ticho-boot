@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Map;
 import java.util.Objects;
 
 
@@ -81,6 +82,9 @@ public class HttpLog {
 
     /* User-Agent信息对象 */
     private UserAgent userAgent;
+
+    /** MDC信息 */
+    private Map<String, String> mdcMap;
 
     public Long getConsume() {
         if (start == null || end == null) {

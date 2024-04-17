@@ -4,6 +4,7 @@ import cn.hutool.core.date.SystemClock;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
+import org.slf4j.MDC;
 import top.ticho.boot.json.util.JsonUtil;
 import top.ticho.boot.view.log.BaseLogProperty;
 import top.ticho.boot.view.log.HttpLog;
@@ -82,6 +83,7 @@ public class ApiGlobalFilter implements GlobalFilter, Ordered {
         httpLogInfo.setType(type);
         httpLogInfo.setReqParams(params);
         httpLogInfo.setUserAgent(userAgent);
+        httpLogInfo.setMdcMap(MDC.getCopyOfContextMap());
         boolean print = Boolean.TRUE.equals(baseLogProperty.getPrint());
         if (print) {
             String reqBody = httpLogInfo.getReqBody();

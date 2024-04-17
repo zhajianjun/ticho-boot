@@ -8,6 +8,7 @@ import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.MDC;
 import top.ticho.boot.json.util.JsonUtil;
 import top.ticho.boot.log.event.WebLogEvent;
 import top.ticho.boot.log.wrapper.RequestWrapper;
@@ -123,6 +124,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
             .start(millis)
             .username((principal != null ? principal.getName() : null))
             .userAgent(userAgent)
+            .mdcMap(MDC.getCopyOfContextMap())
             .build();
         logTheadLocal.set(httpLog);
         boolean print = Boolean.TRUE.equals(baseLogProperty.getPrint());
