@@ -5,7 +5,7 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   top.ticho.boot.web.util.SpringContext,\
   top.ticho.boot.web.config.BaseJacksonCustomizerConfig,\
   top.ticho.boot.web.controller.HealthController,\
-  top.ticho.boot.web.handle.BaseBaseResponseHandle,\
+  top.ticho.boot.web.handle.BaseResponseHandle,\
   top.ticho.boot.web.converter.DateConverter,\
   top.ticho.boot.web.converter.LocalDateConverter,\
   top.ticho.boot.web.converter.LocalDateTimeConverter,\

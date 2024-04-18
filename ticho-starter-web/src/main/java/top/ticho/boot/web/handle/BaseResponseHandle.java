@@ -49,7 +49,7 @@ import java.util.Map;
 @Slf4j
 @RestControllerAdvice
 @Order(Ordered.LOWEST_PRECEDENCE - 10)
-public class BaseBaseResponseHandle implements ResponseBodyAdvice<Object> {
+public class BaseResponseHandle implements ResponseBodyAdvice<Object> {
     public static Map<Class<? extends Throwable>, HttpErrCode> errCodeMap = null;
 
 
@@ -73,7 +73,7 @@ public class BaseBaseResponseHandle implements ResponseBodyAdvice<Object> {
         errCodeMap.put(HttpMediaTypeNotAcceptableException.class, HttpErrCode.NOT_ACCEPTABLE);
 
         errCodeMap.put(AsyncRequestTimeoutException.class, HttpErrCode.SERVICE_UNAVAILABLE);
-        BaseBaseResponseHandle.errCodeMap = Collections.unmodifiableMap(errCodeMap);
+        BaseResponseHandle.errCodeMap = Collections.unmodifiableMap(errCodeMap);
     }
 
     /**

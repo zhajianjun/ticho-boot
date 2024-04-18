@@ -1,7 +1,7 @@
 package top.ticho.boot.web.config;
 
 import top.ticho.boot.web.factory.YamlPropertySourceFactory;
-import top.ticho.boot.web.handle.BaseBaseResponseHandle;
+import top.ticho.boot.web.handle.BaseResponseHandle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -35,7 +35,7 @@ public class BaseMvcConfig implements WebMvcConfigurer {
     /**
      * 主要处理  ResponseHandle#beforeBodyWrite中返回String,使用 StringHttpMessageConverter，但是最终返回的是Result对象，导致
      * StringHttpMessageConverter转换异常，所以去除StringHttpMessageConverter，并添加MappingJackson2HttpMessageConverter作为默认的转换器
-     * @see BaseBaseResponseHandle#beforeBodyWrite(Object, org.springframework.core.MethodParameter, org.springframework.http.MediaType, Class, org.springframework.http.server.ServerHttpRequest, org.springframework.http.server.ServerHttpResponse)(Object, org.springframework.core.MethodParameter, org.springframework.http.MediaType, Class, org.springframework.http.server.ServerHttpRequest, org.springframework.http.server.ServerHttpResponse)
+     * @see BaseResponseHandle#beforeBodyWrite(Object, org.springframework.core.MethodParameter, org.springframework.http.MediaType, Class, org.springframework.http.server.ServerHttpRequest, org.springframework.http.server.ServerHttpResponse)(Object, org.springframework.core.MethodParameter, org.springframework.http.MediaType, Class, org.springframework.http.server.ServerHttpRequest, org.springframework.http.server.ServerHttpResponse)
      */
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
