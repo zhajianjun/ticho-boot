@@ -153,7 +153,9 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         Long consume = httpLog.getConsume();
         httpLog.setResBody(resBody);
         httpLog.setResHeaders(resHeaders);
-        httpLog.setErrMessage(ex== null ? null : ex.getMessage());
+        if (ex != null) {
+            httpLog.setErrMessage(ex.getMessage());
+        }
         httpLog.setEnd(end);
         httpLog.setStatus(status);
         boolean print = Boolean.TRUE.equals(baseLogProperty.getPrint());
