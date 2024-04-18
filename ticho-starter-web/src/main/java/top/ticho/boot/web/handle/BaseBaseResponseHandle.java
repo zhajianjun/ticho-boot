@@ -2,7 +2,6 @@ package top.ticho.boot.web.handle;
 
 import top.ticho.boot.view.enums.HttpErrCode;
 import top.ticho.boot.view.core.Result;
-import top.ticho.boot.view.enums.IErrCode;
 import top.ticho.boot.view.exception.BizException;
 import top.ticho.boot.view.exception.SysException;
 import top.ticho.boot.web.annotation.View;
@@ -51,11 +50,11 @@ import java.util.Map;
 @RestControllerAdvice
 @Order(Ordered.LOWEST_PRECEDENCE - 10)
 public class BaseBaseResponseHandle implements ResponseBodyAdvice<Object> {
-    private static Map<Class<? extends Throwable>, IErrCode> errCodeMap = null;
+    public static Map<Class<? extends Throwable>, HttpErrCode> errCodeMap = null;
 
 
     static {
-        Map<Class<? extends Throwable>, IErrCode> errCodeMap = new HashMap<>();
+        Map<Class<? extends Throwable>, HttpErrCode> errCodeMap = new HashMap<>();
         errCodeMap.put(BindException.class, HttpErrCode.BAD_REQUEST);
         errCodeMap.put(TypeMismatchException.class, HttpErrCode.BAD_REQUEST);
         errCodeMap.put(NoHandlerFoundException.class, HttpErrCode.BAD_REQUEST);
@@ -89,11 +88,10 @@ public class BaseBaseResponseHandle implements ResponseBodyAdvice<Object> {
             log.warn("catch error\t{}", ex.getMessage());
             return Result.of(bizException.getCode(), bizException.getMsg());
         }
-
-        IErrCode iErrCode = errCodeMap.get(ex.getClass());
+        HttpErrCode httpErrCode = errCodeMap.get(ex.getClass());
         Result<String> result;
-        if (iErrCode != null) {
-            result = Result.of(iErrCode);
+        if (httpErrCode != null) {
+            result = Result.of(httpErrCode);
             res.setStatus(result.getCode());
         } else if (ex instanceof SysException) {
             // 系统异常

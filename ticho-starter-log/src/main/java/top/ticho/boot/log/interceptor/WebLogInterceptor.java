@@ -148,13 +148,13 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         String resBody = nullOfDefault(getResBody(response));
         Map<String,String> resHeaderMap = getHeaders(response);
         String resHeaders = toJson(resHeaderMap);
+        long end = SystemClock.now();
+        int status = response.getStatus();
+        Long consume = httpLog.getConsume();
         httpLog.setResBody(resBody);
         httpLog.setResHeaders(resHeaders);
         httpLog.setErrMessage(ex== null ? null : ex.getMessage());
-        long end = SystemClock.now();
         httpLog.setEnd(end);
-        int status = response.getStatus();
-        Long consume = httpLog.getConsume();
         httpLog.setStatus(status);
         boolean print = Boolean.TRUE.equals(baseLogProperty.getPrint());
         Boolean anyMatch = antPathMatchLocal.get();
@@ -170,7 +170,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
     private String getResBody(HttpServletResponse response) {
         String contentType = response.getContentType();
         boolean flag = contentType != null && (contentType.startsWith(MediaType.APPLICATION_JSON_VALUE) ||
-                contentType.equals(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
+            contentType.equals(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
         if (!flag) {
             return null;
         }
