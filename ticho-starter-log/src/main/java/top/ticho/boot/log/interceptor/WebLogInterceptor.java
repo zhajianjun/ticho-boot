@@ -161,6 +161,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         }
         httpLog.setEnd(end);
         httpLog.setStatus(status);
+        httpLog.setMdcMap(MDC.getCopyOfContextMap());
         boolean print = Boolean.TRUE.equals(baseLogProperty.getPrint());
         Boolean anyMatch = antPathMatchLocal.get();
         if (print && !anyMatch) {
