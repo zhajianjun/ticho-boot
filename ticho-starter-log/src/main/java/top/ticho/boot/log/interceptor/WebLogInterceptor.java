@@ -75,14 +75,17 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
     // @formatter:off
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
-        Map<String, Object> paramsMap = null;
-        if (request instanceof StandardMultipartHttpServletRequest){
-            paramsMap = new HashMap<>();
+        Map<String, Object> reqParamsAllMap = null;
+        if (request instanceof StandardMultipartHttpServletRequest) {
+            reqParamsAllMap = new HashMap<>();
             StandardMultipartHttpServletRequest sr = (StandardMultipartHttpServletRequest) request;
             request = sr.getRequest();
-            MultiValueMap<String,MultipartFile> multiFileMap = sr.getMultiFileMap();
-            Map<String,Object> finalParamsMap = paramsMap;
-            multiFileMap.forEach((x, y)-> finalParamsMap.put(x, y.stream().map(MultipartFile::getOriginalFilename).collect(Collectors.joining(",", "文件：",""))));
+            MultiValueMap<String, MultipartFile> multiFileMap = sr.getMultiFileMap();
+            Map<String, Object> finalParamsMap = reqParamsAllMap;
+            multiFileMap.forEach((x, y) -> {
+                String collect = y.stream().map(MultipartFile::getOriginalFilename).collect(Collectors.joining(",", "文件: ", ""));
+                finalParamsMap.put(x, collect);
+            });
         }
         if (!(request instanceof RequestWrapper) || !(handler instanceof HandlerMethod)) {
             return true;
@@ -90,21 +93,21 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         long millis = SystemClock.now();
         String type = request.getMethod();
         String url = request.getRequestURI();
-        if (paramsMap == null) {
-            paramsMap = new HashMap<>();
+        if (reqParamsAllMap == null) {
+            reqParamsAllMap = new HashMap<>();
         }
         // params
-        Map<String, Object> paramsMapFromRequest = getParams(request);
-        paramsMap.putAll(paramsMapFromRequest);
-        String params = toJson(paramsMap);
-        // body
+        Map<String, String> reqParamsMap = getParams(request);
+        reqParamsAllMap.putAll(reqParamsMap);
+        String params = toJson(reqParamsAllMap);
+        // reqBody
         RequestWrapper requestWrapper = (RequestWrapper) request;
-        String body = requestWrapper.getBody();
+        String reqBody = requestWrapper.getBody();
         // header
         Map<String, String> headersMap = getHeaders(request);
         String reqHeaders = toJson(headersMap);
         String userAgentHeader = request.getHeader(USER_AGENT);
-        UserAgent userAgent =  UserAgentUtil.parse(userAgentHeader);
+        UserAgent userAgent = UserAgentUtil.parse(userAgentHeader);
         Principal principal = request.getUserPrincipal();
         String port = environment.getProperty("server.port");
         HandlerMethod handlerMethod = (HandlerMethod) handler;
@@ -119,7 +122,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
             .url(url)
             .port(port)
             .reqParams(params)
-            .reqBody(body)
+            .reqBody(reqBody)
             .reqHeaders(reqHeaders)
             .start(millis)
             .username((principal != null ? principal.getName() : null))
@@ -132,7 +135,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         boolean anyMatch = antPatterns.stream().anyMatch(x -> antPathMatcher.match(x, url));
         antPathMatchLocal.set(anyMatch);
         if (print && !anyMatch) {
-            log.info("[REQ] {} {} 请求开始, 请求参数={}, 请求体={}, 请求头={}", type, url, nullOfDefault(params), nullOfDefault(body), nullOfDefault(reqHeaders));
+            log.info("[REQ] {} {} 请求开始, 请求参数={}, 请求体={}, 请求头={}", type, url, nullOfDefault(params), nullOfDefault(reqBody), nullOfDefault(reqHeaders));
         }
         return true;
     }
@@ -145,7 +148,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         }
         String type = request.getMethod();
         String url = request.getRequestURI();
-        String resBody = nullOfDefault(getResBody(response));
+        String resBody = getResBody(response);
         Map<String,String> resHeaderMap = getHeaders(response);
         String resHeaders = toJson(resHeaderMap);
         long end = SystemClock.now();
@@ -180,8 +183,8 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         return responseWrapper.getBody();
     }
 
-    public Map<String, Object> getParams(HttpServletRequest request) {
-        Map<String, Object> map = new HashMap<>();
+    public Map<String, String> getParams(HttpServletRequest request) {
+        Map<String, String> map = new HashMap<>();
         Enumeration<String> parameteNames = request.getParameterNames();
         while (parameteNames.hasMoreElements()) {
             //获得每个文本域的name
