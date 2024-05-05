@@ -13,6 +13,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerExecutionChain;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -56,9 +57,15 @@ public class SpringContext implements ApplicationContextAware {
     }
 
 
-    public static HandlerMethod getHandlerMethod(HttpServletRequest request) throws Exception {
+    public static HandlerMethod getHandlerMethod(HttpServletRequest request) {
         RequestMappingHandlerMapping mapping = getBean(RequestMappingHandlerMapping.class);
-        HandlerExecutionChain executionChain = mapping.getHandler(request);
+        HandlerExecutionChain executionChain;
+        try {
+            executionChain = mapping.getHandler(request);
+        } catch (Exception e) {
+            log.warn("get handler method error, {}", e.getMessage());
+            return null;
+        }
         if (executionChain == null) {
             return null;
         }

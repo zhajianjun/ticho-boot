@@ -28,7 +28,7 @@ public class AntPatternsAuthHandle {
         this.baseSecurityProperty = baseSecurityProperty;
     }
 
-    public boolean ignoreAuth(HttpServletRequest request) throws Exception {
+    public boolean ignoreAuth(HttpServletRequest request) {
         // @formatter:off
         if (ignoreHandleMethodJwtCheck(request)) {
             return true;
@@ -43,9 +43,8 @@ public class AntPatternsAuthHandle {
      *
      * @param request request
      * @return boolean
-     * @throws Exception e
      */
-    private boolean ignoreHandleMethodJwtCheck(HttpServletRequest request) throws Exception {
+    private boolean ignoreHandleMethodJwtCheck(HttpServletRequest request) {
         HandlerMethod handlerMethod = SpringContext.getHandlerMethod(request);
         if (handlerMethod == null) {
             return false;
