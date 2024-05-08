@@ -16,7 +16,7 @@ public enum BizErrCode implements Serializable, IErrCode {
     /**
      *
      */
-    SUCCESS(0, "执行成功"),
+    SUCCESS(0, "操作成功"),
 
     FAIL(-1, "执行失败"),
 

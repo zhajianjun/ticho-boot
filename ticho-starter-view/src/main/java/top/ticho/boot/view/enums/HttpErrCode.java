@@ -16,7 +16,7 @@ public enum HttpErrCode implements Serializable, IErrCode {
     /**
      *
      */
-    SUCCESS(200, "执行成功"),
+    SUCCESS(200, "操作成功"),
 
     BAD_REQUEST(400, "错误的请求"),
 
