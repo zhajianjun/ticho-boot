@@ -83,7 +83,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
             MultiValueMap<String, MultipartFile> multiFileMap = sr.getMultiFileMap();
             Map<String, Object> finalParamsMap = reqParamsAllMap;
             multiFileMap.forEach((x, y) -> {
-                String collect = y.stream().map(MultipartFile::getOriginalFilename).collect(Collectors.joining(",", "文件: ", ""));
+                String collect = y.stream().map(MultipartFile::getOriginalFilename).collect(Collectors.joining(","));
                 finalParamsMap.put(x, collect);
             });
         }
