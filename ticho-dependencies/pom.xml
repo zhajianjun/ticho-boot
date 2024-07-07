@@ -48,6 +48,12 @@
 
             <dependency>
                 <groupId>top.ticho.boot</groupId>
+                <artifactId>ticho-starter-health</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>top.ticho.boot</groupId>
                 <artifactId>ticho-starter-json</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
