@@ -23,21 +23,14 @@ import top.ticho.boot.view.core.Result;
 @ApiSort(Ordered.HIGHEST_PRECEDENCE)
 public class HeathController {
 
-    @Value("${spring.application.name:application}")
+    @Value("${spring.application.name:unknown}")
     private String applicationName;
-
-    @Value("${server.port:}")
-    private String port;
-
-    @Value("${ticho.health:health}")
-    private String health;
-
 
     @ApiOperation(value = "健康检查", notes = "健康检查")
     @ApiOperationSupport(order = 10)
     @GetMapping
     public Result<String> health() {
-        return Result.ok(String.format("【应用名：%s。端口：%s。健康配置参数内容：%s】", applicationName, port, health));
+        return Result.ok(String.format("application[%s] is up", applicationName));
     }
 
 }
