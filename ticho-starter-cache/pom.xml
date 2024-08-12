@@ -47,11 +47,6 @@
             <artifactId>hutool-core</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>top.ticho.boot</groupId>
-            <artifactId>ticho-starter-redis</artifactId>
-        </dependency>
-
     </dependencies>
 
 </project>
