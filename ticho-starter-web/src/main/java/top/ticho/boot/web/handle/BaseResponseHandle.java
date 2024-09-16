@@ -1,10 +1,5 @@
 package top.ticho.boot.web.handle;
 
-import top.ticho.boot.view.enums.HttpErrCode;
-import top.ticho.boot.view.core.Result;
-import top.ticho.boot.view.exception.BizException;
-import top.ticho.boot.view.exception.SysException;
-import top.ticho.boot.web.annotation.View;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
@@ -33,6 +28,11 @@ import org.springframework.web.context.request.async.AsyncRequestTimeoutExceptio
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
+import top.ticho.boot.view.core.Result;
+import top.ticho.boot.view.enums.HttpErrCode;
+import top.ticho.boot.view.exception.BizException;
+import top.ticho.boot.view.exception.SysException;
+import top.ticho.boot.web.annotation.View;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
@@ -113,16 +113,15 @@ public class BaseResponseHandle implements ResponseBodyAdvice<Object> {
     @Override
     public boolean supports(@NonNull MethodParameter methodParameter, @NonNull Class<? extends HttpMessageConverter<?>> aClass) {
         Class<?> declaringClass = methodParameter.getDeclaringClass();
-        View typeView = declaringClass.getDeclaredAnnotation(View.class);
-        View methodView = methodParameter.getMethodAnnotation(View.class);
-        // action对应的类上是否加了注解，且ignore = false
+        View viewOfClass = declaringClass.getDeclaredAnnotation(View.class);
+        View viewOfMethod = methodParameter.getMethodAnnotation(View.class);
+        // 类上是否加了注解，且ignore = false
         // 仅方法上有注解，或者该注解 ignore=false
-        if (typeView != null && !typeView.ignore()) {
+        if (viewOfClass != null && !viewOfClass.ignore()) {
             // 方法上没有注解，或者该注解 ignore=false
-            return methodView == null || !methodView.ignore();
-        } else {
-            return methodView != null && !methodView.ignore();
+            return viewOfMethod == null || !viewOfMethod.ignore();
         }
+        return viewOfMethod != null && !viewOfMethod.ignore();
     }
 
     @Override

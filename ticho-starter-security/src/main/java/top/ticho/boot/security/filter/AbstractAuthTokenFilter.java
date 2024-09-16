@@ -1,18 +1,7 @@
 package top.ticho.boot.security.filter;
 
 import cn.hutool.core.util.StrUtil;
-import top.ticho.boot.json.util.JsonUtil;
-import top.ticho.boot.security.auth.AntPatternsAuthHandle;
-import top.ticho.boot.security.constant.BaseSecurityConst;
-import top.ticho.boot.security.handle.jwt.JwtDecode;
-import top.ticho.boot.view.enums.BizErrCode;
-import top.ticho.boot.view.enums.HttpErrCode;
-import top.ticho.boot.view.core.Result;
-import top.ticho.boot.view.core.BaseSecurityUser;
-import top.ticho.boot.view.exception.BizException;
-import top.ticho.boot.view.util.Assert;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.lang.NonNull;
@@ -21,7 +10,18 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
+import top.ticho.boot.json.util.JsonUtil;
+import top.ticho.boot.security.auth.AntPatternsAuthHandle;
+import top.ticho.boot.security.constant.BaseSecurityConst;
+import top.ticho.boot.security.handle.jwt.JwtDecode;
+import top.ticho.boot.view.core.BaseSecurityUser;
+import top.ticho.boot.view.core.Result;
+import top.ticho.boot.view.enums.BizErrCode;
+import top.ticho.boot.view.enums.HttpErrCode;
+import top.ticho.boot.view.exception.BizException;
+import top.ticho.boot.view.util.Assert;
 
+import javax.annotation.Resource;
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,10 +44,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public abstract class AbstractAuthTokenFilter<T extends BaseSecurityUser> extends OncePerRequestFilter {
 
-    @Autowired
+    @Resource
     private JwtDecode jwtDecode;
 
-    @Autowired
+    @Resource
     private AntPatternsAuthHandle antPatternsAuthHandle;
 
     /**

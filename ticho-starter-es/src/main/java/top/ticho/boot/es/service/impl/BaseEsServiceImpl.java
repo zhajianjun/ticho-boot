@@ -4,10 +4,10 @@ import cn.easyes.core.biz.EntityInfo;
 import cn.easyes.core.conditions.select.LambdaEsQueryWrapper;
 import cn.easyes.core.core.BaseEsMapper;
 import cn.hutool.core.collection.CollUtil;
-import top.ticho.boot.es.service.BaseEsService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import top.ticho.boot.es.service.BaseEsService;
 
+import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
@@ -21,7 +21,7 @@ import java.util.List;
 @Slf4j
 public class BaseEsServiceImpl<M extends BaseEsMapper<T>, T> implements BaseEsService<T> {
 
-    @Autowired
+    @Resource
     protected M baseEsMapper;
 
     @Override

@@ -20,6 +20,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;
 import lombok.Setter;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.util.EntityUtils;
 import org.elasticsearch.action.admin.indices.refresh.RefreshRequest;
 import org.elasticsearch.action.admin.indices.refresh.RefreshResponse;
@@ -78,16 +79,16 @@ import static cn.easyes.common.constants.BaseEsConstants.*;
  * </p>
  * Copyright © 2021 xpc1024 All Rights Reserved
  **/
+@Slf4j
+@Setter
 public class BaseEsMapperImpl<T> implements BaseEsMapper<T> {
     /**
      * restHighLevel client
      */
-    @Setter
     private RestHighLevelClient client;
     /**
      * T 对应的类
      */
-    @Setter
     private Class<T> entityClass;
 
     @Override
@@ -170,7 +171,7 @@ public class BaseEsMapperImpl<T> implements BaseEsMapper<T> {
             RefreshResponse refresh = client.indices().refresh(request, RequestOptions.DEFAULT);
             return refresh.getSuccessfulShards() == Arrays.stream(indexNames).count();
         } catch (IOException e) {
-            e.printStackTrace();
+             log.error("{}", e.getMessage(), e);
             throw ExceptionUtils.eee("refresh index exception e", e);
         }
     }
@@ -1263,10 +1264,8 @@ public class BaseEsMapperImpl<T> implements BaseEsMapper<T> {
             if (bulkResponse.hasFailures()) {
                 LogUtils.error(bulkResponse.buildFailureMessage());
             }
-
-            Iterator<BulkItemResponse> iterator = bulkResponse.iterator();
-            while (iterator.hasNext()) {
-                if (Objects.equals(iterator.next().status(), RestStatus.OK)) {
+            for (BulkItemResponse bulkItemResponse : bulkResponse) {
+                if (Objects.equals(bulkItemResponse.status(), RestStatus.OK)) {
                     totalSuccess++;
                 }
             }
@@ -1292,11 +1291,9 @@ public class BaseEsMapperImpl<T> implements BaseEsMapper<T> {
                 LogUtils.error(bulkResponse.buildFailureMessage());
             }
 
-            Iterator<BulkItemResponse> iterator = bulkResponse.iterator();
-            while (iterator.hasNext()) {
-                BulkItemResponse next = iterator.next();
+            for (BulkItemResponse next : bulkResponse) {
                 if (Objects.equals(next.status(), RestStatus.CREATED)) {
-                    setId((T) entityList.toArray()[totalSuccess], next.getId());
+                    setId(entityList.toArray()[totalSuccess], next.getId());
                     totalSuccess++;
                 }
             }
@@ -1400,7 +1397,7 @@ public class BaseEsMapperImpl<T> implements BaseEsMapper<T> {
             Object val = ReflectionKit.getVal(id, idClass);
             invokeMethod.invoke(entity, val);
         } catch (Throwable e) {
-            e.printStackTrace();
+             log.error("{}", e.getMessage(), e);
         }
     }
 

@@ -15,10 +15,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 
 /**
- * 自定义权限管理  https://blog.csdn.net/u012373815/article/details/54633046
+ * 自定义权限管理
  *
  * @author zhajianjun
  * @date 2020-07-03 15:39
+ * @link <a href="https://blog.csdn.net/u012373815/article/details/54633046">...</a>
  */
 @Slf4j
 public class BaseAccessDecisionManager implements AccessDecisionManager {

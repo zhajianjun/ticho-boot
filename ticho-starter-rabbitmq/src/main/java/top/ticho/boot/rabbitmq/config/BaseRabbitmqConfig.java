@@ -21,6 +21,7 @@ import javax.annotation.PostConstruct;
  * @author zhajianjun
  * @date 2022-09-13 16:39:23
  */
+@SuppressWarnings("deprecation")
 @Configuration
 @PropertySource(value = "classpath:ticho-rabbitmq.properties")
 @Slf4j

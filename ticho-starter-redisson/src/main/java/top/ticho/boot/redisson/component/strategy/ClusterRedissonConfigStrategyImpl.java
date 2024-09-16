@@ -1,10 +1,10 @@
 package top.ticho.boot.redisson.component.strategy;
 
 import cn.hutool.core.util.StrUtil;
-import top.ticho.boot.redisson.constant.BaseRedissonConst;
-import top.ticho.boot.redisson.prop.BaseRedissonProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.config.Config;
+import top.ticho.boot.redisson.constant.BaseRedissonConst;
+import top.ticho.boot.redisson.prop.BaseRedissonProperty;
 
 /**
  * 集群方式Redisson配置
@@ -29,10 +29,9 @@ public class ClusterRedissonConfigStrategyImpl implements RedissonConfigStrategy
                     config.useClusterServers().setPassword(password);
                 }
             }
-            log.info("初始化[cluster]方式Config,redisAddress:" + address);
+            log.info("初始化[cluster]方式Config,redisAddress:{}", address);
         } catch (Exception e) {
             log.error("cluster Redisson init error", e);
-            e.printStackTrace();
         }
         return config;
     }

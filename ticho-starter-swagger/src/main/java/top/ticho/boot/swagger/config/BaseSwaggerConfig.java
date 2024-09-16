@@ -38,7 +38,7 @@ import java.util.List;
 @AutoConfigureBefore(Knife4jAutoConfiguration.class)
 @EnableSwagger2WebMvc
 public class BaseSwaggerConfig {
-    private static final String URL = "http://www.ticho.top";
+    private static final String URL = "https://www.ticho.top";
     public static final String TYPE = "ticho.swagger.securityType";
 
     @Value("${spring.application.name:ticho-boot-demo}")

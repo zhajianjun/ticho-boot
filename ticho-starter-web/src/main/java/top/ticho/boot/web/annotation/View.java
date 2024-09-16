@@ -17,5 +17,7 @@ public @interface View {
     /**
      * 是否忽略，只对action对应的方法有效
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     boolean ignore() default false;
+    
 }

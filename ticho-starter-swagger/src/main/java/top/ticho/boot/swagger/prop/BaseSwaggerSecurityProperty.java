@@ -1,6 +1,5 @@
 package top.ticho.boot.swagger.prop;
 
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
@@ -17,15 +16,15 @@ import org.springframework.context.annotation.Configuration;
 public class BaseSwaggerSecurityProperty {
 
     /** 开启swagger功能 */
-    @ApiModelProperty(value = "开启swagger功能", position = 10)
+    /** 开启swagger功能 */
     private Boolean enable = false;
 
     /** 权限地址 */
-    @ApiModelProperty(value = "权限地址", position = 20)
+    /** 权限地址 */
     private String securityUrl;
 
     /** 权限类型 */
-    @ApiModelProperty(value = "权限类型", position = 30)
+    /** 权限类型 */
     private String securityType;
 
 }

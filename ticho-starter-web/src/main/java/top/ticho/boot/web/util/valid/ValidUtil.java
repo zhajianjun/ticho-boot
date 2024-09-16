@@ -1,6 +1,8 @@
 package top.ticho.boot.web.util.valid;
 
 import cn.hutool.core.util.ObjUtil;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.BaseHibernateValidatorConfiguration;
 import org.hibernate.validator.HibernateValidator;
 import org.slf4j.Logger;
@@ -11,6 +13,7 @@ import top.ticho.boot.view.exception.BizException;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import javax.validation.groups.Default;
 import java.util.Arrays;
 import java.util.Collection;
@@ -19,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.StringJoiner;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -27,7 +31,9 @@ import java.util.stream.Collectors;
  * @author zhajianjun
  * @date 2022-07-10 15:56:30
  */
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ValidUtil {
+    // @formatter:off
 
     private static final Logger log = LoggerFactory.getLogger(ValidUtil.class);
 
@@ -36,25 +42,27 @@ public class ValidUtil {
     private static final Validator VALIDATOR_FAIL_FAST;
 
     static {
-        // @formatter:off
-       VALIDATOR_DEFAULT = Validation.buildDefaultValidatorFactory().getValidator();
-       VALIDATOR_FAIL_FAST = Validation
-           .byProvider(HibernateValidator.class)
-           .configure()
-           .failFast(true)
-           .buildValidatorFactory()
-           .getValidator();
-       // @formatter:on
+        VALIDATOR_DEFAULT = getValidator(Validation::buildDefaultValidatorFactory);
+        VALIDATOR_FAIL_FAST = getValidator(() -> Validation
+            .byProvider(HibernateValidator.class)
+            .configure()
+            .failFast(true)
+            .buildValidatorFactory()
+        );
     }
 
-    private ValidUtil() {
+    private static Validator getValidator(Supplier<ValidatorFactory> supplier) {
+        try (ValidatorFactory factory = supplier.get()) {
+            // 返回当前工厂的 Validator 实例
+            return factory.getValidator(); // 注意这种方式下，validator 在 factory 关闭后仍可使用
+        }
     }
 
     /**
      * valid 参数校验
      *
-     * @see Default 默认校验默认分组注解，比如@NotNull 没有写group分组，实际用的默认分组
      * @param obj 校验对象
+     * @see Default 默认校验默认分组注解，比如@NotNull 没有写group分组，实际用的默认分组
      */
     public static void valid(Object obj) {
         Object preCheck = preCheck(obj);
@@ -66,9 +74,9 @@ public class ValidUtil {
     /**
      * valid 参数校验
      *
-     * @see Default 默认校验默认分组注解，比如@NotNull 没有写group分组，实际用的默认分组
-     * @param obj 校验对象
+     * @param obj    校验对象
      * @param groups 校验分组
+     * @see Default 默认校验默认分组注解，比如@NotNull 没有写group分组，实际用的默认分组
      */
     public static void valid(Object obj, Class<?>... groups) {
         Object preCheck = preCheck(obj);
@@ -80,9 +88,9 @@ public class ValidUtil {
     /**
      * valid 参数校验
      *
+     * @param obj 校验对象
      * @see Default 默认校验默认分组注解，比如@NotNull 没有写group分组，实际用的默认分组
      * @see BaseHibernateValidatorConfiguration#failFast(boolean) 默认快速校验,遇到第一错误就报异常
-     * @param obj 校验对象
      */
     public static void validFast(Object obj) {
         Object preCheck = preCheck(obj);
@@ -94,10 +102,10 @@ public class ValidUtil {
     /**
      * valid 参数校验
      *
+     * @param obj    校验对象
+     * @param groups 校验分组
      * @see Default 默认校验默认分组注解，比如@NotNull 没有写group分组，实际用的默认分组
      * @see BaseHibernateValidatorConfiguration#failFast(boolean) 默认快速校验,遇到第一错误就报异常
-     * @param obj 校验对象
-     * @param groups 校验分组
      */
     public static void validFast(Object obj, Class<?>... groups) {
         Object preCheck = preCheck(obj);
@@ -109,10 +117,10 @@ public class ValidUtil {
     /**
      * valid 参数校验
      *
-     * @param obj 校验对象
-     * @param failFast 是否快速检查 检验到错误就返回，而不是检验所有错误
+     * @param obj               校验对象
+     * @param failFast          是否快速检查 检验到错误就返回，而不是检验所有错误
      * @param checkDefaultGroup 是否检验默认分组
-     * @param groups 校验分组
+     * @param groups            校验分组
      */
     public static void valid(Object obj, boolean failFast, boolean checkDefaultGroup, Class<?>... groups) {
         Object preCheck = preCheck(obj);
@@ -240,10 +248,10 @@ public class ValidUtil {
             throw new BizException(BizErrCode.PARAM_ERROR, message);
         }
         List<ConstraintViolation<T>> validated = validate
-            .stream()
-            .sorted(Comparator.comparing(ConstraintViolation::getMessage))
-            .peek(next -> joiner.add(next.getPropertyPath() + ":" + next.getMessage()))
-            .collect(Collectors.toList());
+                .stream()
+                .sorted(Comparator.comparing(ConstraintViolation::getMessage))
+                .peek(next -> joiner.add(next.getPropertyPath() + ":" + next.getMessage()))
+                .collect(Collectors.toList());
         log.warn("参数校验异常，{}", joiner);
         ConstraintViolation<T> violation = validated.get(0);
         throw new BizException(BizErrCode.PARAM_ERROR, violation.getMessage());
@@ -258,7 +266,7 @@ public class ValidUtil {
      * <p>2.返回空数组没有问题的，Validator也会校验Default分组</p>
      *
      * @param isCheckDefaultGroup 是否检查默认分组
-     * @param groups 分组
+     * @param groups              分组
      * @return 分组
      */
     private static Class<?>[] getGroups(boolean isCheckDefaultGroup, Class<?>... groups) {
@@ -279,9 +287,9 @@ public class ValidUtil {
      * <p>1.如果是非集合对象，判断是否为null</p>
      * <p>2.如果是集合对象，则注入ValidBean对象中进行校验</p>
      *
-     * @see ValidBean
      * @param obj T
      * @return T
+     * @see ValidBean
      */
     @SuppressWarnings("all")
     private static <T> T preCheck(T obj) {
@@ -304,10 +312,10 @@ public class ValidUtil {
      * <p>1.如果是非集合对象，判断是否为null</p>
      * <p>2.如果是集合对象，则注入ValidBean对象中进行校验</p>
      *
-     * @see ValidBean
-     * @param obj T
+     * @param obj           T
      * @param customMessage 自定义作物信息
      * @return T
+     * @see ValidBean
      */
     @SuppressWarnings("all")
     private static <T> T preCheck(T obj, String customMessage) {

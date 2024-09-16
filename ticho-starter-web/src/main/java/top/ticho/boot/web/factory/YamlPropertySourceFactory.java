@@ -17,7 +17,8 @@ import java.util.Properties;
  * 加载yml格式的自定义配置文件
  *
  * @author aristotle
- * @link https://blog.csdn.net/zxl8899/article/details/106382719/
+ * @date 2022-08-24 00:17
+ * @link <a href="https://blog.csdn.net/zxl8899/article/details/106382719/">...</a>
  */
 @AllArgsConstructor
 public class YamlPropertySourceFactory implements PropertySourceFactory {

@@ -56,12 +56,10 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
     static class WrapperWriter extends PrintWriter {
 
         private final HttpServletResponse response;
-        private final ByteArrayOutputStream output;
 
         public WrapperWriter(ByteArrayOutputStream out, HttpServletResponse response) {
             super(out);
             this.response = response;
-            this.output = out;
         }
 
         @Override
@@ -70,7 +68,7 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
             try {
                 response.getWriter().write(b);
             } catch (IOException e) {
-                e.printStackTrace();
+                 log.error("{}", e.getMessage(), e);
                 this.setError();
             }
         }
@@ -81,7 +79,7 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
             try {
                 response.getWriter().write(s, off, len);
             } catch (IOException e) {
-                e.printStackTrace();
+                 log.error("{}", e.getMessage(), e);
                 this.setError();
             }
         }
@@ -106,7 +104,7 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
             try {
                 return response.getOutputStream().isReady();
             } catch (IOException e) {
-                e.printStackTrace();
+                 log.error("{}", e.getMessage(), e);
             }
             return false;
         }
@@ -117,7 +115,7 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
                 try {
                     response.getOutputStream().setWriteListener(listener);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                     log.error("{}", e.getMessage(), e);
                 }
             }
 

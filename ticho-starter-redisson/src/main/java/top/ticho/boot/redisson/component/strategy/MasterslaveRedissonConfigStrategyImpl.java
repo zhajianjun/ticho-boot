@@ -40,10 +40,9 @@ public class MasterslaveRedissonConfigStrategyImpl implements RedissonConfigStra
             slaveList.remove(0);
 
             config.useMasterSlaveServers().addSlaveAddress(slaveList.toArray(new String[0]));
-            log.info("初始化[MASTERSLAVE]方式Config,redisAddress:" + address);
+            log.info("初始化[MASTERSLAVE]方式Config,redisAddress:{}", address);
         } catch (Exception e) {
             log.error("MASTERSLAVE Redisson init error", e);
-            e.printStackTrace();
         }
         return config;
     }

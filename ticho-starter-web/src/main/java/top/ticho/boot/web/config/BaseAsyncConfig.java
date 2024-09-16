@@ -3,12 +3,12 @@ package top.ticho.boot.web.config;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 
+import javax.annotation.Resource;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.concurrent.Executor;
@@ -25,7 +25,7 @@ import java.util.concurrent.Executor;
 @Slf4j
 public class BaseAsyncConfig implements AsyncConfigurer {
 
-    @Autowired
+    @Resource
     @Qualifier("asyncTaskExecutor")
     private Executor executor;
     // @formatter:off
@@ -46,7 +46,7 @@ public class BaseAsyncConfig implements AsyncConfigurer {
     @Override
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
         return (Throwable ex, Method method, Object... params) -> {
-            String errorMessage = "Async execution error on method:" + method.toString() + " with parameters:" + Arrays.toString(params);
+            String errorMessage = "Async execution error on method:" + method + " with parameters:" + Arrays.toString(params);
             log.error(errorMessage, ex);
         };
     }

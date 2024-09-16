@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.Principal;
 
 /**
- * 权限用户登录控制器
+ * 权限用户登录
  *
  * @author zhajianjun
  * @date 2022-09-22 15:36
@@ -30,7 +30,7 @@ import java.security.Principal;
 @RestController(BaseOAuth2Const.OAUTH2_CONTROLLER)
 @RequestMapping("oauth")
 @ApiSort(Ordered.HIGHEST_PRECEDENCE + 200)
-@Api(tags = "权限登录")
+@Api(tags = "权限用户登录")
 public class OauthController {
 
     @Autowired

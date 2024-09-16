@@ -32,18 +32,18 @@ public class ApiUtil {
         try {
             result = supplier.get();
         } catch (Exception e) {
-            log.error(errorMsg + ",{}", e.getMessage(), e);
+            log.error("{},{}", errorMsg, e.getMessage(), e);
             throw new SysException(BizErrCode.APP_SERVICE_ERR, errorMsg);
         }
         if (result == null) {
-            log.error(errorMsg + ",{}", "返回结果为空");
+            log.error("{},{}", errorMsg, "返回结果为空");
             throw new SysException(BizErrCode.APP_SERVICE_ERR, errorMsg);
         }
         int code = result.getCode();
         String message = result.getMsg();
         boolean isSuccess = code == BizErrCode.SUCCESS.getCode();
         if (!isSuccess) {
-            log.error(errorMsg + ",code={},msg={}", code, message);
+            log.error("{},code={},msg={}",errorMsg, code, message);
             throw new BizException(code, message);
         }
     }
@@ -56,18 +56,18 @@ public class ApiUtil {
         try {
             result = supplier.get();
         } catch (Exception e) {
-            log.error(errorMsg + ",{}", e.getMessage(), e);
+            log.error("{},{}", errorMsg, e.getMessage(), e);
             throw new SysException(BizErrCode.APP_SERVICE_ERR, errorMsg);
         }
         if (result == null) {
-            log.error(errorMsg + ",{}", "返回结果为空");
+            log.error("{},{}", errorMsg, "返回结果为空");
             throw new SysException(BizErrCode.APP_SERVICE_ERR, errorMsg);
         }
         int code = result.getCode();
         String message = result.getMsg();
         boolean isSuccess = code == BizErrCode.SUCCESS.getCode();
         if (!isSuccess) {
-            log.error(errorMsg + ",code={},msg={}", code, message);
+            log.error("{},code={},msg={}",errorMsg, code, message);
             throw new BizException(code, message);
         }
         return result;

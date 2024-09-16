@@ -11,6 +11,6 @@ public enum IgnoreType {
     /** 全部忽略检查 */
     ALL,
     /** 内网接口忽略检查，判断依据是header中是否有inner参数为true */
-    INNER;
+    INNER
 
 }

@@ -99,6 +99,7 @@ public class ApiGlobalFilter implements GlobalFilter, Ordered {
         DataBufferFactory bufferFactory = originalResponse.bufferFactory();
         return new ServerHttpResponseDecorator(originalResponse) {
             @Override
+            @NonNull
             public Mono<Void> writeWith(@NonNull Publisher<? extends DataBuffer> body) {
                 HttpStatus statusCode = getStatusCode();
                 if (Objects.equals(statusCode, HttpStatus.OK) && body instanceof Flux) {
@@ -117,7 +118,7 @@ public class ApiGlobalFilter implements GlobalFilter, Ordered {
                         return bufferFactory.wrap(content);
                     }));
                 } else {
-                    log.error("获取响应体数据 ：" + statusCode);
+                    log.error("获取响应体数据 ：{}", statusCode);
                 }
                 return super.writeWith(body);
             }

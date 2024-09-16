@@ -1,18 +1,16 @@
 package top.ticho.boot.security.util;
 
-import top.ticho.boot.view.core.BaseSecurityUser;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import top.ticho.boot.view.core.BaseSecurityUser;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 /**
- *
- *
  * @author zhajianjun
  * @date 2022-09-30 10:45
  */
@@ -25,15 +23,15 @@ public class BaseUserUtil {
         if (authentication == null) {
             return null;
         }
-        Object principal = authentication.getPrincipal();
-        if (principal == null) {
+        Object principalObj = authentication.getPrincipal();
+         // 直接检查是否为匿名用户或认证对象为空
+        if (principalObj == null || principalObj instanceof String) {
             return null;
         }
-        // 匿名用户返回null
-        if (principal instanceof String) {
-            return null;
-        }
-        return (T) principal;
+        // 安全地进行类型转换
+        @SuppressWarnings("unchecked")
+        T principal = (T) principalObj;
+        return principal;
     }
 
     public static String getCurrentUsername() {

@@ -40,7 +40,7 @@ public class RedisDelayRunnable implements Runnable {
     private volatile Boolean signal;
 
     /** mdc数据 */
-    private Map<String, String> mdcMap;
+    private final Map<String, String> mdcMap;
 
     public RedisDelayRunnable(RLock rLock, String key, long threadId, int expireTime, Map<String, String> mdcMap) {
         this.rLock = rLock;

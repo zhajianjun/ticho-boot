@@ -51,7 +51,7 @@ public class MinioTemplateTest {
         long chunkSize = 1024 * 1024 * 5;
         // 分块数量
         long chunkNum = (long) Math.ceil(localFile.length() * 1.0 / chunkSize);
-        log.info("分块总数：" + chunkNum);
+        log.info("分块总数：{}",chunkNum);
         // 缓冲区大小
         byte[] bytes = new byte[1024];
         // 使用RandomAccessFile访问文件
@@ -165,6 +165,17 @@ public class MinioTemplateTest {
         String localChunkFolderFilePath = parentFilePath + File.separator + chunkFolderFileName;
         File localChunkFolderFile = new File(localChunkFolderFilePath);
         String mimeType = FileUtil.getMimeType(localFilePath);
+        MinioTemplateTest minioTemplateTest = getMinioTemplateTest(chunkBucket, localFile, localChunkFolderFile);
+        // 分片上传到minio
+        minioTemplateTest.uploadChunkToMinio(localChunkFolderFile, chunkBucket, chunkFolderFileName);
+        // minio分片文件进行合并
+        minioTemplateTest.composeMinioObject(chunkBucket, chunkBucket, chunkFolderFileName, fileName, mimeType, true);
+        // 本地分片进行合并
+        String newFilePath = parentFilePath + File.separator + System.currentTimeMillis() + "." + FileNameUtil.extName(localFilePath);
+        minioTemplateTest.composeLocalObject(localChunkFolderFilePath, newFilePath);
+    }
+
+    private static MinioTemplateTest getMinioTemplateTest(String chunkBucket, File localFile, File localChunkFolderFile) throws IOException {
         MinioProperty minioProperty = new MinioProperty();
         minioProperty.setEndpoint("http://127.0.0.1:9000");
         minioProperty.setAccessKey("root");
@@ -175,13 +186,7 @@ public class MinioTemplateTest {
         MinioTemplateTest minioTemplateTest = new MinioTemplateTest(minioTemplate);
         // 大文件分片
         minioTemplateTest.fileSpliceChunk(localFile, localChunkFolderFile);
-        // 分片上传到minio
-        minioTemplateTest.uploadChunkToMinio(localChunkFolderFile, chunkBucket, chunkFolderFileName);
-        // minio分片文件进行合并
-        minioTemplateTest.composeMinioObject(chunkBucket, chunkBucket, chunkFolderFileName, fileName, mimeType, true);
-        // 本地分片进行合并
-        String newFilePath = parentFilePath + File.separator + System.currentTimeMillis() + "." + FileNameUtil.extName(localFilePath);
-        minioTemplateTest.composeLocalObject(localChunkFolderFilePath, newFilePath);
+        return minioTemplateTest;
     }
 
 }
