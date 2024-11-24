@@ -24,11 +24,14 @@
     <property name="log.maxHistoryProxy" value="${log.maxHistory:-7}"/>
     <!--日志最大的文件大小 20MB-->
     <property name="log.maxFileSizeProxy" value="${log.maxFileSize:-20MB}"/>
+    <!--编码-->
+    <property name="ENCODING" value="UTF-8"/>
     <!-- 4.日志输出 -->
     <!-- 4.1.控制台打印 -->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${console.log.patternProxy}</pattern>
+            <charset>${ENCODING}</charset>
         </encoder>
         <!-- 按临界值过滤日志：低于DEBUG以下级别被抛弃 -->
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
@@ -41,6 +44,7 @@
         <file>${log.pathProxy}/debug.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${log.patternProxy}</pattern>
+            <charset>${ENCODING}</charset>
         </encoder>
         <!-- 按指定规则过滤日志 -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -66,6 +70,7 @@
         <file>${log.pathProxy}/info.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${log.patternProxy}</pattern>
+            <charset>${ENCODING}</charset>
         </encoder>
         <!-- 按指定规则过滤日志 -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -91,6 +96,7 @@
         <file>${log.pathProxy}/warn.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${log.patternProxy}</pattern>
+            <charset>${ENCODING}</charset>
         </encoder>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <!-- 过滤的级别 -->
@@ -115,6 +121,7 @@
         <file>${log.pathProxy}/error.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${log.patternProxy}</pattern>
+            <charset>${ENCODING}</charset>
         </encoder>
         <!-- 按指定规则过滤日志 -->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
@@ -140,6 +147,7 @@
         <file>${log.pathProxy}/all.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <pattern>${log.patternProxy}</pattern>
+            <charset>${ENCODING}</charset>
         </encoder>
         <!-- 按临界值过滤日志：低于DEBUG以下级别被抛弃 -->
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
