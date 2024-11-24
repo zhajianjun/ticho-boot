@@ -19,16 +19,15 @@ import java.util.List;
  * @author zhajianjun
  * @date 2022-09-23 14:46
  */
+@Getter
 @NoArgsConstructor
 @Slf4j
 public class BaseSecurityProperty {
 
     /** 默认用户，如果UserDetailsService接口被实现则没有啥作用了 */
-    @Getter
     private List<BaseSecurityUser> users = new ArrayList<>();
 
     /** 权限过滤地址 */
-    @Getter
     @Setter
     private List<String> antPatterns = new ArrayList<>();
 

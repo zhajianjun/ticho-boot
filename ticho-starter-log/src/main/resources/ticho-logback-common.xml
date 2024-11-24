@@ -17,9 +17,9 @@
     <!-- 3.代理属性值定义 -->
     <!-- 彩色日志格式 -->
     <!--日志格式-->
-    <property name="console.log.patternProxy" value="${console.log.pattern:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}) %clr([%thread]) %highlight(%-5level) %boldMagenta(%logger{50}) %L %clr(%X{trace}) : %msg%n}"/>
+    <property name="console.log.patternProxy" value="${console.log.pattern:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}) %clr(%thread) %highlight(%-5level) %boldMagenta(%logger{50}:%line) %clr(%X{trace}): %msg%n}"/>
     <property name="log.pathProxy" value="${log.path:-./logs}" />
-    <property name="log.patternProxy" value="${log.pattern:-%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} %L %X{trace} %msg%n}"/>"
+    <property name="log.patternProxy" value="${log.pattern:-%d{yyyy-MM-dd HH:mm:ss.SSS} %thread %-5level %logger{50}:%line %X{trace}: %msg%n}"/>"
     <!--日志最大的历史 7天-->
     <property name="log.maxHistoryProxy" value="${log.maxHistory:-7}"/>
     <!--日志最大的文件大小 20MB-->

@@ -25,7 +25,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * jwt转换器
+ * jwt签证
  *
  * @author zhajianjun
  * @date 2022-09-21 15:55
