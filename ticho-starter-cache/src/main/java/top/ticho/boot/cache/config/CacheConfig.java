@@ -4,8 +4,6 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.RemovalCause;
 import com.github.benmanes.caffeine.cache.RemovalListener;
-import top.ticho.boot.cache.BaseCache;
-import top.ticho.boot.redis.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cache.CacheManager;
@@ -16,6 +14,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.lang.NonNull;
+import top.ticho.boot.cache.BaseCache;
+import top.ticho.boot.redis.util.RedisUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,6 @@ public class CacheConfig {
     @Bean
     @Primary
     public CacheManager cacheManager(List<BaseCache> baseCaches, RedisUtil<String, String> redisUtil) {
-        // @formatter:off
         List<CaffeineCache> caches = new ArrayList<>();
         for (BaseCache baseCache : baseCaches) {
             Cache<Object, Object> build = Caffeine.newBuilder()
@@ -55,7 +54,6 @@ public class CacheConfig {
         SimpleCacheManager cacheManager = new SimpleCacheManager();
         cacheManager.setCaches(caches);
         return cacheManager;
-        // @formatter:on
     }
 
     @Bean

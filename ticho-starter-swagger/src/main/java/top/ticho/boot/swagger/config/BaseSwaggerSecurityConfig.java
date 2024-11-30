@@ -1,6 +1,5 @@
 package top.ticho.boot.swagger.config;
 
-import top.ticho.boot.swagger.prop.BaseSwaggerSecurityProperty;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -27,6 +26,7 @@ import springfox.documentation.service.TokenRequestEndpoint;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
+import top.ticho.boot.swagger.prop.BaseSwaggerSecurityProperty;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,7 +54,6 @@ public class BaseSwaggerSecurityConfig {
     @Autowired(required = false)
     private ApiInfo apiInfo;
 
-    // @formatter:off
 
     @Bean
     @ConditionalOnProperty(value = BaseSwaggerConfig.TYPE, havingValue = "password")
@@ -94,20 +93,19 @@ public class BaseSwaggerSecurityConfig {
             .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
             // 路径使用any风格
             .paths(PathSelectors.any())
-            //过滤规则,哪些可以通过
+            // 过滤规则,哪些可以通过
             //.paths(doFilteringRules())
             .build()
-            //token验证信息
+            // token验证信息
             .securitySchemes(securitySchemes)
             .securityContexts(securityContexts)
-            //文档描叙
+            // 文档描叙
             .apiInfo(apiInfo);
     }
 
-    // @formatter:on
 
     private List<SecurityContext> securityContexts() {
-        //context
+        // context
         List<AuthorizationScope> scopes = new ArrayList<>();
         scopes.add(new AuthorizationScope("read", "read  resources"));
         scopes.add(new AuthorizationScope("write", "write resources"));

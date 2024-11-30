@@ -1,7 +1,5 @@
 package top.ticho.boot.http.config;
 
-import top.ticho.boot.http.interceptor.OkHttpLogInterceptor;
-import top.ticho.boot.http.prop.BaseHttpProperty;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.ConnectionPool;
 import okhttp3.Interceptor;
@@ -15,6 +13,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
+import top.ticho.boot.http.interceptor.OkHttpLogInterceptor;
+import top.ticho.boot.http.prop.BaseHttpProperty;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -61,7 +61,6 @@ public class OkHttpConfig {
     @ConditionalOnProperty(value = "ticho.http.enable", havingValue = "true", matchIfMissing = true)
     @ConditionalOnMissingBean({OkHttpClient.class})
     public OkHttpClient okHttpClient(BaseHttpProperty prop, List<Interceptor> interceptors) {
-        // @formatter:off
         OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
         interceptors.forEach(builder::addInterceptor);
         if (Boolean.TRUE.equals(prop.getOpenLog())) {
@@ -69,20 +68,19 @@ public class OkHttpConfig {
         }
         return builder
             // 设置连接超时
-            .connectTimeout(prop.getConnectTimeout() , TimeUnit.SECONDS)
+            .connectTimeout(prop.getConnectTimeout(), TimeUnit.SECONDS)
             // 设置读超时
-            .readTimeout(prop.getConnectTimeout() , TimeUnit.SECONDS)
+            .readTimeout(prop.getConnectTimeout(), TimeUnit.SECONDS)
             // 设置写超时
-            .writeTimeout(prop.getWriteTimeout() , TimeUnit.SECONDS)
+            .writeTimeout(prop.getWriteTimeout(), TimeUnit.SECONDS)
             // 是否自动重连
             .retryOnConnectionFailure(prop.getRetryOnConnectionFailure())
-            .connectionPool(new ConnectionPool(prop.getMaxIdleConnections() , prop.getKeepAliveDuration(), TimeUnit.MINUTES))
+            .connectionPool(new ConnectionPool(prop.getMaxIdleConnections(), prop.getKeepAliveDuration(), TimeUnit.MINUTES))
             // 信任所有证书
             .sslSocketFactory(createSSLSocketFactory(), new TrustAllCerts())
             // 主机名验证，信任所有
             .hostnameVerifier(new TrustAllHostnameVerifier())
             .build();
-        // @formatter:on
     }
 
     @Bean

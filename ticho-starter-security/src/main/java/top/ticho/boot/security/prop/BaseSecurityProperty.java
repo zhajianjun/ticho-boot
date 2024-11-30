@@ -2,13 +2,13 @@ package top.ticho.boot.security.prop;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import top.ticho.boot.view.core.BaseSecurityUser;
-import top.ticho.boot.web.util.SpringContext;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import top.ticho.boot.view.core.BaseSecurityUser;
+import top.ticho.boot.web.util.SpringContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,6 @@ public class BaseSecurityProperty {
     private List<String> antPatterns = new ArrayList<>();
 
     public void setUsers(List<BaseSecurityUser> users) {
-        // @formatter:off
         if (CollUtil.isEmpty(users)) {
             return;
         }
@@ -45,7 +44,6 @@ public class BaseSecurityProperty {
             userInfo.setPassword(passwordEncoder.encode(password));
         }
         this.users = users;
-        // @formatter:on
     }
 
 }

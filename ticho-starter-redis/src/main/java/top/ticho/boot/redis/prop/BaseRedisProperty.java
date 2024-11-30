@@ -5,8 +5,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 /**
- *
- *
  * @author zhajianjun
  * @date 2023-02-16 15:40
  */

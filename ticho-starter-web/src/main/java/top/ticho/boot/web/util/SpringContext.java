@@ -77,14 +77,12 @@ public class SpringContext implements ApplicationContextAware {
     }
 
     public static HandlerMethod getHandlerMethod() {
-        // @formatter:off
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (requestAttributes == null) {
             return null;
         }
         HttpServletRequest request = requestAttributes.getRequest();
         return getHandlerMethod(request);
-        // @formatter:on
     }
 
 }

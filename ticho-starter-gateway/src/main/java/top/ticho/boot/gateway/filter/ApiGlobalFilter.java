@@ -4,12 +4,9 @@ import cn.hutool.core.date.SystemClock;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
-import org.slf4j.MDC;
-import top.ticho.boot.json.util.JsonUtil;
-import top.ticho.boot.view.log.BaseLogProperty;
-import top.ticho.boot.view.log.HttpLog;
 import lombok.extern.slf4j.Slf4j;
 import org.reactivestreams.Publisher;
+import org.slf4j.MDC;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -30,6 +27,9 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.ticho.boot.view.log.BaseLogProperty;
+import top.ticho.boot.view.log.HttpLog;
+import top.ticho.tool.json.util.JsonUtil;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -59,15 +59,13 @@ public class ApiGlobalFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        // @formatter:off
         HttpLog httpLogInfo = new HttpLog();
-        return chain.filter(preHandle(exchange, httpLogInfo))
-                .doFinally(signalType -> complete(httpLogInfo));
-        // @formatter:on
+        return chain
+            .filter(preHandle(exchange, httpLogInfo))
+            .doFinally(signalType -> complete(httpLogInfo));
     }
 
     public ServerWebExchange preHandle(ServerWebExchange exchange, HttpLog httpLogInfo) {
-        // @formatter:off
         ServerHttpRequest request = exchange.getRequest();
         HttpHeaders headers = request.getHeaders();
 
@@ -76,7 +74,7 @@ public class ApiGlobalFilter implements GlobalFilter, Ordered {
         String type = request.getMethodValue();
         String url = request.getPath().toString();
         String header = headers.getFirst(USER_AGENT);
-        UserAgent userAgent =  UserAgentUtil.parse(header);
+        UserAgent userAgent = UserAgentUtil.parse(header);
         httpLogInfo.setUrl(url);
         httpLogInfo.setPort(environment.getProperty("server.port"));
         httpLogInfo.setStart(SystemClock.now());
@@ -91,7 +89,6 @@ public class ApiGlobalFilter implements GlobalFilter, Ordered {
         }
         ServerHttpResponse response = getResponse(exchange, httpLogInfo);
         return exchange.mutate().request(request).response(response).build();
-        // @formatter:on
     }
 
     public ServerHttpResponse getResponse(ServerWebExchange exchange, HttpLog httpLogInfo) {

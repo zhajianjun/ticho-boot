@@ -12,12 +12,12 @@ import java.lang.annotation.Target;
  * 忽略token校验
  *
  * <p>
-*     和PreAuthorize有实际意义上的冲突，不要联合使用，token都不校验了，权限就无法验证了
- *   @see org.springframework.security.access.prepost.PreAuthorize
- * </p>
+ * 和PreAuthorize有实际意义上的冲突，不要联合使用，token都不校验了，权限就无法验证了
  *
  * @author zhajianjun
  * @date 2022-09-26 14:11:34
+ * @see org.springframework.security.access.prepost.PreAuthorize
+ * </p>
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)

@@ -1,10 +1,10 @@
 package top.ticho.boot.view.core;
 
-import top.ticho.boot.view.enums.BizErrCode;
-import top.ticho.boot.view.enums.IErrCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import top.ticho.boot.view.enums.BizErrCode;
+import top.ticho.boot.view.enums.IErrCode;
 
 /**
  * 统一响应消息

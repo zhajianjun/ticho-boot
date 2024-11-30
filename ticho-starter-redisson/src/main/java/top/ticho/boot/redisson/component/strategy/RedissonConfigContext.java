@@ -1,8 +1,8 @@
 package top.ticho.boot.redisson.component.strategy;
 
-import top.ticho.boot.redisson.prop.BaseRedissonProperty;
 import lombok.AllArgsConstructor;
 import org.redisson.config.Config;
+import top.ticho.boot.redisson.prop.BaseRedissonProperty;
 
 /**
  * Redisson配置上下文，产出真正的Redisson的Config

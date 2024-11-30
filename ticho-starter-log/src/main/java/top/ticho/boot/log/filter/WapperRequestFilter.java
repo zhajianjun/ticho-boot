@@ -23,7 +23,6 @@ import java.io.IOException;
 @WebFilter(urlPatterns = "/*", filterName = "wapperRequestFilter")
 public class WapperRequestFilter implements Filter {
 
-    // @formatter:off
 
     @Override
     public void init(FilterConfig filterConfig) {
@@ -32,17 +31,17 @@ public class WapperRequestFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         ServletRequest requestWrapper = null;
-        if(servletRequest instanceof HttpServletRequest) {
+        if (servletRequest instanceof HttpServletRequest) {
             requestWrapper = new RequestWrapper((HttpServletRequest) servletRequest);
         }
         ServletResponse responseWrapper = null;
-        if(servletResponse instanceof HttpServletResponse) {
+        if (servletResponse instanceof HttpServletResponse) {
             responseWrapper = new ResponseWrapper((HttpServletResponse) servletResponse);
         }
-        if(requestWrapper != null) {
+        if (requestWrapper != null) {
             servletRequest = requestWrapper;
         }
-        if(responseWrapper != null) {
+        if (responseWrapper != null) {
             servletResponse = responseWrapper;
         }
         filterChain.doFilter(servletRequest, servletResponse);

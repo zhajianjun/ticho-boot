@@ -4,11 +4,6 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import org.slf4j.MDC;
-import top.ticho.boot.http.event.HttpLogEvent;
-import top.ticho.boot.http.prop.BaseHttpProperty;
-import top.ticho.boot.json.util.JsonUtil;
-import top.ticho.boot.view.log.HttpLog;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
@@ -18,10 +13,15 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okio.Buffer;
+import org.slf4j.MDC;
 import org.springframework.context.ApplicationContext;
 import org.springframework.lang.NonNull;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import top.ticho.boot.http.event.HttpLogEvent;
+import top.ticho.boot.http.prop.BaseHttpProperty;
+import top.ticho.boot.view.log.HttpLog;
+import top.ticho.tool.json.util.JsonUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -35,8 +35,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- *
- *
  * @author zhajianjun
  * @date 2022-11-01 14:46
  */
@@ -73,9 +71,9 @@ public class OkHttpLogInterceptor implements Interceptor {
         Map<String, Object> resHeaderMap = getHeaderMap(res.headers());
         String resHeader = toJson(resHeaderMap);
         long t2 = System.currentTimeMillis();
-        //这里不能直接使用response.body().string()的方式输出日志
-        //因为response.body().string()之后，response中的流会被关闭，程序会报错，我们需要创建出一
-        //个新的response给应用层处理
+        // 这里不能直接使用response.body().string()的方式输出日志
+        // 因为response.body().string()之后，response中的流会被关闭，程序会报错，我们需要创建出一
+        // 个新的response给应用层处理
         int byteCount = 1024 * 1024;
         ResponseBody body = res.peekBody(byteCount);
         String resBody = body.string();
@@ -106,18 +104,16 @@ public class OkHttpLogInterceptor implements Interceptor {
         ApplicationContext applicationContext = SpringUtil.getApplicationContext();
         applicationContext.publishEvent(new HttpLogEvent(applicationContext, httpLog));
         return res;
-        // @formatter:on
     }
 
     private Map<String, Object> getHeaderMap(Headers headers) {
-        Map<String,List<String>> headersGroupMap = headers.toMultimap();
+        Map<String, List<String>> headersGroupMap = headers.toMultimap();
         Map<String, Object> headersMap = new HashMap<>();
-        headersGroupMap.forEach((k,v) -> headersMap.put(k, String.join(",",v)));
+        headersGroupMap.forEach((k, v) -> headersMap.put(k, String.join(",", v)));
         return headersMap;
     }
 
     public String getUsername() {
-        // @formatter:off
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (requestAttributes == null) {
             return null;
@@ -126,7 +122,6 @@ public class OkHttpLogInterceptor implements Interceptor {
         return Optional.ofNullable(request.getUserPrincipal())
             .map(Principal::getName)
             .orElse(null);
-        // @formatter:on
     }
 
     public Map<String, Object> getParams(HttpUrl httpUrl) {

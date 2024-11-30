@@ -38,8 +38,8 @@
         </dependency>
 
         <dependency>
-            <groupId>top.ticho.boot</groupId>
-            <artifactId>ticho-starter-json</artifactId>
+            <groupId>top.ticho.tool</groupId>
+            <artifactId>ticho-json</artifactId>
         </dependency>
 
         <dependency>

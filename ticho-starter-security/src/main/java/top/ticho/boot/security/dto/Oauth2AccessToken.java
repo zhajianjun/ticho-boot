@@ -2,10 +2,10 @@ package top.ticho.boot.security.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import top.ticho.boot.security.constant.BaseSecurityConst;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import top.ticho.boot.security.constant.BaseSecurityConst;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -25,12 +25,12 @@ public class Oauth2AccessToken {
     @JsonProperty(BaseSecurityConst.ACCESS_TOKEN)
     public String accessToken;
 
-    /** refresh token  */
+    /** refresh token */
     @ApiModelProperty(value = "refresh token", position = 20)
     @JsonProperty(BaseSecurityConst.REFRESH_TOKEN)
     public String refreshToken;
 
-    /** token type  */
+    /** token type */
     @ApiModelProperty(value = "token type", position = 20)
     @JsonProperty(BaseSecurityConst.TOKEN_TYPE)
     public String tokenType;
@@ -40,12 +40,12 @@ public class Oauth2AccessToken {
     @JsonProperty(BaseSecurityConst.IAT)
     public Long iat;
 
-    /** 剩余时间，单位(s)  */
+    /** 剩余时间，单位(s) */
     @ApiModelProperty(value = "剩余时间，单位(s)", position = 40)
     @JsonProperty(BaseSecurityConst.EXPIRES_IN)
     public Long expiresIn;
 
-    /** 结束时间时间戳，单位(s)  */
+    /** 结束时间时间戳，单位(s) */
     @ApiModelProperty(value = "结束时间时间戳，单位(s)", position = 50)
     @JsonProperty(BaseSecurityConst.EXP)
     public Long exp;

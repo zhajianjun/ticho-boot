@@ -1,8 +1,5 @@
 package top.ticho.boot.redisson.config;
 
-import top.ticho.boot.redisson.component.RedissonManager;
-import top.ticho.boot.redisson.prop.BaseRedissonProperty;
-import top.ticho.boot.redisson.util.RedissonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,6 +8,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import top.ticho.boot.redisson.component.RedissonManager;
+import top.ticho.boot.redisson.prop.BaseRedissonProperty;
+import top.ticho.boot.redisson.util.RedissonUtil;
 
 import java.util.concurrent.Executor;
 

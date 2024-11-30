@@ -50,7 +50,6 @@ public class BaseWebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        // @formatter:off
         http.csrf().disable()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
@@ -75,7 +74,6 @@ public class BaseWebSecurityConfig extends WebSecurityConfigurerAdapter {
             .accessDeniedHandler(accessDeniedHandler)
             // 认证成功,权限不足返回视图
             .authenticationEntryPoint(authenticationEntryPoint);
-        // @formatter:on
     }
 
 }

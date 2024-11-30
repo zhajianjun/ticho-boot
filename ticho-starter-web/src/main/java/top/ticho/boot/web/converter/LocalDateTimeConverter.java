@@ -1,10 +1,10 @@
 package top.ticho.boot.web.converter;
 
 import cn.hutool.core.text.CharSequenceUtil;
-import top.ticho.boot.json.constant.DateFormatConst;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
+import top.ticho.tool.json.constant.DateFormatConst;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

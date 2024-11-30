@@ -27,7 +27,6 @@ public class DefaultFeignFallback<T> implements MethodInterceptor {
     private final String targetName;
     private final Throwable cause;
 
-    // @formatter:off
 
     @Nullable
     @Override

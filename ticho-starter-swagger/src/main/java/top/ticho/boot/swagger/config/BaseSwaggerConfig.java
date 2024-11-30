@@ -44,7 +44,6 @@ public class BaseSwaggerConfig {
     @Value("${spring.application.name:ticho-boot-demo}")
     private String applicationName;
 
-    // @formatter:off
 
     @Bean
     @ConditionalOnProperty(value = TYPE, havingValue = "default", matchIfMissing = true)
@@ -57,13 +56,13 @@ public class BaseSwaggerConfig {
             .apis(RequestHandlerSelectors.withClassAnnotation(Api.class))
             // 路径使用any风格
             .paths(PathSelectors.any())
-            //过滤规则,哪些可以通过
+            // 过滤规则,哪些可以通过
             //.paths(doFilteringRules())
             .build()
-            //token验证信息
+            // token验证信息
             .securitySchemes(securitySchemes())
             .securityContexts(securityContexts())
-            //文档描叙
+            // 文档描叙
             .apiInfo(apiInfo);
     }
 

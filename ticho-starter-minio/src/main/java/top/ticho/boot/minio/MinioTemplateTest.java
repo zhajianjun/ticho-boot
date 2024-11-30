@@ -30,7 +30,6 @@ public class MinioTemplateTest {
         this.minioTemplate = minioTemplate;
     }
 
-    // @formatter:off
 
     /**
      * 大文件分割
@@ -51,7 +50,7 @@ public class MinioTemplateTest {
         long chunkSize = 1024 * 1024 * 5;
         // 分块数量
         long chunkNum = (long) Math.ceil(localFile.length() * 1.0 / chunkSize);
-        log.info("分块总数：{}",chunkNum);
+        log.info("分块总数：{}", chunkNum);
         // 缓冲区大小
         byte[] bytes = new byte[1024];
         // 使用RandomAccessFile访问文件

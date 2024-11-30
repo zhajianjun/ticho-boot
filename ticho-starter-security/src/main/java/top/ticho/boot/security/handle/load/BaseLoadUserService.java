@@ -2,15 +2,15 @@ package top.ticho.boot.security.handle.load;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.IdUtil;
-import top.ticho.boot.json.util.JsonUtil;
-import top.ticho.boot.security.constant.BaseSecurityConst;
-import top.ticho.boot.security.prop.BaseSecurityProperty;
-import top.ticho.boot.view.core.BaseSecurityUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import top.ticho.boot.security.constant.BaseSecurityConst;
+import top.ticho.boot.security.prop.BaseSecurityProperty;
+import top.ticho.boot.view.core.BaseSecurityUser;
+import top.ticho.tool.json.util.JsonUtil;
 
 import javax.annotation.Resource;
 import java.util.Collections;
@@ -37,16 +37,14 @@ public class BaseLoadUserService implements LoadUserService, InitializingBean {
 
     @Override
     public BaseSecurityUser load(String account) {
-        // @formatter:off
         List<BaseSecurityUser> users = baseSecurityProperty.getUsers();
         BaseSecurityUser baseSecurityUser = users
             .stream()
-            .filter(x-> Objects.equals(x.getUsername(), account))
+            .filter(x -> Objects.equals(x.getUsername(), account))
             .findFirst()
             .orElse(null);
         // 拷贝一份对象进行返回，防止对源对象进行属性修改
         return JsonUtil.copy(baseSecurityUser, BaseSecurityUser.class);
-        // @formatter:on
     }
 
 

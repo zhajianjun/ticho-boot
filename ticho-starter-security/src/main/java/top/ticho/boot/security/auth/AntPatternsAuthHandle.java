@@ -1,12 +1,12 @@
 package top.ticho.boot.security.auth;
 
+import org.springframework.util.AntPathMatcher;
+import org.springframework.web.method.HandlerMethod;
 import top.ticho.boot.security.annotation.IgnoreJwtCheck;
 import top.ticho.boot.security.annotation.IgnoreType;
 import top.ticho.boot.security.constant.BaseOAuth2Const;
 import top.ticho.boot.security.prop.BaseSecurityProperty;
 import top.ticho.boot.web.util.SpringContext;
-import org.springframework.util.AntPathMatcher;
-import org.springframework.web.method.HandlerMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -29,13 +29,11 @@ public class AntPatternsAuthHandle {
     }
 
     public boolean ignoreAuth(HttpServletRequest request) {
-        // @formatter:off
         if (ignoreHandleMethodJwtCheck(request)) {
             return true;
         }
         List<String> antPatterns = baseSecurityProperty.getAntPatterns();
         return antPatterns.stream().anyMatch(x -> antPathMatcher.match(x, request.getRequestURI()));
-        // @formatter:on
     }
 
     /**

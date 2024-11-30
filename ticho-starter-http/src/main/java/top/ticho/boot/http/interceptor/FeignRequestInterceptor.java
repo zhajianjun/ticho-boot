@@ -1,7 +1,6 @@
 package top.ticho.boot.http.interceptor;
 
 import cn.hutool.core.util.StrUtil;
-import top.ticho.boot.http.constant.HttpConst;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import lombok.extern.slf4j.Slf4j;
@@ -12,12 +11,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import top.ticho.boot.http.constant.HttpConst;
 
 import javax.servlet.http.HttpServletRequest;
 
 /**
- *
- *
  * @author zhajianjun
  * @date 2022-09-26 16:20:40
  */

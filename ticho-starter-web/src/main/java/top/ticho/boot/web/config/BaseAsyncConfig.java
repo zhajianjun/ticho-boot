@@ -28,7 +28,6 @@ public class BaseAsyncConfig implements AsyncConfigurer {
     @Resource
     @Qualifier("asyncTaskExecutor")
     private Executor executor;
-    // @formatter:off
 
     /**
      * 获取异步线程池执行对象
@@ -39,10 +38,10 @@ public class BaseAsyncConfig implements AsyncConfigurer {
     }
 
     /**
-    * 异步线程执行失败异常处理
+     * 异步线程执行失败异常处理
      *
-    * @return AsyncUncaughtExceptionHandler
-    */
+     * @return AsyncUncaughtExceptionHandler
+     */
     @Override
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
         return (Throwable ex, Method method, Object... params) -> {

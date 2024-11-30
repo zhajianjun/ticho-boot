@@ -24,7 +24,7 @@ public class BaseUserUtil {
             return null;
         }
         Object principalObj = authentication.getPrincipal();
-         // 直接检查是否为匿名用户或认证对象为空
+        // 直接检查是否为匿名用户或认证对象为空
         if (principalObj == null || principalObj instanceof String) {
             return null;
         }

@@ -15,8 +15,6 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
 /**
- *
- *
  * @author zhajianjun
  * @date 2023-01-11 14:00
  */
@@ -68,7 +66,7 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
             try {
                 response.getWriter().write(b);
             } catch (IOException e) {
-                 log.error("{}", e.getMessage(), e);
+                log.error("{}", e.getMessage(), e);
                 this.setError();
             }
         }
@@ -79,7 +77,7 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
             try {
                 response.getWriter().write(s, off, len);
             } catch (IOException e) {
-                 log.error("{}", e.getMessage(), e);
+                log.error("{}", e.getMessage(), e);
                 this.setError();
             }
         }
@@ -104,7 +102,7 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
             try {
                 return response.getOutputStream().isReady();
             } catch (IOException e) {
-                 log.error("{}", e.getMessage(), e);
+                log.error("{}", e.getMessage(), e);
             }
             return false;
         }
@@ -115,7 +113,7 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
                 try {
                     response.getOutputStream().setWriteListener(listener);
                 } catch (IOException e) {
-                     log.error("{}", e.getMessage(), e);
+                    log.error("{}", e.getMessage(), e);
                 }
             }
 

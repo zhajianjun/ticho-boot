@@ -3,11 +3,6 @@ package top.ticho.boot.es.component;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
-import top.ticho.boot.es.query.EsQuery;
-import top.ticho.boot.json.util.JsonUtil;
-import top.ticho.boot.view.core.Entity;
-import top.ticho.boot.view.core.EsPageResult;
-import top.ticho.boot.view.exception.BizException;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.bulk.BulkItemResponse;
@@ -38,6 +33,11 @@ import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.sort.SortOrder;
+import top.ticho.boot.es.query.EsQuery;
+import top.ticho.boot.view.core.Entity;
+import top.ticho.boot.view.core.EsPageResult;
+import top.ticho.boot.view.exception.BizException;
+import top.ticho.tool.json.util.JsonUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -172,7 +172,7 @@ public class EsTemplateImpl implements EsTemplate {
     /**
      * 保存或者更新es数据
      *
-     * @param index 索引
+     * @param index  索引
      * @param entity 对象
      */
     @Override
@@ -209,7 +209,7 @@ public class EsTemplateImpl implements EsTemplate {
     /**
      * 批量保存或者更新es数据
      *
-     * @param index 索引
+     * @param index    索引
      * @param entities 对象列表
      */
     public void saveOrUpdateBatchDb(String index, List<? extends Entity> entities) {
@@ -231,7 +231,7 @@ public class EsTemplateImpl implements EsTemplate {
     /**
      * 批量保存或者更新es数据
      *
-     * @param index 索引
+     * @param index    索引
      * @param entities 对象列表
      */
     public void saveOrUpdateBatchForMap(String index, List<Map<String, Object>> entities) {
@@ -257,7 +257,7 @@ public class EsTemplateImpl implements EsTemplate {
     /**
      * Save or update batch for map.
      *
-     * @param index the index
+     * @param index    the index
      * @param entities the entities
      */
     public void saveOrUpdateBatchForMapDb(String index, List<Map<String, Object>> entities) {
@@ -280,7 +280,7 @@ public class EsTemplateImpl implements EsTemplate {
      * 根据id删除es数据
      *
      * @param index 索引
-     * @param id 编号
+     * @param id    编号
      */
     public void removeById(String index, String id) {
         if (StrUtil.isBlank(id)) {
@@ -301,7 +301,7 @@ public class EsTemplateImpl implements EsTemplate {
      * 批量根据id删除数据
      *
      * @param index 索引
-     * @param ids 编号列表
+     * @param ids   编号列表
      */
     public void removeByIds(String index, Collection<String> ids) {
         if (CollUtil.isEmpty(ids)) {
@@ -326,7 +326,7 @@ public class EsTemplateImpl implements EsTemplate {
     /**
      * 根据id更改数据
      *
-     * @param index 索引
+     * @param index  索引
      * @param entity 对象
      */
     public void updateById(String index, Entity entity) {
@@ -382,7 +382,7 @@ public class EsTemplateImpl implements EsTemplate {
     /**
      * 根据id更改数据
      *
-     * @param index 索引
+     * @param index  索引
      * @param entity 对象
      */
     public void updateById(String index, Map<String, Object> entity) {
@@ -393,7 +393,7 @@ public class EsTemplateImpl implements EsTemplate {
     /**
      * 批量更改数据
      *
-     * @param index 索引
+     * @param index    索引
      * @param entities 对象列表
      */
     public void updateBatch(String index, List<? extends Entity> entities) {
@@ -420,7 +420,7 @@ public class EsTemplateImpl implements EsTemplate {
     /**
      * Update batch.
      *
-     * @param index the index
+     * @param index    the index
      * @param entities the entities
      */
     public void updateBatchDb(String index, List<? extends Entity> entities) {
@@ -442,7 +442,7 @@ public class EsTemplateImpl implements EsTemplate {
     /**
      * 根据id更改map数据
      *
-     * @param index 索引
+     * @param index    索引
      * @param entities 对象列表
      */
     public void updateBatchForMap(String index, List<Map<String, Object>> entities) {
@@ -469,7 +469,7 @@ public class EsTemplateImpl implements EsTemplate {
     /**
      * Update batch for map.
      *
-     * @param index the index
+     * @param index    the index
      * @param entities the entities
      */
     public void updateBatchForMapDb(String index, List<Map<String, Object>> entities) {
@@ -619,7 +619,7 @@ public class EsTemplateImpl implements EsTemplate {
             }
             // 设置是否按查询匹配度排序
             searchBuilder.explain(true);
-            //打印的内容
+            // 打印的内容
             if (log.isDebugEnabled()) {
                 log.debug("【SearchRequest==>{}】", searchRequest);
             }
@@ -638,7 +638,7 @@ public class EsTemplateImpl implements EsTemplate {
     /**
      * 设置排序字段
      *
-     * @param esQuery es查询
+     * @param esQuery       es查询
      * @param searchBuilder 搜索生成器
      */
     private void setSortField(EsQuery<?> esQuery, SearchSourceBuilder searchBuilder) {
@@ -668,8 +668,8 @@ public class EsTemplateImpl implements EsTemplate {
     /**
      * 得到更新请求
      *
-     * @param index 索引
-     * @param entity 实体
+     * @param index       索引
+     * @param entity      实体
      * @param docAsUpsert true-文档不存在则插入，有则更新；false-文档不存在,会抛出ElasticsearchException
      * @return {@link UpdateRequest}
      */
@@ -693,8 +693,8 @@ public class EsTemplateImpl implements EsTemplate {
     /**
      * 得到更新请求
      *
-     * @param index 索引
-     * @param entity 实体
+     * @param index       索引
+     * @param entity      实体
      * @param docAsUpsert true-文档不存在则插入，有则更新；false-文档不存在,会抛出ElasticsearchException
      * @return {@link UpdateRequest}
      */

@@ -1,15 +1,15 @@
 package top.ticho.boot.security.handle.jwt;
 
-import top.ticho.boot.json.util.JsonUtil;
-import top.ticho.boot.security.constant.BaseSecurityConst;
-import top.ticho.boot.security.dto.Oauth2AccessToken;
-import top.ticho.boot.security.prop.BaseOauthProperty;
-import top.ticho.boot.view.enums.BizErrCode;
-import top.ticho.boot.view.core.BaseSecurityUser;
-import top.ticho.boot.view.util.Assert;
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.jwt.crypto.sign.Signer;
 import org.springframework.util.CollectionUtils;
+import top.ticho.boot.security.constant.BaseSecurityConst;
+import top.ticho.boot.security.dto.Oauth2AccessToken;
+import top.ticho.boot.security.prop.BaseOauthProperty;
+import top.ticho.boot.view.core.BaseSecurityUser;
+import top.ticho.boot.view.enums.BizErrCode;
+import top.ticho.boot.view.util.Assert;
+import top.ticho.tool.json.util.JsonUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +36,6 @@ public class JwtEncode {
     }
 
     public void encode(Oauth2AccessToken oAuth2AccessToken, BaseSecurityUser baseSecurityUser) {
-        // @formatter:off
         Signer signer = jwtSigner.getSigner();
         Assert.isNotNull(signer, BizErrCode.FAIL, "signer is null");
         long iat = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
@@ -69,7 +68,6 @@ public class JwtEncode {
         String refreshToken = JwtHelper.encode(JsonUtil.toJsonString(refreshTokenInfo), signer).getEncoded();
         oAuth2AccessToken.setAccessToken(accessToken);
         oAuth2AccessToken.setRefreshToken(refreshToken);
-        // @formatter:on
     }
 
 }

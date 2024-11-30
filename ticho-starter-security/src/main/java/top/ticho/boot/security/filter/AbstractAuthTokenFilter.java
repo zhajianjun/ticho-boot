@@ -10,7 +10,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
-import top.ticho.boot.json.util.JsonUtil;
 import top.ticho.boot.security.auth.AntPatternsAuthHandle;
 import top.ticho.boot.security.constant.BaseSecurityConst;
 import top.ticho.boot.security.handle.jwt.JwtDecode;
@@ -20,6 +19,7 @@ import top.ticho.boot.view.enums.BizErrCode;
 import top.ticho.boot.view.enums.HttpErrCode;
 import top.ticho.boot.view.exception.BizException;
 import top.ticho.boot.view.util.Assert;
+import top.ticho.tool.json.util.JsonUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.FilterChain;
@@ -53,7 +53,7 @@ public abstract class AbstractAuthTokenFilter<T extends BaseSecurityUser> extend
     /**
      * 前置处理
      *
-     * @param request request
+     * @param request  request
      * @param response response
      */
     protected void support(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response) {
@@ -62,7 +62,7 @@ public abstract class AbstractAuthTokenFilter<T extends BaseSecurityUser> extend
     /**
      * 后置处理
      *
-     * @param request request
+     * @param request  request
      * @param response response
      */
     protected void complete(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response) {
@@ -76,7 +76,6 @@ public abstract class AbstractAuthTokenFilter<T extends BaseSecurityUser> extend
      */
     protected abstract T convert(Map<String, Object> decodeAndVerify);
 
-    // @formatter:on
     @Override
     protected void doFilterInternal(
         @NonNull HttpServletRequest request,
@@ -123,7 +122,7 @@ public abstract class AbstractAuthTokenFilter<T extends BaseSecurityUser> extend
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
             response.getWriter().write(JsonUtil.toJsonString(result));
-        } finally{
+        } finally {
             complete(request, response);
         }
     }

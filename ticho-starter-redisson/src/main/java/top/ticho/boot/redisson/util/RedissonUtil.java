@@ -1,14 +1,14 @@
 package top.ticho.boot.redisson.util;
 
-import top.ticho.boot.redisson.thread.RedisDelayRunnable;
-import top.ticho.boot.view.enums.BizErrCode;
-import top.ticho.boot.view.exception.BizException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.Redisson;
 import org.redisson.api.RLock;
 import org.slf4j.MDC;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import top.ticho.boot.redisson.thread.RedisDelayRunnable;
+import top.ticho.boot.view.enums.BizErrCode;
+import top.ticho.boot.view.exception.BizException;
 
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -16,8 +16,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 /**
- *
- *
  * @author zhajianjun
  * @date 2023-02-17 16:42
  */
@@ -36,9 +34,9 @@ public class RedissonUtil {
     public <T> T execute(String key, int expireTime, boolean delayThread, Supplier<T> supplier) {
         T obj;
         RLock rLock = null;
-        //定义锁的延时操作类
+        // 定义锁的延时操作类
         RedisDelayRunnable redisDelayRunnable = null;
-        //定义守护线程
+        // 定义守护线程
         Thread redisDelayThread = null;
         boolean res = false;
         try {
@@ -85,9 +83,9 @@ public class RedissonUtil {
     public <T> T executeTb(String key, int expireTime, boolean delayThread, TaSupplier<T> supplier) throws Throwable {
         T obj;
         RLock rLock = null;
-        //定义锁的延时操作类
+        // 定义锁的延时操作类
         RedisDelayRunnable redisDelayRunnable = null;
-        //定义守护线程
+        // 定义守护线程
         Thread redisDelayThread = null;
         boolean res = false;
         try {

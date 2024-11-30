@@ -1,10 +1,10 @@
 package top.ticho.boot.security.auth;
 
 import cn.hutool.core.util.ArrayUtil;
-import top.ticho.boot.json.util.JsonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import top.ticho.tool.json.util.JsonUtil;
 
 /**
  * 接口权限实现

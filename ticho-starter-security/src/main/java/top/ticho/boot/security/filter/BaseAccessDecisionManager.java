@@ -1,6 +1,5 @@
 package top.ticho.boot.security.filter;
 
-import top.ticho.boot.security.auth.AntPatternsAuthHandle;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDecisionManager;
@@ -9,6 +8,7 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.FilterInvocation;
+import top.ticho.boot.security.auth.AntPatternsAuthHandle;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +27,6 @@ public class BaseAccessDecisionManager implements AccessDecisionManager {
     @Resource
     private AntPatternsAuthHandle antPatternsAuthHandle;
 
-    // @formatter:off
 
     /**
      * decide 方法是判定是否拥有权限的决策方法，

@@ -27,9 +27,8 @@ import io.minio.messages.DeleteObject;
 import io.minio.messages.Item;
 import lombok.Data;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.multipart.MultipartFile;
 import top.ticho.boot.minio.prop.MinioProperty;
@@ -54,17 +53,15 @@ import java.util.concurrent.TimeUnit;
  */
 @SuppressWarnings("all")
 @Data
+@Slf4j
 public class MinioTemplate {
-    private static final Logger log = LoggerFactory.getLogger(MinioTemplate.class);
-
-    // @formatter:off
 
     private MinioProperty minioProperty;
 
     @Getter
     private MinioClient minioClient;
 
-    public MinioTemplate(MinioProperty minioProperty){
+    public MinioTemplate(MinioProperty minioProperty) {
         this.minioProperty = minioProperty;
         this.minioClient = MinioClient
             .builder()
@@ -95,7 +92,7 @@ public class MinioTemplate {
      */
     public void createBucket(String bucketName) {
         try {
-            if(this.bucketExists(bucketName)){
+            if (this.bucketExists(bucketName)) {
                 return;
             }
             minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
@@ -143,10 +140,10 @@ public class MinioTemplate {
     /**
      * 上传文件
      *
-     * @param bucketName bucket名称
-     * @param objectName 文件名称
+     * @param bucketName   bucket名称
+     * @param objectName   文件名称
      * @param userMetadata 用户自定义数据
-     * @param stream     文件流
+     * @param stream       文件流
      */
     public void putObject(String bucketName, String objectName, String contentType, Map<String, String> userMetadata, InputStream stream) {
         try {
@@ -167,22 +164,22 @@ public class MinioTemplate {
     /**
      * 上传文件
      *
-     * @param bucketName bucket名称
-     * @param objectName 文件名称
-     * @param userMetadata 用户自定义数据
-     * @param multipartFile  文件
+     * @param bucketName    bucket名称
+     * @param objectName    文件名称
+     * @param userMetadata  用户自定义数据
+     * @param multipartFile 文件
      */
     public void putObject(String bucketName, String objectName, Map<String, String> userMetadata, MultipartFile multipartFile) {
         try {
             InputStream stream = multipartFile.getInputStream();
             minioClient.putObject(
                 PutObjectArgs.builder()
-                .bucket(bucketName)
-                .object(objectName)
-                .userMetadata(userMetadata)
-                // 分段上传中允许的最小分段大小为5MiB。
-                .stream(stream, stream.available(), minioProperty.getPartSize())
-                .contentType(multipartFile.getContentType()).build()
+                    .bucket(bucketName)
+                    .object(objectName)
+                    .userMetadata(userMetadata)
+                    // 分段上传中允许的最小分段大小为5MiB。
+                    .stream(stream, stream.available(), minioProperty.getPartSize())
+                    .contentType(multipartFile.getContentType()).build()
             );
         } catch (Exception e) {
             log.error("上传文件异常，{}", e.getMessage(), e);
@@ -193,10 +190,10 @@ public class MinioTemplate {
     /**
      * 本地上传文件
      *
-     * @param bucketName bucket名称
-     * @param objectName 文件名称
+     * @param bucketName   bucket名称
+     * @param objectName   文件名称
      * @param userMetadata 用户自定义数据
-     * @param stream     文件流
+     * @param stream       文件流
      */
     public void uploadObject(String bucketName, String filename, String objectName, String contentType, Map<String, String> userMetadata) {
         try {
@@ -235,9 +232,9 @@ public class MinioTemplate {
      * @param objectNames
      * @return true/false
      */
-    public void removeObjects(String bucketName, List<String> objectNames){
+    public void removeObjects(String bucketName, List<String> objectNames) {
         List<DeleteObject> deleteObjects = new ArrayList<>(objectNames.size());
-        for (String objectName : objectNames){
+        for (String objectName : objectNames) {
             deleteObjects.add(new DeleteObject(objectName));
         }
         RemoveObjectsArgs objectsArgs = RemoveObjectsArgs.builder()
@@ -254,7 +251,7 @@ public class MinioTemplate {
                 log.error("批量删除对象异常，{}", e.getMessage(), e);
                 isError = true;
             }
-       }
+        }
         if (isError) {
             throw new BizException(BizErrCode.FAIL, "批量删除对象异常");
         }
@@ -262,25 +259,26 @@ public class MinioTemplate {
 
     /**
      * 获取分片名称地址HashMap key=分片序号 value=分片文件地址
+     *
      * @param bucketName 存储桶名称
-     * @param objectMd5 对象Md5
+     * @param objectMd5  对象Md5
      * @return objectChunkNameMap
      */
-    public Map<Integer,String> mapChunkObjectNames(String bucketName, String objectMd5){
-        if (null == bucketName){
+    public Map<Integer, String> mapChunkObjectNames(String bucketName, String objectMd5) {
+        if (null == bucketName) {
             bucketName = minioProperty.getChunkBucket();
         }
-        if (null == objectMd5){
+        if (null == objectMd5) {
             return null;
         }
-        List<String> chunkPaths = listObjectNames(bucketName,objectMd5, true);
-        if (null == chunkPaths || chunkPaths.size() == 0){
+        List<String> chunkPaths = listObjectNames(bucketName, objectMd5, true);
+        if (null == chunkPaths || chunkPaths.size() == 0) {
             return null;
         }
-        Map<Integer,String> chunkMap = new HashMap<>(chunkPaths.size());
+        Map<Integer, String> chunkMap = new HashMap<>(chunkPaths.size());
         for (String chunkName : chunkPaths) {
-            Integer partNumber = Integer.parseInt(chunkName.substring(chunkName.indexOf("/") + 1,chunkName.lastIndexOf(".")));
-            chunkMap.put(partNumber,chunkName);
+            Integer partNumber = Integer.parseInt(chunkName.substring(chunkName.indexOf("/") + 1, chunkName.lastIndexOf(".")));
+            chunkMap.put(partNumber, chunkName);
         }
         return chunkMap;
     }
@@ -302,10 +300,10 @@ public class MinioTemplate {
         String contentType,
         Map<String, String> userMetadata,
         boolean isDeleteChunkObject
-    ){
+    ) {
         try {
             List<ComposeSource> sourceObjectList = new ArrayList<>(chunkNames.size());
-            for (String chunk : chunkNames){
+            for (String chunk : chunkNames) {
                 ComposeSource composeSource = ComposeSource.builder()
                     .bucket(chunkBucKetName)
                     .object(chunk)
@@ -322,7 +320,7 @@ public class MinioTemplate {
                 .userMetadata(userMetadata)
                 .build();
             minioClient.composeObject(composeObjectArgs);
-            if(isDeleteChunkObject){
+            if (isDeleteChunkObject) {
                 removeObjects(chunkBucKetName, chunkNames);
             }
         } catch (Exception e) {
@@ -358,8 +356,8 @@ public class MinioTemplate {
      *
      * @param bucketName bucket名称
      * @param objectName 文件名称
-     * @param offset 起始字节的位置
-     * @param length 要读取的长度 (可选，如果无值则代表读到文件结尾)
+     * @param offset     起始字节的位置
+     * @param length     要读取的长度 (可选，如果无值则代表读到文件结尾)
      * @return 二进制流
      */
     public GetObjectResponse getObject(String bucketName, String objectName, Long offset, Long length) {
@@ -438,15 +436,15 @@ public class MinioTemplate {
      * 获取对象文件名称列表
      *
      * @param bucketName 存储桶名称
-     * @param prefix 对象名称前缀
-     * @param sort 是否排序(升序)
+     * @param prefix     对象名称前缀
+     * @param sort       是否排序(升序)
      * @return objectNames
      */
     public List<String> listObjectNames(String bucketName, String prefix, Boolean sort) {
         List<Result<Item>> chunks = listObjects(bucketName, prefix, true);
         try {
             List<String> chunkPaths = new ArrayList<>();
-            for (Result<Item> item : chunks){
+            for (Result<Item> item : chunks) {
                 chunkPaths.add(item.get().objectName());
             }
             if (sort) {
@@ -464,22 +462,22 @@ public class MinioTemplate {
      *
      * @param bucketName bucketName
      * @param objectName 文件名称
-     * @param expiry 过期时间 <=7天，默认30分钟，单位：秒
+     * @param expiry     过期时间 <=7天，默认30分钟，单位：秒
      * @return String
      */
     public String getObjectUrl(String bucketName, String objectName, Integer expiry) {
         try {
             TimeUnit timeUnit = TimeUnit.SECONDS;
-            if(Objects.isNull(expiry)){
+            if (Objects.isNull(expiry)) {
                 expiry = 30;
                 timeUnit = TimeUnit.MINUTES;
             }
             GetPresignedObjectUrlArgs urlArgs = GetPresignedObjectUrlArgs.builder()
-                 .method(Method.GET)
-                 .bucket(bucketName)
-                 .object(objectName)
-                 .expiry(expiry, timeUnit)
-                 .build();
+                .method(Method.GET)
+                .bucket(bucketName)
+                .object(objectName)
+                .expiry(expiry, timeUnit)
+                .build();
             return minioClient.getPresignedObjectUrl(urlArgs);
         } catch (Exception e) {
             log.error("获取文件外链异常，{}", e.getMessage(), e);
@@ -492,8 +490,8 @@ public class MinioTemplate {
      *
      * @param bucketName bucketName
      * @param objectName 文件名称
-     * @param expires 过期时间 <=7天
-     * @param timeUnit 时间单位
+     * @param expires    过期时间 <=7天
+     * @param timeUnit   时间单位
      * @return String
      */
     public String getObjectUrl(String bucketName, String objectName, Integer expires, TimeUnit timeUnit) {
@@ -503,11 +501,11 @@ public class MinioTemplate {
                 timeUnit = TimeUnit.HOURS;
             }
             GetPresignedObjectUrlArgs urlArgs = GetPresignedObjectUrlArgs.builder()
-                 .method(Method.GET)
-                 .bucket(bucketName)
-                 .object(objectName)
-                 .expiry(expires, timeUnit)
-                 .build();
+                .method(Method.GET)
+                .bucket(bucketName)
+                .object(objectName)
+                .expiry(expires, timeUnit)
+                .build();
             return minioClient.getPresignedObjectUrl(urlArgs);
         } catch (Exception e) {
             log.error("获取文件外链异常，{}", e.getMessage(), e);

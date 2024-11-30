@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author zhajianjun
  * @date 2020-11-24 23:14
  */
@@ -31,7 +30,6 @@ public class BaseSwaggerResourcesProvider implements SwaggerResourcesProvider {
 
     @Override
     public List<SwaggerResource> get() {
-        // @formatter:off
         List<SwaggerResource> resources = new ArrayList<>();
         List<String> routes = new ArrayList<>();
         routeLocator.getRoutes().subscribe(route -> routes.add(route.getId()));
@@ -40,14 +38,13 @@ public class BaseSwaggerResourcesProvider implements SwaggerResourcesProvider {
             .filter(routeDefinition -> routes.contains(routeDefinition.getId()))
             .forEach(route ->
                 route.getPredicates()
-                     .stream()
-                     .filter(predicateDefinition -> ("Path").equalsIgnoreCase(predicateDefinition.getName()))
-                     .forEach(predicateDefinition ->
-                         resources.add(swaggerResource(route.getId(), predicateDefinition.getArgs().get(NameUtils.GENERATED_NAME_PREFIX + "0").replace("**", "v2/api-docs")))
-                     )
+                    .stream()
+                    .filter(predicateDefinition -> ("Path").equalsIgnoreCase(predicateDefinition.getName()))
+                    .forEach(predicateDefinition ->
+                        resources.add(swaggerResource(route.getId(), predicateDefinition.getArgs().get(NameUtils.GENERATED_NAME_PREFIX + "0").replace("**", "v2/api-docs")))
+                    )
             );
         return resources;
-        // @formatter:on
     }
 
     private SwaggerResource swaggerResource(String name, String location) {

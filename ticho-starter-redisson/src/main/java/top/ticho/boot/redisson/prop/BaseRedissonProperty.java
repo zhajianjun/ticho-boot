@@ -1,13 +1,11 @@
 package top.ticho.boot.redisson.prop;
 
-import top.ticho.boot.redisson.enums.RedissonType;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import top.ticho.boot.redisson.enums.RedissonType;
 
 /**
- *
- *
  * @author zhajianjun
  * @date 2023-02-17 16:42
  */

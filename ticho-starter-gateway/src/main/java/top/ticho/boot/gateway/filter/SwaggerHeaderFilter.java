@@ -1,15 +1,14 @@
 package top.ticho.boot.gateway.filter;
 
-import top.ticho.boot.gateway.constant.CommonConst;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
+import top.ticho.boot.gateway.constant.CommonConst;
 
 /**
- *
  * @author zhajianjun
  * @date 2021-10-18 22:57
  */

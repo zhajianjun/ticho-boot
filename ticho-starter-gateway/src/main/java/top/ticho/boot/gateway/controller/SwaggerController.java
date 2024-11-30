@@ -15,7 +15,6 @@ import springfox.documentation.swagger.web.UiConfigurationBuilder;
 import java.util.Optional;
 
 /**
- *
  * @author zhajianjun
  * @date 2020-11-24 23:31
  */
@@ -31,7 +30,6 @@ public class SwaggerController {
     @Autowired(required = false)
     private UiConfiguration uiConfiguration;
 
-    // @formatter:off
 
     @GetMapping("/swagger-resources/configuration/security")
     public Mono<ResponseEntity<SecurityConfiguration>> securityConfiguration() {
@@ -54,6 +52,5 @@ public class SwaggerController {
         return Mono.just((new ResponseEntity<>(swaggerResources.get(), HttpStatus.OK)));
     }
 
-    // @formatter:on
 
 }

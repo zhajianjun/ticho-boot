@@ -5,8 +5,6 @@ import lombok.EqualsAndHashCode;
 import org.elasticsearch.index.query.QueryBuilder;
 
 /**
- *
- *
  * @author zhajianjun
  * @date 2023-04-15 12:21:05
  */

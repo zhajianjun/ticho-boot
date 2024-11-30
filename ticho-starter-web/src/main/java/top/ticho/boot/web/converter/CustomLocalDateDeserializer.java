@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import top.ticho.boot.json.constant.DateFormatConst;
+import top.ticho.tool.json.constant.DateFormatConst;
 
 import java.io.IOException;
 import java.time.DateTimeException;
@@ -20,11 +20,12 @@ import java.time.format.DateTimeFormatter;
 /**
  * LocalDateTime反序列化
  * <p>
- *    主要处理 yyyy-MM-dd HH:mm:ss 转换 yyyy-MM-dd
+ * 主要处理 yyyy-MM-dd HH:mm:ss 转换 yyyy-MM-dd
  * </p>
- * @see LocalDateDeserializer
+ *
  * @author zhajianjun
  * @date 2022-07-10 15:56:30
+ * @see LocalDateDeserializer
  */
 @SuppressWarnings("all")
 public class CustomLocalDateDeserializer extends JSR310DateTimeDeserializerBase<LocalDate> {
@@ -79,8 +80,7 @@ public class CustomLocalDateDeserializer extends JSR310DateTimeDeserializerBase<
     }
 
     @Override
-    public LocalDate deserialize(JsonParser parser, DeserializationContext context) throws IOException
-    {
+    public LocalDate deserialize(JsonParser parser, DeserializationContext context) throws IOException {
         if (parser.hasToken(JsonToken.VALUE_STRING)) {
             String string = parser.getText().trim();
             if (string.length() == 0) {
@@ -98,7 +98,7 @@ public class CustomLocalDateDeserializer extends JSR310DateTimeDeserializerBase<
                     LocalDateTime localDateTime = LocalDateTime.parse(string, DateTimeFormatter.ofPattern(DateFormatConst.YYYY_MM_DD_HH_MM_SS));
                     return localDateTime.toLocalDate();
                 }
-                                // 添加的内容在这
+                // 添加的内容在这
                 if (string.matches(DateFormatConst.YYYY_MM_DD_HH_MM_SS_SSS_REGEX)) {
                     LocalDateTime localDateTime = LocalDateTime.parse(string, DateTimeFormatter.ofPattern(DateFormatConst.YYYY_MM_DD_HH_MM_SS_SSS));
                     return localDateTime.toLocalDate();
@@ -124,7 +124,7 @@ public class CustomLocalDateDeserializer extends JSR310DateTimeDeserializerBase<
                 return null;
             }
             if (context.isEnabled(DeserializationFeature.UNWRAP_SINGLE_VALUE_ARRAYS)
-                    && (t == JsonToken.VALUE_STRING || t==JsonToken.VALUE_EMBEDDED_OBJECT)) {
+                && (t == JsonToken.VALUE_STRING || t == JsonToken.VALUE_EMBEDDED_OBJECT)) {
                 final LocalDate parsed = deserialize(parser, context);
                 if (parser.nextToken() != JsonToken.END_ARRAY) {
                     handleMissingEndArrayForSingle(parser, context);
@@ -137,14 +137,18 @@ public class CustomLocalDateDeserializer extends JSR310DateTimeDeserializerBase<
                 int day = parser.nextIntValue(-1);
 
                 if (parser.nextToken() != JsonToken.END_ARRAY) {
-                    throw context.wrongTokenException(parser, handledType(), JsonToken.END_ARRAY,
-                            "Expected array to end");
+                    throw context.wrongTokenException(
+                        parser, handledType(), JsonToken.END_ARRAY,
+                        "Expected array to end"
+                    );
                 }
                 return LocalDate.of(year, month, day);
             }
-            context.reportInputMismatch(handledType(),
-                    "Unexpected token (%s) within Array, expected VALUE_NUMBER_INT",
-                    t);
+            context.reportInputMismatch(
+                handledType(),
+                "Unexpected token (%s) within Array, expected VALUE_NUMBER_INT",
+                t
+            );
         }
         if (parser.hasToken(JsonToken.VALUE_EMBEDDED_OBJECT)) {
             return (LocalDate) parser.getEmbeddedObject();

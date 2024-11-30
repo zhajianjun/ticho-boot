@@ -1,12 +1,12 @@
 package top.ticho.boot.gateway.config;
 
-import top.ticho.boot.gateway.filter.ApiGlobalFilter;
-import top.ticho.boot.view.log.BaseLogProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import top.ticho.boot.gateway.filter.ApiGlobalFilter;
+import top.ticho.boot.view.log.BaseLogProperty;
 
 /**
  * bean初始化配置

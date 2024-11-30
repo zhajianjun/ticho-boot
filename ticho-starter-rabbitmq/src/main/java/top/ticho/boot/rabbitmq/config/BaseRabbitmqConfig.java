@@ -1,7 +1,5 @@
 package top.ticho.boot.rabbitmq.config;
 
-import top.ticho.boot.rabbitmq.event.MqSendSuccessEvent;
-import top.ticho.boot.rabbitmq.event.MqSendToExchangeFailEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
@@ -12,6 +10,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.lang.NonNull;
+import top.ticho.boot.rabbitmq.event.MqSendSuccessEvent;
+import top.ticho.boot.rabbitmq.event.MqSendToExchangeFailEvent;
 
 import javax.annotation.PostConstruct;
 
@@ -27,8 +27,6 @@ import javax.annotation.PostConstruct;
 @Slf4j
 public class BaseRabbitmqConfig implements RabbitTemplate.ConfirmCallback, RabbitTemplate.ReturnCallback {
 
-
-    // @formatter:off
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
@@ -48,14 +46,14 @@ public class BaseRabbitmqConfig implements RabbitTemplate.ConfirmCallback, Rabbi
      * 发送到路由失败回调，无论是否失败都会触发
      *
      * @param correlationData correlationData
-     * @param ack ack
-     * @param cause cause
+     * @param ack             ack
+     * @param cause           cause
      */
     @Override
     public void confirm(CorrelationData correlationData, boolean ack, String cause) {
         Message returnedMessage = null;
         String id = null;
-        if(correlationData != null){
+        if (correlationData != null) {
             id = correlationData.getId();
             returnedMessage = correlationData.getReturnedMessage();
         }
@@ -71,10 +69,10 @@ public class BaseRabbitmqConfig implements RabbitTemplate.ConfirmCallback, Rabbi
     /**
      * 路由发送到队列失败回调，只有失败才会触发
      *
-     * @param message message
-     * @param replyCode replyCode
-     * @param replyText replyText
-     * @param exchange exchange
+     * @param message    message
+     * @param replyCode  replyCode
+     * @param replyText  replyText
+     * @param exchange   exchange
      * @param routingKey routingKey
      */
     @Override

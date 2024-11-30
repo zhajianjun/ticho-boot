@@ -60,11 +60,9 @@ public class TreeUtil {
      * @return {@link Map}<{@link Boolean}, {@link List}<{@link T}>>
      */
     private static <T extends TreeNode<T>> Map<Boolean, List<T>> group(List<T> data, Serializable parentId) {
-        // @formatter:off
         return data
             .stream()
-            .collect(Collectors.groupingBy(x-> Objects.equals(x.getParentId(), parentId)));
-        // @formatter:on
+            .collect(Collectors.groupingBy(x -> Objects.equals(x.getParentId(), parentId)));
     }
 
     /**
@@ -77,7 +75,6 @@ public class TreeUtil {
      * @param afterConsumer 父节点收集所有子节点后的处理
      */
     public static <T extends TreeNode<T>> void tree(List<T> datas, T root, BiPredicate<T, T> predicate, BiConsumer<T, T> consumer, Consumer<T> afterConsumer) {
-        // @formatter:off
         Objects.requireNonNull(datas);
         Objects.requireNonNull(root);
         Objects.requireNonNull(root.getId());
@@ -90,10 +87,9 @@ public class TreeUtil {
         root.setHasChildren(!sons.isEmpty());
         sons
             .stream()
-            .filter(x-> predicate.test(root, x))
-            .peek(x-> consumer.accept(root, x))
+            .filter(x -> predicate.test(root, x))
+            .peek(x -> consumer.accept(root, x))
             .forEach(x -> tree(elseChilds, x, predicate, consumer, afterConsumer));
-        // @formatter:on
         if (afterConsumer == null) {
             return;
         }
@@ -103,11 +99,11 @@ public class TreeUtil {
     /**
      * 树
      *
-     * @param datas     数据
-     * @param root 根节点数据
+     * @param datas 数据
+     * @param root  根节点数据
      */
     public static <T extends TreeNode<T>> void tree(List<T> datas, T root) {
-        tree(datas, root, (x, y) -> true, (x, y) -> {}, (x)-> {});
+        tree(datas, root, (x, y) -> true, (x, y) -> {}, (x) -> {});
     }
 
 }

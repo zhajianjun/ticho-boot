@@ -57,7 +57,6 @@ public class RedisDelayRunnable implements Runnable {
 
     @Override
     public void run() {
-        // @formatter:off
         MDC.setContextMap(mdcMap);
         // 等待时间
         int delayTime = expireTime * 2 / 3;
@@ -69,7 +68,7 @@ public class RedisDelayRunnable implements Runnable {
                 Thread.sleep(TimeUnit.SECONDS.toMillis(delayTime));
                 //
                 int wateTime = 5;
-                //此处如果不使用tryLockAsync会导致锁id进行变更。导致释放锁的时候报错。expireTime才是过期时间，第一个是连接等待时间
+                // 此处如果不使用tryLockAsync会导致锁id进行变更。导致释放锁的时候报错。expireTime才是过期时间，第一个是连接等待时间
                 if (rLock.tryLockAsync(wateTime, expireTime, TimeUnit.SECONDS, threadId).get()) {
                     if (log.isInfoEnabled()) {
                         log.info("分布式锁[{}]延时成功，等待{}ms，锁超时时间重置为{}s,主线程{},守护线程{}", key, delayTime, expireTime, threadId, id);
@@ -92,6 +91,5 @@ public class RedisDelayRunnable implements Runnable {
             log.debug("RedisDelayRunnable 处理线程已停止");
         }
         MDC.clear();
-        // @formatter:on
     }
 }

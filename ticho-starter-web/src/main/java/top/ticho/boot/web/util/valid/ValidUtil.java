@@ -33,7 +33,6 @@ import java.util.stream.Collectors;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ValidUtil {
-    // @formatter:off
 
     private static final Logger log = LoggerFactory.getLogger(ValidUtil.class);
 
@@ -130,13 +129,12 @@ public class ValidUtil {
         throwValidException(validate);
     }
 
-    // @formatter:off
     /**
      * valid 参数校验
      *
-     * @see Default 默认校验默认分组注解，比如@NotNull 没有写group分组，实际用的默认分组
-     * @param obj 校验对象
+     * @param obj           校验对象
      * @param customMessage 自定义作物信息
+     * @see Default 默认校验默认分组注解，比如@NotNull 没有写group分组，实际用的默认分组
      */
     public static void valid(Object obj, String customMessage) {
         Object preCheck = preCheck(obj, customMessage);
@@ -148,10 +146,10 @@ public class ValidUtil {
     /**
      * valid 参数校验
      *
-     * @see Default 默认校验默认分组注解，比如@NotNull 没有写group分组，实际用的默认分组
-     * @param obj 校验对象
+     * @param obj           校验对象
      * @param customMessage 自定义作物信息
-     * @param groups 校验分组
+     * @param groups        校验分组
+     * @see Default 默认校验默认分组注解，比如@NotNull 没有写group分组，实际用的默认分组
      */
     public static void valid(Object obj, String customMessage, Class<?>... groups) {
         Object preCheck = preCheck(obj, customMessage);
@@ -163,10 +161,10 @@ public class ValidUtil {
     /**
      * valid 参数校验
      *
+     * @param obj           校验对象
+     * @param customMessage 自定义作物信息
      * @see Default 默认校验默认分组注解，比如@NotNull 没有写group分组，实际用的默认分组
      * @see BaseHibernateValidatorConfiguration#failFast(boolean) 默认快速校验,遇到第一错误就报异常
-     * @param obj 校验对象
-     * @param customMessage 自定义作物信息
      */
     public static void validFast(Object obj, String customMessage) {
         Object preCheck = preCheck(obj, customMessage);
@@ -178,11 +176,11 @@ public class ValidUtil {
     /**
      * valid 参数校验
      *
+     * @param obj           校验对象
+     * @param groups        校验分组
+     * @param customMessage 自定义作物信息
      * @see Default 默认校验默认分组注解，比如@NotNull 没有写group分组，实际用的默认分组
      * @see BaseHibernateValidatorConfiguration#failFast(boolean) 默认快速校验,遇到第一错误就报异常
-     * @param obj 校验对象
-     * @param groups 校验分组
-     * @param customMessage 自定义作物信息
      */
     public static void validFast(Object obj, String customMessage, Class<?>... groups) {
         Object preCheck = preCheck(obj, customMessage);
@@ -194,11 +192,11 @@ public class ValidUtil {
     /**
      * valid 参数校验
      *
-     * @param obj 校验对象
-     * @param customMessage 自定义作物信息
-     * @param failFast 是否快速检查 检验到错误就返回，而不是检验所有错误
+     * @param obj               校验对象
+     * @param customMessage     自定义作物信息
+     * @param failFast          是否快速检查 检验到错误就返回，而不是检验所有错误
      * @param checkDefaultGroup 是否检验默认分组
-     * @param groups 校验分组
+     * @param groups            校验分组
      */
     public static void valid(Object obj, String customMessage, boolean failFast, boolean checkDefaultGroup, Class<?>... groups) {
         Object preCheck = preCheck(obj, customMessage);
@@ -211,10 +209,10 @@ public class ValidUtil {
     /**
      * valid 参数校验
      *
-     * @param obj 校验对象
-     * @param failFast 是否快速检查 检验到错误就返回，而不是检验所有错误
+     * @param obj               校验对象
+     * @param failFast          是否快速检查 检验到错误就返回，而不是检验所有错误
      * @param checkDefaultGroup 是否检验默认分组
-     * @param groups 校验分组
+     * @param groups            校验分组
      */
     public static <T> Set<ConstraintViolation<T>> validReturn(T obj, boolean failFast, boolean checkDefaultGroup, Class<?>... groups) {
         Validator validtor = failFast ? VALIDATOR_FAIL_FAST : VALIDATOR_DEFAULT;
@@ -222,7 +220,6 @@ public class ValidUtil {
         return validtor.validate(obj, groupsNew);
     }
 
-    // @formatter:on
 
     /**
      * 抛出ConstraintViolation的异常信息
@@ -232,12 +229,11 @@ public class ValidUtil {
      * @param validate 校验异常信息列表
      */
     private static <T> void throwValidException(Set<ConstraintViolation<T>> validate) {
-        // @formatter:off
         int size;
         if (validate == null || (size = validate.size()) == 0) {
             return;
         }
-        StringJoiner joiner = new StringJoiner(",","{","}");
+        StringJoiner joiner = new StringJoiner(",", "{", "}");
         if (size == 1) {
             Iterator<ConstraintViolation<T>> violation = validate.iterator();
             ConstraintViolation<T> next = violation.next();
@@ -248,14 +244,13 @@ public class ValidUtil {
             throw new BizException(BizErrCode.PARAM_ERROR, message);
         }
         List<ConstraintViolation<T>> validated = validate
-                .stream()
-                .sorted(Comparator.comparing(ConstraintViolation::getMessage))
-                .peek(next -> joiner.add(next.getPropertyPath() + ":" + next.getMessage()))
-                .collect(Collectors.toList());
+            .stream()
+            .sorted(Comparator.comparing(ConstraintViolation::getMessage))
+            .peek(next -> joiner.add(next.getPropertyPath() + ":" + next.getMessage()))
+            .collect(Collectors.toList());
         log.warn("参数校验异常，{}", joiner);
         ConstraintViolation<T> violation = validated.get(0);
         throw new BizException(BizErrCode.PARAM_ERROR, violation.getMessage());
-        // @formatter:on
     }
 
     /**

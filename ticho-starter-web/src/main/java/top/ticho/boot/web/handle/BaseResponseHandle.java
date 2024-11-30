@@ -108,7 +108,6 @@ public class BaseResponseHandle implements ResponseBodyAdvice<Object> {
         return result;
     }
 
-    // @formatter:off
 
     @Override
     public boolean supports(@NonNull MethodParameter methodParameter, @NonNull Class<? extends HttpMessageConverter<?>> aClass) {

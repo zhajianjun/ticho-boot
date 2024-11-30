@@ -15,7 +15,6 @@
         <module>ticho-starter-rabbitmq</module>
         <module>ticho-starter-security</module>
         <module>ticho-starter-redis</module>
-        <module>ticho-starter-json</module>
         <module>ticho-starter-log</module>
         <module>ticho-starter-cache</module>
         <module>ticho-starter-gateway</module>

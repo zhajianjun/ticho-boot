@@ -19,5 +19,5 @@ public @interface View {
      */
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     boolean ignore() default false;
-    
+
 }

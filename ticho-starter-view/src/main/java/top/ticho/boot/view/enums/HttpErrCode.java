@@ -11,7 +11,6 @@ import java.io.Serializable;
  */
 public enum HttpErrCode implements Serializable, IErrCode {
 
-    // @formatter:off
 
     /**
      *
@@ -52,7 +51,7 @@ public enum HttpErrCode implements Serializable, IErrCode {
     private final int code;
 
     /**
-     *状态信息
+     * 状态信息
      */
     private final String msg;
 

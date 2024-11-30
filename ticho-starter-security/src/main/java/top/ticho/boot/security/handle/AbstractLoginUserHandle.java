@@ -1,11 +1,6 @@
 package top.ticho.boot.security.handle;
 
 import cn.hutool.core.collection.CollUtil;
-import top.ticho.boot.security.dto.Oauth2AccessToken;
-import top.ticho.boot.security.handle.jwt.JwtSigner;
-import top.ticho.boot.security.handle.jwt.JwtEncode;
-import top.ticho.boot.security.handle.jwt.JwtExtra;
-import top.ticho.boot.view.core.BaseSecurityUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,6 +8,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import top.ticho.boot.security.dto.Oauth2AccessToken;
+import top.ticho.boot.security.handle.jwt.JwtEncode;
+import top.ticho.boot.security.handle.jwt.JwtExtra;
+import top.ticho.boot.security.handle.jwt.JwtSigner;
+import top.ticho.boot.view.core.BaseSecurityUser;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -43,7 +43,6 @@ public abstract class AbstractLoginUserHandle implements LoginUserHandle {
 
     public String publicKey() {
         return jwtSigner.getVerifierKey();
-        // @formatter:on
     }
 
     /**
@@ -53,7 +52,6 @@ public abstract class AbstractLoginUserHandle implements LoginUserHandle {
      * @return token返回信息
      */
     protected Oauth2AccessToken getOauth2TokenAndSetAuthentication(BaseSecurityUser baseSecurityUser) {
-        // @formatter:off
         List<String> authoritieStrs = Optional.ofNullable(baseSecurityUser.getRoles()).orElseGet(ArrayList::new);
         baseSecurityUser.setPassword("N/A");
         List<SimpleGrantedAuthority> authorities = authoritieStrs.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
@@ -70,7 +68,6 @@ public abstract class AbstractLoginUserHandle implements LoginUserHandle {
         oAuth2AccessToken.setExtInfo(map);
         jwtEncode.encode(oAuth2AccessToken, baseSecurityUser);
         return oAuth2AccessToken;
-        // @formatter:on
     }
 
     /**

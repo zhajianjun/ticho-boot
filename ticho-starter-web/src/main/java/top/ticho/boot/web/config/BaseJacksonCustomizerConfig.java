@@ -5,12 +5,12 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
-import top.ticho.boot.web.converter.CustomLocalDateDeserializer;
-import top.ticho.boot.web.converter.CustomLocalDateTimeDeserializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import top.ticho.boot.web.converter.CustomLocalDateDeserializer;
+import top.ticho.boot.web.converter.CustomLocalDateTimeDeserializer;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -38,7 +38,6 @@ public class BaseJacksonCustomizerConfig {
 
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
-        // @formatter:off
         return builder -> {
             builder.serializerByType(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(localDateTimePattern)));
             builder.deserializerByType(LocalDateTime.class, new CustomLocalDateTimeDeserializer(DateTimeFormatter.ofPattern(localDateTimePattern)));
@@ -57,6 +56,5 @@ public class BaseJacksonCustomizerConfig {
             builder.serializerByType(Long.class, ToStringSerializer.instance);
             builder.serializerByType(Long.TYPE, ToStringSerializer.instance);
         };
-        // @formatter:on
     }
 }

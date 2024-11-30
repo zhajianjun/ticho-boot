@@ -4,11 +4,11 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import top.ticho.boot.datasource.mapper.RootMapper;
-import top.ticho.boot.datasource.service.RootService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
+import top.ticho.boot.datasource.mapper.RootMapper;
+import top.ticho.boot.datasource.service.RootService;
 
 import java.io.Serializable;
 import java.util.Collection;

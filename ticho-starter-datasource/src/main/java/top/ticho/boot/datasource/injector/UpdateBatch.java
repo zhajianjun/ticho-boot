@@ -18,7 +18,6 @@ public class UpdateBatch extends AbstractMethod {
 
     @Override
     public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo) {
-        // @formatter:off
         String sql = "<script>\n<foreach collection=\"list\" item=\"item\" separator=\";\">\nupdate %s %s where %s=#{%s} %s\n</foreach>\n</script>";
         String additional = tableInfo.isWithVersion() ? tableInfo.getVersionFieldInfo().getVersionOli("item", "item.") : tableInfo.getLogicDeleteSql(true, true);
         String setSql = sqlSet(tableInfo.isWithLogicDelete(), false, tableInfo, false, "item", "item.");
@@ -26,7 +25,6 @@ public class UpdateBatch extends AbstractMethod {
         SqlSource sqlSource = languageDriver.createSqlSource(configuration, sqlResult, modelClass);
         // 第三个参数必须和RootMapper的自定义方法名一致
         return this.addUpdateMappedStatement(mapperClass, modelClass, "updateBatch", sqlSource);
-        // @formatter:on
     }
 
 }

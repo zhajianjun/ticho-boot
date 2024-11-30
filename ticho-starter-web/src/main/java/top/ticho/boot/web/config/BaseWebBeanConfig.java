@@ -1,7 +1,5 @@
 package top.ticho.boot.web.config;
 
-import top.ticho.boot.view.task.BaseTaskDecortor;
-import top.ticho.boot.web.prop.BaseAsyncProperty;
 import org.slf4j.MDC;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +8,8 @@ import org.springframework.core.task.TaskDecorator;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
+import top.ticho.boot.view.task.BaseTaskDecortor;
+import top.ticho.boot.web.prop.BaseAsyncProperty;
 
 import java.util.List;
 import java.util.Map;

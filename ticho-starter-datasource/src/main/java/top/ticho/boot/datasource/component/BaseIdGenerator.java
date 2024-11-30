@@ -1,10 +1,10 @@
 package top.ticho.boot.datasource.component;
 
 import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
-import top.ticho.boot.web.util.CloudIdUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Component;
+import top.ticho.boot.web.util.CloudIdUtil;
 
 import java.io.Serializable;
 

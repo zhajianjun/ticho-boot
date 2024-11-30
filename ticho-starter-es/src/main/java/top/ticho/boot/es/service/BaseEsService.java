@@ -10,8 +10,6 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- *
- *
  * @author zhajianjun
  * @date 2023-04-25 15:53
  */
@@ -62,7 +60,7 @@ public interface BaseEsService<T> {
     /**
      * 保存数据
      *
-     * @param entity 实体
+     * @param entity     实体
      * @param indexNames 索引名称
      * @return boolean
      */
@@ -81,7 +79,7 @@ public interface BaseEsService<T> {
     /**
      * 删除数据
      *
-     * @param id id
+     * @param id         id
      * @param indexNames 索引名称
      * @return boolean
      */
@@ -100,7 +98,7 @@ public interface BaseEsService<T> {
     /**
      * 修改数据
      *
-     * @param entity 数据对象
+     * @param entity     数据对象
      * @param indexNames 索引名称
      * @return boolean
      */
@@ -119,7 +117,7 @@ public interface BaseEsService<T> {
     /**
      * 根据id查询数据
      *
-     * @param id id
+     * @param id         id
      * @param indexNames 索引名称
      * @return {@link T}
      */
@@ -237,7 +235,7 @@ public interface BaseEsService<T> {
     /**
      * 删除（根据ID 批量删除）
      *
-     * @param idList id列表
+     * @param idList     id列表
      * @param indexNames 索引名称
      * @return 是否删除成功
      */
@@ -248,7 +246,7 @@ public interface BaseEsService<T> {
     /**
      * 删除（根据ID 批量删除）
      *
-     * @param idList id列表
+     * @param idList    id列表
      * @param batchSize 批量大小
      * @return 是否删除成功
      */
@@ -259,8 +257,8 @@ public interface BaseEsService<T> {
     /**
      * 删除（根据ID 批量删除）
      *
-     * @param idList id列表
-     * @param batchSize 批量大小
+     * @param idList     id列表
+     * @param batchSize  批量大小
      * @param indexNames 索引名称
      * @return 是否删除成功
      */

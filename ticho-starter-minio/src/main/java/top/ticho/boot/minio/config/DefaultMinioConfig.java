@@ -1,12 +1,12 @@
 package top.ticho.boot.minio.config;
 
-import top.ticho.boot.minio.component.MinioTemplate;
-import top.ticho.boot.minio.prop.MinioProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import top.ticho.boot.minio.component.MinioTemplate;
+import top.ticho.boot.minio.prop.MinioProperty;
 
 /**
  * minio配置

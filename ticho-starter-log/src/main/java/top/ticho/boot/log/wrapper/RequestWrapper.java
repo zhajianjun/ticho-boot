@@ -17,8 +17,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 /**
- *
- *
  * @author zhajianjun
  * @date 2023-01-11 10:09
  */
@@ -33,8 +31,8 @@ public class RequestWrapper extends HttpServletRequestWrapper {
      * Wrapper的构造方法，主要是将body里的内容取出来，然后存储到对象中的body变量中，方便
      * 后续复用
      * <p>
-     *  io.undertow.servlet.spec.HttpServletRequestImpl#parseFormData()
-     *  查看上述的方法，需要执行下request.getParameterMap()，才能正常解析form-data类型的参数数据
+     * io.undertow.servlet.spec.HttpServletRequestImpl#parseFormData()
+     * 查看上述的方法，需要执行下request.getParameterMap()，才能正常解析form-data类型的参数数据
      * </p>
      *
      * @param request The request to wrap
@@ -128,7 +126,6 @@ public class RequestWrapper extends HttpServletRequestWrapper {
     public BufferedReader getReader() {
         return new BufferedReader(new InputStreamReader(getInputStream()));
     }
-
 
 
     /**

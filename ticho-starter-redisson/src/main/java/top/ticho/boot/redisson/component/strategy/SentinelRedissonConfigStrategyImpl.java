@@ -1,10 +1,10 @@
 package top.ticho.boot.redisson.component.strategy;
 
 import cn.hutool.core.util.StrUtil;
-import top.ticho.boot.redisson.constant.BaseRedissonConst;
-import top.ticho.boot.redisson.prop.BaseRedissonProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.config.Config;
+import top.ticho.boot.redisson.constant.BaseRedissonConst;
+import top.ticho.boot.redisson.prop.BaseRedissonProperty;
 
 /**
  * 哨兵方式Redis连接配置

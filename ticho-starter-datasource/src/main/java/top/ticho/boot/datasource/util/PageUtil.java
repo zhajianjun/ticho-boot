@@ -1,9 +1,9 @@
 package top.ticho.boot.datasource.util;
 
 import com.github.pagehelper.Page;
-import top.ticho.boot.view.core.PageResult;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import top.ticho.boot.view.core.PageResult;
 
 import java.math.BigDecimal;
 
@@ -36,5 +36,4 @@ public class PageUtil {
         return pageResult;
 
     }
-    // @formatter:on
 }

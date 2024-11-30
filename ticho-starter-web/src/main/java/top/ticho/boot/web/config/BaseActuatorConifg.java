@@ -26,7 +26,6 @@ import java.util.List;
  * <p>RequestMapping中patternsCondition为null的问题解决</p>
  * <p>也解决了与swagger的冲突问题</p>
  *
- *
  * @author zhajianjun
  * @date 2022-09-13 13:55
  */

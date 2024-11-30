@@ -41,7 +41,6 @@ public class PageResult<T> {
     private List<T> rows;
 
     public PageResult(Number pageNum, Number pageSize, Number total, List<T> rows) {
-        // @formatter:off
         BigDecimal pageSizeDec = NumberUtil.toBigDecimal(pageSize);
         BigDecimal totalDec = NumberUtil.toBigDecimal(total);
         this.pageNum = NumberUtil.toBigDecimal(pageNum).intValue();
@@ -49,6 +48,5 @@ public class PageResult<T> {
         this.total = totalDec.intValue();
         this.pages = pageSizeDec.intValue() <= 0 ? 0 : (int) Math.ceil(totalDec.divide(pageSizeDec, 2, RoundingMode.HALF_UP).doubleValue());
         this.rows = Optional.ofNullable(rows).orElseGet(ArrayList::new);
-        // @formatter:on
     }
 }

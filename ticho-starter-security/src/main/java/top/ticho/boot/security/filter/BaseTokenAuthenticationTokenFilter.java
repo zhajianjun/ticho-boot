@@ -18,14 +18,12 @@ public class BaseTokenAuthenticationTokenFilter extends AbstractAuthTokenFilter<
 
     @Override
     public BaseSecurityUser convert(Map<String, Object> decodeAndVerify) {
-        // @formatter:off
         String username = Optional.ofNullable(decodeAndVerify.get(BaseSecurityConst.USERNAME)).map(Object::toString).orElse(null);
-        List<String> authorities = Optional.ofNullable(decodeAndVerify.get(BaseSecurityConst.AUTHORITIES)).map(x-> Convert.toList(String.class, x)).orElse(null);
+        List<String> authorities = Optional.ofNullable(decodeAndVerify.get(BaseSecurityConst.AUTHORITIES)).map(x -> Convert.toList(String.class, x)).orElse(null);
         BaseSecurityUser user = new BaseSecurityUser();
         user.setUsername(username);
         user.setRoles(authorities);
         return user;
-        // @formatter:on
     }
 
 }

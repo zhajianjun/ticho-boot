@@ -1,10 +1,5 @@
 package top.ticho.boot.log.config;
 
-import top.ticho.boot.log.filter.WapperRequestFilter;
-import top.ticho.boot.log.interceptor.WebLogInterceptor;
-import top.ticho.boot.view.log.BaseLogProperty;
-import top.ticho.boot.view.task.BaseTaskDecortor;
-import top.ticho.tool.trace.core.util.TraceUtil;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -13,6 +8,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import top.ticho.boot.log.filter.WapperRequestFilter;
+import top.ticho.boot.log.interceptor.WebLogInterceptor;
+import top.ticho.boot.view.log.BaseLogProperty;
+import top.ticho.boot.view.task.BaseTaskDecortor;
+import top.ticho.tool.trace.core.util.TraceUtil;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

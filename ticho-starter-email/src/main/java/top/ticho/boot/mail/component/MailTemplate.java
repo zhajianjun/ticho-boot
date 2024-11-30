@@ -68,7 +68,7 @@ public class MailTemplate {
             if (CollUtil.isNotEmpty(cc)) {
                 helper.setCc(cc.toArray(new String[0]));
             }
-        } catch (MessagingException | UnsupportedEncodingException e ) {
+        } catch (MessagingException | UnsupportedEncodingException e) {
             log.error(e.getMessage(), e);
             Assert.cast(BizErrCode.FAIL, "创建邮件MimeMessageHelper失败");
         }

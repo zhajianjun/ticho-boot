@@ -3,8 +3,6 @@ package top.ticho.boot.web.prop;
 import lombok.Data;
 
 /**
- *
- *
  * @author zhajianjun
  * @date 2023-01-12 11:08
  */

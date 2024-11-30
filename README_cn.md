@@ -12,7 +12,6 @@
 - ticho-starter-rabbitmq: 集成RabbitMQ消息队列
 - ticho-starter-security: 提供安全性配置，例如身份验证和授权
 - ticho-starter-redis: 集成Redis缓存和数据存储
-- ticho-starter-json: 配置JSON数据序列化和反序列化
 - ticho-starter-log: 配置日志记录
 - ticho-starter-cache: 配置应用程序缓存
 - ticho-starter-gateway: 配置API网关

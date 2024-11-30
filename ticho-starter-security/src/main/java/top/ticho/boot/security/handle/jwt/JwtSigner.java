@@ -2,8 +2,6 @@ package top.ticho.boot.security.handle.jwt;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.StrUtil;
-import top.ticho.boot.view.enums.BizErrCode;
-import top.ticho.boot.view.util.Assert;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -15,6 +13,8 @@ import org.springframework.security.jwt.crypto.sign.RsaVerifier;
 import org.springframework.security.jwt.crypto.sign.SignatureVerifier;
 import org.springframework.security.jwt.crypto.sign.Signer;
 import org.springframework.security.rsa.crypto.KeyStoreKeyFactory;
+import top.ticho.boot.view.enums.BizErrCode;
+import top.ticho.boot.view.util.Assert;
 
 import java.security.KeyPair;
 import java.security.PrivateKey;
@@ -43,7 +43,6 @@ public class JwtSigner implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-        // @formatter:off
         if (verifier != null) {
             return;
         }
@@ -65,16 +64,14 @@ public class JwtSigner implements InitializingBean {
             Assert.isTrue(Objects.equals(this.signingKey, this.verifierKey), BizErrCode.FAIL, "For MAC signing you do not need to specify the verifier key separately, and if you do it must match the signing key");
         }
         this.verifier = verifier;
-        // @formatter:on
     }
 
     /**
      * 通过证书加密
      */
     public JwtSigner(String path, String alias, String password) {
-        // @formatter:off
         ClassPathResource resource = new ClassPathResource(path);
-        //设置密钥对（私钥） 此处传入的是创建jks文件时的别名-alias 和 秘钥库访问密码
+        // 设置密钥对（私钥） 此处传入的是创建jks文件时的别名-alias 和 秘钥库访问密码
         KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(resource, password.toCharArray());
         KeyPair keyPair = keyStoreKeyFactory.getKeyPair(alias);
         PrivateKey privateKey = keyPair.getPrivate();
@@ -84,7 +81,6 @@ public class JwtSigner implements InitializingBean {
         verifier = new RsaVerifier(publicKey);
         String encode = Base64.encode(publicKey.getEncoded());
         verifierKey = Arrays.stream(StrUtil.split(encode, 64)).collect(Collectors.joining("\n", "-----BEGIN PUBLIC KEY-----\n", "\n-----END PUBLIC KEY-----"));
-        // @formatter:on
     }
 
     /**

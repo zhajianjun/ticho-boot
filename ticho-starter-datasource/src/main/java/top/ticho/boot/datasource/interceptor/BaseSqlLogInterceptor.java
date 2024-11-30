@@ -25,7 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
-import top.ticho.boot.json.util.JsonUtil;
+import top.ticho.tool.json.util.JsonUtil;
 
 import java.sql.Statement;
 import java.text.DateFormat;
@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 
-// @formatter:off
 
 /**
  * sql日志打印
@@ -52,7 +51,6 @@ import java.util.regex.Matcher;
 @RefreshScope
 @ConditionalOnProperty(value = "ticho.datasource.log.enable", havingValue = "true")
 public class BaseSqlLogInterceptor implements Interceptor {
-    // @formatter:on
 
     /** 是否打印sql */
     @Value("${ticho.datasource.log.print-sql:false}")

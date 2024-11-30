@@ -34,7 +34,7 @@ public class BaseMultPartFile implements MultipartFile {
     }
 
     public BaseMultPartFile(String name, @Nullable String originalFilename, @Nullable String contentType,
-            @Nullable byte[] content) {
+                            @Nullable byte[] content) {
         Assert.hasLength(name, "Name must not be empty");
         this.name = name;
         this.originalFilename = originalFilename != null ? originalFilename : "";
@@ -43,13 +43,15 @@ public class BaseMultPartFile implements MultipartFile {
     }
 
     public BaseMultPartFile(String name, @Nullable String originalFilename, @Nullable String contentType,
-            InputStream contentStream) throws IOException {
+                            InputStream contentStream) throws IOException {
         this(name, originalFilename, contentType, FileCopyUtils.copyToByteArray(contentStream));
     }
 
     public BaseMultPartFile(@NonNull MultipartFile multipartFile) throws IOException {
-        this(multipartFile.getName(), multipartFile.getOriginalFilename(), multipartFile.getContentType(),
-                multipartFile.getBytes());
+        this(
+            multipartFile.getName(), multipartFile.getOriginalFilename(), multipartFile.getContentType(),
+            multipartFile.getBytes()
+        );
     }
 
     @Override

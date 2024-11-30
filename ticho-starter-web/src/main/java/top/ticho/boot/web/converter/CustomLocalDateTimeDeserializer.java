@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import top.ticho.boot.json.constant.DateFormatConst;
+import top.ticho.tool.json.constant.DateFormatConst;
 
 import java.io.IOException;
 import java.time.DateTimeException;
@@ -21,11 +21,12 @@ import java.time.format.DateTimeFormatter;
 /**
  * LocalDateTime反序列化
  * <p>
- *    主要处理 yyyy-MM-dd 转换 yyyy-MM-dd HH:mm:ss
+ * 主要处理 yyyy-MM-dd 转换 yyyy-MM-dd HH:mm:ss
  * </p>
- * @see LocalDateDeserializer
+ *
  * @author zhajianjun
  * @date 2022-07-10 15:56:30
+ * @see LocalDateDeserializer
  */
 @SuppressWarnings("all")
 public class CustomLocalDateTimeDeserializer extends JSR310DateTimeDeserializerBase<LocalDateTime> {
@@ -61,7 +62,7 @@ public class CustomLocalDateTimeDeserializer extends JSR310DateTimeDeserializerB
         if (parser.hasTokenId(6)) {
             String string = parser.getText().trim();
             if (string.length() == 0) {
-                return !this.isLenient() ? (LocalDateTime)this._failForNotLenient(parser, context, JsonToken.VALUE_STRING) : null;
+                return !this.isLenient() ? (LocalDateTime) this._failForNotLenient(parser, context, JsonToken.VALUE_STRING) : null;
             } else {
                 try {
                     if (string.matches(DateFormatConst.YYYY_MM_DD_REGEX)) {
@@ -74,7 +75,7 @@ public class CustomLocalDateTimeDeserializer extends JSR310DateTimeDeserializerB
                         return LocalDateTime.parse(string, this._formatter);
                     }
                 } catch (DateTimeException var12) {
-                    return (LocalDateTime)this._handleDateTimeException(context, var12, string);
+                    return (LocalDateTime) this._handleDateTimeException(context, var12, string);
                 }
             }
         } else {
@@ -129,13 +130,13 @@ public class CustomLocalDateTimeDeserializer extends JSR310DateTimeDeserializerB
             }
 
             if (parser.hasToken(JsonToken.VALUE_EMBEDDED_OBJECT)) {
-                return (LocalDateTime)parser.getEmbeddedObject();
+                return (LocalDateTime) parser.getEmbeddedObject();
             } else {
                 if (parser.hasToken(JsonToken.VALUE_NUMBER_INT)) {
                     this._throwNoNumericTimestampNeedTimeZone(parser, context);
                 }
 
-                return (LocalDateTime)this._handleUnexpectedToken(context, parser, "Expected array or string.", new Object[0]);
+                return (LocalDateTime) this._handleUnexpectedToken(context, parser, "Expected array or string.", new Object[0]);
             }
         }
     }

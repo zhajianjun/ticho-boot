@@ -1,10 +1,10 @@
 package top.ticho.boot.web.util;
 
-import top.ticho.boot.view.enums.BizErrCode;
+import lombok.extern.slf4j.Slf4j;
 import top.ticho.boot.view.core.Result;
+import top.ticho.boot.view.enums.BizErrCode;
 import top.ticho.boot.view.exception.BizException;
 import top.ticho.boot.view.exception.SysException;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.function.Supplier;
 
@@ -43,7 +43,7 @@ public class ApiUtil {
         String message = result.getMsg();
         boolean isSuccess = code == BizErrCode.SUCCESS.getCode();
         if (!isSuccess) {
-            log.error("{},code={},msg={}",errorMsg, code, message);
+            log.error("{},code={},msg={}", errorMsg, code, message);
             throw new BizException(code, message);
         }
     }
@@ -67,7 +67,7 @@ public class ApiUtil {
         String message = result.getMsg();
         boolean isSuccess = code == BizErrCode.SUCCESS.getCode();
         if (!isSuccess) {
-            log.error("{},code={},msg={}",errorMsg, code, message);
+            log.error("{},code={},msg={}", errorMsg, code, message);
             throw new BizException(code, message);
         }
         return result;

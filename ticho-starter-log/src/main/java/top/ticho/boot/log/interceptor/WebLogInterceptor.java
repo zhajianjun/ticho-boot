@@ -8,15 +8,8 @@ import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import io.swagger.annotations.ApiOperation;
-import org.slf4j.MDC;
-import top.ticho.boot.json.util.JsonUtil;
-import top.ticho.boot.log.event.WebLogEvent;
-import top.ticho.boot.log.wrapper.RequestWrapper;
-import top.ticho.boot.log.wrapper.ResponseWrapper;
-import top.ticho.boot.view.log.BaseLogProperty;
-import top.ticho.boot.view.log.HttpLog;
-import top.ticho.tool.trace.spring.util.IpUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
@@ -28,6 +21,13 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerInterceptor;
+import top.ticho.boot.log.event.WebLogEvent;
+import top.ticho.boot.log.wrapper.RequestWrapper;
+import top.ticho.boot.log.wrapper.ResponseWrapper;
+import top.ticho.boot.view.log.BaseLogProperty;
+import top.ticho.boot.view.log.HttpLog;
+import top.ticho.tool.json.util.JsonUtil;
+import top.ticho.tool.trace.spring.util.IpUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -72,7 +72,6 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         return logTheadLocal.get();
     }
 
-    // @formatter:off
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
         Map<String, Object> reqParamsAllMap = null;
@@ -149,7 +148,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         String type = request.getMethod();
         String url = request.getRequestURI();
         String resBody = getResBody(response);
-        Map<String,String> resHeaderMap = getHeaders(response);
+        Map<String, String> resHeaderMap = getHeaders(response);
         String resHeaders = toJson(resHeaderMap);
         long end = SystemClock.now();
         int status = response.getStatus();
@@ -180,7 +179,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         if (!flag) {
             return null;
         }
-        ResponseWrapper responseWrapper = (ResponseWrapper)response;
+        ResponseWrapper responseWrapper = (ResponseWrapper) response;
         return responseWrapper.getBody();
     }
 
@@ -188,10 +187,10 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         Map<String, String> map = new HashMap<>();
         Enumeration<String> parameteNames = request.getParameterNames();
         while (parameteNames.hasMoreElements()) {
-            //获得每个文本域的name
+            // 获得每个文本域的name
             String name = parameteNames.nextElement();
-            //根据文本域的name来获取值
-            //因为无法判断文本域是否是单值或者双值，所以我们全部使用双值接收
+            // 根据文本域的name来获取值
+            // 因为无法判断文本域是否是单值或者双值，所以我们全部使用双值接收
             String[] values = request.getParameterValues(name);
             String value = String.join(",", Arrays.stream(values).filter(StrUtil::isNotBlank).collect(Collectors.joining(",")));
             map.put(name, value);
@@ -203,10 +202,10 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         Map<String, String> map = new HashMap<>();
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
-            //获得每个文本域的name
+            // 获得每个文本域的name
             String name = headerNames.nextElement();
-            //根据文本域的name来获取值
-            //因为无法判断文本域是否是单值或者双值，所以我们全部使用双值接收
+            // 根据文本域的name来获取值
+            // 因为无法判断文本域是否是单值或者双值，所以我们全部使用双值接收
             String value = request.getHeader(name);
             map.put(name, value);
         }
