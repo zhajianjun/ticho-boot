@@ -18,6 +18,7 @@ import java.util.concurrent.Callable;
 @AllArgsConstructor
 public class CacheTemplate {
 
+    /** 缓存管理器 */
     private CacheManager cacheManager;
 
     public Optional<Cache> getOptCache(String name) {
