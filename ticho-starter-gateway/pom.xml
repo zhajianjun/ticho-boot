@@ -26,6 +26,11 @@
         </dependency>
 
         <dependency>
+            <groupId>top.ticho.boot</groupId>
+            <artifactId>ticho-starter-health</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
