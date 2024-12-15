@@ -1,5 +1,6 @@
 package top.ticho.boot.web.util;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -26,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public class SpringContext implements ApplicationContextAware {
 
+    @Getter
     private static ApplicationContext applicationContext;
 
     @Override
@@ -33,10 +35,6 @@ public class SpringContext implements ApplicationContextAware {
         if (SpringContext.applicationContext == null) {
             SpringContext.applicationContext = applicationContext;
         }
-    }
-
-    public static ApplicationContext getApplicationContext() {
-        return applicationContext;
     }
 
     public static void publishEvent(ApplicationEvent event) {

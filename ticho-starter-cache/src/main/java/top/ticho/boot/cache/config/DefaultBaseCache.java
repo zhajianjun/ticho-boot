@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.boot.cache.prop.CacheProperty;
 
-import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -34,13 +33,13 @@ public class DefaultBaseCache implements BaseCache {
     }
 
     @Override
-    public Object load(Object key) throws Exception {
+    public Object load(Object key) {
         return null;
     }
 
     @Override
-    public Map<Object, Object> loadAll(Iterable<?> keys) throws Exception {
-        return Collections.emptyMap();
+    public Map<Object, Object> loadAll(Iterable<?> keys) {
+        return null;
     }
 
     @Override
