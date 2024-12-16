@@ -19,9 +19,12 @@ import org.springframework.lang.NonNull;
 import top.ticho.boot.cache.component.CacheTemplate;
 import top.ticho.boot.cache.prop.CacheProperty;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 缓存配置
@@ -46,21 +49,36 @@ public class TichoCacheConfig {
         return new DefaultBaseCache(cacheProperty);
     }
 
+    @Bean
+    public BaseCacheBatch defaultBaseCacheBatch(CacheProperty cacheProperty) {
+        return new DefaultBaseCacheBatch(cacheProperty);
+    }
+
     /**
      * 缓存管理器
      */
     @Bean
     @Primary
-    public CacheManager cacheManager(List<BaseCache> baseCaches) {
-        List<CaffeineCache> caches = new ArrayList<>();
-        for (BaseCache baseCache : baseCaches) {
-            Cache<Object, Object> build = getObjectObjectCaffeine(baseCache);
-            CaffeineCache caffeineCache = new CaffeineCache(baseCache.getName(), build);
-            caches.add(caffeineCache);
-        }
+    public CacheManager cacheManager(List<BaseCache> baseCaches, List<BaseCacheBatch> baseCacheBatches) {
+        List<BaseCache> baseCachesCollect = baseCacheBatches
+            .stream()
+            .map(BaseCacheBatch::getBaseCaches)
+            .flatMap(Collection::stream)
+            .collect(Collectors.toList());
+        List<CaffeineCache> caches = Stream
+            .concat(baseCaches.stream(), baseCachesCollect.stream())
+            .collect(Collectors.toMap(BaseCache::getName, Function.identity(), (o, n) -> o))
+            .values()
+            .stream()
+            .map(this::buildCaffeineCache)
+            .collect(Collectors.toList());
         SimpleCacheManager cacheManager = new SimpleCacheManager();
         cacheManager.setCaches(caches);
         return cacheManager;
+    }
+
+    private CaffeineCache buildCaffeineCache(BaseCache baseCache) {
+        return new CaffeineCache(baseCache.getName(), buildCache(baseCache));
     }
 
     @Bean
@@ -69,7 +87,7 @@ public class TichoCacheConfig {
     }
 
 
-    private Cache<Object, Object> getObjectObjectCaffeine(BaseCache baseCache) {
+    private Cache<Object, Object> buildCache(BaseCache baseCache) {
         Caffeine<Object, Object> caffeine = Caffeine.newBuilder()
             .recordStats()
             .expireAfter(getExpiry(baseCache))
