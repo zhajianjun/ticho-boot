@@ -3,9 +3,14 @@ package top.ticho.boot.web.util;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
+import org.springframework.context.support.AbstractRefreshableApplicationContext;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -81,6 +86,31 @@ public class SpringContext implements ApplicationContextAware {
         }
         HttpServletRequest request = requestAttributes.getRequest();
         return getHandlerMethod(request);
+    }
+
+    public static Object registerSingletonBean(String beanName, Object singletonObject) {
+        DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) applicationContext.getAutowireCapableBeanFactory();
+        beanFactory.registerSingleton(beanName, singletonObject);
+        return applicationContext.getBean(beanName);
+    }
+
+    public static boolean addBean(String beanName, Class<?> beanClass, Object... constructValues) {
+        BeanDefinitionRegistry beanDefReg = (DefaultListableBeanFactory) ((AbstractRefreshableApplicationContext) applicationContext).getBeanFactory();
+        if (beanDefReg.containsBeanDefinition(beanName)) {
+            return false;
+        }
+        BeanDefinitionBuilder beanDefBuilder = BeanDefinitionBuilder.genericBeanDefinition(beanClass);
+        for (Object constructValue : constructValues) {
+            beanDefBuilder.addConstructorArgValue(constructValue);
+        }
+        BeanDefinition beanDefinition = beanDefBuilder.getBeanDefinition();
+        beanDefReg.registerBeanDefinition(beanName, beanDefinition);
+        return true;
+    }
+
+    public static void removeBean(String beanName) {
+        BeanDefinitionRegistry beanDefReg = (DefaultListableBeanFactory) ((AbstractRefreshableApplicationContext) applicationContext).getBeanFactory();
+        beanDefReg.removeBeanDefinition(beanName);
     }
 
 }
