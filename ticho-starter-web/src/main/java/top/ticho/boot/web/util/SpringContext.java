@@ -20,65 +20,118 @@ import org.springframework.web.servlet.HandlerExecutionChain;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * Spring 工具
+ * Spring 工具类，提供了一些常用的 Spring 相关的方法。
  *
  * @author zhajianjun
  * @date 2022-07-10 15:56:30
  */
-
 @Component
 @Slf4j
 public class SpringContext implements ApplicationContextAware {
 
+    /**
+     * 存储当前的 ApplicationContext 实例。
+     */
     @Getter
-    private static ApplicationContext applicationContext;
+    private static final AtomicReference<ApplicationContext> applicationContext = new AtomicReference<>();
 
+    /**
+     * 设置 ApplicationContext 实例。
+     *
+     * @param applicationContext 应用上下文实例
+     * @throws BeansException 如果设置失败
+     */
     @Override
     public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
-        if (SpringContext.applicationContext == null) {
-            SpringContext.applicationContext = applicationContext;
-        }
+        SpringContext.applicationContext.compareAndSet(null, applicationContext);
     }
 
+    /**
+     * 发布一个应用事件。
+     *
+     * @param event 应用事件
+     */
     public static void publishEvent(ApplicationEvent event) {
-        applicationContext.publishEvent(event);
+        applicationContext.get().publishEvent(event);
     }
 
+    /**
+     * 根据名称获取 Bean。
+     *
+     * @param name Bean 名称
+     * @return Bean 实例
+     */
     public static Object getBean(String name) {
-        return applicationContext.getBean(name);
+        return applicationContext.get().getBean(name);
     }
 
+    /**
+     * 根据类型获取 Bean。
+     *
+     * @param clazz Bean 类型
+     * @param <T>   泛型类型
+     * @return Bean 实例
+     */
     public static <T> T getBean(Class<T> clazz) {
-        return applicationContext.getBean(clazz);
+        return applicationContext.get().getBean(clazz);
     }
 
+    /**
+     * 根据名称和类型获取 Bean。
+     *
+     * @param name  Bean 名称
+     * @param clazz Bean 类型
+     * @param <T>   泛型类型
+     * @return Bean 实例
+     */
     public static <T> T getBean(String name, Class<T> clazz) {
-        return applicationContext.getBean(name, clazz);
+        return applicationContext.get().getBean(name, clazz);
     }
 
+    /**
+     * 获取 RequestMappingHandlerMapping 实例。
+     *
+     * @return RequestMappingHandlerMapping 实例
+     */
+    private static RequestMappingHandlerMapping getRequestMappingHandlerMapping() {
+        return applicationContext.get().getBean(RequestMappingHandlerMapping.class);
+    }
 
+    /**
+     * 根据请求获取 HandlerMethod。
+     *
+     * @param request HTTP 请求
+     * @return HandlerMethod 实例
+     */
     public static HandlerMethod getHandlerMethod(HttpServletRequest request) {
-        RequestMappingHandlerMapping mapping = getBean(RequestMappingHandlerMapping.class);
+        RequestMappingHandlerMapping mapping = getRequestMappingHandlerMapping();
         HandlerExecutionChain executionChain;
         try {
             executionChain = mapping.getHandler(request);
         } catch (Exception e) {
-            log.warn("get handler method error, {}", e.getMessage());
-            return null;
+            log.error("Failed to get handler method for request: {}", request, e);
+            throw new RuntimeException("Failed to get handler method", e);
         }
         if (executionChain == null) {
             return null;
         }
-        // 不是handler，false
         Object handler = executionChain.getHandler();
-        if (!(handler instanceof HandlerMethod)) {
+        if (handler instanceof HandlerMethod) {
+            return (HandlerMethod) handler;
+        } else {
+            log.warn("Handler is not an instance of HandlerMethod: {}", handler.getClass());
             return null;
         }
-        return (HandlerMethod) handler;
     }
 
+    /**
+     * 获取当前请求的 HandlerMethod。
+     *
+     * @return HandlerMethod 实例
+     */
     public static HandlerMethod getHandlerMethod() {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (requestAttributes == null) {
@@ -88,14 +141,29 @@ public class SpringContext implements ApplicationContextAware {
         return getHandlerMethod(request);
     }
 
+    /**
+     * 注册一个单例 Bean。
+     *
+     * @param beanName        单例 Bean 名称
+     * @param singletonObject 单例对象
+     * @return 注册的 Bean 实例
+     */
     public static Object registerSingletonBean(String beanName, Object singletonObject) {
-        DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) applicationContext.getAutowireCapableBeanFactory();
+        DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) applicationContext.get().getAutowireCapableBeanFactory();
         beanFactory.registerSingleton(beanName, singletonObject);
-        return applicationContext.getBean(beanName);
+        return applicationContext.get().getBean(beanName);
     }
 
+    /**
+     * 添加一个新的 Bean 定义。
+     *
+     * @param beanName        Bean 名称
+     * @param beanClass       Bean 类型
+     * @param constructValues 构造参数值
+     * @return 是否成功添加
+     */
     public static boolean addBean(String beanName, Class<?> beanClass, Object... constructValues) {
-        BeanDefinitionRegistry beanDefReg = (DefaultListableBeanFactory) ((AbstractRefreshableApplicationContext) applicationContext).getBeanFactory();
+        BeanDefinitionRegistry beanDefReg = (DefaultListableBeanFactory) ((AbstractRefreshableApplicationContext) applicationContext.get()).getBeanFactory();
         if (beanDefReg.containsBeanDefinition(beanName)) {
             return false;
         }
@@ -108,8 +176,13 @@ public class SpringContext implements ApplicationContextAware {
         return true;
     }
 
+    /**
+     * 移除一个 Bean 定义。
+     *
+     * @param beanName Bean 名称
+     */
     public static void removeBean(String beanName) {
-        BeanDefinitionRegistry beanDefReg = (DefaultListableBeanFactory) ((AbstractRefreshableApplicationContext) applicationContext).getBeanFactory();
+        BeanDefinitionRegistry beanDefReg = (DefaultListableBeanFactory) ((AbstractRefreshableApplicationContext) applicationContext.get()).getBeanFactory();
         beanDefReg.removeBeanDefinition(beanName);
     }
 
