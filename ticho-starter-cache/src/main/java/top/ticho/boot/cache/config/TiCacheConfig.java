@@ -16,8 +16,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.lang.NonNull;
-import top.ticho.boot.cache.component.CacheTemplate;
-import top.ticho.boot.cache.prop.CacheProperty;
+import top.ticho.boot.cache.component.TiCacheTemplate;
+import top.ticho.boot.cache.prop.TiCacheProperty;
 
 import java.util.Collection;
 import java.util.List;
@@ -36,22 +36,22 @@ import java.util.stream.Stream;
 @Configuration
 @ConditionalOnProperty(value = "ticho.cache.enable", havingValue = "true")
 @EnableCaching
-public class TichoCacheConfig {
+public class TiCacheConfig {
 
     @Bean
     @ConfigurationProperties(prefix = "ticho.cache")
-    public CacheProperty cacheProperty() {
-        return new CacheProperty();
+    public TiCacheProperty cacheProperty() {
+        return new TiCacheProperty();
     }
 
     @Bean
-    public BaseCache defaultBaseCache(CacheProperty cacheProperty) {
-        return new DefaultBaseCache(cacheProperty);
+    public TiCache tiCache(TiCacheProperty tiCacheProperty) {
+        return new DefaultTiCache(tiCacheProperty);
     }
 
     @Bean
-    public BaseCacheBatch defaultBaseCacheBatch(CacheProperty cacheProperty) {
-        return new DefaultBaseCacheBatch(cacheProperty);
+    public TiCacheBatch tiChcheBatch(TiCacheProperty tiCacheProperty) {
+        return new DefaultTiCacheBatch(tiCacheProperty);
     }
 
     /**
@@ -59,15 +59,15 @@ public class TichoCacheConfig {
      */
     @Bean
     @Primary
-    public CacheManager cacheManager(List<BaseCache> baseCaches, List<BaseCacheBatch> baseCacheBatches) {
-        List<BaseCache> baseCachesCollect = baseCacheBatches
+    public CacheManager cacheManager(List<TiCache> tiCaches, List<TiCacheBatch> tiCacheBatches) {
+        List<TiCache> tiCachesCollect = tiCacheBatches
             .stream()
-            .map(BaseCacheBatch::getBaseCaches)
+            .map(TiCacheBatch::getTiCaches)
             .flatMap(Collection::stream)
             .collect(Collectors.toList());
         List<CaffeineCache> caches = Stream
-            .concat(baseCaches.stream(), baseCachesCollect.stream())
-            .collect(Collectors.toMap(BaseCache::getName, Function.identity(), (o, n) -> o))
+            .concat(tiCaches.stream(), tiCachesCollect.stream())
+            .collect(Collectors.toMap(TiCache::getName, Function.identity(), (o, n) -> o))
             .values()
             .stream()
             .map(this::buildCaffeineCache)
@@ -77,51 +77,51 @@ public class TichoCacheConfig {
         return cacheManager;
     }
 
-    private CaffeineCache buildCaffeineCache(BaseCache baseCache) {
-        return new CaffeineCache(baseCache.getName(), buildCache(baseCache));
+    private CaffeineCache buildCaffeineCache(TiCache tiCache) {
+        return new CaffeineCache(tiCache.getName(), buildCache(tiCache));
     }
 
     @Bean
-    public CacheTemplate cacheTemplate(CacheManager cacheManager) {
-        return new CacheTemplate(cacheManager);
+    public TiCacheTemplate tiCacheTemplate(CacheManager cacheManager) {
+        return new TiCacheTemplate(cacheManager);
     }
 
 
-    private Cache<Object, Object> buildCache(BaseCache baseCache) {
+    private Cache<Object, Object> buildCache(TiCache tiCache) {
         Caffeine<Object, Object> caffeine = Caffeine.newBuilder()
             .recordStats()
-            .expireAfter(getExpiry(baseCache))
-            .maximumSize(baseCache.getMaxSize())
-            .removalListener(baseCache::onRemoval);
+            .expireAfter(getExpiry(tiCache))
+            .maximumSize(tiCache.getMaxSize())
+            .removalListener(tiCache::onRemoval);
         return caffeine.build(new CacheLoader<Object, Object>() {
             @Override
             public Object load(@NonNull Object key) throws Exception {
-                return baseCache.load(key);
+                return tiCache.load(key);
             }
 
             @Override
             @NonNull
             public Map<Object, Object> loadAll(@NonNull Iterable<?> keys) throws Exception {
-                return baseCache.loadAll(keys);
+                return tiCache.loadAll(keys);
             }
         });
     }
 
-    private Expiry<Object, Object> getExpiry(BaseCache baseCache) {
+    private Expiry<Object, Object> getExpiry(TiCache tiCache) {
         return new Expiry<Object, Object>() {
             @Override
             public long expireAfterCreate(@NonNull Object key, @NonNull Object value, long currentTime) {
-                return baseCache.expireAfterCreate(key, value, currentTime);
+                return tiCache.expireAfterCreate(key, value, currentTime);
             }
 
             @Override
             public long expireAfterUpdate(@NonNull Object key, @NonNull Object value, long currentTime, @NonNegative long currentDuration) {
-                return baseCache.expireAfterUpdate(key.toString(), value, currentTime, currentDuration);
+                return tiCache.expireAfterUpdate(key.toString(), value, currentTime, currentDuration);
             }
 
             @Override
             public long expireAfterRead(@NonNull Object key, @NonNull Object value, long currentTime, @NonNegative long currentDuration) {
-                return baseCache.expireAfterRead(key.toString(), value, currentTime, currentDuration);
+                return tiCache.expireAfterRead(key.toString(), value, currentTime, currentDuration);
             }
         };
     }

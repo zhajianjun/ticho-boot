@@ -7,7 +7,7 @@ import lombok.Data;
  * @date 2024-08-12 20:42
  */
 @Data
-public class CacheProperty {
+public class TiCacheProperty {
 
     /** 是否开启缓存 */
     private Boolean enable;

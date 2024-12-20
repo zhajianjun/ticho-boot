@@ -16,7 +16,7 @@ import java.util.concurrent.Callable;
  * @date 2024-08-12 20:42
  */
 @AllArgsConstructor
-public class CacheTemplate {
+public class TiCacheTemplate {
 
     /** 缓存管理器 */
     private CacheManager cacheManager;

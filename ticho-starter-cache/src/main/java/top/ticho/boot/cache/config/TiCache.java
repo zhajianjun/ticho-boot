@@ -9,7 +9,7 @@ import java.util.Map;
  * @author zhajianjun
  * @date 2024-08-12 20:42
  */
-public interface BaseCache {
+public interface TiCache {
 
     /** 缓存名称 */
     String getName();

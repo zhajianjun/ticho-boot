@@ -3,7 +3,7 @@ package top.ticho.boot.cache.config;
 import com.github.benmanes.caffeine.cache.RemovalCause;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import top.ticho.boot.cache.prop.CacheProperty;
+import top.ticho.boot.cache.prop.TiCacheProperty;
 
 import java.util.Map;
 
@@ -13,23 +13,23 @@ import java.util.Map;
  */
 @Slf4j
 @AllArgsConstructor
-public class DefaultBaseCache implements BaseCache {
+public class DefaultTiCache implements TiCache {
 
-    private final CacheProperty cacheProperty;
+    private final TiCacheProperty tiCacheProperty;
 
     @Override
     public String getName() {
-        return cacheProperty.getName();
+        return tiCacheProperty.getName();
     }
 
     @Override
     public int getMaxSize() {
-        return cacheProperty.getMaxSize();
+        return tiCacheProperty.getMaxSize();
     }
 
     @Override
     public int getTtl() {
-        return cacheProperty.getTtl();
+        return tiCacheProperty.getTtl();
     }
 
     @Override

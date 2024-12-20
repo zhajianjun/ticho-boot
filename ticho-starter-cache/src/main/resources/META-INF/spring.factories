@@ -1,3 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  top.ticho.boot.cache.config.TichoCacheConfig
+  top.ticho.boot.cache.config.TiCacheConfig
 

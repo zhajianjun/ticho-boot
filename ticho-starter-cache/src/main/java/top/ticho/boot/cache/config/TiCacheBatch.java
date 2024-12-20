@@ -6,8 +6,8 @@ import java.util.List;
  * @author zhajianjun
  * @date 2024-12-17 00:06
  */
-public interface BaseCacheBatch {
+public interface TiCacheBatch {
 
-    List<BaseCache> getBaseCaches();
+    List<TiCache> getTiCaches();
 
 }
