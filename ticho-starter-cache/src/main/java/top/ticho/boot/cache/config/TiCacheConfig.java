@@ -38,24 +38,45 @@ import java.util.stream.Stream;
 @EnableCaching
 public class TiCacheConfig {
 
+    /**
+     * 创建并配置缓存属性
+     *
+     * @return 缓存属性对象
+     */
     @Bean
     @ConfigurationProperties(prefix = "ticho.cache")
     public TiCacheProperty cacheProperty() {
         return new TiCacheProperty();
     }
 
+    /**
+     * 创建缓存操作模板
+     *
+     * @param tiCacheProperty 缓存属性
+     * @return 缓存操作模板对象
+     */
     @Bean
     public TiCache tiCache(TiCacheProperty tiCacheProperty) {
         return new DefaultTiCache(tiCacheProperty);
     }
 
+    /**
+     * 创建批量缓存操作模板
+     *
+     * @param tiCacheProperty 缓存属性
+     * @return 批量缓存操作模板对象
+     */
     @Bean
     public TiCacheBatch tiChcheBatch(TiCacheProperty tiCacheProperty) {
         return new DefaultTiCacheBatch(tiCacheProperty);
     }
 
     /**
-     * 缓存管理器
+     * 创建缓存管理器
+     *
+     * @param tiCaches       缓存操作模板列表
+     * @param tiCacheBatches 批量缓存操作模板列表
+     * @return 缓存管理器对象
      */
     @Bean
     @Primary
@@ -77,16 +98,33 @@ public class TiCacheConfig {
         return cacheManager;
     }
 
-    private CaffeineCache buildCaffeineCache(TiCache tiCache) {
-        return new CaffeineCache(tiCache.getName(), buildCache(tiCache));
-    }
-
+    /**
+     * 创建缓存模板
+     *
+     * @param cacheManager 缓存管理器
+     * @return 缓存模板对象
+     */
     @Bean
     public TiCacheTemplate tiCacheTemplate(CacheManager cacheManager) {
         return new TiCacheTemplate(cacheManager);
     }
 
+    /**
+     * 构建Caffeine缓存
+     *
+     * @param tiCache 缓存操作模板
+     * @return Caffeine缓存对象
+     */
+    private CaffeineCache buildCaffeineCache(TiCache tiCache) {
+        return new CaffeineCache(tiCache.getName(), buildCache(tiCache));
+    }
 
+    /**
+     * 构建缓存
+     *
+     * @param tiCache 缓存操作模板
+     * @return 缓存对象
+     */
     private Cache<Object, Object> buildCache(TiCache tiCache) {
         Caffeine<Object, Object> caffeine = Caffeine.newBuilder()
             .recordStats()
@@ -104,23 +142,65 @@ public class TiCacheConfig {
             public Map<Object, Object> loadAll(@NonNull Iterable<?> keys) throws Exception {
                 return tiCache.loadAll(keys);
             }
+
         });
     }
 
+    /**
+     * 获取缓存过期策略
+     *
+     * @param tiCache 缓存操作模板
+     * @return 缓存过期策略对象
+     */
     private Expiry<Object, Object> getExpiry(TiCache tiCache) {
         return new Expiry<Object, Object>() {
+            /**
+             * 在创建缓存项时，确定其过期时间
+             * 此方法用于指定新创建缓存项的过期时间，基于当前时间和缓存项的键值
+             *
+             * @param key 缓存项的键，用于唯一标识缓存中的项
+             * @param value 缓存项的值，与键关联存储
+             * @param currentTime 当前时间，用作计算过期时间的基准
+             * @return 返回缓存项的过期时间，以毫秒为单位
+             */
             @Override
             public long expireAfterCreate(@NonNull Object key, @NonNull Object value, long currentTime) {
                 return tiCache.expireAfterCreate(key, value, currentTime);
             }
 
+
+            /**
+             * 在更新操作后设置过期时间
+             * 当缓存项被更新时，此方法用于确定新的过期时间它基于当前时间和当前持续时间来计算
+             *
+             * @param key 缓存项的键，用于唯一标识缓存中的项
+             * @param value 缓存项的值，可以是任何类型的数据
+             * @param currentTime 当前时间，通常用于计算过期时间
+             * @param currentDuration 当前缓存项的持续时间，即缓存项在更新前的剩余有效时间
+             * @return 返回新的过期时间，单位取决于具体实现
+             */
             @Override
             public long expireAfterUpdate(@NonNull Object key, @NonNull Object value, long currentTime, @NonNegative long currentDuration) {
+                // 调用tiCache的expireAfterUpdate方法来设置新的过期时间
                 return tiCache.expireAfterUpdate(key.toString(), value, currentTime, currentDuration);
             }
 
+
+            /**
+             * 在读取操作后设置缓存项的过期时间
+             * 此方法覆盖了基类或接口的expireAfterRead方法，旨在为缓存项设置读取后的过期时间
+             * 它考虑了当前时间和当前持续时间，以决定缓存项的过期时间
+             *
+             * @param key 缓存项的键，用于唯一标识缓存中的项，不能为空
+             * @param value 缓存项的值，用于存储与键关联的数据，不能为空
+             * @param currentTime 当前时间，用于计算缓存项的过期时间
+             * @param currentDuration 当前持续时间，表示缓存项当前的过期时间，必须为非负数
+             * @return 返回新的过期时间，以毫秒为单位
+             */
             @Override
             public long expireAfterRead(@NonNull Object key, @NonNull Object value, long currentTime, @NonNegative long currentDuration) {
+                // 调用tiCache的expireAfterRead方法，传入转换为字符串的键、值、当前时间和当前持续时间
+                // 并返回新的过期时间
                 return tiCache.expireAfterRead(key.toString(), value, currentTime, currentDuration);
             }
         };
