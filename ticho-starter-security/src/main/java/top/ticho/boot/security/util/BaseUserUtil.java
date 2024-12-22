@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import top.ticho.boot.view.core.BaseSecurityUser;
+import top.ticho.boot.view.core.TiSecurityUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.Optional;
 public class BaseUserUtil {
 
 
-    public static <T extends BaseSecurityUser> T getCurrentUser() {
+    public static <T extends TiSecurityUser> T getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
             return null;
@@ -35,13 +35,13 @@ public class BaseUserUtil {
     }
 
     public static String getCurrentUsername() {
-        BaseSecurityUser user = getCurrentUser();
-        return Optional.ofNullable(user).map(BaseSecurityUser::getUsername).orElse(null);
+        TiSecurityUser user = getCurrentUser();
+        return Optional.ofNullable(user).map(TiSecurityUser::getUsername).orElse(null);
     }
 
     public static List<String> getRoleIds() {
-        BaseSecurityUser user = getCurrentUser();
-        return Optional.ofNullable(user).map(BaseSecurityUser::getRoles).orElseGet(ArrayList::new);
+        TiSecurityUser user = getCurrentUser();
+        return Optional.ofNullable(user).map(TiSecurityUser::getRoles).orElseGet(ArrayList::new);
     }
 
 }

@@ -1,7 +1,7 @@
 package top.ticho.boot.view.exception;
 
 import lombok.Getter;
-import top.ticho.boot.view.enums.IErrCode;
+import top.ticho.boot.view.enums.TiErrCode;
 
 /**
  * 系统异常处理
@@ -10,24 +10,23 @@ import top.ticho.boot.view.enums.IErrCode;
  * @date 2022-07-10 15:56:30
  */
 @Getter
-public class SysException extends BaseException {
+public class TiSysException extends TiBaseException {
     private static final long serialVersionUID = 1L;
 
 
-    public SysException(int code, String msg) {
+    public TiSysException(int code, String msg) {
         super(code, msg);
     }
 
-    public SysException(String msg) {
+    public TiSysException(String msg) {
         super(msg);
     }
 
-    public SysException(IErrCode resultCode) {
+    public TiSysException(TiErrCode resultCode) {
         super(resultCode);
     }
 
-
-    public SysException(IErrCode resultCode, String msg) {
+    public TiSysException(TiErrCode resultCode, String msg) {
         super(resultCode, msg);
     }
 

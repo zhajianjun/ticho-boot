@@ -7,8 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
 import org.springframework.lang.Nullable;
-import top.ticho.boot.view.core.Result;
-import top.ticho.boot.view.enums.BizErrCode;
+import top.ticho.boot.view.core.TiResult;
+import top.ticho.boot.view.enums.TiBizErrCode;
 
 import java.lang.reflect.Method;
 import java.util.Objects;
@@ -35,20 +35,20 @@ public class DefaultFeignFallback<T> implements MethodInterceptor {
         log.error("FeignFallback:[{}.{}] serviceId:[{}] message:[{}]", targetType.getName(), method.getName(), targetName, errorMessage);
         Class<?> returnType = method.getReturnType();
         // 暂时不支持 flux，rx，异步等，返回值不是 R，直接返回 null。
-        if (Result.class != returnType) {
+        if (TiResult.class != returnType) {
             return null;
         }
         // 非 FeignException
         if (!(cause instanceof FeignException)) {
-            return Result.of(BizErrCode.APP_SERVICE_ERR, errorMessage);
+            return TiResult.of(TiBizErrCode.APP_SERVICE_ERR, errorMessage);
         }
         FeignException exception = (FeignException) cause;
         String content = exception.contentUTF8();
         // 如果返回的数据为空
         if (StrUtil.isBlank(content)) {
-            return Result.of(BizErrCode.APP_SERVICE_ERR, errorMessage);
+            return TiResult.of(TiBizErrCode.APP_SERVICE_ERR, errorMessage);
         }
-        return Result.fail(content);
+        return TiResult.fail(content);
     }
 
     @Override

@@ -9,8 +9,8 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.multipart.MultipartFile;
 import top.ticho.boot.mail.prop.MailProperty;
-import top.ticho.boot.view.enums.BizErrCode;
-import top.ticho.boot.view.util.Assert;
+import top.ticho.boot.view.enums.TiBizErrCode;
+import top.ticho.boot.view.util.TiAssert;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -48,8 +48,8 @@ public class MailTemplate {
      * @param mailContent 邮件内容
      */
     public void sendMail(MailContent mailContent) {
-        Assert.isNotNull(mailProperty, BizErrCode.FAIL, "请检查邮件配置");
-        Assert.isNotNull(javaMailSender, BizErrCode.FAIL, "请检查邮件配置");
+        TiAssert.isNotNull(mailProperty, TiBizErrCode.FAIL, "请检查邮件配置");
+        TiAssert.isNotNull(javaMailSender, TiBizErrCode.FAIL, "请检查邮件配置");
         MimeMessage mimeMessage = getMimeMessage(mailContent);
         javaMailSender.send(mimeMessage);
     }
@@ -70,7 +70,7 @@ public class MailTemplate {
             }
         } catch (MessagingException | UnsupportedEncodingException e) {
             log.error(e.getMessage(), e);
-            Assert.cast(BizErrCode.FAIL, "创建邮件MimeMessageHelper失败");
+            TiAssert.cast(TiBizErrCode.FAIL, "创建邮件MimeMessageHelper失败");
         }
         List<MailInines> inlines = mailContent.getInlines();
         if (CollUtil.isNotEmpty(inlines)) {
@@ -86,8 +86,8 @@ public class MailTemplate {
     }
 
     public void sendMailBatch(List<MailContent> mailContents) {
-        Assert.isNotNull(mailProperty, BizErrCode.FAIL, "请检查邮件配置");
-        Assert.isNotNull(javaMailSender, BizErrCode.FAIL, "请检查邮件配置");
+        TiAssert.isNotNull(mailProperty, TiBizErrCode.FAIL, "请检查邮件配置");
+        TiAssert.isNotNull(javaMailSender, TiBizErrCode.FAIL, "请检查邮件配置");
         MimeMessage[] mimeMessages = mailContents
             .stream()
             .map(this::getMimeMessage)
@@ -102,7 +102,7 @@ public class MailTemplate {
             finalHelper.addAttachment(originalFilename, iss);
         } catch (MessagingException | IOException e) {
             log.error(e.getMessage(), e);
-            Assert.cast(BizErrCode.FAIL, "添加附件资源失败");
+            TiAssert.cast(TiBizErrCode.FAIL, "添加附件资源失败");
         }
     }
 
@@ -113,7 +113,7 @@ public class MailTemplate {
             helper.addInline(inline.getContentId(), iss);
         } catch (MessagingException | IOException e) {
             log.error(e.getMessage(), e);
-            Assert.cast(BizErrCode.FAIL, "添加邮件静态资源失败");
+            TiAssert.cast(TiBizErrCode.FAIL, "添加邮件静态资源失败");
         }
     }
 

@@ -2,11 +2,10 @@ package top.ticho.boot.view.core;
 
 
 import cn.hutool.core.util.NumberUtil;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -21,26 +20,25 @@ import java.util.Optional;
  */
 @Data
 @NoArgsConstructor
-@ApiModel("分页对象")
-public class PageResult<T> {
+public class TiPageResult<T> implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "页码，从1开始", position = 10)
+    /** 页码，从1开始 */
     private Integer pageNum;
 
-    @ApiModelProperty(value = "页面大小", position = 20)
+    /** 页面大小 */
     private Integer pageSize;
 
-    @ApiModelProperty(value = "总页数", position = 30)
+    /** 总页数 */
     private Integer pages;
 
-    @ApiModelProperty(value = "总数", position = 40)
+    /** 总数 */
     private Integer total;
 
-    @ApiModelProperty(value = "查询数据列表", position = 50)
+    /** 查询数据列表 */
     private List<T> rows;
 
-    public PageResult(Number pageNum, Number pageSize, Number total, List<T> rows) {
+    public TiPageResult(Number pageNum, Number pageSize, Number total, List<T> rows) {
         BigDecimal pageSizeDec = NumberUtil.toBigDecimal(pageSize);
         BigDecimal totalDec = NumberUtil.toBigDecimal(total);
         this.pageNum = NumberUtil.toBigDecimal(pageNum).intValue();

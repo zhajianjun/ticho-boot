@@ -9,18 +9,15 @@ import java.io.Serializable;
  * @author zhajianjun
  * @date 2022-07-10 15:56:30
  */
-public enum BizErrCode implements Serializable, IErrCode {
+public enum TiBizErrCode implements Serializable, TiErrCode {
 
 
     /**
      *
      */
     SUCCESS(0, "操作成功"),
-
     FAIL(-1, "执行失败"),
-
     PARAM_ERROR(1000, "参数不能为空"),
-
     IS_NOT_EXISTS(1001, "数据不存在"),
     APP_SERVICE_ERR(1001, "数据不存在"),
     ;
@@ -35,7 +32,7 @@ public enum BizErrCode implements Serializable, IErrCode {
      */
     private final String msg;
 
-    BizErrCode(int code, String msg) {
+    TiBizErrCode(int code, String msg) {
         this.code = code;
         this.msg = msg;
     }

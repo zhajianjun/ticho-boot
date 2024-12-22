@@ -7,8 +7,8 @@ import org.redisson.api.RLock;
 import org.slf4j.MDC;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import top.ticho.boot.redisson.thread.RedisDelayRunnable;
-import top.ticho.boot.view.enums.BizErrCode;
-import top.ticho.boot.view.exception.BizException;
+import top.ticho.boot.view.enums.TiBizErrCode;
+import top.ticho.boot.view.exception.TiBizException;
 
 import java.util.Map;
 import java.util.concurrent.Executor;
@@ -59,11 +59,11 @@ public class RedissonUtil {
                 obj = supplier.get();
             } else {
                 log.info("获取锁:{}失败", key);
-                throw new BizException(BizErrCode.FAIL, String.format("获取锁:%s失败", key));
+                throw new TiBizException(TiBizErrCode.FAIL, String.format("获取锁:%s失败", key));
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new BizException(e.getMessage());
+            throw new TiBizException(e.getMessage());
         } finally {
             if (null != redisDelayRunnable) {
                 redisDelayRunnable.stop();
@@ -108,11 +108,11 @@ public class RedissonUtil {
                 obj = supplier.get();
             } else {
                 log.info("获取锁:{}失败", key);
-                throw new BizException(BizErrCode.FAIL, String.format("获取锁:%s失败", key));
+                throw new TiBizException(TiBizErrCode.FAIL, String.format("获取锁:%s失败", key));
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new BizException(e.getMessage());
+            throw new TiBizException(e.getMessage());
         } finally {
             if (null != redisDelayRunnable) {
                 redisDelayRunnable.stop();

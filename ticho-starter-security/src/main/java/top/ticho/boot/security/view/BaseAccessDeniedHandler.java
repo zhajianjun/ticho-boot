@@ -4,8 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import top.ticho.boot.view.core.Result;
-import top.ticho.boot.view.enums.HttpErrCode;
+import top.ticho.boot.view.core.TiResult;
+import top.ticho.boot.view.enums.TiHttpErrCode;
 import top.ticho.tool.json.util.JsonUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,13 +26,13 @@ public class BaseAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest req, HttpServletResponse res, AccessDeniedException e) throws IOException {
-        Result<String> result = Result.of(HttpErrCode.TOKEN_INVALID);
-        result.setData(req.getRequestURI());
-        res.setStatus(result.getCode());
+        TiResult<String> tiResult = TiResult.of(TiHttpErrCode.TOKEN_INVALID);
+        tiResult.setData(req.getRequestURI());
+        res.setStatus(tiResult.getCode());
         res.setContentType(MediaType.APPLICATION_JSON_VALUE);
         res.setCharacterEncoding(StandardCharsets.UTF_8.name());
         PrintWriter writer = res.getWriter();
-        writer.write(JsonUtil.toJsonString(result));
+        writer.write(JsonUtil.toJsonString(tiResult));
         writer.close();
     }
 

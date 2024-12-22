@@ -10,11 +10,11 @@ import top.ticho.boot.security.dto.Oauth2AccessToken;
 import top.ticho.boot.security.handle.jwt.JwtDecode;
 import top.ticho.boot.security.handle.jwt.JwtSigner;
 import top.ticho.boot.security.handle.load.LoadUserService;
-import top.ticho.boot.view.core.BaseSecurityUser;
-import top.ticho.boot.view.enums.BizErrCode;
-import top.ticho.boot.view.enums.HttpErrCode;
-import top.ticho.boot.view.exception.BizException;
-import top.ticho.boot.view.util.Assert;
+import top.ticho.boot.view.core.TiSecurityUser;
+import top.ticho.boot.view.enums.TiBizErrCode;
+import top.ticho.boot.view.enums.TiHttpErrCode;
+import top.ticho.boot.view.exception.TiBizException;
+import top.ticho.boot.view.util.TiAssert;
 
 import javax.annotation.Resource;
 import java.util.Map;
@@ -46,32 +46,32 @@ public class BaseLoginUserHandle extends AbstractLoginUserHandle {
     public Oauth2AccessToken token(LoginRequest loginRequest) {
         String account = loginRequest.getUsername();
         String credentials = loginRequest.getPassword();
-        BaseSecurityUser baseSecurityUser = checkPassword(account, credentials);
-        return getOauth2TokenAndSetAuthentication(baseSecurityUser);
+        TiSecurityUser tiSecurityUser = checkPassword(account, credentials);
+        return getOauth2TokenAndSetAuthentication(tiSecurityUser);
     }
 
-    public BaseSecurityUser checkPassword(String account, String credentials) {
+    public TiSecurityUser checkPassword(String account, String credentials) {
         // 查询用户信息
-        Assert.isNotNull(account, BizErrCode.PARAM_ERROR, "用户名不能为空");
-        Assert.isNotNull(credentials, BizErrCode.PARAM_ERROR, "密码不能为空");
-        BaseSecurityUser baseSecurityUser = loadUserService.load(account);
-        Assert.isNotNull(baseSecurityUser, HttpErrCode.NOT_LOGIN, "用户或者密码不正确");
+        TiAssert.isNotNull(account, TiBizErrCode.PARAM_ERROR, "用户名不能为空");
+        TiAssert.isNotNull(credentials, TiBizErrCode.PARAM_ERROR, "密码不能为空");
+        TiSecurityUser tiSecurityUser = loadUserService.load(account);
+        TiAssert.isNotNull(tiSecurityUser, TiHttpErrCode.NOT_LOGIN, "用户或者密码不正确");
         // 校验用户密码
-        String passwordAes = baseSecurityUser.getPassword();
-        Assert.isTrue(passwordEncoder.matches(credentials, passwordAes), HttpErrCode.NOT_LOGIN, "用户或者密码不正确");
-        return baseSecurityUser;
+        String passwordAes = tiSecurityUser.getPassword();
+        TiAssert.isTrue(passwordEncoder.matches(credentials, passwordAes), TiHttpErrCode.NOT_LOGIN, "用户或者密码不正确");
+        return tiSecurityUser;
     }
 
     public Oauth2AccessToken refreshToken(String refreshToken) {
-        Assert.isNotNull(refreshToken, BizErrCode.PARAM_ERROR, "参数不能为空");
+        TiAssert.isNotNull(refreshToken, TiBizErrCode.PARAM_ERROR, "参数不能为空");
         Map<String, Object> decodeAndVerify = jwtDecode.decodeAndVerify(refreshToken);
         Object type = decodeAndVerify.getOrDefault(BaseSecurityConst.TYPE, "");
-        Assert.isTrue(Objects.equals(type, BaseSecurityConst.REFRESH_TOKEN), BizErrCode.FAIL, "refreshToken不合法");
+        TiAssert.isTrue(Objects.equals(type, BaseSecurityConst.REFRESH_TOKEN), TiBizErrCode.FAIL, "refreshToken不合法");
         String username = Optional.ofNullable(decodeAndVerify.get(BaseSecurityConst.USERNAME))
             .map(Object::toString)
-            .orElseThrow(() -> new BizException(BizErrCode.FAIL, "用户名不存在"));
-        BaseSecurityUser baseSecurityUser = loadUserService.load(username);
-        return getOauth2TokenAndSetAuthentication(baseSecurityUser);
+            .orElseThrow(() -> new TiBizException(TiBizErrCode.FAIL, "用户名不存在"));
+        TiSecurityUser tiSecurityUser = loadUserService.load(username);
+        return getOauth2TokenAndSetAuthentication(tiSecurityUser);
     }
 
     @Override

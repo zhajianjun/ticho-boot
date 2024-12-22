@@ -24,65 +24,46 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-public class HttpLog {
+public class TIHttpLog {
 
     /** 请求类型 */
     private String type;
-
     /** ip */
     private String ip;
-
     /** 请求地址 */
     private String url;
-
     /** 端口号 */
     private String port;
-
     /** 全路径接口 */
     private String fullUrl;
-
     /** 请求名称 */
     private String name;
-
     /** 请求参数 */
     private String reqParams;
-
     /** 请求体 */
     private String reqBody;
-
     /** 请求头 */
     private String reqHeaders;
-
     /** 响应体 */
     private String resBody;
-
     /** 响应头 */
     private String resHeaders;
-
     /** 响应状态 */
     private Integer status;
-
     /* 请求开始时间戳 */
     private Long start;
-
     /* 请求结束时间戳 */
     private Long end;
-
     /* 请求间隔 */
     private Long consume;
-
     /** 代码位置 */
     private String position;
-
     /** 错误信息 */
     private String errMessage;
-
     /* 用户信息 */
     private String username;
-
     /* User-Agent信息对象 */
     private UserAgent userAgent;
-
     /** MDC信息 */
     private Map<String, String> mdcMap;
 

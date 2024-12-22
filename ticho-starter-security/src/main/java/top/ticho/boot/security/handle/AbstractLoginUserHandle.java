@@ -12,7 +12,7 @@ import top.ticho.boot.security.dto.Oauth2AccessToken;
 import top.ticho.boot.security.handle.jwt.JwtEncode;
 import top.ticho.boot.security.handle.jwt.JwtExtra;
 import top.ticho.boot.security.handle.jwt.JwtSigner;
-import top.ticho.boot.view.core.BaseSecurityUser;
+import top.ticho.boot.view.core.TiSecurityUser;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -48,14 +48,14 @@ public abstract class AbstractLoginUserHandle implements LoginUserHandle {
     /**
      * 根据权限用户获取token返回信息
      *
-     * @param baseSecurityUser 权限用户
+     * @param tiSecurityUser 权限用户
      * @return token返回信息
      */
-    protected Oauth2AccessToken getOauth2TokenAndSetAuthentication(BaseSecurityUser baseSecurityUser) {
-        List<String> authoritieStrs = Optional.ofNullable(baseSecurityUser.getRoles()).orElseGet(ArrayList::new);
-        baseSecurityUser.setPassword("N/A");
+    protected Oauth2AccessToken getOauth2TokenAndSetAuthentication(TiSecurityUser tiSecurityUser) {
+        List<String> authoritieStrs = Optional.ofNullable(tiSecurityUser.getRoles()).orElseGet(ArrayList::new);
+        tiSecurityUser.setPassword("N/A");
         List<SimpleGrantedAuthority> authorities = authoritieStrs.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(baseSecurityUser, baseSecurityUser.getPassword(), authorities);
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(tiSecurityUser, tiSecurityUser.getPassword(), authorities);
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (requestAttributes != null) {
             HttpServletRequest httpServletRequest = requestAttributes.getRequest();
@@ -66,7 +66,7 @@ public abstract class AbstractLoginUserHandle implements LoginUserHandle {
         Map<String, Object> map = getAllJwtExtInfo();
         // jwt扩展接口的所有数据放入token中
         oAuth2AccessToken.setExtInfo(map);
-        jwtEncode.encode(oAuth2AccessToken, baseSecurityUser);
+        jwtEncode.encode(oAuth2AccessToken, tiSecurityUser);
         return oAuth2AccessToken;
     }
 

@@ -6,7 +6,7 @@ package top.ticho.boot.view.core;
  * @author zhajianjun
  * @date 2023-04-15 12:17:55
  */
-public interface Entity {
+public interface TiEntity {
 
     String getId();
 

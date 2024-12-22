@@ -3,8 +3,8 @@ package top.ticho.boot.security.view;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import top.ticho.boot.view.core.Result;
-import top.ticho.boot.view.enums.HttpErrCode;
+import top.ticho.boot.view.core.TiResult;
+import top.ticho.boot.view.enums.TiHttpErrCode;
 import top.ticho.tool.json.util.JsonUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,13 +27,13 @@ public class BaseAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest req, HttpServletResponse res, AuthenticationException e) throws IOException {
-        Result<String> result = Result.of(HttpErrCode.NOT_LOGIN);
-        result.setData(req.getRequestURI());
+        TiResult<String> tiResult = TiResult.of(TiHttpErrCode.NOT_LOGIN);
+        tiResult.setData(req.getRequestURI());
         res.setContentType(MediaType.APPLICATION_JSON_VALUE);
         res.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        res.setStatus(result.getCode());
+        res.setStatus(tiResult.getCode());
         PrintWriter writer = res.getWriter();
-        writer.write(JsonUtil.toJsonString(result));
+        writer.write(JsonUtil.toJsonString(tiResult));
         writer.close();
     }
 }

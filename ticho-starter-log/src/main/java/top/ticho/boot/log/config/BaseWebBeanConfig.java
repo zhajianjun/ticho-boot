@@ -10,8 +10,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import top.ticho.boot.log.filter.WapperRequestFilter;
 import top.ticho.boot.log.interceptor.WebLogInterceptor;
-import top.ticho.boot.view.log.BaseLogProperty;
-import top.ticho.boot.view.task.BaseTaskDecortor;
+import top.ticho.boot.view.log.TiLogProperty;
+import top.ticho.boot.view.task.TiTaskDecortor;
 import top.ticho.tool.trace.core.util.TraceUtil;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -34,25 +34,25 @@ public class BaseWebBeanConfig {
 
     @Bean
     @ConfigurationProperties(prefix = "ticho.log")
-    public BaseLogProperty baseLogProperty() {
-        return new BaseLogProperty();
+    public TiLogProperty baseLogProperty() {
+        return new TiLogProperty();
     }
 
     @Bean
     @ConditionalOnBean(WapperRequestFilter.class)
-    public WebLogInterceptor webLogInterceptor(BaseLogProperty baseLogProperty, Environment environment) {
-        return new WebLogInterceptor(baseLogProperty, environment);
+    public WebLogInterceptor webLogInterceptor(TiLogProperty tiLogProperty, Environment environment) {
+        return new WebLogInterceptor(tiLogProperty, environment);
     }
 
     /**
      * 下个跨度id的索引 上下文传递
      * <p>虽然TransmittableThreadLocal可以进行父子线程的变量传递，但是子线程结束也得清除线程变量，所以还是手动方式注入，子线程结束进行清除</p>
      *
-     * @return {@link BaseTaskDecortor}<{@link AtomicInteger}>
+     * @return {@link TiTaskDecortor}<{@link AtomicInteger}>
      */
     @Bean
-    public BaseTaskDecortor<AtomicInteger> nextSpanIndex() {
-        BaseTaskDecortor<AtomicInteger> decortor = new BaseTaskDecortor<>();
+    public TiTaskDecortor<AtomicInteger> nextSpanIndex() {
+        TiTaskDecortor<AtomicInteger> decortor = new TiTaskDecortor<>();
         decortor.setSupplier(TraceUtil::getNextSpanIndex);
         decortor.setExecute(TraceUtil::setNextSpanIndex);
         decortor.setComplete(x -> TraceUtil.clearNextSpanIndex());

@@ -9,7 +9,7 @@ import org.springframework.core.Ordered;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.ticho.boot.view.core.Result;
+import top.ticho.boot.view.core.TiResult;
 
 /**
  * 健康检查接口
@@ -29,8 +29,8 @@ public class HeathController {
     @ApiOperation(value = "健康检查", notes = "健康检查")
     @ApiOperationSupport(order = 10)
     @GetMapping
-    public Result<String> health() {
-        return Result.ok(String.format("application[%s] is up", applicationName));
+    public TiResult<String> health() {
+        return TiResult.ok(String.format("application[%s] is up", applicationName));
     }
 
 }

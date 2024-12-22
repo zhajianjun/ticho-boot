@@ -24,8 +24,8 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import top.ticho.boot.log.event.WebLogEvent;
 import top.ticho.boot.log.wrapper.RequestWrapper;
 import top.ticho.boot.log.wrapper.ResponseWrapper;
-import top.ticho.boot.view.log.BaseLogProperty;
-import top.ticho.boot.view.log.HttpLog;
+import top.ticho.boot.view.log.TiLogProperty;
+import top.ticho.boot.view.log.TIHttpLog;
 import top.ticho.tool.json.util.JsonUtil;
 import top.ticho.tool.trace.spring.util.IpUtil;
 
@@ -53,22 +53,22 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
     /** 用户代理key */
     private static final String USER_AGENT = "User-Agent";
     /** 日志信息线程变量 */
-    private static final TransmittableThreadLocal<HttpLog> logTheadLocal = new TransmittableThreadLocal<>();
+    private static final TransmittableThreadLocal<TIHttpLog> logTheadLocal = new TransmittableThreadLocal<>();
     /** 日志过滤地址匹配线程变量 */
     private static final TransmittableThreadLocal<Boolean> antPathMatchLocal = new TransmittableThreadLocal<>();
     /** 日志配置 */
-    private final BaseLogProperty baseLogProperty;
+    private final TiLogProperty tiLogProperty;
     /** url地址匹配 */
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
     /** 环境变量 */
     private final Environment environment;
 
-    public WebLogInterceptor(BaseLogProperty baseLogProperty, Environment environment) {
-        this.baseLogProperty = baseLogProperty;
+    public WebLogInterceptor(TiLogProperty tiLogProperty, Environment environment) {
+        this.tiLogProperty = tiLogProperty;
         this.environment = environment;
     }
 
-    public static HttpLog logInfo() {
+    public static TIHttpLog logInfo() {
         return logTheadLocal.get();
     }
 
@@ -113,7 +113,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         ApiOperation annotation = handlerMethod.getMethodAnnotation(ApiOperation.class);
         String name = Optional.ofNullable(annotation).map(ApiOperation::value).orElse(null);
         String position = handlerMethod.getMethod().getDeclaringClass().getName() + "." + handlerMethod.getMethod().getName() + "()";
-        HttpLog httpLog = HttpLog.builder()
+        TIHttpLog TIHttpLog = TIHttpLog.builder()
             .type(type)
             .name(name)
             .position(position)
@@ -128,9 +128,9 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
             .userAgent(userAgent)
             .mdcMap(MDC.getCopyOfContextMap())
             .build();
-        logTheadLocal.set(httpLog);
-        boolean print = Boolean.TRUE.equals(baseLogProperty.getPrint());
-        List<String> antPatterns = baseLogProperty.getAntPatterns();
+        logTheadLocal.set(TIHttpLog);
+        boolean print = Boolean.TRUE.equals(tiLogProperty.getPrint());
+        List<String> antPatterns = tiLogProperty.getAntPatterns();
         boolean anyMatch = antPatterns.stream().anyMatch(x -> antPathMatcher.match(x, url));
         antPathMatchLocal.set(anyMatch);
         if (print && !anyMatch) {
@@ -141,8 +141,8 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
 
     @Override
     public void afterCompletion(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, Exception ex) {
-        HttpLog httpLog = logTheadLocal.get();
-        if (httpLog == null) {
+        TIHttpLog TIHttpLog = logTheadLocal.get();
+        if (TIHttpLog == null) {
             return;
         }
         String type = request.getMethod();
@@ -152,22 +152,22 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         String resHeaders = toJson(resHeaderMap);
         long end = SystemClock.now();
         int status = response.getStatus();
-        Long consume = httpLog.getConsume();
-        httpLog.setResBody(resBody);
-        httpLog.setResHeaders(resHeaders);
+        Long consume = TIHttpLog.getConsume();
+        TIHttpLog.setResBody(resBody);
+        TIHttpLog.setResHeaders(resHeaders);
         if (ex != null) {
-            httpLog.setErrMessage(ex.getMessage());
+            TIHttpLog.setErrMessage(ex.getMessage());
         }
-        httpLog.setEnd(end);
-        httpLog.setStatus(status);
-        httpLog.setMdcMap(MDC.getCopyOfContextMap());
-        boolean print = Boolean.TRUE.equals(baseLogProperty.getPrint());
+        TIHttpLog.setEnd(end);
+        TIHttpLog.setStatus(status);
+        TIHttpLog.setMdcMap(MDC.getCopyOfContextMap());
+        boolean print = Boolean.TRUE.equals(tiLogProperty.getPrint());
         Boolean anyMatch = antPathMatchLocal.get();
         if (print && !anyMatch) {
             log.info("[REQ] {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}, 响应头={}", type, url, status, consume, nullOfDefault(resBody), nullOfDefault(resHeaders));
         }
         ApplicationContext applicationContext = SpringUtil.getApplicationContext();
-        applicationContext.publishEvent(new WebLogEvent(applicationContext, httpLog));
+        applicationContext.publishEvent(new WebLogEvent(applicationContext, TIHttpLog));
         logTheadLocal.remove();
         antPathMatchLocal.remove();
     }
@@ -238,7 +238,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
 
     @Override
     public int getOrder() {
-        return baseLogProperty.getOrder();
+        return tiLogProperty.getOrder();
     }
 
 }

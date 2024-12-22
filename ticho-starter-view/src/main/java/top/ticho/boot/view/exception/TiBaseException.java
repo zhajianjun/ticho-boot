@@ -1,8 +1,8 @@
 package top.ticho.boot.view.exception;
 
 import lombok.Getter;
-import top.ticho.boot.view.enums.HttpErrCode;
-import top.ticho.boot.view.enums.IErrCode;
+import top.ticho.boot.view.enums.TiHttpErrCode;
+import top.ticho.boot.view.enums.TiErrCode;
 
 /**
  * 基础异常处理
@@ -11,7 +11,7 @@ import top.ticho.boot.view.enums.IErrCode;
  * @date 2022-07-10 15:56:30
  */
 @Getter
-public class BaseException extends RuntimeException {
+public class TiBaseException extends RuntimeException {
     private static final long serialVersionUID = 1L;
     public static final String ERROR_CODE = "异常代码:";
     public static final String ERROR_MSG = ",异常信息:";
@@ -22,25 +22,25 @@ public class BaseException extends RuntimeException {
     /** 状态信息 */
     private final String msg;
 
-    public BaseException(int code, String msg) {
+    public TiBaseException(int code, String msg) {
         super(ERROR_CODE + code + ERROR_MSG + msg);
         this.code = code;
         this.msg = msg;
     }
 
-    public BaseException(String msg) {
-        super(ERROR_CODE + HttpErrCode.INTERNAL_SERVER_ERROR.getCode() + ERROR_MSG + msg);
-        this.code = HttpErrCode.INTERNAL_SERVER_ERROR.getCode();
+    public TiBaseException(String msg) {
+        super(ERROR_CODE + TiHttpErrCode.INTERNAL_SERVER_ERROR.getCode() + ERROR_MSG + msg);
+        this.code = TiHttpErrCode.INTERNAL_SERVER_ERROR.getCode();
         this.msg = msg;
     }
 
-    public BaseException(IErrCode errorCode) {
+    public TiBaseException(TiErrCode errorCode) {
         super(ERROR_CODE + errorCode.getCode() + ERROR_MSG + errorCode.getMsg());
         this.code = errorCode.getCode();
         this.msg = errorCode.getMsg();
     }
 
-    public BaseException(IErrCode errCode, String msg) {
+    public TiBaseException(TiErrCode errCode, String msg) {
         super(ERROR_CODE + errCode.getCode() + ERROR_MSG + msg);
         this.code = errCode.getCode();
         this.msg = msg;

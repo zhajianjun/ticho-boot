@@ -28,10 +28,10 @@ import org.springframework.web.context.request.async.AsyncRequestTimeoutExceptio
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
-import top.ticho.boot.view.core.Result;
-import top.ticho.boot.view.enums.HttpErrCode;
-import top.ticho.boot.view.exception.BizException;
-import top.ticho.boot.view.exception.SysException;
+import top.ticho.boot.view.core.TiResult;
+import top.ticho.boot.view.enums.TiHttpErrCode;
+import top.ticho.boot.view.exception.TiBizException;
+import top.ticho.boot.view.exception.TiSysException;
 import top.ticho.boot.web.annotation.View;
 
 import javax.servlet.http.HttpServletResponse;
@@ -50,29 +50,29 @@ import java.util.Map;
 @RestControllerAdvice
 @Order(Ordered.LOWEST_PRECEDENCE - 10)
 public class BaseResponseHandle implements ResponseBodyAdvice<Object> {
-    public static Map<Class<? extends Throwable>, HttpErrCode> errCodeMap = null;
+    public static Map<Class<? extends Throwable>, TiHttpErrCode> errCodeMap = null;
 
 
     static {
-        Map<Class<? extends Throwable>, HttpErrCode> errCodeMap = new HashMap<>();
-        errCodeMap.put(BindException.class, HttpErrCode.BAD_REQUEST);
-        errCodeMap.put(TypeMismatchException.class, HttpErrCode.BAD_REQUEST);
-        errCodeMap.put(NoHandlerFoundException.class, HttpErrCode.BAD_REQUEST);
-        errCodeMap.put(ServletRequestBindingException.class, HttpErrCode.BAD_REQUEST);
-        errCodeMap.put(HttpMessageNotReadableException.class, HttpErrCode.BAD_REQUEST);
-        errCodeMap.put(MethodArgumentNotValidException.class, HttpErrCode.BAD_REQUEST);
-        errCodeMap.put(MissingServletRequestPartException.class, HttpErrCode.BAD_REQUEST);
-        errCodeMap.put(MissingServletRequestParameterException.class, HttpErrCode.BAD_REQUEST);
+        Map<Class<? extends Throwable>, TiHttpErrCode> errCodeMap = new HashMap<>();
+        errCodeMap.put(BindException.class, TiHttpErrCode.BAD_REQUEST);
+        errCodeMap.put(TypeMismatchException.class, TiHttpErrCode.BAD_REQUEST);
+        errCodeMap.put(NoHandlerFoundException.class, TiHttpErrCode.BAD_REQUEST);
+        errCodeMap.put(ServletRequestBindingException.class, TiHttpErrCode.BAD_REQUEST);
+        errCodeMap.put(HttpMessageNotReadableException.class, TiHttpErrCode.BAD_REQUEST);
+        errCodeMap.put(MethodArgumentNotValidException.class, TiHttpErrCode.BAD_REQUEST);
+        errCodeMap.put(MissingServletRequestPartException.class, TiHttpErrCode.BAD_REQUEST);
+        errCodeMap.put(MissingServletRequestParameterException.class, TiHttpErrCode.BAD_REQUEST);
 
-        errCodeMap.put(MissingPathVariableException.class, HttpErrCode.INTERNAL_SERVER_ERROR);
-        errCodeMap.put(ConversionNotSupportedException.class, HttpErrCode.INTERNAL_SERVER_ERROR);
-        errCodeMap.put(HttpMessageNotWritableException.class, HttpErrCode.INTERNAL_SERVER_ERROR);
+        errCodeMap.put(MissingPathVariableException.class, TiHttpErrCode.INTERNAL_SERVER_ERROR);
+        errCodeMap.put(ConversionNotSupportedException.class, TiHttpErrCode.INTERNAL_SERVER_ERROR);
+        errCodeMap.put(HttpMessageNotWritableException.class, TiHttpErrCode.INTERNAL_SERVER_ERROR);
 
-        errCodeMap.put(HttpRequestMethodNotSupportedException.class, HttpErrCode.METHOD_NOT_ALLOWED);
-        errCodeMap.put(HttpMediaTypeNotSupportedException.class, HttpErrCode.UNSUPPORTED_MEDIA_TYPE);
-        errCodeMap.put(HttpMediaTypeNotAcceptableException.class, HttpErrCode.NOT_ACCEPTABLE);
+        errCodeMap.put(HttpRequestMethodNotSupportedException.class, TiHttpErrCode.METHOD_NOT_ALLOWED);
+        errCodeMap.put(HttpMediaTypeNotSupportedException.class, TiHttpErrCode.UNSUPPORTED_MEDIA_TYPE);
+        errCodeMap.put(HttpMediaTypeNotAcceptableException.class, TiHttpErrCode.NOT_ACCEPTABLE);
 
-        errCodeMap.put(AsyncRequestTimeoutException.class, HttpErrCode.SERVICE_UNAVAILABLE);
+        errCodeMap.put(AsyncRequestTimeoutException.class, TiHttpErrCode.SERVICE_UNAVAILABLE);
         BaseResponseHandle.errCodeMap = Collections.unmodifiableMap(errCodeMap);
     }
 
@@ -80,32 +80,32 @@ public class BaseResponseHandle implements ResponseBodyAdvice<Object> {
      * 全局错误用于捕获不可预知的异常
      */
     @ExceptionHandler(Exception.class)
-    public Result<String> exception(Exception ex, HttpServletResponse res) {
-        if (ex instanceof BizException) {
+    public TiResult<String> exception(Exception ex, HttpServletResponse res) {
+        if (ex instanceof TiBizException) {
             // 业务异常
-            BizException bizException = (BizException) ex;
+            TiBizException tiBizException = (TiBizException) ex;
             res.setStatus(HttpStatus.OK.value());
             log.warn("catch error\t{}", ex.getMessage());
-            return Result.of(bizException.getCode(), bizException.getMsg());
+            return TiResult.of(tiBizException.getCode(), tiBizException.getMsg());
         }
-        HttpErrCode httpErrCode = errCodeMap.get(ex.getClass());
-        Result<String> result;
-        if (httpErrCode != null) {
-            result = Result.of(httpErrCode);
-            res.setStatus(result.getCode());
-        } else if (ex instanceof SysException) {
+        TiHttpErrCode tiHttpErrorCode = errCodeMap.get(ex.getClass());
+        TiResult<String> tiResult;
+        if (tiHttpErrorCode != null) {
+            tiResult = TiResult.of(tiHttpErrorCode);
+            res.setStatus(tiResult.getCode());
+        } else if (ex instanceof TiSysException) {
             // 系统异常
-            SysException systemException = (SysException) ex;
-            result = Result.of(systemException.getCode(), systemException.getMsg());
+            TiSysException systemException = (TiSysException) ex;
+            tiResult = TiResult.of(systemException.getCode(), systemException.getMsg());
             res.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         } else {
             // 未知异常
-            result = Result.of(HttpErrCode.FAIL);
-            result.setMsg(ex.getMessage());
-            res.setStatus(result.getCode());
+            tiResult = TiResult.of(TiHttpErrCode.FAIL);
+            tiResult.setMsg(ex.getMessage());
+            res.setStatus(tiResult.getCode());
         }
         log.error("catch error\t{}", ex.getMessage(), ex);
-        return result;
+        return tiResult;
     }
 
 
@@ -125,9 +125,9 @@ public class BaseResponseHandle implements ResponseBodyAdvice<Object> {
 
     @Override
     public Object beforeBodyWrite(Object o, @NonNull MethodParameter methodParameter, @NonNull MediaType mediaType, @NonNull Class<? extends HttpMessageConverter<?>> aClass, @NonNull ServerHttpRequest serverHttpRequest, @NonNull ServerHttpResponse serverHttpResponse) {
-        if (o instanceof Result) {
+        if (o instanceof TiResult) {
             return o;
         }
-        return Result.ok(o);
+        return TiResult.ok(o);
     }
 }

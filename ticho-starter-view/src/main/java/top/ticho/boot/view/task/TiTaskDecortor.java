@@ -12,7 +12,7 @@ import java.util.function.Supplier;
  * @date 2023-01-05 10:53
  */
 @Data
-public class BaseTaskDecortor<T> {
+public class TiTaskDecortor<T> {
 
     private T data;
 

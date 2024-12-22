@@ -7,8 +7,8 @@ import org.hibernate.validator.BaseHibernateValidatorConfiguration;
 import org.hibernate.validator.HibernateValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.ticho.boot.view.enums.BizErrCode;
-import top.ticho.boot.view.exception.BizException;
+import top.ticho.boot.view.enums.TiBizErrCode;
+import top.ticho.boot.view.exception.TiBizException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -241,7 +241,7 @@ public class ValidUtil {
             String propertyPath = next.getPropertyPath().toString();
             joiner.add(propertyPath + ":" + message);
             log.warn("参数校验异常，{}", joiner);
-            throw new BizException(BizErrCode.PARAM_ERROR, message);
+            throw new TiBizException(TiBizErrCode.PARAM_ERROR, message);
         }
         List<ConstraintViolation<T>> validated = validate
             .stream()
@@ -250,7 +250,7 @@ public class ValidUtil {
             .collect(Collectors.toList());
         log.warn("参数校验异常，{}", joiner);
         ConstraintViolation<T> violation = validated.get(0);
-        throw new BizException(BizErrCode.PARAM_ERROR, violation.getMessage());
+        throw new TiBizException(TiBizErrCode.PARAM_ERROR, violation.getMessage());
     }
 
     /**
@@ -289,12 +289,12 @@ public class ValidUtil {
     @SuppressWarnings("all")
     private static <T> T preCheck(T obj) {
         if (ObjUtil.isEmpty(obj)) {
-            throw new BizException(BizErrCode.PARAM_ERROR);
+            throw new TiBizException(TiBizErrCode.PARAM_ERROR);
         }
         if (obj instanceof Collection<?>) {
             Collection<?> objnew = (Collection<?>) obj;
             if (objnew.isEmpty()) {
-                throw new BizException(BizErrCode.PARAM_ERROR);
+                throw new TiBizException(TiBizErrCode.PARAM_ERROR);
             }
             ValidBean<?> validBean = new ValidBean<>(objnew);
             return (T) validBean;
@@ -315,12 +315,12 @@ public class ValidUtil {
     @SuppressWarnings("all")
     private static <T> T preCheck(T obj, String customMessage) {
         if (ObjUtil.isEmpty(obj)) {
-            throw new BizException(BizErrCode.PARAM_ERROR, customMessage);
+            throw new TiBizException(TiBizErrCode.PARAM_ERROR, customMessage);
         }
         if (obj instanceof Collection<?>) {
             Collection<?> objnew = (Collection<?>) obj;
             if (objnew.isEmpty()) {
-                throw new BizException(BizErrCode.PARAM_ERROR, customMessage);
+                throw new TiBizException(TiBizErrCode.PARAM_ERROR, customMessage);
             }
             ValidBean<?> validBean = new ValidBean<>(objnew);
             return (T) validBean;

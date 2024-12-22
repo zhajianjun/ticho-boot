@@ -9,8 +9,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import top.ticho.boot.view.core.Result;
-import top.ticho.boot.view.enums.HttpErrCode;
+import top.ticho.boot.view.core.TiResult;
+import top.ticho.boot.view.enums.TiHttpErrCode;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -34,9 +34,9 @@ public class BaseSecurityControllerAdvice {
      */
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public Result<String> accessDeniedException(AccessDeniedException e, HttpServletRequest request) {
+    public TiResult<String> accessDeniedException(AccessDeniedException e, HttpServletRequest request) {
         log.warn("权限不足 e={}", e.getMessage());
-        return Result.of(HttpErrCode.ACCESS_DENIED, e.getMessage(), request.getRequestURI());
+        return TiResult.of(TiHttpErrCode.ACCESS_DENIED, e.getMessage(), request.getRequestURI());
     }
 
     /**
@@ -47,9 +47,9 @@ public class BaseSecurityControllerAdvice {
      */
     @ExceptionHandler(AuthenticationException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public Result<String> authenticationException(AuthenticationException e, HttpServletRequest request) {
+    public TiResult<String> authenticationException(AuthenticationException e, HttpServletRequest request) {
         log.warn("登录异常 e={}", e.getMessage());
-        return Result.of(HttpErrCode.NOT_LOGIN, e.getMessage(), request.getRequestURI());
+        return TiResult.of(TiHttpErrCode.NOT_LOGIN, e.getMessage(), request.getRequestURI());
     }
 
 }

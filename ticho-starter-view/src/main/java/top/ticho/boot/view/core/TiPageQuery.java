@@ -1,8 +1,8 @@
 package top.ticho.boot.view.core;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.io.Serializable;
 
 /**
  * 通用分页查询条件
@@ -11,13 +11,13 @@ import lombok.Data;
  * @date 2022-07-10 15:56:30
  */
 @Data
-@ApiModel("基础分页查询条件")
-public class BasePageQuery {
+public class TiPageQuery implements Serializable {
+    private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "当前页码", required = true, example = "1", position = 1)
+    /** 当前页码 */
     private Integer pageNum;
 
-    @ApiModelProperty(value = "页面大小", required = true, example = "10", position = 5)
+    /** 页面大小 */
     private Integer pageSize;
 
     public void checkPage(int defaultPageSize) {

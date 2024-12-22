@@ -1,7 +1,7 @@
 package top.ticho.boot.view.exception;
 
 import lombok.Getter;
-import top.ticho.boot.view.enums.IErrCode;
+import top.ticho.boot.view.enums.TiErrCode;
 
 /**
  * 业务异常处理
@@ -10,23 +10,22 @@ import top.ticho.boot.view.enums.IErrCode;
  * @date 2022-07-10 15:56:30
  */
 @Getter
-public class BizException extends BaseException {
+public class TiBizException extends TiBaseException {
     private static final long serialVersionUID = 1L;
 
-    public BizException(int code, String msg) {
+    public TiBizException(int code, String msg) {
         super(code, msg);
     }
 
-    public BizException(String msg) {
+    public TiBizException(String msg) {
         super(msg);
     }
 
-    public BizException(IErrCode resultCode) {
+    public TiBizException(TiErrCode resultCode) {
         super(resultCode);
     }
 
-
-    public BizException(IErrCode resultCode, String msg) {
+    public TiBizException(TiErrCode resultCode, String msg) {
         super(resultCode, msg);
     }
 

@@ -28,7 +28,7 @@ import top.ticho.boot.security.handle.jwt.JwtSigner;
 import top.ticho.boot.security.prop.BaseSecurityProperty;
 import top.ticho.boot.security.view.BaseAccessDeniedHandler;
 import top.ticho.boot.security.view.BaseAuthenticationEntryPoint;
-import top.ticho.boot.view.task.BaseTaskDecortor;
+import top.ticho.boot.view.task.TiTaskDecortor;
 
 /**
  * springsecurity 相关bean配置
@@ -161,11 +161,11 @@ public class BaseSecurityImportConfig {
     /**
      * 权限上下文传递
      *
-     * @return {@link BaseTaskDecortor}<{@link Authentication}>
+     * @return {@link TiTaskDecortor}<{@link Authentication}>
      */
     @Bean
-    public BaseTaskDecortor<Authentication> authenticationTaskDecortor() {
-        BaseTaskDecortor<Authentication> decortor = new BaseTaskDecortor<>();
+    public TiTaskDecortor<Authentication> authenticationTaskDecortor() {
+        TiTaskDecortor<Authentication> decortor = new TiTaskDecortor<>();
         decortor.setSupplier(() -> SecurityContextHolder.getContext().getAuthentication());
         decortor.setExecute((x) -> SecurityContextHolder.getContext().setAuthentication(x));
         decortor.setComplete(x -> SecurityContextHolder.clearContext());

@@ -16,7 +16,7 @@ import top.ticho.boot.security.constant.BaseOAuth2Const;
 import top.ticho.boot.security.dto.BaseLoginRequest;
 import top.ticho.boot.security.dto.Oauth2AccessToken;
 import top.ticho.boot.security.handle.LoginUserHandle;
-import top.ticho.boot.view.core.Result;
+import top.ticho.boot.view.core.TiResult;
 
 import java.security.Principal;
 
@@ -39,29 +39,29 @@ public class OauthController {
     @ApiOperation("登录")
     @ApiOperationSupport(order = 10)
     @PostMapping("token")
-    public Result<Oauth2AccessToken> token(BaseLoginRequest loginRequest) {
-        return Result.ok(loginUserHandle.token(loginRequest));
+    public TiResult<Oauth2AccessToken> token(BaseLoginRequest loginRequest) {
+        return TiResult.ok(loginUserHandle.token(loginRequest));
     }
 
     @ApiOperation("刷新token")
     @ApiOperationSupport(order = 20)
     @PostMapping("refreshToken")
-    public Result<Oauth2AccessToken> refreshToken(String refreshToken) {
-        return Result.ok(loginUserHandle.refreshToken(refreshToken));
+    public TiResult<Oauth2AccessToken> refreshToken(String refreshToken) {
+        return TiResult.ok(loginUserHandle.refreshToken(refreshToken));
     }
 
     @ApiOperation(value = "token信息查询")
     @ApiOperationSupport(order = 30)
     @GetMapping
-    public Result<Principal> principal() {
-        return Result.ok(SecurityContextHolder.getContext().getAuthentication());
+    public TiResult<Principal> principal() {
+        return TiResult.ok(SecurityContextHolder.getContext().getAuthentication());
     }
 
     @ApiOperation("获取公钥")
     @ApiOperationSupport(order = 40)
     @GetMapping("publicKey")
-    public Result<String> publicKey() {
-        return Result.ok(loginUserHandle.publicKey());
+    public TiResult<String> publicKey() {
+        return TiResult.ok(loginUserHandle.publicKey());
     }
 
 

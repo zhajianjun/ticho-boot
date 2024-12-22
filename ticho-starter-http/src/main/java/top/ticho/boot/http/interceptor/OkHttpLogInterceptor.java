@@ -20,7 +20,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import top.ticho.boot.http.event.HttpLogEvent;
 import top.ticho.boot.http.prop.BaseHttpProperty;
-import top.ticho.boot.view.log.HttpLog;
+import top.ticho.boot.view.log.TIHttpLog;
 import top.ticho.tool.json.util.JsonUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -84,7 +84,7 @@ public class OkHttpLogInterceptor implements Interceptor {
         String host = uri.getHost();
         String port = Integer.toString(uri.getPort());
         String url = uri.getPath();
-        HttpLog httpLog = HttpLog.builder()
+        TIHttpLog TIHttpLog = TIHttpLog.builder()
             .type(method)
             .ip(host)
             .url(url)
@@ -102,7 +102,7 @@ public class OkHttpLogInterceptor implements Interceptor {
             .mdcMap(MDC.getCopyOfContextMap())
             .build();
         ApplicationContext applicationContext = SpringUtil.getApplicationContext();
-        applicationContext.publishEvent(new HttpLogEvent(applicationContext, httpLog));
+        applicationContext.publishEvent(new HttpLogEvent(applicationContext, TIHttpLog));
         return res;
     }
 

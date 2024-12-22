@@ -34,9 +34,9 @@ import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.sort.SortOrder;
 import top.ticho.boot.es.query.EsQuery;
-import top.ticho.boot.view.core.Entity;
-import top.ticho.boot.view.core.EsPageResult;
-import top.ticho.boot.view.exception.BizException;
+import top.ticho.boot.view.core.TiEntity;
+import top.ticho.boot.view.core.TiEsPageResult;
+import top.ticho.boot.view.exception.TiBizException;
 import top.ticho.tool.json.util.JsonUtil;
 
 import java.io.IOException;
@@ -70,12 +70,12 @@ public class EsTemplateImpl implements EsTemplate {
     }
 
 
-    public void save(String index, Entity entity) {
-        if (entity == null) {
+    public void save(String index, TiEntity tiEntity) {
+        if (tiEntity == null) {
             log.info("es保存数据异常，对象为null");
             return;
         }
-        IndexRequest indexRequest = getIndexRequest(index, entity);
+        IndexRequest indexRequest = getIndexRequest(index, tiEntity);
         this.save(indexRequest);
     }
 
@@ -88,11 +88,11 @@ public class EsTemplateImpl implements EsTemplate {
         this.save(indexRequest);
     }
 
-    public void saveBatch(String index, List<? extends Entity> entities) {
+    public void saveBatch(String index, List<? extends TiEntity> entities) {
         this.saveBatch(index, entities, MAX_BATCH_SIZE);
     }
 
-    public void saveBatch(String index, List<? extends Entity> entityList, Integer bachSize) {
+    public void saveBatch(String index, List<? extends TiEntity> entityList, Integer bachSize) {
         if (CollUtil.isEmpty(entityList)) {
             log.info("es批量保存数据异常，集合为null或者大小为0");
             return;
@@ -104,15 +104,15 @@ public class EsTemplateImpl implements EsTemplate {
             saveBatchDb(index, entityList);
             return;
         }
-        List<? extends List<? extends Entity>> split = CollUtil.split(entityList, bachSize);
+        List<? extends List<? extends TiEntity>> split = CollUtil.split(entityList, bachSize);
         split.forEach(item -> saveBatchDb(index, item));
     }
 
-    private void saveBatchDb(String index, List<? extends Entity> entities) {
+    private void saveBatchDb(String index, List<? extends TiEntity> entities) {
         try {
             BulkRequest bulkInsertRequest = new BulkRequest();
-            for (Entity entity : entities) {
-                IndexRequest updateRequest = getIndexRequest(index, entity);
+            for (TiEntity tiEntity : entities) {
+                IndexRequest updateRequest = getIndexRequest(index, tiEntity);
                 bulkInsertRequest.add(updateRequest);
             }
             BulkResponse response = restHighLevelClient.bulk(bulkInsertRequest, RequestOptions.DEFAULT);
@@ -120,7 +120,7 @@ public class EsTemplateImpl implements EsTemplate {
             printErrorMessage(response);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new BizException("es批量保存数据失败");
+            throw new TiBizException("es批量保存数据失败");
         }
     }
 
@@ -156,16 +156,16 @@ public class EsTemplateImpl implements EsTemplate {
             printErrorMessage(response);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new BizException("es批量保存数据失败");
+            throw new TiBizException("es批量保存数据失败");
         }
     }
 
-    public void saveOrUpdate(String index, Entity entity) {
-        if (entity == null) {
+    public void saveOrUpdate(String index, TiEntity tiEntity) {
+        if (tiEntity == null) {
             log.info("es保存或更新数据异常，对象为null");
             return;
         }
-        UpdateRequest updateRequest = getUpdateRequest(index, entity, true);
+        UpdateRequest updateRequest = getUpdateRequest(index, tiEntity, true);
         this.update(updateRequest);
     }
 
@@ -186,11 +186,11 @@ public class EsTemplateImpl implements EsTemplate {
     }
 
     @Override
-    public void saveOrUpdateBatch(String index, List<? extends Entity> entities) {
+    public void saveOrUpdateBatch(String index, List<? extends TiEntity> entities) {
         this.saveOrUpdateBatch(index, entities, MAX_BATCH_SIZE);
     }
 
-    public void saveOrUpdateBatch(String index, List<? extends Entity> entityList, Integer bachSize) {
+    public void saveOrUpdateBatch(String index, List<? extends TiEntity> entityList, Integer bachSize) {
         if (CollUtil.isEmpty(entityList)) {
             log.info("es批量保存或者更新数据异常，集合为null或者大小为0");
             return;
@@ -202,7 +202,7 @@ public class EsTemplateImpl implements EsTemplate {
             saveOrUpdateBatchDb(index, entityList);
             return;
         }
-        List<? extends List<? extends Entity>> split = CollUtil.split(entityList, bachSize);
+        List<? extends List<? extends TiEntity>> split = CollUtil.split(entityList, bachSize);
         split.forEach(item -> saveOrUpdateBatchDb(index, item));
     }
 
@@ -212,11 +212,11 @@ public class EsTemplateImpl implements EsTemplate {
      * @param index    索引
      * @param entities 对象列表
      */
-    public void saveOrUpdateBatchDb(String index, List<? extends Entity> entities) {
+    public void saveOrUpdateBatchDb(String index, List<? extends TiEntity> entities) {
         try {
             BulkRequest bulkInsertRequest = new BulkRequest();
-            for (Entity entity : entities) {
-                UpdateRequest updateRequest = getUpdateRequest(index, entity, true);
+            for (TiEntity tiEntity : entities) {
+                UpdateRequest updateRequest = getUpdateRequest(index, tiEntity, true);
                 bulkInsertRequest.add(updateRequest);
             }
             BulkResponse response = restHighLevelClient.bulk(bulkInsertRequest, RequestOptions.DEFAULT);
@@ -224,7 +224,7 @@ public class EsTemplateImpl implements EsTemplate {
             printErrorMessage(response);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new BizException("es批量保存或者更新数据失败");
+            throw new TiBizException("es批量保存或者更新数据失败");
         }
     }
 
@@ -272,7 +272,7 @@ public class EsTemplateImpl implements EsTemplate {
             printErrorMessage(response);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new BizException("es批量保存或者更新数据失败");
+            throw new TiBizException("es批量保存或者更新数据失败");
         }
     }
 
@@ -293,7 +293,7 @@ public class EsTemplateImpl implements EsTemplate {
             printStatus(response);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new BizException("es删除数据失败");
+            throw new TiBizException("es删除数据失败");
         }
     }
 
@@ -319,7 +319,7 @@ public class EsTemplateImpl implements EsTemplate {
             printErrorMessage(response);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new BizException("es批量删除数据失败");
+            throw new TiBizException("es批量删除数据失败");
         }
     }
 
@@ -327,14 +327,14 @@ public class EsTemplateImpl implements EsTemplate {
      * 根据id更改数据
      *
      * @param index  索引
-     * @param entity 对象
+     * @param tiEntity 对象
      */
-    public void updateById(String index, Entity entity) {
-        if (Objects.isNull(entity)) {
+    public void updateById(String index, TiEntity tiEntity) {
+        if (Objects.isNull(tiEntity)) {
             log.info("es删除数据异常，对象为null");
             return;
         }
-        UpdateRequest updateRequest = getUpdateRequest(index, entity, false);
+        UpdateRequest updateRequest = getUpdateRequest(index, tiEntity, false);
         update(updateRequest);
     }
 
@@ -353,7 +353,7 @@ public class EsTemplateImpl implements EsTemplate {
             log.error("{}, status is {}", e.getMessage(), status.name(), e);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new BizException("es保存数据失败");
+            throw new TiBizException("es保存数据失败");
         }
     }
 
@@ -375,7 +375,7 @@ public class EsTemplateImpl implements EsTemplate {
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new BizException("es更新数据失败");
+            throw new TiBizException("es更新数据失败");
         }
     }
 
@@ -396,11 +396,11 @@ public class EsTemplateImpl implements EsTemplate {
      * @param index    索引
      * @param entities 对象列表
      */
-    public void updateBatch(String index, List<? extends Entity> entities) {
+    public void updateBatch(String index, List<? extends TiEntity> entities) {
         updateBatch(index, entities, MAX_BATCH_SIZE);
     }
 
-    public void updateBatch(String index, List<? extends Entity> entities, Integer bachSize) {
+    public void updateBatch(String index, List<? extends TiEntity> entities, Integer bachSize) {
         if (entities == null) {
             return;
         }
@@ -411,8 +411,8 @@ public class EsTemplateImpl implements EsTemplate {
             updateBatchDb(index, entities);
             return;
         }
-        List<? extends List<? extends Entity>> split = CollUtil.split(entities, bachSize);
-        for (List<? extends Entity> maps : split) {
+        List<? extends List<? extends TiEntity>> split = CollUtil.split(entities, bachSize);
+        for (List<? extends TiEntity> maps : split) {
             updateBatchDb(index, maps);
         }
     }
@@ -423,11 +423,11 @@ public class EsTemplateImpl implements EsTemplate {
      * @param index    the index
      * @param entities the entities
      */
-    public void updateBatchDb(String index, List<? extends Entity> entities) {
+    public void updateBatchDb(String index, List<? extends TiEntity> entities) {
         try {
             BulkRequest bulkInsertRequest = new BulkRequest();
-            for (Entity entity : entities) {
-                UpdateRequest updateRequest = getUpdateRequest(index, entity, false);
+            for (TiEntity tiEntity : entities) {
+                UpdateRequest updateRequest = getUpdateRequest(index, tiEntity, false);
                 bulkInsertRequest.add(updateRequest);
             }
             BulkResponse response = restHighLevelClient.bulk(bulkInsertRequest, RequestOptions.DEFAULT);
@@ -435,7 +435,7 @@ public class EsTemplateImpl implements EsTemplate {
             printErrorMessage(response);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new BizException("es更新数据失败");
+            throw new TiBizException("es更新数据失败");
         }
     }
 
@@ -484,7 +484,7 @@ public class EsTemplateImpl implements EsTemplate {
             printErrorMessage(response);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new BizException("es更新数据失败");
+            throw new TiBizException("es更新数据失败");
         }
     }
 
@@ -495,7 +495,7 @@ public class EsTemplateImpl implements EsTemplate {
         esQuery.setQueryBuilder(query);
         esQuery.setClazz(tClass);
         esQuery.setIndexs(Collections.singletonList(index));
-        EsPageResult<T> pageInfo = page(esQuery);
+        TiEsPageResult<T> pageInfo = page(esQuery);
         if (pageInfo == null || CollUtil.isEmpty(pageInfo.getRows())) {
             return null;
         }
@@ -508,7 +508,7 @@ public class EsTemplateImpl implements EsTemplate {
         query.must(QueryBuilders.matchQuery("id", id));
         esQuery.setQueryBuilder(query);
         esQuery.setIndexs(Collections.singletonList(index));
-        EsPageResult<Map<String, Object>> pageInfo = pageForMap(esQuery);
+        TiEsPageResult<Map<String, Object>> pageInfo = pageForMap(esQuery);
         if (pageInfo == null || CollUtil.isEmpty(pageInfo.getRows())) {
             return null;
         }
@@ -521,7 +521,7 @@ public class EsTemplateImpl implements EsTemplate {
      * @param esQuery es查询条件
      * @return 查询数据
      */
-    public <T> EsPageResult<T> page(EsQuery<T> esQuery) {
+    public <T> TiEsPageResult<T> page(EsQuery<T> esQuery) {
         SearchResponse searchResponse = searchResponse(esQuery);
         List<T> rows = new ArrayList<>();
         Set<String> indexs = new HashSet<>();
@@ -537,7 +537,7 @@ public class EsTemplateImpl implements EsTemplate {
                 rows.add(JsonUtil.toJavaObject(searchHit.getSourceAsString(), clazz));
             }
         });
-        return new EsPageResult<>(esQuery.getPageNum(), esQuery.getPageSize(), total, indexs, rows);
+        return new TiEsPageResult<>(esQuery.getPageNum(), esQuery.getPageSize(), total, indexs, rows);
     }
 
     /**
@@ -546,7 +546,7 @@ public class EsTemplateImpl implements EsTemplate {
      * @param esQuery es查询条件
      * @return 查询数据
      */
-    public EsPageResult<Map<String, Object>> pageForMap(EsQuery<Map<String, Object>> esQuery) {
+    public TiEsPageResult<Map<String, Object>> pageForMap(EsQuery<Map<String, Object>> esQuery) {
         SearchResponse searchResponse = searchResponse(esQuery);
         List<Map<String, Object>> rows = new ArrayList<>();
         Set<String> indexs = new HashSet<>();
@@ -561,7 +561,7 @@ public class EsTemplateImpl implements EsTemplate {
                 rows.add(searchHit.getSourceAsMap());
             }
         });
-        return new EsPageResult<>(esQuery.getPageNum(), esQuery.getPageSize(), total, indexs, rows);
+        return new TiEsPageResult<>(esQuery.getPageNum(), esQuery.getPageSize(), total, indexs, rows);
     }
 
     /**
@@ -626,10 +626,10 @@ public class EsTemplateImpl implements EsTemplate {
             searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
         } catch (IOException e) {
             log.error("catch error:\n", e);
-            throw new BizException("select error");
+            throw new TiBizException("select error");
         }
         if (Objects.isNull(searchResponse) || searchResponse.status().getStatus() != RestStatus.OK.getStatus()) {
-            throw new BizException("select error");
+            throw new TiBizException("select error");
         }
         return searchResponse;
     }
@@ -669,23 +669,23 @@ public class EsTemplateImpl implements EsTemplate {
      * 得到更新请求
      *
      * @param index       索引
-     * @param entity      实体
+     * @param tiEntity      实体
      * @param docAsUpsert true-文档不存在则插入，有则更新；false-文档不存在,会抛出ElasticsearchException
      * @return {@link UpdateRequest}
      */
-    private UpdateRequest getUpdateRequest(String index, Entity entity, boolean docAsUpsert) {
-        String id = entity.getId();
+    private UpdateRequest getUpdateRequest(String index, TiEntity tiEntity, boolean docAsUpsert) {
+        String id = tiEntity.getId();
         UpdateRequest updateRequest = new UpdateRequest(index, id);
-        IndexRequest indexRequest = getIndexRequest(index, entity);
+        IndexRequest indexRequest = getIndexRequest(index, tiEntity);
         updateRequest.doc(indexRequest);
         updateRequest.docAsUpsert(docAsUpsert);
         return updateRequest;
     }
 
-    private IndexRequest getIndexRequest(String index, Entity entity) {
-        String id = entity.getId();
+    private IndexRequest getIndexRequest(String index, TiEntity tiEntity) {
+        String id = tiEntity.getId();
         IndexRequest indexRequest = new IndexRequest(index).id(id);
-        indexRequest.source(JsonUtil.toJsonString(entity), XContentType.JSON);
+        indexRequest.source(JsonUtil.toJsonString(tiEntity), XContentType.JSON);
         return indexRequest;
     }
 

@@ -13,12 +13,12 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import top.ticho.boot.security.auth.AntPatternsAuthHandle;
 import top.ticho.boot.security.constant.BaseSecurityConst;
 import top.ticho.boot.security.handle.jwt.JwtDecode;
-import top.ticho.boot.view.core.BaseSecurityUser;
-import top.ticho.boot.view.core.Result;
-import top.ticho.boot.view.enums.BizErrCode;
-import top.ticho.boot.view.enums.HttpErrCode;
-import top.ticho.boot.view.exception.BizException;
-import top.ticho.boot.view.util.Assert;
+import top.ticho.boot.view.core.TiSecurityUser;
+import top.ticho.boot.view.core.TiResult;
+import top.ticho.boot.view.enums.TiBizErrCode;
+import top.ticho.boot.view.enums.TiHttpErrCode;
+import top.ticho.boot.view.exception.TiBizException;
+import top.ticho.boot.view.util.TiAssert;
 import top.ticho.tool.json.util.JsonUtil;
 
 import javax.annotation.Resource;
@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
  * @date 2022-09-22 08:38:17
  */
 @Slf4j
-public abstract class AbstractAuthTokenFilter<T extends BaseSecurityUser> extends OncePerRequestFilter {
+public abstract class AbstractAuthTokenFilter<T extends TiSecurityUser> extends OncePerRequestFilter {
 
     @Resource
     private JwtDecode jwtDecode;
@@ -100,28 +100,28 @@ public abstract class AbstractAuthTokenFilter<T extends BaseSecurityUser> extend
                 chain.doFilter(request, response);
                 return;
             }
-            Assert.isNotNull(token, HttpErrCode.NOT_LOGIN);
+            TiAssert.isNotNull(token, TiHttpErrCode.NOT_LOGIN);
             token = StrUtil.removePrefixIgnoreCase(token, BaseSecurityConst.BEARER);
             token = StrUtil.trimStart(token);
             Map<String, Object> map = jwtDecode.decodeAndVerify(token);
             Object type = map.getOrDefault(BaseSecurityConst.TYPE, "");
-            Assert.isTrue(Objects.equals(type, BaseSecurityConst.ACCESS_TOKEN), BizErrCode.FAIL, "token不合法");
+            TiAssert.isTrue(Objects.equals(type, BaseSecurityConst.ACCESS_TOKEN), TiBizErrCode.FAIL, "token不合法");
             T securityUser = convert(map);
-            Assert.isNotNull(securityUser, BizErrCode.FAIL, "token不合法");
+            TiAssert.isNotNull(securityUser, TiBizErrCode.FAIL, "token不合法");
             setAuthentication(request, securityUser, token);
             chain.doFilter(request, response);
         } catch (Exception e) {
             String message = e.getMessage();
-            HttpErrCode tokenInvalid = HttpErrCode.TOKEN_INVALID;
+            TiHttpErrCode tokenInvalid = TiHttpErrCode.TOKEN_INVALID;
             log.warn("{} {} {} catch error\t{}", request.getMethod(), request.getRequestURI(), tokenInvalid.getCode(), message, e);
-            if (e instanceof BizException) {
-                message = ((BizException) e).getMsg();
+            if (e instanceof TiBizException) {
+                message = ((TiBizException) e).getMsg();
             }
-            Result<String> result = Result.of(tokenInvalid, message, request.getRequestURI());
+            TiResult<String> tiResult = TiResult.of(tokenInvalid, message, request.getRequestURI());
             response.setStatus(tokenInvalid.getCode());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-            response.getWriter().write(JsonUtil.toJsonString(result));
+            response.getWriter().write(JsonUtil.toJsonString(tiResult));
         } finally {
             complete(request, response);
         }

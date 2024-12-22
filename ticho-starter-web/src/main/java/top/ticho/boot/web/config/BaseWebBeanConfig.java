@@ -8,7 +8,7 @@ import org.springframework.core.task.TaskDecorator;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
-import top.ticho.boot.view.task.BaseTaskDecortor;
+import top.ticho.boot.view.task.TiTaskDecortor;
 import top.ticho.boot.web.prop.BaseAsyncProperty;
 
 import java.util.List;
@@ -54,8 +54,8 @@ public class BaseWebBeanConfig {
 
 
     @Bean
-    public BaseTaskDecortor<RequestAttributes> requestAttributes() {
-        BaseTaskDecortor<RequestAttributes> decortor = new BaseTaskDecortor<>();
+    public TiTaskDecortor<RequestAttributes> requestAttributes() {
+        TiTaskDecortor<RequestAttributes> decortor = new TiTaskDecortor<>();
         decortor.setSupplier(RequestContextHolder::currentRequestAttributes);
         decortor.setExecute(RequestContextHolder::setRequestAttributes);
         decortor.setComplete(x -> RequestContextHolder.resetRequestAttributes());
@@ -63,8 +63,8 @@ public class BaseWebBeanConfig {
     }
 
     @Bean
-    public BaseTaskDecortor<Map<String, String>> mdc() {
-        BaseTaskDecortor<Map<String, String>> decortor = new BaseTaskDecortor<>();
+    public TiTaskDecortor<Map<String, String>> mdc() {
+        TiTaskDecortor<Map<String, String>> decortor = new TiTaskDecortor<>();
         decortor.setSupplier(MDC::getCopyOfContextMap);
         decortor.setExecute(MDC::setContextMap);
         decortor.setComplete(x -> MDC.clear());
@@ -72,16 +72,16 @@ public class BaseWebBeanConfig {
     }
 
     @Bean
-    public TaskDecorator taskDecorator(List<BaseTaskDecortor<?>> taskDecorators) {
+    public TaskDecorator taskDecorator(List<TiTaskDecortor<?>> taskDecorators) {
         return runnable -> {
             try {
-                taskDecorators.forEach(BaseTaskDecortor::setData);
+                taskDecorators.forEach(TiTaskDecortor::setData);
                 return () -> {
                     try {
-                        taskDecorators.forEach(BaseTaskDecortor::execute);
+                        taskDecorators.forEach(TiTaskDecortor::execute);
                         runnable.run();
                     } finally {
-                        taskDecorators.forEach(BaseTaskDecortor::complete);
+                        taskDecorators.forEach(TiTaskDecortor::complete);
                     }
                 };
             } catch (IllegalStateException e) {

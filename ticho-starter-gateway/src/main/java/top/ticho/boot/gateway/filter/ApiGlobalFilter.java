@@ -27,8 +27,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import top.ticho.boot.view.log.BaseLogProperty;
-import top.ticho.boot.view.log.HttpLog;
+import top.ticho.boot.view.log.TiLogProperty;
+import top.ticho.boot.view.log.TIHttpLog;
 import top.ticho.tool.json.util.JsonUtil;
 
 import java.nio.charset.StandardCharsets;
@@ -46,26 +46,26 @@ import java.util.Objects;
 public class ApiGlobalFilter implements GlobalFilter, Ordered {
     public static final String USER_AGENT = "User-Agent";
     /** 日志线程变量 */
-    private final TransmittableThreadLocal<HttpLog> theadLocal = new TransmittableThreadLocal<>();
+    private final TransmittableThreadLocal<TIHttpLog> theadLocal = new TransmittableThreadLocal<>();
     /** 日志配置 */
-    private final BaseLogProperty baseLogProperty;
+    private final TiLogProperty tiLogProperty;
     /** 环境变量 */
     private final Environment environment;
 
-    public ApiGlobalFilter(BaseLogProperty baseLogProperty, Environment environment) {
+    public ApiGlobalFilter(TiLogProperty tiLogProperty, Environment environment) {
         this.environment = environment;
-        this.baseLogProperty = baseLogProperty;
+        this.tiLogProperty = tiLogProperty;
     }
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        HttpLog httpLogInfo = new HttpLog();
+        TIHttpLog TIHttpLogInfo = new TIHttpLog();
         return chain
-            .filter(preHandle(exchange, httpLogInfo))
-            .doFinally(signalType -> complete(httpLogInfo));
+            .filter(preHandle(exchange, TIHttpLogInfo))
+            .doFinally(signalType -> complete(TIHttpLogInfo));
     }
 
-    public ServerWebExchange preHandle(ServerWebExchange exchange, HttpLog httpLogInfo) {
+    public ServerWebExchange preHandle(ServerWebExchange exchange, TIHttpLog TIHttpLogInfo) {
         ServerHttpRequest request = exchange.getRequest();
         HttpHeaders headers = request.getHeaders();
 
@@ -75,23 +75,23 @@ public class ApiGlobalFilter implements GlobalFilter, Ordered {
         String url = request.getPath().toString();
         String header = headers.getFirst(USER_AGENT);
         UserAgent userAgent = UserAgentUtil.parse(header);
-        httpLogInfo.setUrl(url);
-        httpLogInfo.setPort(environment.getProperty("server.port"));
-        httpLogInfo.setStart(SystemClock.now());
-        httpLogInfo.setType(type);
-        httpLogInfo.setReqParams(params);
-        httpLogInfo.setUserAgent(userAgent);
-        httpLogInfo.setMdcMap(MDC.getCopyOfContextMap());
-        boolean print = Boolean.TRUE.equals(baseLogProperty.getPrint());
+        TIHttpLogInfo.setUrl(url);
+        TIHttpLogInfo.setPort(environment.getProperty("server.port"));
+        TIHttpLogInfo.setStart(SystemClock.now());
+        TIHttpLogInfo.setType(type);
+        TIHttpLogInfo.setReqParams(params);
+        TIHttpLogInfo.setUserAgent(userAgent);
+        TIHttpLogInfo.setMdcMap(MDC.getCopyOfContextMap());
+        boolean print = Boolean.TRUE.equals(tiLogProperty.getPrint());
         if (print) {
-            String reqBody = httpLogInfo.getReqBody();
+            String reqBody = TIHttpLogInfo.getReqBody();
             log.info("[REQ] {} {} 请求开始, 请求参数={}, 请求体={}, 请求头={}", type, url, params, reqBody, headers);
         }
-        ServerHttpResponse response = getResponse(exchange, httpLogInfo);
+        ServerHttpResponse response = getResponse(exchange, TIHttpLogInfo);
         return exchange.mutate().request(request).response(response).build();
     }
 
-    public ServerHttpResponse getResponse(ServerWebExchange exchange, HttpLog httpLogInfo) {
+    public ServerHttpResponse getResponse(ServerWebExchange exchange, TIHttpLog TIHttpLogInfo) {
         ServerHttpResponse originalResponse = exchange.getResponse();
         DataBufferFactory bufferFactory = originalResponse.bufferFactory();
         return new ServerHttpResponseDecorator(originalResponse) {
@@ -108,9 +108,9 @@ public class ApiGlobalFilter implements GlobalFilter, Ordered {
                         join.read(content);
                         DataBufferUtils.release(join);
                         String resBody = new String(content, StandardCharsets.UTF_8);
-                        httpLogInfo.setEnd(SystemClock.now());
-                        httpLogInfo.setResBody(resBody);
-                        httpLogInfo.setStatus(statusCode.value());
+                        TIHttpLogInfo.setEnd(SystemClock.now());
+                        TIHttpLogInfo.setResBody(resBody);
+                        TIHttpLogInfo.setStatus(statusCode.value());
                         originalResponse.getHeaders().setContentLength(content.length);
                         return bufferFactory.wrap(content);
                     }));
@@ -128,13 +128,13 @@ public class ApiGlobalFilter implements GlobalFilter, Ordered {
         };
     }
 
-    private void complete(HttpLog httpLogInfo) {
-        boolean print = Boolean.TRUE.equals(baseLogProperty.getPrint());
-        String type = httpLogInfo.getType();
-        String url = httpLogInfo.getUrl();
-        Long consume = httpLogInfo.getConsume();
-        Integer status = httpLogInfo.getStatus();
-        String resBody = httpLogInfo.getResBody();
+    private void complete(TIHttpLog TIHttpLogInfo) {
+        boolean print = Boolean.TRUE.equals(tiLogProperty.getPrint());
+        String type = TIHttpLogInfo.getType();
+        String url = TIHttpLogInfo.getUrl();
+        Long consume = TIHttpLogInfo.getConsume();
+        Integer status = TIHttpLogInfo.getStatus();
+        String resBody = TIHttpLogInfo.getResBody();
         if (print) {
             log.info("[REQ] {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}", type, url, status, consume, resBody);
         }
@@ -143,7 +143,7 @@ public class ApiGlobalFilter implements GlobalFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return baseLogProperty.getOrder();
+        return tiLogProperty.getOrder();
     }
 
 

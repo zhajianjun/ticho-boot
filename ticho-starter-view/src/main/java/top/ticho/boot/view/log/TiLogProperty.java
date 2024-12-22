@@ -13,7 +13,7 @@ import java.util.List;
  * @date 2022-07-13 22:40:25
  */
 @Data
-public class BaseLogProperty {
+public class TiLogProperty {
 
     /** 是否开启日志拦截器 */
     private Boolean enable = true;

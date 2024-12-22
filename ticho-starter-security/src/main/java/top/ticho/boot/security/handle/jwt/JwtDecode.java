@@ -6,9 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.jwt.crypto.sign.SignatureVerifier;
 import top.ticho.boot.security.constant.BaseSecurityConst;
-import top.ticho.boot.view.enums.BizErrCode;
-import top.ticho.boot.view.exception.BizException;
-import top.ticho.boot.view.util.Assert;
+import top.ticho.boot.view.enums.TiBizErrCode;
+import top.ticho.boot.view.exception.TiBizException;
+import top.ticho.boot.view.util.TiAssert;
 import top.ticho.tool.json.util.JsonUtil;
 
 import java.math.BigDecimal;
@@ -28,7 +28,7 @@ public class JwtDecode {
     public final JwtSigner jwtSigner;
 
     public JwtDecode(JwtSigner jwtSigner) {
-        Assert.isNotNull(jwtSigner, BizErrCode.FAIL, "signer is null");
+        TiAssert.isNotNull(jwtSigner, TiBizErrCode.FAIL, "signer is null");
         this.jwtSigner = jwtSigner;
     }
 
@@ -39,18 +39,18 @@ public class JwtDecode {
 
     public Map<String, Object> decodeAndVerify(String token) {
         SignatureVerifier verifier = jwtSigner.getVerifier();
-        Assert.isNotNull(verifier, BizErrCode.FAIL, "verifier is null");
+        TiAssert.isNotNull(verifier, TiBizErrCode.FAIL, "verifier is null");
         String claims;
         try {
             claims = JwtHelper.decodeAndVerify(token, verifier).getClaims();
         } catch (Exception e) {
             log.error("TOKEN 失效, {}", e.getMessage(), e);
-            throw new BizException(BizErrCode.FAIL, "TOKEN 失效");
+            throw new TiBizException(TiBizErrCode.FAIL, "TOKEN 失效");
         }
-        Assert.isNotNull(claims, BizErrCode.FAIL, "TOKEN 失效");
+        TiAssert.isNotNull(claims, TiBizErrCode.FAIL, "TOKEN 失效");
         Map<String, Object> map = JsonUtil.toMap(claims, String.class, Object.class);
         boolean isExpired = isExpired(map);
-        Assert.isTrue(!isExpired, BizErrCode.FAIL, "token过期");
+        TiAssert.isTrue(!isExpired, TiBizErrCode.FAIL, "token过期");
         return map;
     }
 

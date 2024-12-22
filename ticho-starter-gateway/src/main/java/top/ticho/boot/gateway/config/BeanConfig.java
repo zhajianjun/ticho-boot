@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import top.ticho.boot.gateway.filter.ApiGlobalFilter;
-import top.ticho.boot.view.log.BaseLogProperty;
+import top.ticho.boot.view.log.TiLogProperty;
 
 /**
  * bean初始化配置
@@ -20,13 +20,13 @@ public class BeanConfig {
 
     @Bean
     @ConfigurationProperties(prefix = "ticho.log")
-    public BaseLogProperty baseLogProperty() {
-        return new BaseLogProperty();
+    public TiLogProperty tiLogProperty() {
+        return new TiLogProperty();
     }
 
     @Bean
-    public ApiGlobalFilter apiGlobalFilter(BaseLogProperty baseLogProperty, Environment environment) {
-        return new ApiGlobalFilter(baseLogProperty, environment);
+    public ApiGlobalFilter apiGlobalFilter(TiLogProperty tiLogProperty, Environment environment) {
+        return new ApiGlobalFilter(tiLogProperty, environment);
     }
 
 }

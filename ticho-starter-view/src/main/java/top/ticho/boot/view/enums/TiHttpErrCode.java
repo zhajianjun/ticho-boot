@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @author zhajianjun
  * @date 2022-07-10 15:56:30
  */
-public enum HttpErrCode implements Serializable, IErrCode {
+public enum TiHttpErrCode implements Serializable, TiErrCode {
 
 
     /**
@@ -55,7 +55,7 @@ public enum HttpErrCode implements Serializable, IErrCode {
      */
     private final String msg;
 
-    HttpErrCode(int code, String msg) {
+    TiHttpErrCode(int code, String msg) {
         this.code = code;
         this.msg = msg;
     }

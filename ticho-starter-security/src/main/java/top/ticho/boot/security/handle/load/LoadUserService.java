@@ -1,6 +1,6 @@
 package top.ticho.boot.security.handle.load;
 
-import top.ticho.boot.view.core.BaseSecurityUser;
+import top.ticho.boot.view.core.TiSecurityUser;
 
 /**
  * 用户查询服务
@@ -16,6 +16,6 @@ public interface LoadUserService {
      * @param account 账户
      * @return 用户信息
      */
-    BaseSecurityUser load(String account);
+    TiSecurityUser load(String account);
 
 }

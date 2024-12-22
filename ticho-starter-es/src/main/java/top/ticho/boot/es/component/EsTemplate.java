@@ -1,8 +1,8 @@
 package top.ticho.boot.es.component;
 
 import top.ticho.boot.es.query.EsQuery;
-import top.ticho.boot.view.core.Entity;
-import top.ticho.boot.view.core.EsPageResult;
+import top.ticho.boot.view.core.TiEntity;
+import top.ticho.boot.view.core.TiEsPageResult;
 
 import java.util.Collection;
 import java.util.List;
@@ -18,9 +18,9 @@ public interface EsTemplate {
      * 保存es数据
      *
      * @param index  索引
-     * @param entity 对象
+     * @param tiEntity 对象
      */
-    void save(String index, Entity entity);
+    void save(String index, TiEntity tiEntity);
 
     /**
      * 保存es数据 map
@@ -36,7 +36,7 @@ public interface EsTemplate {
      * @param index    指数
      * @param entities 实体
      */
-    void saveBatch(String index, List<? extends Entity> entities);
+    void saveBatch(String index, List<? extends TiEntity> entities);
 
     /**
      * 批量保存数据 map
@@ -50,9 +50,9 @@ public interface EsTemplate {
      * 保存或者更新es数据
      *
      * @param index  索引
-     * @param entity 对象
+     * @param tiEntity 对象
      */
-    void saveOrUpdate(String index, Entity entity);
+    void saveOrUpdate(String index, TiEntity tiEntity);
 
     /**
      * 保存或者更新es数据
@@ -68,7 +68,7 @@ public interface EsTemplate {
      * @param index    索引
      * @param entities 对象列表
      */
-    void saveOrUpdateBatch(String index, List<? extends Entity> entities);
+    void saveOrUpdateBatch(String index, List<? extends TiEntity> entities);
 
     /**
      * 批量保存或者更新es数据
@@ -98,9 +98,9 @@ public interface EsTemplate {
      * 根据id更改数据
      *
      * @param index  索引
-     * @param entity 对象
+     * @param tiEntity 对象
      */
-    void updateById(String index, Entity entity);
+    void updateById(String index, TiEntity tiEntity);
 
     /**
      * 根据id更改数据
@@ -116,7 +116,7 @@ public interface EsTemplate {
      * @param index    索引
      * @param entities 对象列表
      */
-    void updateBatch(String index, List<? extends Entity> entities);
+    void updateBatch(String index, List<? extends TiEntity> entities);
 
     /**
      * 根据id更改数据
@@ -149,16 +149,16 @@ public interface EsTemplate {
      * 根据条件查询
      *
      * @param esQuery es查询条件
-     * @return {@link EsPageResult}<{@link Map}<{@link String}, {@link Object}>>
+     * @return {@link TiEsPageResult}<{@link Map}<{@link String}, {@link Object}>>
      */
-    <T> EsPageResult<T> page(EsQuery<T> esQuery);
+    <T> TiEsPageResult<T> page(EsQuery<T> esQuery);
 
     /**
      * 根据条件查询
      *
      * @param esQuery es查询
-     * @return {@link EsPageResult}<{@link Map}<{@link String}, {@link Object}>>
+     * @return {@link TiEsPageResult}<{@link Map}<{@link String}, {@link Object}>>
      */
-    EsPageResult<Map<String, Object>> pageForMap(EsQuery<Map<String, Object>> esQuery);
+    TiEsPageResult<Map<String, Object>> pageForMap(EsQuery<Map<String, Object>> esQuery);
 
 }

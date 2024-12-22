@@ -9,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import top.ticho.boot.security.constant.BaseSecurityConst;
 import top.ticho.boot.security.prop.BaseSecurityProperty;
-import top.ticho.boot.view.core.BaseSecurityUser;
+import top.ticho.boot.view.core.TiSecurityUser;
 import top.ticho.tool.json.util.JsonUtil;
 
 import javax.annotation.Resource;
@@ -27,7 +27,7 @@ import java.util.Objects;
 @ConditionalOnMissingBean(LoadUserService.class)
 @Slf4j
 public class BaseLoadUserService implements LoadUserService, InitializingBean {
-    private BaseSecurityUser user = null;
+    private TiSecurityUser user = null;
 
     @Resource
     private BaseSecurityProperty baseSecurityProperty;
@@ -36,21 +36,21 @@ public class BaseLoadUserService implements LoadUserService, InitializingBean {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public BaseSecurityUser load(String account) {
-        List<BaseSecurityUser> users = baseSecurityProperty.getUsers();
-        BaseSecurityUser baseSecurityUser = users
+    public TiSecurityUser load(String account) {
+        List<TiSecurityUser> users = baseSecurityProperty.getUsers();
+        TiSecurityUser tiSecurityUser = users
             .stream()
             .filter(x -> Objects.equals(x.getUsername(), account))
             .findFirst()
             .orElse(null);
         // 拷贝一份对象进行返回，防止对源对象进行属性修改
-        return JsonUtil.copy(baseSecurityUser, BaseSecurityUser.class);
+        return JsonUtil.copy(tiSecurityUser, TiSecurityUser.class);
     }
 
 
     @Override
     public void afterPropertiesSet() {
-        List<BaseSecurityUser> users = baseSecurityProperty.getUsers();
+        List<TiSecurityUser> users = baseSecurityProperty.getUsers();
         if (CollUtil.isNotEmpty(users)) {
             return;
         }
@@ -58,7 +58,7 @@ public class BaseLoadUserService implements LoadUserService, InitializingBean {
             users.add(user);
             return;
         }
-        BaseSecurityUser userInfo = new BaseSecurityUser();
+        TiSecurityUser userInfo = new TiSecurityUser();
         userInfo.setUsername(BaseSecurityConst.DEFAULT_USERNAME);
         String password = IdUtil.fastUUID();
         userInfo.setPassword(passwordEncoder.encode(password));
