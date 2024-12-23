@@ -1,6 +1,10 @@
 package top.ticho.boot.view.enums;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
+
 import java.io.Serializable;
 
 /**
@@ -9,20 +13,19 @@ import java.io.Serializable;
  * @author zhajianjun
  * @date 2022-07-10 15:56:30
  */
+@Getter
+@AllArgsConstructor
+@ToString
 public enum TiBizErrCode implements Serializable, TiErrCode {
 
-
-    /**
-     *
-     */
     SUCCESS(0, "操作成功"),
     FAIL(-1, "执行失败"),
     PARAM_ERROR(1000, "参数不能为空"),
     IS_NOT_EXISTS(1001, "数据不存在"),
-    APP_SERVICE_ERR(1001, "数据不存在"),
-    ;
+    APP_SERVICE_ERR(1001, "数据不存在");
 
     private static final long serialVersionUID = 1L;
+
     /**
      * 状态码
      */
@@ -32,24 +35,4 @@ public enum TiBizErrCode implements Serializable, TiErrCode {
      */
     private final String msg;
 
-    TiBizErrCode(int code, String msg) {
-        this.code = code;
-        this.msg = msg;
-    }
-
-
-    @Override
-    public int getCode() {
-        return this.code;
-    }
-
-    @Override
-    public String getMsg() {
-        return this.msg;
-    }
-
-    @Override
-    public String toString() {
-        return String.format(" %s:{code=%s, msg=%s} ", this.getClass().getSimpleName(), this.code, this.msg);
-    }
 }

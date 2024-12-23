@@ -11,7 +11,6 @@ import top.ticho.boot.view.enums.TiErrCode;
  */
 @Getter
 public class TiBizException extends TiBaseException {
-    private static final long serialVersionUID = 1L;
 
     public TiBizException(int code, String msg) {
         super(code, msg);

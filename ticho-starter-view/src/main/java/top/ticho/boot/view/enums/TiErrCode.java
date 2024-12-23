@@ -11,14 +11,15 @@ public interface TiErrCode {
     /**
      * 错误码
      *
-     * @return 错误码
+     * @return int
      */
     int getCode();
+
 
     /**
      * 错误信息
      *
-     * @return java.lang.String 错误信息
+     * @return {@link String }
      */
     String getMsg();
 
