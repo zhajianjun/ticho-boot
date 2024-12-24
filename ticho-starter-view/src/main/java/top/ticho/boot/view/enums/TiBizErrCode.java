@@ -26,13 +26,10 @@ public enum TiBizErrCode implements Serializable, TiErrCode {
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 状态码
-     */
+    /** 状态码 */
     private final int code;
-    /**
-     * 状态信息
-     */
+
+    /** 状态信息 */
     private final String msg;
 
 }

@@ -25,18 +25,18 @@ public class TiPageResult<T> implements Serializable {
 
     /** 页码，从1开始 */
     private Integer pageNum;
-
     /** 页面大小 */
     private Integer pageSize;
-
     /** 总页数 */
     private Integer pages;
-
     /** 总数 */
     private Integer total;
-
     /** 查询数据列表 */
     private List<T> rows;
+
+    public TiPageResult(Number pageNum, Number pageSize, Number total) {
+        this(pageNum, pageSize, total, null);
+    }
 
     public TiPageResult(Number pageNum, Number pageSize, Number total, List<T> rows) {
         BigDecimal pageSizeDec = NumberUtil.toBigDecimal(pageSize);
@@ -47,4 +47,5 @@ public class TiPageResult<T> implements Serializable {
         this.pages = pageSizeDec.intValue() <= 0 ? 0 : (int) Math.ceil(totalDec.divide(pageSizeDec, 2, RoundingMode.HALF_UP).doubleValue());
         this.rows = Optional.ofNullable(rows).orElseGet(ArrayList::new);
     }
+
 }

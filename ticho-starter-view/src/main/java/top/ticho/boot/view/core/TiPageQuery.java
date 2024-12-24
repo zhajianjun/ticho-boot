@@ -3,6 +3,7 @@ package top.ticho.boot.view.core;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * 通用分页查询条件
@@ -16,15 +17,14 @@ public class TiPageQuery implements Serializable {
 
     /** 当前页码 */
     private Integer pageNum;
-
     /** 页面大小 */
     private Integer pageSize;
 
     public void checkPage(int defaultPageSize) {
-        if (pageNum == null || pageNum <= 0) {
+        if (Objects.isNull(pageNum) || pageNum <= 0) {
             pageNum = 1;
         }
-        if (pageSize == null || pageSize <= 0) {
+        if (Objects.isNull(pageSize) || pageSize <= 0) {
             pageSize = defaultPageSize;
         }
     }

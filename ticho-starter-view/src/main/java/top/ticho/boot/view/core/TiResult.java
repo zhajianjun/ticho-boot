@@ -13,15 +13,12 @@ import top.ticho.boot.view.enums.TiErrCode;
 @Data
 public class TiResult<T> {
 
-    /** 状态码 */
+    /** 业务码 */
     private int code;
-
-    /** 消息内容 */
+    /** 业务信息 */
     private String msg;
-
     /** 业务数据 */
     private T data;
-
     /** 时间戳 */
     private long time;
 
