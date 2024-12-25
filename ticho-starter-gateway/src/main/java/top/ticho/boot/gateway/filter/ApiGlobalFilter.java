@@ -28,7 +28,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.ticho.boot.view.log.TiLogProperty;
-import top.ticho.boot.view.log.TIHttpLog;
+import top.ticho.boot.view.log.TiHttpLog;
 import top.ticho.tool.json.util.JsonUtil;
 
 import java.nio.charset.StandardCharsets;
@@ -46,7 +46,7 @@ import java.util.Objects;
 public class ApiGlobalFilter implements GlobalFilter, Ordered {
     public static final String USER_AGENT = "User-Agent";
     /** 日志线程变量 */
-    private final TransmittableThreadLocal<TIHttpLog> theadLocal = new TransmittableThreadLocal<>();
+    private final TransmittableThreadLocal<TiHttpLog> theadLocal = new TransmittableThreadLocal<>();
     /** 日志配置 */
     private final TiLogProperty tiLogProperty;
     /** 环境变量 */
@@ -59,13 +59,13 @@ public class ApiGlobalFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        TIHttpLog TIHttpLogInfo = new TIHttpLog();
+        TiHttpLog TiHttpLogInfo = new TiHttpLog();
         return chain
-            .filter(preHandle(exchange, TIHttpLogInfo))
-            .doFinally(signalType -> complete(TIHttpLogInfo));
+            .filter(preHandle(exchange, TiHttpLogInfo))
+            .doFinally(signalType -> complete(TiHttpLogInfo));
     }
 
-    public ServerWebExchange preHandle(ServerWebExchange exchange, TIHttpLog TIHttpLogInfo) {
+    public ServerWebExchange preHandle(ServerWebExchange exchange, TiHttpLog TiHttpLogInfo) {
         ServerHttpRequest request = exchange.getRequest();
         HttpHeaders headers = request.getHeaders();
 
@@ -75,23 +75,23 @@ public class ApiGlobalFilter implements GlobalFilter, Ordered {
         String url = request.getPath().toString();
         String header = headers.getFirst(USER_AGENT);
         UserAgent userAgent = UserAgentUtil.parse(header);
-        TIHttpLogInfo.setUrl(url);
-        TIHttpLogInfo.setPort(environment.getProperty("server.port"));
-        TIHttpLogInfo.setStart(SystemClock.now());
-        TIHttpLogInfo.setType(type);
-        TIHttpLogInfo.setReqParams(params);
-        TIHttpLogInfo.setUserAgent(userAgent);
-        TIHttpLogInfo.setMdcMap(MDC.getCopyOfContextMap());
+        TiHttpLogInfo.setUrl(url);
+        TiHttpLogInfo.setPort(environment.getProperty("server.port"));
+        TiHttpLogInfo.setStart(SystemClock.now());
+        TiHttpLogInfo.setType(type);
+        TiHttpLogInfo.setReqParams(params);
+        TiHttpLogInfo.setUserAgent(userAgent);
+        TiHttpLogInfo.setMdcMap(MDC.getCopyOfContextMap());
         boolean print = Boolean.TRUE.equals(tiLogProperty.getPrint());
         if (print) {
-            String reqBody = TIHttpLogInfo.getReqBody();
+            String reqBody = TiHttpLogInfo.getReqBody();
             log.info("[REQ] {} {} 请求开始, 请求参数={}, 请求体={}, 请求头={}", type, url, params, reqBody, headers);
         }
-        ServerHttpResponse response = getResponse(exchange, TIHttpLogInfo);
+        ServerHttpResponse response = getResponse(exchange, TiHttpLogInfo);
         return exchange.mutate().request(request).response(response).build();
     }
 
-    public ServerHttpResponse getResponse(ServerWebExchange exchange, TIHttpLog TIHttpLogInfo) {
+    public ServerHttpResponse getResponse(ServerWebExchange exchange, TiHttpLog TiHttpLogInfo) {
         ServerHttpResponse originalResponse = exchange.getResponse();
         DataBufferFactory bufferFactory = originalResponse.bufferFactory();
         return new ServerHttpResponseDecorator(originalResponse) {
@@ -108,9 +108,9 @@ public class ApiGlobalFilter implements GlobalFilter, Ordered {
                         join.read(content);
                         DataBufferUtils.release(join);
                         String resBody = new String(content, StandardCharsets.UTF_8);
-                        TIHttpLogInfo.setEnd(SystemClock.now());
-                        TIHttpLogInfo.setResBody(resBody);
-                        TIHttpLogInfo.setStatus(statusCode.value());
+                        TiHttpLogInfo.setEnd(SystemClock.now());
+                        TiHttpLogInfo.setResBody(resBody);
+                        TiHttpLogInfo.setStatus(statusCode.value());
                         originalResponse.getHeaders().setContentLength(content.length);
                         return bufferFactory.wrap(content);
                     }));
@@ -128,13 +128,13 @@ public class ApiGlobalFilter implements GlobalFilter, Ordered {
         };
     }
 
-    private void complete(TIHttpLog TIHttpLogInfo) {
+    private void complete(TiHttpLog TiHttpLogInfo) {
         boolean print = Boolean.TRUE.equals(tiLogProperty.getPrint());
-        String type = TIHttpLogInfo.getType();
-        String url = TIHttpLogInfo.getUrl();
-        Long consume = TIHttpLogInfo.getConsume();
-        Integer status = TIHttpLogInfo.getStatus();
-        String resBody = TIHttpLogInfo.getResBody();
+        String type = TiHttpLogInfo.getType();
+        String url = TiHttpLogInfo.getUrl();
+        Long consume = TiHttpLogInfo.getConsume();
+        Integer status = TiHttpLogInfo.getStatus();
+        String resBody = TiHttpLogInfo.getResBody();
         if (print) {
             log.info("[REQ] {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}", type, url, status, consume, resBody);
         }

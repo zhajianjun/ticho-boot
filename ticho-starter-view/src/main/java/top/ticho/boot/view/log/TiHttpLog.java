@@ -24,7 +24,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
-public class TIHttpLog {
+public class TiHttpLog {
 
     /** 请求类型 */
     private String type;

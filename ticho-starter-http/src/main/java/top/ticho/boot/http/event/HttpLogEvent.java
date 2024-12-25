@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.ApplicationContextEvent;
-import top.ticho.boot.view.log.TIHttpLog;
+import top.ticho.boot.view.log.TiHttpLog;
 
 /**
  * http接口调用日志事件
@@ -16,9 +16,9 @@ import top.ticho.boot.view.log.TIHttpLog;
 @Getter
 public class HttpLogEvent extends ApplicationContextEvent {
 
-    private final TIHttpLog TIHttpLog;
+    private final TiHttpLog TIHttpLog;
 
-    public HttpLogEvent(ApplicationContext source, TIHttpLog TIHttpLog) {
+    public HttpLogEvent(ApplicationContext source, TiHttpLog TIHttpLog) {
         super(source);
         this.TIHttpLog = TIHttpLog;
     }

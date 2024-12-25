@@ -7,7 +7,6 @@ import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
-import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationContext;
@@ -21,11 +20,12 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerInterceptor;
+import top.ticho.boot.log.annotation.TiLog;
 import top.ticho.boot.log.event.WebLogEvent;
 import top.ticho.boot.log.wrapper.RequestWrapper;
 import top.ticho.boot.log.wrapper.ResponseWrapper;
+import top.ticho.boot.view.log.TiHttpLog;
 import top.ticho.boot.view.log.TiLogProperty;
-import top.ticho.boot.view.log.TIHttpLog;
 import top.ticho.tool.json.util.JsonUtil;
 import top.ticho.tool.trace.spring.util.IpUtil;
 
@@ -53,7 +53,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
     /** 用户代理key */
     private static final String USER_AGENT = "User-Agent";
     /** 日志信息线程变量 */
-    private static final TransmittableThreadLocal<TIHttpLog> logTheadLocal = new TransmittableThreadLocal<>();
+    private static final TransmittableThreadLocal<TiHttpLog> logTheadLocal = new TransmittableThreadLocal<>();
     /** 日志过滤地址匹配线程变量 */
     private static final TransmittableThreadLocal<Boolean> antPathMatchLocal = new TransmittableThreadLocal<>();
     /** 日志配置 */
@@ -68,7 +68,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         this.environment = environment;
     }
 
-    public static TIHttpLog logInfo() {
+    public static TiHttpLog logInfo() {
         return logTheadLocal.get();
     }
 
@@ -110,10 +110,10 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         Principal principal = request.getUserPrincipal();
         String port = environment.getProperty("server.port");
         HandlerMethod handlerMethod = (HandlerMethod) handler;
-        ApiOperation annotation = handlerMethod.getMethodAnnotation(ApiOperation.class);
-        String name = Optional.ofNullable(annotation).map(ApiOperation::value).orElse(null);
+        TiLog annotation = handlerMethod.getMethodAnnotation(TiLog.class);
+        String name = Optional.ofNullable(annotation).map(TiLog::value).orElse(null);
         String position = handlerMethod.getMethod().getDeclaringClass().getName() + "." + handlerMethod.getMethod().getName() + "()";
-        TIHttpLog TIHttpLog = TIHttpLog.builder()
+        TiHttpLog TIHttpLog = TiHttpLog.builder()
             .type(type)
             .name(name)
             .position(position)
@@ -141,7 +141,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
 
     @Override
     public void afterCompletion(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, Exception ex) {
-        TIHttpLog TIHttpLog = logTheadLocal.get();
+        TiHttpLog TIHttpLog = logTheadLocal.get();
         if (TIHttpLog == null) {
             return;
         }
