@@ -1,5 +1,7 @@
 package top.ticho.boot.web.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.boot.view.core.TiResult;
 import top.ticho.boot.view.enums.TiBizErrCode;
@@ -15,10 +17,8 @@ import java.util.function.Supplier;
  * @date 2022-07-10 15:56:30
  */
 @Slf4j
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ApiUtil {
-    private ApiUtil() {
-
-    }
 
     public static <T> T getApiResult(Supplier<TiResult<T>> supplier, String errorMsg) {
         return getApi(supplier, errorMsg).getData();

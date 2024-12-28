@@ -84,7 +84,7 @@ public class OkHttpLogInterceptor implements Interceptor {
         String host = uri.getHost();
         String port = Integer.toString(uri.getPort());
         String url = uri.getPath();
-        TiHttpLog TIHttpLog = TIHttpLog.builder()
+        TiHttpLog TIHttpLog = TiHttpLog.builder()
             .type(method)
             .ip(host)
             .url(url)

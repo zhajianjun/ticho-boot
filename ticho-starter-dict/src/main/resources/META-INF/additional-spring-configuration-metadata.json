@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "ticho.dict.enable",
+      "type": "java.lang.Boolean",
+      "description": "Description for ticho.dict.enable."
+    }
+  ]
+}

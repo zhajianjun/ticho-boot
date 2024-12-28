@@ -3,6 +3,7 @@ package top.ticho.boot.cache.config;
 import com.github.benmanes.caffeine.cache.RemovalCause;
 
 import java.time.Duration;
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -20,11 +21,17 @@ public interface TiCache {
     /** 过期时间 */
     int getTtl();
 
-    Object load(Object key) throws Exception;
+    default Object load(Object key) throws Exception {
+        return null;
+    }
 
-    Map<Object, Object> loadAll(Iterable<?> keys) throws Exception;
+    default Map<Object, Object> loadAll(Iterable<?> keys) throws Exception {
+        return Collections.emptyMap();
+    }
 
-    void onRemoval(Object key, Object value, RemovalCause cause);
+    default void onRemoval(Object key, Object value, RemovalCause cause) {
+
+    }
 
     /**
      * 创建后过期时间

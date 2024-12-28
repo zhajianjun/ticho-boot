@@ -16,11 +16,11 @@ import top.ticho.boot.view.log.TiHttpLog;
 @Getter
 public class WebLogEvent extends ApplicationContextEvent {
 
-    private final TiHttpLog TIHttpLog;
+    private final TiHttpLog tiHttpLog;
 
-    public WebLogEvent(ApplicationContext source, TiHttpLog TIHttpLog) {
+    public WebLogEvent(ApplicationContext source, TiHttpLog tiHttpLog) {
         super(source);
-        this.TIHttpLog = TIHttpLog;
+        this.tiHttpLog = tiHttpLog;
     }
 
 }

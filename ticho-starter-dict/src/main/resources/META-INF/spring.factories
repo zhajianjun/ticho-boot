@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  top.ticho.boot.dict.config.TiDictConfig
+

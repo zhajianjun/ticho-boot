@@ -10,16 +10,12 @@ import javax.validation.groups.Default;
  * @date 2022-07-10 15:56:30
  */
 public class ValidGroup {
-    public interface Add {
 
-    }
+    public interface Add {}
 
-    public interface Upd {
-
-    }
+    public interface Upd {}
 
     @GroupSequence({Default.class, Add.class, Upd.class})
-    public interface CheckSequence {
+    public interface CheckSequence {}
 
-    }
 }

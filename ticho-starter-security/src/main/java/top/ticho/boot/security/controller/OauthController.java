@@ -1,12 +1,7 @@
 package top.ticho.boot.security.controller;
 
-import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
-import com.github.xiaoymin.knife4j.annotations.ApiSort;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.core.Ordered;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,36 +24,48 @@ import java.security.Principal;
 @ConditionalOnMissingBean(name = BaseOAuth2Const.OAUTH2_CONTROLLER)
 @RestController(BaseOAuth2Const.OAUTH2_CONTROLLER)
 @RequestMapping("oauth")
-@ApiSort(Ordered.HIGHEST_PRECEDENCE + 200)
-@Api(tags = "权限用户登录")
 public class OauthController {
 
     @Autowired
     private LoginUserHandle loginUserHandle;
 
-    @ApiOperation("登录")
-    @ApiOperationSupport(order = 10)
+    /**
+     * 登录
+     *
+     * @param loginRequest 登录请求
+     * @return {@link TiResult }<{@link Oauth2AccessToken }>
+     */
     @PostMapping("token")
     public TiResult<Oauth2AccessToken> token(BaseLoginRequest loginRequest) {
         return TiResult.ok(loginUserHandle.token(loginRequest));
     }
 
-    @ApiOperation("刷新token")
-    @ApiOperationSupport(order = 20)
+    /**
+     * 刷新令牌
+     *
+     * @param refreshToken 刷新令牌
+     * @return {@link TiResult }<{@link Oauth2AccessToken }>
+     */
     @PostMapping("refreshToken")
     public TiResult<Oauth2AccessToken> refreshToken(String refreshToken) {
         return TiResult.ok(loginUserHandle.refreshToken(refreshToken));
     }
 
-    @ApiOperation(value = "token信息查询")
-    @ApiOperationSupport(order = 30)
+    /**
+     * token信息查询
+     *
+     * @return {@link TiResult }<{@link Principal }>
+     */
     @GetMapping
     public TiResult<Principal> principal() {
         return TiResult.ok(SecurityContextHolder.getContext().getAuthentication());
     }
 
-    @ApiOperation("获取公钥")
-    @ApiOperationSupport(order = 40)
+    /**
+     * 获取公钥
+     *
+     * @return {@link TiResult }<{@link String }>
+     */
     @GetMapping("publicKey")
     public TiResult<String> publicKey() {
         return TiResult.ok(loginUserHandle.publicKey());

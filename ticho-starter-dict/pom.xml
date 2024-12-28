@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>ticho-boot</artifactId>
@@ -8,7 +8,7 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>ticho-starter-health</artifactId>
+    <artifactId>ticho-starter-dict</artifactId>
     <version>1.0.0-SNAPSHOT</version>
 
     <properties>
@@ -22,14 +22,25 @@
     <dependencies>
 
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
             <optional>true</optional>
         </dependency>
 
         <dependency>
             <groupId>top.ticho.boot</groupId>
-            <artifactId>ticho-starter-view</artifactId>
+            <artifactId>ticho-starter-cache</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>top.ticho.tool</groupId>
+            <artifactId>ticho-json</artifactId>
+        </dependency>
+
+        <!-- 配合additional-spring-configuration-metadata.json时，添加配置时有提示 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
         </dependency>
 
     </dependencies>

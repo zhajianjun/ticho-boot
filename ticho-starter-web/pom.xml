@@ -67,11 +67,6 @@
             <artifactId>spring-boot-actuator-autoconfigure</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.github.xiaoymin</groupId>
-            <artifactId>knife4j-annotations</artifactId>
-        </dependency>
-
         <!-- @RefreshScope注解 用于刷新配置 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
