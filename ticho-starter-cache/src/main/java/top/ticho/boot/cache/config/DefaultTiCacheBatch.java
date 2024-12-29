@@ -15,7 +15,7 @@ public class DefaultTiCacheBatch implements TiCacheBatch {
     private final TiCacheProperty tiCacheProperty;
 
     @Override
-    public List<TiCache> getTiCaches() {
+    public List<TiCache<?, ?>> getTiCaches() {
         return Collections.singletonList(new DefaultTiCache(tiCacheProperty));
     }
 

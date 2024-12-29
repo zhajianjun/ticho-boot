@@ -22,6 +22,7 @@ import top.ticho.boot.cache.prop.TiCacheProperty;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -34,7 +35,7 @@ import java.util.stream.Stream;
  */
 @Slf4j
 @Configuration
-@ConditionalOnProperty(value = "ticho.cache.enable", havingValue = "true")
+@ConditionalOnProperty(value = "ticho.cache.enable", havingValue = "true", matchIfMissing = true)
 @EnableCaching
 public class TiCacheConfig {
 
@@ -56,7 +57,7 @@ public class TiCacheConfig {
      * @return 缓存操作模板对象
      */
     @Bean
-    public TiCache tiCache(TiCacheProperty tiCacheProperty) {
+    public TiCache<String, Object> tiCache(TiCacheProperty tiCacheProperty) {
         return new DefaultTiCache(tiCacheProperty);
     }
 
@@ -80,15 +81,16 @@ public class TiCacheConfig {
      */
     @Bean
     @Primary
-    public CacheManager cacheManager(List<TiCache> tiCaches, List<TiCacheBatch> tiCacheBatches) {
-        List<TiCache> tiCachesCollect = tiCacheBatches
+    public CacheManager cacheManager(List<TiCache<?, ?>> tiCaches, List<TiCacheBatch> tiCacheBatches) {
+        List<TiCache<?, ?>> tiCachesCollect = tiCacheBatches
             .stream()
             .map(TiCacheBatch::getTiCaches)
             .flatMap(Collection::stream)
             .collect(Collectors.toList());
         List<CaffeineCache> caches = Stream
             .concat(tiCaches.stream(), tiCachesCollect.stream())
-            .collect(Collectors.toMap(TiCache::getName, Function.identity(), (o, n) -> o))
+            .filter(Objects::nonNull)
+            .collect(Collectors.toMap(TiCache::getName, Function.identity(), (o, n) -> n))
             .values()
             .stream()
             .map(this::buildCaffeineCache)
@@ -115,8 +117,9 @@ public class TiCacheConfig {
      * @param tiCache 缓存操作模板
      * @return Caffeine缓存对象
      */
-    private CaffeineCache buildCaffeineCache(TiCache tiCache) {
-        return new CaffeineCache(tiCache.getName(), buildCache(tiCache));
+    private CaffeineCache buildCaffeineCache(TiCache<?, ?> tiCache) {
+        Cache<Object, Object> cache = (Cache<Object, Object>) buildCache(tiCache);
+        return new CaffeineCache(tiCache.getName(), cache);
     }
 
     /**
@@ -125,21 +128,21 @@ public class TiCacheConfig {
      * @param tiCache 缓存操作模板
      * @return 缓存对象
      */
-    private Cache<Object, Object> buildCache(TiCache tiCache) {
-        Caffeine<Object, Object> caffeine = Caffeine.newBuilder()
+    private <K, V> Cache<K, V> buildCache(TiCache<K, V> tiCache) {
+        Caffeine<K, V> caffeine = Caffeine.newBuilder()
             .recordStats()
             .expireAfter(getExpiry(tiCache))
             .maximumSize(tiCache.getMaxSize())
             .removalListener(tiCache::onRemoval);
-        return caffeine.build(new CacheLoader<Object, Object>() {
+        return caffeine.build(new CacheLoader<K, V>() {
             @Override
-            public Object load(@NonNull Object key) throws Exception {
-                return tiCache.load(key);
+            public V load(@NonNull K key) {
+                return tiCache.load(key.toString());
             }
 
             @Override
             @NonNull
-            public Map<Object, Object> loadAll(@NonNull Iterable<?> keys) throws Exception {
+            public Map<K, V> loadAll(@NonNull Iterable<? extends K> keys) {
                 return tiCache.loadAll(keys);
             }
 
@@ -152,8 +155,8 @@ public class TiCacheConfig {
      * @param tiCache 缓存操作模板
      * @return 缓存过期策略对象
      */
-    private Expiry<Object, Object> getExpiry(TiCache tiCache) {
-        return new Expiry<Object, Object>() {
+    private <K, V> Expiry<K, V> getExpiry(TiCache<K, V> tiCache) {
+        return new Expiry<K, V>() {
             /**
              * 在创建缓存项时，确定其过期时间
              * 此方法用于指定新创建缓存项的过期时间，基于当前时间和缓存项的键值
@@ -164,7 +167,7 @@ public class TiCacheConfig {
              * @return 返回缓存项的过期时间，以毫秒为单位
              */
             @Override
-            public long expireAfterCreate(@NonNull Object key, @NonNull Object value, long currentTime) {
+            public long expireAfterCreate(@NonNull K key, @NonNull V value, long currentTime) {
                 return tiCache.expireAfterCreate(key, value, currentTime);
             }
 
@@ -180,9 +183,9 @@ public class TiCacheConfig {
              * @return 返回新的过期时间，单位取决于具体实现
              */
             @Override
-            public long expireAfterUpdate(@NonNull Object key, @NonNull Object value, long currentTime, @NonNegative long currentDuration) {
+            public long expireAfterUpdate(@NonNull K key, @NonNull V value, long currentTime, @NonNegative long currentDuration) {
                 // 调用tiCache的expireAfterUpdate方法来设置新的过期时间
-                return tiCache.expireAfterUpdate(key.toString(), value, currentTime, currentDuration);
+                return tiCache.expireAfterUpdate(key, value, currentTime, currentDuration);
             }
 
 
@@ -198,10 +201,10 @@ public class TiCacheConfig {
              * @return 返回新的过期时间，以毫秒为单位
              */
             @Override
-            public long expireAfterRead(@NonNull Object key, @NonNull Object value, long currentTime, @NonNegative long currentDuration) {
+            public long expireAfterRead(@NonNull K key, @NonNull V value, long currentTime, @NonNegative long currentDuration) {
                 // 调用tiCache的expireAfterRead方法，传入转换为字符串的键、值、当前时间和当前持续时间
                 // 并返回新的过期时间
-                return tiCache.expireAfterRead(key.toString(), value, currentTime, currentDuration);
+                return tiCache.expireAfterRead(key, value, currentTime, currentDuration);
             }
         };
     }

@@ -16,9 +16,9 @@ public class TiCacheProperty {
     private String name = "default";
 
     /** 过期时间，单位:秒(s) */
-    private Integer ttl;
+    private Integer ttl = 60 * 60;
 
     /** 最大存储数量 */
-    private Integer maxSize;
+    private Integer maxSize = 1000;
 
 }

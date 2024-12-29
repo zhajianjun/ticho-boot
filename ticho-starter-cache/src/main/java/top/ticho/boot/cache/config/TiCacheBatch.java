@@ -8,6 +8,6 @@ import java.util.List;
  */
 public interface TiCacheBatch {
 
-    List<TiCache> getTiCaches();
+    List<TiCache<?, ?>> getTiCaches();
 
 }

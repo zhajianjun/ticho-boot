@@ -13,7 +13,7 @@ import java.util.Map;
  */
 @Slf4j
 @AllArgsConstructor
-public class DefaultTiCache implements TiCache {
+public class DefaultTiCache implements TiCache<String, Object> {
 
     private final TiCacheProperty tiCacheProperty;
 
@@ -33,17 +33,12 @@ public class DefaultTiCache implements TiCache {
     }
 
     @Override
-    public Object load(Object key) {
+    public Map<String, Object> loadAll(Iterable<? extends String> keys) {
         return null;
     }
 
     @Override
-    public Map<Object, Object> loadAll(Iterable<?> keys) {
-        return null;
-    }
-
-    @Override
-    public void onRemoval(Object key, Object value, RemovalCause cause) {
+    public void onRemoval(String key, Object value, RemovalCause cause) {
         log.info("缓存移除监听, 移除的key = {}, cause = {}", key, cause);
     }
 

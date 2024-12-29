@@ -36,6 +36,10 @@ public class TiCacheTemplate {
         return getOptCache(name).map(x -> x.get(key, type)).orElse(null);
     }
 
+    public Object get(String name, Object key) {
+        return getOptCache(name).map(x -> x.get(key)).map(Cache.ValueWrapper::get).orElse(null);
+    }
+
     public <T> T get(String name, Object key, Callable<T> valueLoader) {
         return getOptCache(name).map(x -> x.get(key, valueLoader)).orElse(null);
     }

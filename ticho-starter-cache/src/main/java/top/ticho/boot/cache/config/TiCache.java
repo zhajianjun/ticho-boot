@@ -10,7 +10,7 @@ import java.util.Map;
  * @author zhajianjun
  * @date 2024-08-12 20:42
  */
-public interface TiCache {
+public interface TiCache<K, V> {
 
     /** 缓存名称 */
     String getName();
@@ -21,15 +21,15 @@ public interface TiCache {
     /** 过期时间 */
     int getTtl();
 
-    default Object load(Object key) throws Exception {
+    default V load(String key) {
         return null;
     }
 
-    default Map<Object, Object> loadAll(Iterable<?> keys) throws Exception {
+    default Map<K, V> loadAll(Iterable<? extends K> keys) {
         return Collections.emptyMap();
     }
 
-    default void onRemoval(Object key, Object value, RemovalCause cause) {
+    default void onRemoval(K key, V value, RemovalCause cause) {
 
     }
 
@@ -41,7 +41,7 @@ public interface TiCache {
      * @param currentTime 当前时间 （单位:ns纳秒）
      * @return 过期剩余时间（单位:ns纳秒），以纳秒为单位
      */
-    default long expireAfterCreate(Object key, Object value, long currentTime) {
+    default long expireAfterCreate(K key, V value, long currentTime) {
         int ttl = getTtl();
         return Duration.ofMillis(ttl).toNanos() + currentTime;
     }
@@ -55,7 +55,7 @@ public interface TiCache {
      * @param currentDuration 当前持续时间
      * @return 过期剩余时间（单位:ns纳秒），以纳秒为单位
      */
-    default long expireAfterUpdate(Object key, Object value, long currentTime, long currentDuration) {
+    default long expireAfterUpdate(K key, V value, long currentTime, long currentDuration) {
         return currentDuration;
     }
 
@@ -68,7 +68,7 @@ public interface TiCache {
      * @param currentDuration 当前持续时间
      * @return 过期剩余时间（单位:ns纳秒），以纳秒为单位
      */
-    default long expireAfterRead(Object key, Object value, long currentTime, long currentDuration) {
+    default long expireAfterRead(K key, V value, long currentTime, long currentDuration) {
         return currentDuration;
     }
 
