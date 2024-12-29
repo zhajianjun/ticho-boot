@@ -6,7 +6,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import top.ticho.boot.view.core.TiResult;
 import top.ticho.boot.view.enums.TiHttpErrCode;
-import top.ticho.tool.json.util.JsonUtil;
+import top.ticho.tool.json.util.TiJsonUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,7 +32,7 @@ public class BaseAccessDeniedHandler implements AccessDeniedHandler {
         res.setContentType(MediaType.APPLICATION_JSON_VALUE);
         res.setCharacterEncoding(StandardCharsets.UTF_8.name());
         PrintWriter writer = res.getWriter();
-        writer.write(JsonUtil.toJsonString(tiResult));
+        writer.write(TiJsonUtil.toJsonString(tiResult));
         writer.close();
     }
 

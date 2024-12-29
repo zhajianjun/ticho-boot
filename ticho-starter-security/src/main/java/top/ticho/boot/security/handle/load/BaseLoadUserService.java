@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import top.ticho.boot.security.constant.BaseSecurityConst;
 import top.ticho.boot.security.prop.BaseSecurityProperty;
 import top.ticho.boot.view.core.TiSecurityUser;
-import top.ticho.tool.json.util.JsonUtil;
+import top.ticho.tool.json.util.TiJsonUtil;
 
 import javax.annotation.Resource;
 import java.util.Collections;
@@ -44,7 +44,7 @@ public class BaseLoadUserService implements LoadUserService, InitializingBean {
             .findFirst()
             .orElse(null);
         // 拷贝一份对象进行返回，防止对源对象进行属性修改
-        return JsonUtil.copy(tiSecurityUser, TiSecurityUser.class);
+        return TiJsonUtil.copy(tiSecurityUser, TiSecurityUser.class);
     }
 
 

@@ -21,7 +21,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import top.ticho.boot.http.event.HttpLogEvent;
 import top.ticho.boot.http.prop.BaseHttpProperty;
 import top.ticho.boot.view.log.TiHttpLog;
-import top.ticho.tool.json.util.JsonUtil;
+import top.ticho.tool.json.util.TiJsonUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -152,7 +152,7 @@ public class OkHttpLogInterceptor implements Interceptor {
         if (MapUtil.isEmpty(map)) {
             return null;
         }
-        return JsonUtil.toJsonString(map);
+        return TiJsonUtil.toJsonString(map);
     }
 
     private String nullOfDefault(String result) {

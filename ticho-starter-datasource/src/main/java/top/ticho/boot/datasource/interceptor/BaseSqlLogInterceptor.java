@@ -25,7 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
-import top.ticho.tool.json.util.JsonUtil;
+import top.ticho.tool.json.util.TiJsonUtil;
 
 import java.sql.Statement;
 import java.text.DateFormat;
@@ -96,7 +96,7 @@ public class BaseSqlLogInterceptor implements Interceptor {
         if (Boolean.TRUE.equals(printSimple)) {
             log.info("[SQL]【{}】-【{}】-【计数:{}】-【耗时:{}ms】", ms.getId(), sql, length, timing);
         } else {
-            log.info("[SQL]【{}】-【{}】-【计数:{}】-【耗时:{}ms】-【记录:{}】", ms.getId(), sql, length, timing, JsonUtil.toJsonString(result));
+            log.info("[SQL]【{}】-【{}】-【计数:{}】-【耗时:{}ms】-【记录:{}】", ms.getId(), sql, length, timing, TiJsonUtil.toJsonString(result));
         }
         return result;
     }

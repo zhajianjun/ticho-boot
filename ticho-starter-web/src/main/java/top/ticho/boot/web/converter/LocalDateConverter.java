@@ -4,7 +4,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
-import top.ticho.tool.json.constant.DateFormatConst;
+import top.ticho.tool.json.constant.TiDateFormatConst;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -25,8 +25,8 @@ public class LocalDateConverter implements Converter<String, LocalDate> {
         if (CharSequenceUtil.isBlank(source)) {
             return null;
         }
-        if (source.matches(DateFormatConst.YYYY_MM_DD_REGEX)) {
-            return LocalDate.parse(source, DateTimeFormatter.ofPattern(DateFormatConst.YYYY_MM_DD));
+        if (source.matches(TiDateFormatConst.YYYY_MM_DD_REGEX)) {
+            return LocalDate.parse(source, DateTimeFormatter.ofPattern(TiDateFormatConst.YYYY_MM_DD));
         }
         throw new IllegalArgumentException("Invalid value '" + source + "'");
     }

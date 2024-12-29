@@ -37,7 +37,7 @@ import top.ticho.boot.es.query.EsQuery;
 import top.ticho.boot.view.core.TiEntity;
 import top.ticho.boot.view.core.TiEsPageResult;
 import top.ticho.boot.view.exception.TiBizException;
-import top.ticho.tool.json.util.JsonUtil;
+import top.ticho.tool.json.util.TiJsonUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -534,7 +534,7 @@ public class EsTemplateImpl implements EsTemplate {
         }).map(SearchHits::getHits).ifPresent(hits -> {
             for (SearchHit searchHit : hits) {
                 indexs.add(searchHit.getIndex());
-                rows.add(JsonUtil.toJavaObject(searchHit.getSourceAsString(), clazz));
+                rows.add(TiJsonUtil.toJavaObject(searchHit.getSourceAsString(), clazz));
             }
         });
         return new TiEsPageResult<>(esQuery.getPageNum(), esQuery.getPageSize(), total, indexs, rows);
@@ -685,7 +685,7 @@ public class EsTemplateImpl implements EsTemplate {
     private IndexRequest getIndexRequest(String index, TiEntity tiEntity) {
         String id = tiEntity.getId();
         IndexRequest indexRequest = new IndexRequest(index).id(id);
-        indexRequest.source(JsonUtil.toJsonString(tiEntity), XContentType.JSON);
+        indexRequest.source(TiJsonUtil.toJsonString(tiEntity), XContentType.JSON);
         return indexRequest;
     }
 

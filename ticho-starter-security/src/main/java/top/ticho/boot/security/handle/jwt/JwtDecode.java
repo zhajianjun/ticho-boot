@@ -9,7 +9,7 @@ import top.ticho.boot.security.constant.BaseSecurityConst;
 import top.ticho.boot.view.enums.TiBizErrCode;
 import top.ticho.boot.view.exception.TiBizException;
 import top.ticho.boot.view.util.TiAssert;
-import top.ticho.tool.json.util.JsonUtil;
+import top.ticho.tool.json.util.TiJsonUtil;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -34,7 +34,7 @@ public class JwtDecode {
 
     public Map<String, Object> decode(String token) {
         String claims = JwtHelper.decode(token).getClaims();
-        return JsonUtil.toMap(claims, String.class, Object.class);
+        return TiJsonUtil.toMap(claims, String.class, Object.class);
     }
 
     public Map<String, Object> decodeAndVerify(String token) {
@@ -48,7 +48,7 @@ public class JwtDecode {
             throw new TiBizException(TiBizErrCode.FAIL, "TOKEN 失效");
         }
         TiAssert.isNotNull(claims, TiBizErrCode.FAIL, "TOKEN 失效");
-        Map<String, Object> map = JsonUtil.toMap(claims, String.class, Object.class);
+        Map<String, Object> map = TiJsonUtil.toMap(claims, String.class, Object.class);
         boolean isExpired = isExpired(map);
         TiAssert.isTrue(!isExpired, TiBizErrCode.FAIL, "token过期");
         return map;

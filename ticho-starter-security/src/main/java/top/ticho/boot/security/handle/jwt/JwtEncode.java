@@ -9,7 +9,7 @@ import top.ticho.boot.security.prop.BaseOauthProperty;
 import top.ticho.boot.view.core.TiSecurityUser;
 import top.ticho.boot.view.enums.TiBizErrCode;
 import top.ticho.boot.view.util.TiAssert;
-import top.ticho.tool.json.util.JsonUtil;
+import top.ticho.tool.json.util.TiJsonUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,8 +64,8 @@ public class JwtEncode {
         refreshTokenInfo.put(BaseSecurityConst.TYPE, BaseSecurityConst.REFRESH_TOKEN);
         refreshTokenInfo.put(BaseSecurityConst.EXP, refreTokenExp);
         refreshTokenInfo.put(BaseSecurityConst.USERNAME, tiSecurityUser.getUsername());
-        String accessToken = JwtHelper.encode(JsonUtil.toJsonString(accessTokenInfo), signer).getEncoded();
-        String refreshToken = JwtHelper.encode(JsonUtil.toJsonString(refreshTokenInfo), signer).getEncoded();
+        String accessToken = JwtHelper.encode(TiJsonUtil.toJsonString(accessTokenInfo), signer).getEncoded();
+        String refreshToken = JwtHelper.encode(TiJsonUtil.toJsonString(refreshTokenInfo), signer).getEncoded();
         oAuth2AccessToken.setAccessToken(accessToken);
         oAuth2AccessToken.setRefreshToken(refreshToken);
     }

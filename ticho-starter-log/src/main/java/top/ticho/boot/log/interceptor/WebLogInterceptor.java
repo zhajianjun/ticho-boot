@@ -26,7 +26,7 @@ import top.ticho.boot.log.wrapper.RequestWrapper;
 import top.ticho.boot.log.wrapper.ResponseWrapper;
 import top.ticho.boot.view.log.TiHttpLog;
 import top.ticho.boot.view.log.TiLogProperty;
-import top.ticho.tool.json.util.JsonUtil;
+import top.ticho.tool.json.util.TiJsonUtil;
 import top.ticho.tool.trace.spring.util.IpUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -226,7 +226,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         if (MapUtil.isEmpty(map)) {
             return null;
         }
-        return JsonUtil.toJsonString(map);
+        return TiJsonUtil.toJsonString(map);
     }
 
     private String nullOfDefault(String result) {

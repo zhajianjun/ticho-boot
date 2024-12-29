@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.deser.JSR310DateTimeDeserializerBase;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import top.ticho.tool.json.constant.DateFormatConst;
+import top.ticho.tool.json.constant.TiDateFormatConst;
 
 import java.io.IOException;
 import java.time.DateTimeException;
@@ -94,13 +94,13 @@ public class CustomLocalDateDeserializer extends JSR310DateTimeDeserializerBase<
             DateTimeFormatter format = _formatter;
             try {
                 // 添加的内容在这
-                if (string.matches(DateFormatConst.YYYY_MM_DD_HH_MM_SS_REGEX)) {
-                    LocalDateTime localDateTime = LocalDateTime.parse(string, DateTimeFormatter.ofPattern(DateFormatConst.YYYY_MM_DD_HH_MM_SS));
+                if (string.matches(TiDateFormatConst.YYYY_MM_DD_HH_MM_SS_REGEX)) {
+                    LocalDateTime localDateTime = LocalDateTime.parse(string, DateTimeFormatter.ofPattern(TiDateFormatConst.YYYY_MM_DD_HH_MM_SS));
                     return localDateTime.toLocalDate();
                 }
                 // 添加的内容在这
-                if (string.matches(DateFormatConst.YYYY_MM_DD_HH_MM_SS_SSS_REGEX)) {
-                    LocalDateTime localDateTime = LocalDateTime.parse(string, DateTimeFormatter.ofPattern(DateFormatConst.YYYY_MM_DD_HH_MM_SS_SSS));
+                if (string.matches(TiDateFormatConst.YYYY_MM_DD_HH_MM_SS_SSS_REGEX)) {
+                    LocalDateTime localDateTime = LocalDateTime.parse(string, DateTimeFormatter.ofPattern(TiDateFormatConst.YYYY_MM_DD_HH_MM_SS_SSS));
                     return localDateTime.toLocalDate();
                 }
                 if (_formatter == DEFAULT_FORMATTER) {

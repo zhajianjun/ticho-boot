@@ -5,7 +5,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import top.ticho.boot.view.core.TiResult;
 import top.ticho.boot.view.enums.TiHttpErrCode;
-import top.ticho.tool.json.util.JsonUtil;
+import top.ticho.tool.json.util.TiJsonUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,7 +33,7 @@ public class BaseAuthenticationEntryPoint implements AuthenticationEntryPoint {
         res.setCharacterEncoding(StandardCharsets.UTF_8.name());
         res.setStatus(tiResult.getCode());
         PrintWriter writer = res.getWriter();
-        writer.write(JsonUtil.toJsonString(tiResult));
+        writer.write(TiJsonUtil.toJsonString(tiResult));
         writer.close();
     }
 }

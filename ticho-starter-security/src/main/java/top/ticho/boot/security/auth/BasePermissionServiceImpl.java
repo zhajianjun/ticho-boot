@@ -4,7 +4,7 @@ import cn.hutool.core.util.ArrayUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import top.ticho.tool.json.util.JsonUtil;
+import top.ticho.tool.json.util.TiJsonUtil;
 
 /**
  * 接口权限实现
@@ -24,7 +24,7 @@ public class BasePermissionServiceImpl implements PermissionService {
         if (authentication == null) {
             return false;
         }
-        log.info("权限用户信息，user = {}", JsonUtil.toJsonString(authentication.getPrincipal()));
+        log.info("权限用户信息，user = {}", TiJsonUtil.toJsonString(authentication.getPrincipal()));
         return true;
     }
 

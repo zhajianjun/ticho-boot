@@ -4,7 +4,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
-import top.ticho.tool.json.constant.DateFormatConst;
+import top.ticho.tool.json.constant.TiDateFormatConst;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -28,15 +28,15 @@ public class LocalDateTimeConverter implements Converter<String, LocalDateTime> 
         if (CharSequenceUtil.isBlank(source)) {
             return null;
         }
-        if (source.matches(DateFormatConst.YYYY_MM_DD_REGEX)) {
-            LocalDate localDate = LocalDate.parse(source, DateTimeFormatter.ofPattern(DateFormatConst.YYYY_MM_DD));
+        if (source.matches(TiDateFormatConst.YYYY_MM_DD_REGEX)) {
+            LocalDate localDate = LocalDate.parse(source, DateTimeFormatter.ofPattern(TiDateFormatConst.YYYY_MM_DD));
             return LocalDateTime.of(localDate, LocalTime.MIN);
         }
-        if (source.matches(DateFormatConst.YYYY_MM_DD_HH_MM_SS_REGEX)) {
-            return LocalDateTime.parse(source, DateTimeFormatter.ofPattern(DateFormatConst.YYYY_MM_DD_HH_MM_SS));
+        if (source.matches(TiDateFormatConst.YYYY_MM_DD_HH_MM_SS_REGEX)) {
+            return LocalDateTime.parse(source, DateTimeFormatter.ofPattern(TiDateFormatConst.YYYY_MM_DD_HH_MM_SS));
         }
-        if (source.matches(DateFormatConst.YYYY_MM_DD_HH_MM_SS_SSS_REGEX)) {
-            return LocalDateTime.parse(source, DateTimeFormatter.ofPattern(DateFormatConst.YYYY_MM_DD_HH_MM_SS_SSS));
+        if (source.matches(TiDateFormatConst.YYYY_MM_DD_HH_MM_SS_SSS_REGEX)) {
+            return LocalDateTime.parse(source, DateTimeFormatter.ofPattern(TiDateFormatConst.YYYY_MM_DD_HH_MM_SS_SSS));
         }
         throw new IllegalArgumentException("Invalid value '" + source + "'");
     }

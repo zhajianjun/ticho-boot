@@ -29,7 +29,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.ticho.boot.view.log.TiLogProperty;
 import top.ticho.boot.view.log.TiHttpLog;
-import top.ticho.tool.json.util.JsonUtil;
+import top.ticho.tool.json.util.TiJsonUtil;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
@@ -70,7 +70,7 @@ public class ApiGlobalFilter implements GlobalFilter, Ordered {
         HttpHeaders headers = request.getHeaders();
 
         MultiValueMap<String, String> queryParams = request.getQueryParams();
-        String params = JsonUtil.toJsonString(queryParams);
+        String params = TiJsonUtil.toJsonString(queryParams);
         String type = request.getMethodValue();
         String url = request.getPath().toString();
         String header = headers.getFirst(USER_AGENT);

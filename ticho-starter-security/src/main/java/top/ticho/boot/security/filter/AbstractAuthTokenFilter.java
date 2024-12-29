@@ -19,7 +19,7 @@ import top.ticho.boot.view.enums.TiBizErrCode;
 import top.ticho.boot.view.enums.TiHttpErrCode;
 import top.ticho.boot.view.exception.TiBizException;
 import top.ticho.boot.view.util.TiAssert;
-import top.ticho.tool.json.util.JsonUtil;
+import top.ticho.tool.json.util.TiJsonUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.FilterChain;
@@ -121,7 +121,7 @@ public abstract class AbstractAuthTokenFilter<T extends TiSecurityUser> extends 
             response.setStatus(tokenInvalid.getCode());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-            response.getWriter().write(JsonUtil.toJsonString(tiResult));
+            response.getWriter().write(TiJsonUtil.toJsonString(tiResult));
         } finally {
             complete(request, response);
         }
