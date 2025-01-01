@@ -8,7 +8,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.multipart.MultipartFile;
-import top.ticho.boot.mail.prop.MailProperty;
+import top.ticho.boot.mail.prop.TiMailProperty;
 import top.ticho.boot.view.enums.TiBizErrCode;
 import top.ticho.boot.view.util.TiAssert;
 
@@ -29,42 +29,42 @@ import java.util.Properties;
  * @date 2022-07-13 22:40:25
  */
 @Slf4j
-public class MailTemplate {
+public class TiMailTemplate {
 
-    private final MailProperty mailProperty;
+    private final TiMailProperty tiMailProperty;
 
     private final JavaMailSender javaMailSender;
 
-    public MailTemplate(MailProperty mailProperty) {
-        this.mailProperty = mailProperty;
+    public TiMailTemplate(TiMailProperty tiMailProperty) {
+        this.tiMailProperty = tiMailProperty;
         JavaMailSenderImpl sender = new JavaMailSenderImpl();
-        applyProperties(mailProperty, sender);
+        applyProperties(tiMailProperty, sender);
         this.javaMailSender = sender;
     }
 
     /**
      * 发送邮件
      *
-     * @param mailContent 邮件内容
+     * @param tiMailContent 邮件内容
      */
-    public void sendMail(MailContent mailContent) {
-        TiAssert.isNotNull(mailProperty, TiBizErrCode.FAIL, "请检查邮件配置");
+    public void sendMail(TiMailContent tiMailContent) {
+        TiAssert.isNotNull(tiMailProperty, TiBizErrCode.FAIL, "请检查邮件配置");
         TiAssert.isNotNull(javaMailSender, TiBizErrCode.FAIL, "请检查邮件配置");
-        MimeMessage mimeMessage = getMimeMessage(mailContent);
+        MimeMessage mimeMessage = getMimeMessage(tiMailContent);
         javaMailSender.send(mimeMessage);
     }
 
-    private MimeMessage getMimeMessage(MailContent mailContent) {
+    private MimeMessage getMimeMessage(TiMailContent tiMailContent) {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = null;
         try {
             helper = new MimeMessageHelper(mimeMessage, true);
-            String senderName = StrUtil.isBlank(mailProperty.getSenderName()) ? mailProperty.getUsername() : mailProperty.getSenderName();
-            helper.setFrom(mailProperty.getUsername(), senderName);
-            helper.setTo(mailContent.getTo());
-            helper.setSubject(mailContent.getSubject());
-            helper.setText(mailContent.getContent(), true);
-            List<String> cc = mailContent.getCc();
+            String senderName = StrUtil.isBlank(tiMailProperty.getSenderName()) ? tiMailProperty.getUsername() : tiMailProperty.getSenderName();
+            helper.setFrom(tiMailProperty.getUsername(), senderName);
+            helper.setTo(tiMailContent.getTo());
+            helper.setSubject(tiMailContent.getSubject());
+            helper.setText(tiMailContent.getContent(), true);
+            List<String> cc = tiMailContent.getCc();
             if (CollUtil.isNotEmpty(cc)) {
                 helper.setCc(cc.toArray(new String[0]));
             }
@@ -72,12 +72,12 @@ public class MailTemplate {
             log.error(e.getMessage(), e);
             TiAssert.cast(TiBizErrCode.FAIL, "创建邮件MimeMessageHelper失败");
         }
-        List<MailInines> inlines = mailContent.getInlines();
+        List<TiMailInines> inlines = tiMailContent.getInlines();
         if (CollUtil.isNotEmpty(inlines)) {
             MimeMessageHelper finalHelper = helper;
             inlines.forEach(inline -> addInline(finalHelper, inline));
         }
-        List<MultipartFile> files = mailContent.getFiles();
+        List<MultipartFile> files = tiMailContent.getFiles();
         if (CollUtil.isNotEmpty(files)) {
             MimeMessageHelper finalHelper = helper;
             files.forEach(file -> addAttachment(finalHelper, file));
@@ -85,10 +85,10 @@ public class MailTemplate {
         return mimeMessage;
     }
 
-    public void sendMailBatch(List<MailContent> mailContents) {
-        TiAssert.isNotNull(mailProperty, TiBizErrCode.FAIL, "请检查邮件配置");
+    public void sendMailBatch(List<TiMailContent> tiMailContents) {
+        TiAssert.isNotNull(tiMailProperty, TiBizErrCode.FAIL, "请检查邮件配置");
         TiAssert.isNotNull(javaMailSender, TiBizErrCode.FAIL, "请检查邮件配置");
-        MimeMessage[] mimeMessages = mailContents
+        MimeMessage[] mimeMessages = tiMailContents
             .stream()
             .map(this::getMimeMessage)
             .toArray(MimeMessage[]::new);
@@ -106,7 +106,7 @@ public class MailTemplate {
         }
     }
 
-    private void addInline(@NonNull MimeMessageHelper helper, @NonNull MailInines inline) {
+    private void addInline(@NonNull MimeMessageHelper helper, @NonNull TiMailInines inline) {
         MultipartFile file = inline.getFile();
         try {
             ByteArrayDataSource iss = new ByteArrayDataSource(file.getInputStream(), file.getContentType());
@@ -117,19 +117,19 @@ public class MailTemplate {
         }
     }
 
-    private void applyProperties(MailProperty mailProperty, JavaMailSenderImpl sender) {
-        sender.setHost(mailProperty.getHost());
-        if (mailProperty.getPort() != null) {
-            sender.setPort(mailProperty.getPort());
+    private void applyProperties(TiMailProperty tiMailProperty, JavaMailSenderImpl sender) {
+        sender.setHost(tiMailProperty.getHost());
+        if (tiMailProperty.getPort() != null) {
+            sender.setPort(tiMailProperty.getPort());
         }
-        sender.setUsername(mailProperty.getUsername());
-        sender.setPassword(mailProperty.getPassword());
-        sender.setProtocol(mailProperty.getProtocol());
-        if (mailProperty.getDefaultEncoding() != null) {
-            sender.setDefaultEncoding(mailProperty.getDefaultEncoding().name());
+        sender.setUsername(tiMailProperty.getUsername());
+        sender.setPassword(tiMailProperty.getPassword());
+        sender.setProtocol(tiMailProperty.getProtocol());
+        if (tiMailProperty.getDefaultEncoding() != null) {
+            sender.setDefaultEncoding(tiMailProperty.getDefaultEncoding().name());
         }
-        if (!mailProperty.getProperties().isEmpty()) {
-            sender.setJavaMailProperties(asProperties(mailProperty.getProperties()));
+        if (!tiMailProperty.getProperties().isEmpty()) {
+            sender.setJavaMailProperties(asProperties(tiMailProperty.getProperties()));
         }
     }
 

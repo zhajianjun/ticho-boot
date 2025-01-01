@@ -3,8 +3,8 @@ package top.ticho.boot.mail.config;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import top.ticho.boot.mail.component.MailTemplate;
-import top.ticho.boot.mail.prop.MailProperty;
+import top.ticho.boot.mail.component.TiMailTemplate;
+import top.ticho.boot.mail.prop.TiMailProperty;
 
 /**
  * 默认email配置
@@ -14,16 +14,16 @@ import top.ticho.boot.mail.prop.MailProperty;
  */
 @Configuration
 @ConditionalOnProperty(value = "ticho.mail.enable", havingValue = "true")
-public class DefaultEmailConfig {
+public class TiEmailConfig {
 
     @Bean
-    public MailProperty mailProperty() {
-        return new MailProperty();
+    public TiMailProperty mailProperty() {
+        return new TiMailProperty();
     }
 
     @Bean
-    public MailTemplate mailTemplate(MailProperty mailProperty) {
-        return new MailTemplate(mailProperty);
+    public TiMailTemplate mailTemplate(TiMailProperty tiMailProperty) {
+        return new TiMailTemplate(tiMailProperty);
     }
 
 
