@@ -99,7 +99,7 @@ public class BaseSqlLogInterceptor implements Interceptor {
             length = -1;
         } else if (ClassUtil.isSimpleValueType(result.getClass())) {
             if (NumberUtil.isNumber(result.toString())) {
-                return result;
+                length = NumberUtil.parseInt(result.toString());
             } else {
                 length = 1;
             }
