@@ -12,7 +12,6 @@ import top.ticho.boot.datasource.service.RootService;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -138,7 +137,8 @@ public class RootServiceImpl<M extends RootMapper<T>, T> extends ServiceImpl<M, 
             log.info("{}保存更新异常，对象为null", getTableName());
             return false;
         }
-        return saveOrUpdateBatch(Collections.singletonList(entity));
+        int result = baseMapper.insertOrUpdate(entity);
+        return result >= 1;
     }
 
     @Transactional(rollbackFor = Exception.class)

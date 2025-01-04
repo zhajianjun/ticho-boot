@@ -21,6 +21,7 @@ public class BaseSqlInjector extends DefaultSqlInjector {
         methodList.add(new InsertBatch());
         methodList.add(new UpdateBatch());
         methodList.add(new InsertOrUpdateBatch());
+        methodList.add(new InsertOrUpdate());
         return methodList;
     }
 

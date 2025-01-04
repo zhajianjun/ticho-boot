@@ -1,5 +1,6 @@
 package top.ticho.boot.datasource.service;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,6 +50,10 @@ public interface RootService<T> extends IService<T> {
     @Transactional(rollbackFor = Exception.class)
     default boolean saveOrUpdateBatch(Collection<T> entityList) {
         return saveOrUpdateBatch(entityList, DEFAULT_BATCH_SIZE);
+    }
+
+    default boolean saveOrUpdate(T entity, Wrapper<T> updateWrapper) {
+        return this.saveOrUpdate(entity);
     }
 
 }

@@ -38,7 +38,7 @@ public class UpdateBatch extends AbstractMethod {
         // id,username,age
         String columns = sqlColumn.substring(0, sqlColumn.length() - 1);
         // #{et.id},#{et.username},#{et.age},
-        String sqlProperty = tableInfo.getKeyInsertSqlProperty(true, ENTITY_DOT, false) + this.filterTableFieldInfo(fieldList, predicate, i -> i.getInsertSqlProperty(ENTITY_DOT), EMPTY);
+        String sqlProperty = SqlScriptUtils.safeParam(ENTITY_DOT + tableInfo.getKeyProperty()) + COMMA + this.filterTableFieldInfo(fieldList, predicate, i -> i.getInsertSqlProperty(ENTITY_DOT), EMPTY);
         // #{et.id},#{et.username},#{et.age}
         String property = "select " + sqlProperty.substring(0, sqlProperty.length() - 1);
         String valuesScript = SqlScriptUtils.convertForeach(property, "list", null, ENTITY, "union all");
