@@ -98,7 +98,7 @@ public class RootServiceImpl<M extends RootMapper<T>, T> extends ServiceImpl<M, 
             log.info("{}批量修改异常，集合为null或者大小为0", getTableName());
             return false;
         }
-       int size = entityList.size();
+        int size = entityList.size();
         if (size <= batchSize) {
             return size == baseMapper.updateBatch(entityList);
         }

@@ -154,8 +154,11 @@ public class BaseSqlLogInterceptor implements Interceptor {
      * 对参数是null和不是null的情况作了处理
      */
     private static String getParameterValue(Object obj) {
+        if (obj == null) {
+            return "null";
+        }
         if (obj instanceof String) {
-            return "'" + obj + "'";
+            return obj.toString().isEmpty() ? "''" : "'" + obj + "'";
         }
         if (obj instanceof Date) {
             DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.CHINA);
@@ -170,10 +173,7 @@ public class BaseSqlLogInterceptor implements Interceptor {
         if (obj instanceof LocalTime) {
             return "'" + ((LocalTime) obj).format(DatePattern.NORM_TIME_FORMATTER) + "'";
         }
-        if (obj != null) {
-            return obj.toString();
-        }
-        return "''";
+        return obj.toString();
     }
 
 }
