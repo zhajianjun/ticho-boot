@@ -1,6 +1,8 @@
 package top.ticho.boot.datasource.interceptor;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
@@ -29,6 +31,9 @@ import top.ticho.tool.json.util.TiJsonUtil;
 
 import java.sql.Statement;
 import java.text.DateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -147,6 +152,15 @@ public class BaseSqlLogInterceptor implements Interceptor {
         if (obj instanceof Date) {
             DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.CHINA);
             return "'" + formatter.format(obj) + "'";
+        }
+        if (obj instanceof LocalDateTime) {
+            return "'" + LocalDateTimeUtil.formatNormal((LocalDateTime) obj) + "'";
+        }
+        if (obj instanceof LocalDate) {
+            return "'" + LocalDateTimeUtil.formatNormal((LocalDate) obj) + "'";
+        }
+        if (obj instanceof LocalTime) {
+            return "'" + ((LocalTime) obj).format(DatePattern.NORM_TIME_FORMATTER) + "'";
         }
         if (obj != null) {
             return obj.toString();
