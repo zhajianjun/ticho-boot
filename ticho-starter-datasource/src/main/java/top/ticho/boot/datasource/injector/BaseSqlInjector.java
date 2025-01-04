@@ -20,6 +20,7 @@ public class BaseSqlInjector extends DefaultSqlInjector {
         List<AbstractMethod> methodList = super.getMethodList(mapperClass, tableInfo);
         methodList.add(new InsertBatch());
         methodList.add(new UpdateBatch());
+        methodList.add(new InsertOrUpdateBatch());
         return methodList;
     }
 

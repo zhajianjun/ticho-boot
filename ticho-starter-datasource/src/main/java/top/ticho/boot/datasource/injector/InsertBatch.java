@@ -11,7 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.executor.keygen.Jdbc3KeyGenerator;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.executor.keygen.NoKeyGenerator;
@@ -30,7 +29,6 @@ import java.util.function.Predicate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Slf4j
 public class InsertBatch extends AbstractMethod {
 
     /**
@@ -76,4 +74,5 @@ public class InsertBatch extends AbstractMethod {
     public String getMethod(SqlMethod sqlMethod) {
         return "insertBatch";
     }
+
 }

@@ -23,4 +23,10 @@ public interface RootMapper<T> extends BaseMapper<T> {
      */
     int updateBatch(@Param("list") Collection<T> list);
 
+    /**
+     * 自定义批量新增或者更新，条件为主键
+     * 如果要自动填充，@Param(xx) xx参数名必须是 list/collection/array 3个的其中之一
+     */
+    int insertOrUpdateBatch(@Param("list") Collection<T> list);
+
 }

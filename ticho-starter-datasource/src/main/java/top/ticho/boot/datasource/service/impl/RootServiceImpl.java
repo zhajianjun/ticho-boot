@@ -12,6 +12,7 @@ import top.ticho.boot.datasource.service.RootService;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -137,7 +138,7 @@ public class RootServiceImpl<M extends RootMapper<T>, T> extends ServiceImpl<M, 
             log.info("{}保存更新异常，对象为null", getTableName());
             return false;
         }
-        return super.saveOrUpdate(entity);
+        return saveOrUpdateBatch(Collections.singletonList(entity));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -147,10 +148,13 @@ public class RootServiceImpl<M extends RootMapper<T>, T> extends ServiceImpl<M, 
             log.info("{}批量保存更新异常，集合为null或者大小为0", getTableName());
             return false;
         }
-        if (batchSize <= 0 || batchSize > 1000) {
-            batchSize = RootService.DEFAULT_BATCH_SIZE;
+        int size = entityList.size();
+        if (size <= batchSize) {
+            return size == baseMapper.insertOrUpdateBatch(entityList);
         }
-        return super.saveOrUpdateBatch(entityList, batchSize);
+        List<List<T>> split = CollUtil.split(entityList, batchSize);
+        Integer total = split.stream().map(baseMapper::insertOrUpdateBatch).reduce(0, Integer::sum);
+        return total == entityList.size();
     }
 
 }
