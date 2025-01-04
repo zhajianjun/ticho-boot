@@ -97,10 +97,13 @@ public class RootServiceImpl<M extends RootMapper<T>, T> extends ServiceImpl<M, 
             log.info("{}批量修改异常，集合为null或者大小为0", getTableName());
             return false;
         }
-        if (batchSize <= 0 || batchSize > 1000) {
-            batchSize = RootService.DEFAULT_BATCH_SIZE;
+       int size = entityList.size();
+        if (size <= batchSize) {
+            return size == baseMapper.updateBatch(entityList);
         }
-        return super.updateBatchById(entityList, batchSize);
+        List<List<T>> split = CollUtil.split(entityList, batchSize);
+        Integer total = split.stream().map(baseMapper::updateBatch).reduce(0, Integer::sum);
+        return total == entityList.size();
     }
 
     @Override
