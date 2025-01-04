@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
@@ -37,6 +38,7 @@ import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.regex.Matcher;
 
 
@@ -93,8 +95,14 @@ public class BaseSqlLogInterceptor implements Interceptor {
         Object result = invocation.proceed();
         long timing = SystemClock.now() - start;
         int length;
-        if (ClassUtil.isSimpleValueType(result.getClass())) {
-            length = 1;
+        if (Objects.isNull(result)) {
+            length = -1;
+        } else if (ClassUtil.isSimpleValueType(result.getClass())) {
+            if (NumberUtil.isNumber(result.toString())) {
+                return result;
+            } else {
+                length = 1;
+            }
         } else {
             length = ObjUtil.length(result);
         }
