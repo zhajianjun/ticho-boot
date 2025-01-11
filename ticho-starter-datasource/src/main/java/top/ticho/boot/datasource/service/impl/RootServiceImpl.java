@@ -6,8 +6,10 @@ import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import top.ticho.boot.datasource.mapper.RootMapper;
+import top.ticho.boot.datasource.prop.TiDataSourceProperty;
 import top.ticho.boot.datasource.service.RootService;
 
 import java.io.Serializable;
@@ -24,12 +26,26 @@ import java.util.List;
 public class RootServiceImpl<M extends RootMapper<T>, T> extends ServiceImpl<M, T> implements RootService<T> {
     private static final Logger log = LoggerFactory.getLogger(RootServiceImpl.class);
 
+    @Autowired
+    private TiDataSourceProperty tiDataSourceProperty;
+
+
     public TableInfo getTableInfo() {
         return TableInfoHelper.getTableInfo(this.entityClass);
     }
 
     public String getTableName() {
         return getTableInfo().getTableName();
+    }
+
+    @Override
+    public Integer batchSize() {
+        return tiDataSourceProperty.getBatchSize();
+    }
+
+    @Override
+    public Integer maxBatchSize() {
+        return tiDataSourceProperty.getMaxBatchSize();
     }
 
     @Override
@@ -48,8 +64,8 @@ public class RootServiceImpl<M extends RootMapper<T>, T> extends ServiceImpl<M, 
             log.info("{}批量保存异常，集合为null或者大小为0", getTableName());
             return false;
         }
-        if (batchSize <= 0 || batchSize > 1000) {
-            batchSize = RootService.DEFAULT_BATCH_SIZE;
+        if (batchSize <= 0 || batchSize > tiDataSourceProperty.getMaxBatchSize()) {
+            batchSize = batchSize();
         }
         int size = entityList.size();
         if (size <= batchSize) {
@@ -71,7 +87,7 @@ public class RootServiceImpl<M extends RootMapper<T>, T> extends ServiceImpl<M, 
 
     @Override
     public boolean removeByIds(Collection<? extends Serializable> ids) {
-        return removeByIds(ids, RootService.DEFAULT_BATCH_SIZE);
+        return removeByIds(ids, batchSize());
     }
 
     public boolean removeByIds(Collection<? extends Serializable> ids, int batchSize) {
@@ -79,8 +95,8 @@ public class RootServiceImpl<M extends RootMapper<T>, T> extends ServiceImpl<M, 
             log.info("{}批量删除异常，集合为null或者大小为0", getTableName());
             return false;
         }
-        if (batchSize <= 0 || batchSize > 1000) {
-            batchSize = RootService.DEFAULT_BATCH_SIZE;
+        if (batchSize <= 0 || batchSize > tiDataSourceProperty.getMaxBatchSize()) {
+            batchSize = batchSize();
         }
         int size = ids.size();
         if (size <= batchSize) {

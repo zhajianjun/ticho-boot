@@ -15,9 +15,18 @@ import java.util.Collection;
 public interface RootService<T> extends IService<T> {
 
     /**
-     * 默认批次提交数量
+     * 获取批量大小
+     *
+     * @return {@link Integer }
      */
-    int DEFAULT_BATCH_SIZE = 200;
+    Integer batchSize();
+
+    /**
+     * 最大批量大小
+     *
+     * @return {@link Integer }
+     */
+    Integer maxBatchSize();
 
     /**
      * 插入（批量）
@@ -27,7 +36,7 @@ public interface RootService<T> extends IService<T> {
     @Override
     @Transactional(rollbackFor = Exception.class)
     default boolean saveBatch(Collection<T> entityList) {
-        return saveBatch(entityList, DEFAULT_BATCH_SIZE);
+        return saveBatch(entityList, batchSize());
     }
 
     /**
@@ -38,7 +47,7 @@ public interface RootService<T> extends IService<T> {
     @Override
     @Transactional(rollbackFor = Exception.class)
     default boolean updateBatchById(Collection<T> entityList) {
-        return updateBatchById(entityList, DEFAULT_BATCH_SIZE);
+        return updateBatchById(entityList, batchSize());
     }
 
     /**
@@ -49,7 +58,7 @@ public interface RootService<T> extends IService<T> {
     @Override
     @Transactional(rollbackFor = Exception.class)
     default boolean saveOrUpdateBatch(Collection<T> entityList) {
-        return saveOrUpdateBatch(entityList, DEFAULT_BATCH_SIZE);
+        return saveOrUpdateBatch(entityList, batchSize());
     }
 
     default boolean saveOrUpdate(T entity, Wrapper<T> updateWrapper) {
