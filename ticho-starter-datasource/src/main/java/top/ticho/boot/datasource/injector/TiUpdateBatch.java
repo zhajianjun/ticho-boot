@@ -23,7 +23,7 @@ import java.util.function.Predicate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateBatch extends AbstractMethod {
+public class TiUpdateBatch extends AbstractMethod {
     /**
      * 字段筛选条件
      */

@@ -8,9 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import top.ticho.boot.datasource.mapper.RootMapper;
+import top.ticho.boot.datasource.mapper.TiRootMapper;
 import top.ticho.boot.datasource.prop.TiDataSourceProperty;
-import top.ticho.boot.datasource.service.RootService;
+import top.ticho.boot.datasource.service.TiRootService;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -23,12 +23,11 @@ import java.util.List;
  * @date 2022-10-17 13:29
  */
 @SuppressWarnings("all")
-public class RootServiceImpl<M extends RootMapper<T>, T> extends ServiceImpl<M, T> implements RootService<T> {
-    private static final Logger log = LoggerFactory.getLogger(RootServiceImpl.class);
+public class TiRootServiceImpl<M extends TiRootMapper<T>, T> extends ServiceImpl<M, T> implements TiRootService<T> {
+    private static final Logger log = LoggerFactory.getLogger(TiRootServiceImpl.class);
 
     @Autowired
     private TiDataSourceProperty tiDataSourceProperty;
-
 
     public TableInfo getTableInfo() {
         return TableInfoHelper.getTableInfo(this.entityClass);

@@ -18,7 +18,7 @@ import java.io.Serializable;
 @Component
 @ConditionalOnMissingBean(IdentifierGenerator.class)
 @Slf4j
-public class BaseIdGenerator implements IdentifierGenerator {
+public class TiIdGenerator implements IdentifierGenerator {
 
     @Override
     public Number nextId(Object entity) {

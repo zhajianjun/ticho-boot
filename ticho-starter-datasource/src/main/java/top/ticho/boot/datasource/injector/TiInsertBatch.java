@@ -29,7 +29,7 @@ import java.util.function.Predicate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class InsertBatch extends AbstractMethod {
+public class TiInsertBatch extends AbstractMethod {
 
     /**
      * 字段筛选条件

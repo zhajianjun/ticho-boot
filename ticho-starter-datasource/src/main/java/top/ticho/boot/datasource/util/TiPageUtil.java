@@ -14,7 +14,7 @@ import java.math.BigDecimal;
  * @date 2022-07-10 15:56:30
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class PageUtil {
+public class TiPageUtil {
 
     public static <T> TiPageResult<T> getResult(Page<T> page) {
         TiPageResult<T> tiPageResult = new TiPageResult<>();

@@ -10,7 +10,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import top.ticho.boot.datasource.injector.BaseSqlInjector;
+import top.ticho.boot.datasource.injector.TiSqlInjector;
 
 /**
  * mybatis plus config
@@ -22,7 +22,7 @@ import top.ticho.boot.datasource.injector.BaseSqlInjector;
 @EnableTransactionManagement
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @PropertySource(value = "classpath:ticho-mybatis-plus.properties")
-public class BaseMybatisPlusConfig {
+public class TiMybatisPlusConfig {
 
     /**
      * mybatis-plus 乐观锁拦截器
@@ -46,8 +46,8 @@ public class BaseMybatisPlusConfig {
      * 默认sql注入器
      */
     @Bean
-    public BaseSqlInjector tichoSqlInjector() {
-        return new BaseSqlInjector();
+    public TiSqlInjector tichoSqlInjector() {
+        return new TiSqlInjector();
     }
 
 }

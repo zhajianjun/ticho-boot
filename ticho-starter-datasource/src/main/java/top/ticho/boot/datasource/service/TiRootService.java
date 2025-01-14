@@ -12,7 +12,7 @@ import java.util.Collection;
  * @author zhajianjun
  * @date 2022-10-17 13:28
  */
-public interface RootService<T> extends IService<T> {
+public interface TiRootService<T> extends IService<T> {
 
     /**
      * 获取批量大小

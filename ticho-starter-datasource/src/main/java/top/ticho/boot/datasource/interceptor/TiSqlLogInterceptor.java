@@ -57,7 +57,7 @@ import java.util.regex.Matcher;
 @Component
 @RefreshScope
 @ConditionalOnProperty(value = "ticho.datasource.log.enable", havingValue = "true")
-public class BaseSqlLogInterceptor implements Interceptor {
+public class TiSqlLogInterceptor implements Interceptor {
 
     /** 是否打印sql */
     @Value("${ticho.datasource.log.print-sql:false}")

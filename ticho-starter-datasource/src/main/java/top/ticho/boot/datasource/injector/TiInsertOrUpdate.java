@@ -15,7 +15,7 @@ import java.util.List;
  * @date 2025-01-04 19:50
  */
 @Setter
-public class InsertOrUpdate extends AbstractMethod {
+public class TiInsertOrUpdate extends AbstractMethod {
 
     @Override
     public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo) {

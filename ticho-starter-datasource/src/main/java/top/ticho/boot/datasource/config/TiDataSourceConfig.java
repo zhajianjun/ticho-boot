@@ -19,7 +19,7 @@ import top.ticho.boot.datasource.prop.TiDataSourceProperty;
  */
 @Configuration
 @PropertySource(value = "classpath:ticho-datasource.properties")
-public class BaseDataSourceConfig {
+public class TiDataSourceConfig {
 
     @Bean
     @ConfigurationProperties(prefix = "ticho.datasource")
@@ -66,4 +66,5 @@ public class BaseDataSourceConfig {
         filterRegistrationBean.addInitParameter("exclusions", "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*");
         return filterRegistrationBean;
     }
+
 }
