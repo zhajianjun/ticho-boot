@@ -1,8 +1,13 @@
 ticho:
   datasource:
-    url: jdbc:mysql://122.112.164.156:10030/ticho_dev?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull
+    url: jdbc:mysql://127.0.0.1:3306/user?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull
     username: root
-    password: mysql1511ticho.
+    password: 123456
     driver-class-name: com.mysql.cj.jdbc.Driver
     type-aliases-package: top.ticho.**.entity
-    print-sql: true
+    batch-size: 200
+    max-batch-size: 1000
+    log:
+      enable: true
+      print-sql: true
+      print-simple: true

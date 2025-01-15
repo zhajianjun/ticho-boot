@@ -24,10 +24,10 @@ import org.apache.ibatis.reflection.SystemMetaObject;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
+import top.ticho.boot.datasource.prop.TiDataSourceProperty;
 import top.ticho.tool.json.util.TiJsonUtil;
 
 import java.sql.Statement;
@@ -59,13 +59,11 @@ import java.util.regex.Matcher;
 @ConditionalOnProperty(value = "ticho.datasource.log.enable", havingValue = "true")
 public class TiSqlLogInterceptor implements Interceptor {
 
-    /** 是否打印sql */
-    @Value("${ticho.datasource.log.print-sql:false}")
-    private Boolean printSql;
+    private final TiDataSourceProperty.Log tiDataSourcePropertyLog;
 
-    /** 是否简单打印 */
-    @Value("${ticho.datasource.log.print-simple:true}")
-    private Boolean printSimple;
+    public TiSqlLogInterceptor(TiDataSourceProperty tiDataSourceProperty) {
+        this.tiDataSourcePropertyLog = tiDataSourceProperty.getLog();
+    }
 
     /**
      * 拦截类型StatementHandler
@@ -82,7 +80,7 @@ public class TiSqlLogInterceptor implements Interceptor {
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
-        if (!Boolean.TRUE.equals(printSql)) {
+        if (Objects.isNull(tiDataSourcePropertyLog) || !Boolean.TRUE.equals(tiDataSourcePropertyLog.getPrintSql())) {
             return invocation.proceed();
         }
         Object target = PluginUtils.realTarget(invocation.getTarget());
@@ -106,7 +104,7 @@ public class TiSqlLogInterceptor implements Interceptor {
         } else {
             length = ObjUtil.length(result);
         }
-        if (Boolean.TRUE.equals(printSimple)) {
+        if (Boolean.TRUE.equals(tiDataSourcePropertyLog.getPrintSimple())) {
             log.info("[SQL]【{}】-【{}】-【计数:{}】-【耗时:{}ms】", ms.getId(), sql, length, timing);
         } else {
             log.info("[SQL]【{}】-【{}】-【计数:{}】-【耗时:{}ms】-【记录:{}】", ms.getId(), sql, length, timing, TiJsonUtil.toJsonString(result));
@@ -115,34 +113,38 @@ public class TiSqlLogInterceptor implements Interceptor {
     }
 
 
-    public static String getSql(Configuration configuration, BoundSql boundSql) {
+    public String getSql(Configuration configuration, BoundSql boundSql) {
         // 获取参数
         Object parameterObject = boundSql.getParameterObject();
         List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
         // sql语句中多个空格都用一个空格代替
         String sql = boundSql.getSql().replaceAll("\\s+", " ");
-        if (CollUtil.isNotEmpty(parameterMappings) && parameterObject != null) {
-            // 获取类型处理器注册器，类型处理器的功能是进行java类型和数据库类型的转换
-            TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
-            // 如果根据parameterObject.getClass(）可以找到对应的类型，则替换
-            if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
-                return sql.replaceFirst("\\?", Matcher.quoteReplacement(getParameterValue(parameterObject)));
-            }
-            // MetaObject主要是封装了originalObject对象，提供了get和set的方法用于获取和设置originalObject的属性值,主要支持对JavaBean、Collection、Map三种类型对象的操作
-            MetaObject metaObject = configuration.newMetaObject(parameterObject);
-            for (ParameterMapping parameterMapping : parameterMappings) {
-                String propertyName = parameterMapping.getProperty();
-                if (metaObject.hasGetter(propertyName)) {
-                    Object obj = metaObject.getValue(propertyName);
-                    sql = sql.replaceFirst("\\?", Matcher.quoteReplacement(getParameterValue(obj)));
-                } else if (boundSql.hasAdditionalParameter(propertyName)) {
-                    // 该分支是动态sql
-                    Object obj = boundSql.getAdditionalParameter(propertyName);
-                    sql = sql.replaceFirst("\\?", Matcher.quoteReplacement(getParameterValue(obj)));
-                } else {
-                    // 打印出缺失，提醒该参数缺失并防止错位
-                    sql = sql.replaceFirst("\\?", "缺失");
-                }
+        if (!Boolean.TRUE.equals(tiDataSourcePropertyLog.getShowParams())) {
+            return sql;
+        }
+        if (CollUtil.isEmpty(parameterMappings) || Objects.isNull(parameterObject)) {
+            return sql;
+        }
+        // 获取类型处理器注册器，类型处理器的功能是进行java类型和数据库类型的转换
+        TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
+        // 如果根据parameterObject.getClass(）可以找到对应的类型，则替换
+        if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
+            return sql.replaceFirst("\\?", Matcher.quoteReplacement(getParameterValue(parameterObject)));
+        }
+        // MetaObject主要是封装了originalObject对象，提供了get和set的方法用于获取和设置originalObject的属性值,主要支持对JavaBean、Collection、Map三种类型对象的操作
+        MetaObject metaObject = configuration.newMetaObject(parameterObject);
+        for (ParameterMapping parameterMapping : parameterMappings) {
+            String propertyName = parameterMapping.getProperty();
+            if (metaObject.hasGetter(propertyName)) {
+                Object obj = metaObject.getValue(propertyName);
+                sql = sql.replaceFirst("\\?", Matcher.quoteReplacement(getParameterValue(obj)));
+            } else if (boundSql.hasAdditionalParameter(propertyName)) {
+                // 该分支是动态sql
+                Object obj = boundSql.getAdditionalParameter(propertyName);
+                sql = sql.replaceFirst("\\?", Matcher.quoteReplacement(getParameterValue(obj)));
+            } else {
+                // 打印出缺失，提醒该参数缺失并防止错位
+                sql = sql.replaceFirst("\\?", "缺失");
             }
         }
         return sql;
@@ -153,7 +155,7 @@ public class TiSqlLogInterceptor implements Interceptor {
      * 如果是日期，则转换为时间格式器并加单引号；
      * 对参数是null和不是null的情况作了处理
      */
-    private static String getParameterValue(Object obj) {
+    private String getParameterValue(Object obj) {
         if (obj == null) {
             return "null";
         }

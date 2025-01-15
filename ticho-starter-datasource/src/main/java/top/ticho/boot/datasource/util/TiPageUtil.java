@@ -28,12 +28,12 @@ public class TiPageUtil {
 
     public static <T> TiPageResult<T> getResult(com.baomidou.mybatisplus.extension.plugins.pagination.Page<T> page) {
         TiPageResult<T> tiPageResult = new TiPageResult<>();
-        tiPageResult.setPageNum((int) page.getCurrent());
-        tiPageResult.setPageSize((int) page.getSize());
-        tiPageResult.setPages((int) page.getPages());
+        tiPageResult.setPageNum(Long.valueOf(page.getCurrent()).intValue());
+        tiPageResult.setPageSize(Long.valueOf(page.getSize()).intValue());
+        tiPageResult.setPages(Long.valueOf(page.getPages()).intValue());
         tiPageResult.setTotal(BigDecimal.valueOf(page.getTotal()).intValue());
         tiPageResult.setRows(page.getRecords());
         return tiPageResult;
-
     }
+
 }

@@ -19,13 +19,14 @@ public class TiDataSourceProperty {
     /** 数据库驱动类名称 */
     private String driverClassName;
     /** 存储类型别名的包路径 */
-    private Integer typeAliasesPackage;
-    /** 存储日志相关的配置信息 */
-    private Log log;
+    private String typeAliasesPackage;
     /** 储批量操作的大小，默认值为200 */
     private Integer batchSize = 200;
     /** 存储最大批量操作的大小，默认值为1000 */
     private Integer maxBatchSize = 1000;
+    /** 存储日志相关的配置信息 */
+    private Log log;
+
 
     @Data
     public static class Log {
