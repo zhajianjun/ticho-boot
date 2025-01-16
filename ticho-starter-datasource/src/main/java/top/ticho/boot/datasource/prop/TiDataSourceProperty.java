@@ -28,6 +28,9 @@ public class TiDataSourceProperty {
     private Log log;
 
 
+    /**
+     * 日志配置
+     */
     @Data
     public static class Log {
         /** 是否启用日志 */

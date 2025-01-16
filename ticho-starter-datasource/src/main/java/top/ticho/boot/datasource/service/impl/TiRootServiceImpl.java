@@ -4,29 +4,27 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import top.ticho.boot.datasource.mapper.TiRootMapper;
 import top.ticho.boot.datasource.prop.TiDataSourceProperty;
 import top.ticho.boot.datasource.service.TiRootService;
 
+import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 
 /**
- * RootService 实现类（ 泛型：M 是 mapper 对象，T 是实体 ）
+ * TiRootService 实现类（ 泛型：M 是 mapper 对象，T 是实体 ）
  *
  * @author zhajianjun
  * @date 2022-10-17 13:29
  */
-@SuppressWarnings("all")
+@Slf4j
 public class TiRootServiceImpl<M extends TiRootMapper<T>, T> extends ServiceImpl<M, T> implements TiRootService<T> {
-    private static final Logger log = LoggerFactory.getLogger(TiRootServiceImpl.class);
 
-    @Autowired
+    @Resource
     private TiDataSourceProperty tiDataSourceProperty;
 
     public TableInfo getTableInfo() {

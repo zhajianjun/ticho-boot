@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 
 /**
- * 顶级 Service
+ * TiRootService
  *
  * @author zhajianjun
  * @date 2022-10-17 13:28
