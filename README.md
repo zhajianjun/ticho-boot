@@ -1,4 +1,4 @@
-README_cn.mdThis project is starter libraries for quickly setting up Spring Boot applications. Each starter provides configurations and dependencies
+This project is starter libraries for quickly setting up Spring Boot applications. Each starter provides configurations and dependencies
 for specific functionalities, allowing developers to easily integrate these features into their applications.
 
 - ticho-dependencies: Contains all the dependencies required by ticho-starters
