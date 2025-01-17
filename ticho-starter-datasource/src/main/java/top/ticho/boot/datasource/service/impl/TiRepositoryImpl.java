@@ -6,9 +6,9 @@ import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
-import top.ticho.boot.datasource.mapper.TiRootMapper;
+import top.ticho.boot.datasource.mapper.TiMapper;
 import top.ticho.boot.datasource.prop.TiDataSourceProperty;
-import top.ticho.boot.datasource.service.TiRootService;
+import top.ticho.boot.datasource.service.TiRepository;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
@@ -16,13 +16,13 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * TiRootService 实现类（ 泛型：M 是 mapper 对象，T 是实体 ）
+ * TiRepository 实现类（ 泛型：M 是 mapper 对象，T 是实体 ）
  *
  * @author zhajianjun
  * @date 2022-10-17 13:29
  */
 @Slf4j
-public class TiRootServiceImpl<M extends TiRootMapper<T>, T> extends ServiceImpl<M, T> implements TiRootService<T> {
+public class TiRepositoryImpl<M extends TiMapper<T>, T> extends ServiceImpl<M, T> implements TiRepository<T> {
 
     @Resource
     private TiDataSourceProperty tiDataSourceProperty;

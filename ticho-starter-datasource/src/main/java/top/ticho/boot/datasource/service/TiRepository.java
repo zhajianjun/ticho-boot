@@ -7,12 +7,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 
 /**
- * TiRootService
+ * TiRepository
  *
  * @author zhajianjun
  * @date 2022-10-17 13:28
  */
-public interface TiRootService<T> extends IService<T> {
+public interface TiRepository<T> extends IService<T> {
 
     /**
      * 获取批量大小

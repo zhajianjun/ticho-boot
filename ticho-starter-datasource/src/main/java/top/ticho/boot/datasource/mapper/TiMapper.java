@@ -11,7 +11,7 @@ import java.util.Collection;
  * @author zhajianjun
  * @date 2022-10-17 08:53
  */
-public interface TiRootMapper<T> extends BaseMapper<T> {
+public interface TiMapper<T> extends BaseMapper<T> {
 
     /**
      * 自定义批量插入
