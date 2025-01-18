@@ -29,32 +29,32 @@ import java.time.format.DateTimeFormatter;
  * @see LocalDateDeserializer
  */
 @SuppressWarnings("all")
-public class CustomLocalDateTimeDeserializer extends JSR310DateTimeDeserializerBase<LocalDateTime> {
+public class TiLocalDateTimeDeserializer extends JSR310DateTimeDeserializerBase<LocalDateTime> {
     private static final long serialVersionUID = 1L;
     private static final DateTimeFormatter DEFAULT_FORMATTER;
-    public static final CustomLocalDateTimeDeserializer INSTANCE;
+    public static final TiLocalDateTimeDeserializer INSTANCE;
 
-    private CustomLocalDateTimeDeserializer() {
+    private TiLocalDateTimeDeserializer() {
         this(DEFAULT_FORMATTER);
     }
 
-    public CustomLocalDateTimeDeserializer(DateTimeFormatter formatter) {
+    public TiLocalDateTimeDeserializer(DateTimeFormatter formatter) {
         super(LocalDateTime.class, formatter);
     }
 
-    protected CustomLocalDateTimeDeserializer(CustomLocalDateTimeDeserializer base, Boolean leniency) {
+    protected TiLocalDateTimeDeserializer(TiLocalDateTimeDeserializer base, Boolean leniency) {
         super(base, leniency);
     }
 
-    protected CustomLocalDateTimeDeserializer withDateFormat(DateTimeFormatter formatter) {
-        return new CustomLocalDateTimeDeserializer(formatter);
+    protected TiLocalDateTimeDeserializer withDateFormat(DateTimeFormatter formatter) {
+        return new TiLocalDateTimeDeserializer(formatter);
     }
 
-    protected CustomLocalDateTimeDeserializer withLeniency(Boolean leniency) {
-        return new CustomLocalDateTimeDeserializer(this, leniency);
+    protected TiLocalDateTimeDeserializer withLeniency(Boolean leniency) {
+        return new TiLocalDateTimeDeserializer(this, leniency);
     }
 
-    protected CustomLocalDateTimeDeserializer withShape(JsonFormat.Shape shape) {
+    protected TiLocalDateTimeDeserializer withShape(JsonFormat.Shape shape) {
         return this;
     }
 
@@ -143,6 +143,6 @@ public class CustomLocalDateTimeDeserializer extends JSR310DateTimeDeserializerB
 
     static {
         DEFAULT_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-        INSTANCE = new CustomLocalDateTimeDeserializer();
+        INSTANCE = new TiLocalDateTimeDeserializer();
     }
 }

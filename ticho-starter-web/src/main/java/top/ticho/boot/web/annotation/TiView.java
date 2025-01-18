@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface View {
+public @interface TiView {
     /**
      * 是否忽略，只对action对应的方法有效
      */

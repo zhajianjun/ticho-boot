@@ -30,7 +30,7 @@ import java.util.List;
  * @date 2022-09-13 13:55
  */
 @Configuration
-public class BaseActuatorConifg {
+public class TiActuatorConifg {
 
     @Bean
     public WebMvcEndpointHandlerMapping webEndpointServletHandlerMapping(WebEndpointsSupplier webEndpointsSupplier, ServletEndpointsSupplier servletEndpointsSupplier, ControllerEndpointsSupplier controllerEndpointsSupplier, EndpointMediaTypes endpointMediaTypes, CorsEndpointProperties corsProperties, WebEndpointProperties webEndpointProperties, Environment environment) {

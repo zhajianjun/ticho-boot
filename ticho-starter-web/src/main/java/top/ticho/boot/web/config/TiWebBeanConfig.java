@@ -9,7 +9,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import top.ticho.boot.view.task.TiTaskDecortor;
-import top.ticho.boot.web.prop.BaseAsyncProperty;
+import top.ticho.boot.web.prop.TiAsyncProperty;
 
 import java.util.List;
 import java.util.Map;
@@ -21,16 +21,16 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @date 2023-01-05 13:08
  */
 @Configuration
-public class BaseWebBeanConfig {
+public class TiWebBeanConfig {
 
     @Bean
     @ConfigurationProperties(prefix = "ticho.async")
-    public BaseAsyncProperty baseAsyncProperty() {
-        return new BaseAsyncProperty();
+    public TiAsyncProperty baseAsyncProperty() {
+        return new TiAsyncProperty();
     }
 
     @Bean("asyncTaskExecutor")
-    public Executor executor(BaseAsyncProperty property, TaskDecorator taskDecorator) {
+    public Executor executor(TiAsyncProperty property, TaskDecorator taskDecorator) {
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
         // 设置核心线程数
         taskExecutor.setCorePoolSize(property.getCorePoolSize());

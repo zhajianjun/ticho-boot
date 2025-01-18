@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import top.ticho.boot.web.converter.CustomLocalDateDeserializer;
-import top.ticho.boot.web.converter.CustomLocalDateTimeDeserializer;
+import top.ticho.boot.web.converter.TiLocalDateDeserializer;
+import top.ticho.boot.web.converter.TiLocalDateTimeDeserializer;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -26,7 +26,7 @@ import java.time.format.DateTimeFormatter;
  * @date 2022-07-10 15:56:30
  */
 @Configuration
-public class BaseJacksonCustomizerConfig {
+public class TiJacksonCustomizerConfig {
     @Value("${spring.jackson.date-format:yyyy-MM-dd HH:mm:ss}")
     private String localDateTimePattern;
 
@@ -40,10 +40,10 @@ public class BaseJacksonCustomizerConfig {
     public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
         return builder -> {
             builder.serializerByType(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(localDateTimePattern)));
-            builder.deserializerByType(LocalDateTime.class, new CustomLocalDateTimeDeserializer(DateTimeFormatter.ofPattern(localDateTimePattern)));
+            builder.deserializerByType(LocalDateTime.class, new TiLocalDateTimeDeserializer(DateTimeFormatter.ofPattern(localDateTimePattern)));
 
             builder.serializerByType(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(localDatePattern)));
-            builder.deserializerByType(LocalDate.class, new CustomLocalDateDeserializer(DateTimeFormatter.ofPattern(localDatePattern)));
+            builder.deserializerByType(LocalDate.class, new TiLocalDateDeserializer(DateTimeFormatter.ofPattern(localDatePattern)));
 
             builder.serializerByType(LocalTime.class, new LocalTimeSerializer(DateTimeFormatter.ofPattern(localTimePattern)));
             builder.deserializerByType(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern(localTimePattern)));
@@ -57,4 +57,5 @@ public class BaseJacksonCustomizerConfig {
             builder.serializerByType(Long.TYPE, ToStringSerializer.instance);
         };
     }
+
 }

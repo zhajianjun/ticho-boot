@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RefreshScope
-public class CloudIdUtil implements InitializingBean {
+public class TiIdUtil implements InitializingBean {
     private static Snowflake snowflake = IdUtil.getSnowflake(0, 0);
 
     @Value("${spring.application.serviceId:0}")

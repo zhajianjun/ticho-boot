@@ -8,7 +8,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import top.ticho.boot.view.core.TiSecurityUser;
-import top.ticho.boot.web.util.SpringContext;
+import top.ticho.boot.web.util.TiSpringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ public class BaseSecurityProperty {
         if (CollUtil.isEmpty(users)) {
             return;
         }
-        PasswordEncoder passwordEncoder = SpringContext.getBean(PasswordEncoder.class);
+        PasswordEncoder passwordEncoder = TiSpringUtil.getBean(PasswordEncoder.class);
         for (TiSecurityUser userInfo : users) {
             String password = userInfo.getPassword();
             if (StrUtil.isBlank(password)) {

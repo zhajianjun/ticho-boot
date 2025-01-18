@@ -18,7 +18,7 @@ import java.util.function.Supplier;
  */
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ApiUtil {
+public class TiApiUtil {
 
     public static <T> T getApiResult(Supplier<TiResult<T>> supplier, String errorMsg) {
         return getApi(supplier, errorMsg).getData();

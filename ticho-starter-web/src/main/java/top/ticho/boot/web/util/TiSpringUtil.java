@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @Component
 @Slf4j
-public class SpringContext implements ApplicationContextAware {
+public class TiSpringUtil implements ApplicationContextAware {
 
     /**
      * 存储当前的 ApplicationContext 实例。
@@ -46,7 +46,7 @@ public class SpringContext implements ApplicationContextAware {
      */
     @Override
     public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
-        SpringContext.applicationContext.compareAndSet(null, applicationContext);
+        TiSpringUtil.applicationContext.compareAndSet(null, applicationContext);
     }
 
     /**

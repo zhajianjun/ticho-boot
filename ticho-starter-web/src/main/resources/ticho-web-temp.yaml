@@ -1,6 +1,4 @@
 ticho:
-  # 探针接口的返回信息
-  health: 健康检查！
   # 开启跨域
   cors:
     enable: true

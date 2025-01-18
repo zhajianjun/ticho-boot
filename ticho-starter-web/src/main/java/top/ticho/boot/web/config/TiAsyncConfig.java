@@ -23,7 +23,7 @@ import java.util.concurrent.Executor;
 @Configuration
 @Data
 @Slf4j
-public class BaseAsyncConfig implements AsyncConfigurer {
+public class TiAsyncConfig implements AsyncConfigurer {
 
     @Resource
     @Qualifier("asyncTaskExecutor")

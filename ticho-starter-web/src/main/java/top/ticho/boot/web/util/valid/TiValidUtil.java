@@ -32,9 +32,9 @@ import java.util.stream.Collectors;
  * @date 2022-07-10 15:56:30
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class ValidUtil {
+public class TiValidUtil {
 
-    private static final Logger log = LoggerFactory.getLogger(ValidUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(TiValidUtil.class);
 
     public static final Validator VALIDATOR_DEFAULT;
 
@@ -284,7 +284,7 @@ public class ValidUtil {
      *
      * @param obj T
      * @return T
-     * @see ValidBean
+     * @see TiValidBean
      */
     @SuppressWarnings("all")
     private static <T> T preCheck(T obj) {
@@ -296,8 +296,8 @@ public class ValidUtil {
             if (objnew.isEmpty()) {
                 throw new TiBizException(TiBizErrCode.PARAM_ERROR);
             }
-            ValidBean<?> validBean = new ValidBean<>(objnew);
-            return (T) validBean;
+            TiValidBean<?> tiValidBean = new TiValidBean<>(objnew);
+            return (T) tiValidBean;
         }
         return obj;
     }
@@ -310,7 +310,7 @@ public class ValidUtil {
      * @param obj           T
      * @param customMessage 自定义作物信息
      * @return T
-     * @see ValidBean
+     * @see TiValidBean
      */
     @SuppressWarnings("all")
     private static <T> T preCheck(T obj, String customMessage) {
@@ -322,8 +322,8 @@ public class ValidUtil {
             if (objnew.isEmpty()) {
                 throw new TiBizException(TiBizErrCode.PARAM_ERROR, customMessage);
             }
-            ValidBean<?> validBean = new ValidBean<>(objnew);
-            return (T) validBean;
+            TiValidBean<?> tiValidBean = new TiValidBean<>(objnew);
+            return (T) tiValidBean;
         }
         return obj;
     }

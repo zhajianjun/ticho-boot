@@ -18,23 +18,23 @@ import java.io.InputStream;
  * @author zhajianjun
  * @date 2022-07-12 0:28
  */
-public class BaseMultPartFile implements MultipartFile {
+public class TiMultipartFile implements MultipartFile {
     private final String name;
     private final String originalFilename;
     @Nullable
     private final String contentType;
     private final byte[] content;
 
-    public BaseMultPartFile(String name, @Nullable byte[] content) {
+    public TiMultipartFile(String name, @Nullable byte[] content) {
         this(name, "", null, content);
     }
 
-    public BaseMultPartFile(String name, InputStream contentStream) throws IOException {
+    public TiMultipartFile(String name, InputStream contentStream) throws IOException {
         this(name, "", null, FileCopyUtils.copyToByteArray(contentStream));
     }
 
-    public BaseMultPartFile(String name, @Nullable String originalFilename, @Nullable String contentType,
-                            @Nullable byte[] content) {
+    public TiMultipartFile(String name, @Nullable String originalFilename, @Nullable String contentType,
+                           @Nullable byte[] content) {
         Assert.hasLength(name, "Name must not be empty");
         this.name = name;
         this.originalFilename = originalFilename != null ? originalFilename : "";
@@ -42,12 +42,12 @@ public class BaseMultPartFile implements MultipartFile {
         this.content = content != null ? content : new byte[0];
     }
 
-    public BaseMultPartFile(String name, @Nullable String originalFilename, @Nullable String contentType,
-                            InputStream contentStream) throws IOException {
+    public TiMultipartFile(String name, @Nullable String originalFilename, @Nullable String contentType,
+                           InputStream contentStream) throws IOException {
         this(name, originalFilename, contentType, FileCopyUtils.copyToByteArray(contentStream));
     }
 
-    public BaseMultPartFile(@NonNull MultipartFile multipartFile) throws IOException {
+    public TiMultipartFile(@NonNull MultipartFile multipartFile) throws IOException {
         this(
             multipartFile.getName(), multipartFile.getOriginalFilename(), multipartFile.getContentType(),
             multipartFile.getBytes()

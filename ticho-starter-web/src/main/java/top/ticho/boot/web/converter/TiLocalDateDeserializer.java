@@ -28,54 +28,54 @@ import java.time.format.DateTimeFormatter;
  * @see LocalDateDeserializer
  */
 @SuppressWarnings("all")
-public class CustomLocalDateDeserializer extends JSR310DateTimeDeserializerBase<LocalDate> {
+public class TiLocalDateDeserializer extends JSR310DateTimeDeserializerBase<LocalDate> {
     private static final long serialVersionUID = 1L;
 
     private static final DateTimeFormatter DEFAULT_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
 
-    public static final CustomLocalDateDeserializer INSTANCE = new CustomLocalDateDeserializer();
+    public static final TiLocalDateDeserializer INSTANCE = new TiLocalDateDeserializer();
 
-    protected CustomLocalDateDeserializer() {
+    protected TiLocalDateDeserializer() {
         this(DEFAULT_FORMATTER);
     }
 
-    public CustomLocalDateDeserializer(DateTimeFormatter dtf) {
+    public TiLocalDateDeserializer(DateTimeFormatter dtf) {
         super(LocalDate.class, dtf);
     }
 
     /**
      * Since 2.10
      */
-    public CustomLocalDateDeserializer(CustomLocalDateDeserializer base, DateTimeFormatter dtf) {
+    public TiLocalDateDeserializer(TiLocalDateDeserializer base, DateTimeFormatter dtf) {
         super(base, dtf);
     }
 
     /**
      * Since 2.10
      */
-    protected CustomLocalDateDeserializer(CustomLocalDateDeserializer base, Boolean leniency) {
+    protected TiLocalDateDeserializer(TiLocalDateDeserializer base, Boolean leniency) {
         super(base, leniency);
     }
 
     /**
      * Since 2.11
      */
-    protected CustomLocalDateDeserializer(LocalDateDeserializer base, JsonFormat.Shape shape) {
+    protected TiLocalDateDeserializer(LocalDateDeserializer base, JsonFormat.Shape shape) {
         super(base, shape);
     }
 
     @Override
-    protected CustomLocalDateDeserializer withDateFormat(DateTimeFormatter dtf) {
-        return new CustomLocalDateDeserializer(this, dtf);
+    protected TiLocalDateDeserializer withDateFormat(DateTimeFormatter dtf) {
+        return new TiLocalDateDeserializer(this, dtf);
     }
 
     @Override
-    protected CustomLocalDateDeserializer withLeniency(Boolean leniency) {
-        return new CustomLocalDateDeserializer(this, leniency);
+    protected TiLocalDateDeserializer withLeniency(Boolean leniency) {
+        return new TiLocalDateDeserializer(this, leniency);
     }
 
     @Override
-    protected CustomLocalDateDeserializer withShape(JsonFormat.Shape shape) {
+    protected TiLocalDateDeserializer withShape(JsonFormat.Shape shape) {
         return this;
     }
 

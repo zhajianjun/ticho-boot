@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * @date 2023-01-30 13:36
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class TreeUtil {
+public class TiTreeUtil {
 
     /**
      * 获取该id以及子节点id的集合
@@ -33,7 +33,7 @@ public class TreeUtil {
      * @param parentId 父id
      * @return {@link Set}<{@link Serializable}> 树节点
      */
-    public static <T extends TreeNode<T>> Set<Serializable> getAllNodeIds(List<T> data, Serializable parentId) {
+    public static <T extends TiTreeNode<T>> Set<Serializable> getAllNodeIds(List<T> data, Serializable parentId) {
         Set<Serializable> ids = new HashSet<>();
         ids.add(parentId);
         if (Objects.isNull(data) || Objects.isNull(parentId)) {
@@ -59,7 +59,7 @@ public class TreeUtil {
      * @param parentId 父id
      * @return {@link Map}<{@link Boolean}, {@link List}<{@link T}>>
      */
-    private static <T extends TreeNode<T>> Map<Boolean, List<T>> group(List<T> data, Serializable parentId) {
+    private static <T extends TiTreeNode<T>> Map<Boolean, List<T>> group(List<T> data, Serializable parentId) {
         return data
             .stream()
             .collect(Collectors.groupingBy(x -> Objects.equals(x.getParentId(), parentId)));
@@ -74,7 +74,7 @@ public class TreeUtil {
      * @param consumer      父节点收集所有子节点后的处理
      * @param afterConsumer 父节点收集所有子节点后的处理
      */
-    public static <T extends TreeNode<T>> void tree(List<T> datas, T root, BiPredicate<T, T> predicate, BiConsumer<T, T> consumer, Consumer<T> afterConsumer) {
+    public static <T extends TiTreeNode<T>> void tree(List<T> datas, T root, BiPredicate<T, T> predicate, BiConsumer<T, T> consumer, Consumer<T> afterConsumer) {
         Objects.requireNonNull(datas);
         Objects.requireNonNull(root);
         Objects.requireNonNull(root.getId());
@@ -102,7 +102,7 @@ public class TreeUtil {
      * @param datas 数据
      * @param root  根节点数据
      */
-    public static <T extends TreeNode<T>> void tree(List<T> datas, T root) {
+    public static <T extends TiTreeNode<T>> void tree(List<T> datas, T root) {
         tree(datas, root, (x, y) -> true, (x, y) -> {}, (x) -> {});
     }
 

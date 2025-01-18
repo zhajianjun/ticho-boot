@@ -15,12 +15,12 @@ import java.util.ListIterator;
  * @author zhajianjun
  * @date 2022-07-10 15:56:30
  */
-public class ValidBean<E> implements List<E> {
+public class TiValidBean<E> implements List<E> {
 
     @Valid
     private final List<E> list;
 
-    public ValidBean(@Valid Collection<E> list) {
+    public TiValidBean(@Valid Collection<E> list) {
         this.list = new LinkedList<>(list);
     }
 

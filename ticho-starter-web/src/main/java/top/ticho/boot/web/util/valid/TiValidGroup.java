@@ -9,7 +9,7 @@ import javax.validation.groups.Default;
  * @author zhajianjun
  * @date 2022-07-10 15:56:30
  */
-public class ValidGroup {
+public class TiValidGroup {
 
     public interface Add {}
 

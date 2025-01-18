@@ -32,7 +32,7 @@ import top.ticho.boot.view.core.TiResult;
 import top.ticho.boot.view.enums.TiHttpErrCode;
 import top.ticho.boot.view.exception.TiBizException;
 import top.ticho.boot.view.exception.TiSysException;
-import top.ticho.boot.web.annotation.View;
+import top.ticho.boot.web.annotation.TiView;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
@@ -49,7 +49,7 @@ import java.util.Map;
 @Slf4j
 @RestControllerAdvice
 @Order(Ordered.LOWEST_PRECEDENCE - 10)
-public class BaseResponseHandle implements ResponseBodyAdvice<Object> {
+public class TiResponseHandle implements ResponseBodyAdvice<Object> {
     public static Map<Class<? extends Throwable>, TiHttpErrCode> errCodeMap = null;
 
 
@@ -73,7 +73,7 @@ public class BaseResponseHandle implements ResponseBodyAdvice<Object> {
         errCodeMap.put(HttpMediaTypeNotAcceptableException.class, TiHttpErrCode.NOT_ACCEPTABLE);
 
         errCodeMap.put(AsyncRequestTimeoutException.class, TiHttpErrCode.SERVICE_UNAVAILABLE);
-        BaseResponseHandle.errCodeMap = Collections.unmodifiableMap(errCodeMap);
+        TiResponseHandle.errCodeMap = Collections.unmodifiableMap(errCodeMap);
     }
 
     /**
@@ -112,15 +112,15 @@ public class BaseResponseHandle implements ResponseBodyAdvice<Object> {
     @Override
     public boolean supports(@NonNull MethodParameter methodParameter, @NonNull Class<? extends HttpMessageConverter<?>> aClass) {
         Class<?> declaringClass = methodParameter.getDeclaringClass();
-        View viewOfClass = declaringClass.getDeclaredAnnotation(View.class);
-        View viewOfMethod = methodParameter.getMethodAnnotation(View.class);
+        TiView tiViewOfClass = declaringClass.getDeclaredAnnotation(TiView.class);
+        TiView tiViewOfMethod = methodParameter.getMethodAnnotation(TiView.class);
         // 类上是否加了注解，且ignore = false
         // 仅方法上有注解，或者该注解 ignore=false
-        if (viewOfClass != null && !viewOfClass.ignore()) {
+        if (tiViewOfClass != null && !tiViewOfClass.ignore()) {
             // 方法上没有注解，或者该注解 ignore=false
-            return viewOfMethod == null || !viewOfMethod.ignore();
+            return tiViewOfMethod == null || !tiViewOfMethod.ignore();
         }
-        return viewOfMethod != null && !viewOfMethod.ignore();
+        return tiViewOfMethod != null && !tiViewOfMethod.ignore();
     }
 
     @Override

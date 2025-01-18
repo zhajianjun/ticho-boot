@@ -12,7 +12,7 @@ import java.util.List;
  * @date 2023-01-30 13:36
  */
 @Data
-public class TreeNode<T> {
+public class TiTreeNode<T> {
 
     /** 编号 */
     private Serializable id;

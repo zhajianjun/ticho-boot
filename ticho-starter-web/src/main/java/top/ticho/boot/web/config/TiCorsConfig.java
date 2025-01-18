@@ -17,7 +17,7 @@ import org.springframework.web.filter.CorsFilter;
  */
 @Configuration
 @ConditionalOnProperty(value = "ticho.cors.enable", havingValue = "true")
-public class BaseCorsConfig {
+public class TiCorsConfig {
 
     private CorsConfiguration corsConfiguration() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();

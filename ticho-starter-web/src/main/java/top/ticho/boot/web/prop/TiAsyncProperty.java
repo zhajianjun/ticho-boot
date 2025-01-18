@@ -7,7 +7,7 @@ import lombok.Data;
  * @date 2023-01-12 11:08
  */
 @Data
-public class BaseAsyncProperty {
+public class TiAsyncProperty {
 
     /** 开启异步线程池 */
     private boolean enableAsync = true;

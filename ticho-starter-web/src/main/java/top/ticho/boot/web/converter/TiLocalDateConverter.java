@@ -19,7 +19,7 @@ import java.time.format.DateTimeFormatter;
  * @date 2022-07-10 15:56:30
  */
 @Component
-public class LocalDateConverter implements Converter<String, LocalDate> {
+public class TiLocalDateConverter implements Converter<String, LocalDate> {
     @Override
     public LocalDate convert(@NonNull String source) {
         if (CharSequenceUtil.isBlank(source)) {

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Component;
-import top.ticho.boot.web.util.CloudIdUtil;
+import top.ticho.boot.web.util.TiIdUtil;
 
 import java.io.Serializable;
 
@@ -22,7 +22,7 @@ public class TiIdGenerator implements IdentifierGenerator {
 
     @Override
     public Number nextId(Object entity) {
-        long id = CloudIdUtil.getId();
+        long id = TiIdUtil.getId();
         printLog(entity, id);
         return id;
     }
@@ -35,7 +35,7 @@ public class TiIdGenerator implements IdentifierGenerator {
      */
     @Override
     public String nextUUID(Object entity) {
-        String uuid = CloudIdUtil.getUuid();
+        String uuid = TiIdUtil.getUuid();
         printLog(entity, uuid);
         return uuid;
     }

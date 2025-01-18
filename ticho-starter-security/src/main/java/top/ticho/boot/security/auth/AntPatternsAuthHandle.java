@@ -6,7 +6,7 @@ import top.ticho.boot.security.annotation.IgnoreJwtCheck;
 import top.ticho.boot.security.annotation.IgnoreType;
 import top.ticho.boot.security.constant.BaseOAuth2Const;
 import top.ticho.boot.security.prop.BaseSecurityProperty;
-import top.ticho.boot.web.util.SpringContext;
+import top.ticho.boot.web.util.TiSpringUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -43,7 +43,7 @@ public class AntPatternsAuthHandle {
      * @return boolean
      */
     private boolean ignoreHandleMethodJwtCheck(HttpServletRequest request) {
-        HandlerMethod handlerMethod = SpringContext.getHandlerMethod(request);
+        HandlerMethod handlerMethod = TiSpringUtil.getHandlerMethod(request);
         if (handlerMethod == null) {
             return false;
         }

@@ -21,7 +21,7 @@ import java.util.Properties;
  * @link <a href="https://blog.csdn.net/zxl8899/article/details/106382719/">...</a>
  */
 @AllArgsConstructor
-public class YamlPropertySourceFactory implements PropertySourceFactory {
+public class TiYamlPropertySourceFactory implements PropertySourceFactory {
 
     @Override
     public PropertySource<?> createPropertySource(String name, @NonNull EncodedResource resource) throws IOException {
