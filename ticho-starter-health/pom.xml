@@ -5,11 +5,10 @@
     <parent>
         <artifactId>ticho-boot</artifactId>
         <groupId>top.ticho.boot</groupId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ticho-starter-health</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
 
     <properties>
         <!-- 项目版本信息 -->
