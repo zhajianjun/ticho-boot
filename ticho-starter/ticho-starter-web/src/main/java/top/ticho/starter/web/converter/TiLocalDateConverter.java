@@ -1,4 +1,4 @@
-package top.ticho.boot.web.converter;
+package top.ticho.starter.web.converter;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import org.springframework.core.convert.converter.Converter;

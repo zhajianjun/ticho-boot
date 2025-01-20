@@ -1,4 +1,4 @@
-package top.ticho.boot.cache.component;
+package top.ticho.starter.cache.component;
 
 import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;

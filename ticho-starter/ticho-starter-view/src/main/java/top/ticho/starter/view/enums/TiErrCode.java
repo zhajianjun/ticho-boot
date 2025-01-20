@@ -1,4 +1,4 @@
-package top.ticho.boot.view.enums;
+package top.ticho.starter.view.enums;
 
 /**
  * 错误码接口

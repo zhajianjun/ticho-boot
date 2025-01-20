@@ -1,8 +1,8 @@
-package top.ticho.boot.es.component;
+package top.ticho.starter.es.component;
 
-import top.ticho.boot.es.query.EsQuery;
-import top.ticho.boot.view.core.TiEntity;
-import top.ticho.boot.view.core.TiEsPageResult;
+import top.ticho.starter.es.query.EsQuery;
+import top.ticho.starter.view.core.TiEntity;
+import top.ticho.starter.view.core.TiEsPageResult;
 
 import java.util.Collection;
 import java.util.List;

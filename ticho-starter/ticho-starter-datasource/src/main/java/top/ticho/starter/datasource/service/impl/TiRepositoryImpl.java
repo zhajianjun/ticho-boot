@@ -1,4 +1,4 @@
-package top.ticho.boot.datasource.service.impl;
+package top.ticho.starter.datasource.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
@@ -6,9 +6,9 @@ import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
-import top.ticho.boot.datasource.mapper.TiMapper;
-import top.ticho.boot.datasource.prop.TiDataSourceProperty;
-import top.ticho.boot.datasource.service.TiRepository;
+import top.ticho.starter.datasource.mapper.TiMapper;
+import top.ticho.starter.datasource.prop.TiDataSourceProperty;
+import top.ticho.starter.datasource.service.TiRepository;
 
 import javax.annotation.Resource;
 import java.io.Serializable;

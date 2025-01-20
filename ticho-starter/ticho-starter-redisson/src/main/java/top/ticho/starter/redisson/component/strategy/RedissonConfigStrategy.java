@@ -1,7 +1,7 @@
-package top.ticho.boot.redisson.component.strategy;
+package top.ticho.starter.redisson.component.strategy;
 
 import org.redisson.config.Config;
-import top.ticho.boot.redisson.prop.BaseRedissonProperty;
+import top.ticho.starter.redisson.prop.BaseRedissonProperty;
 
 /**
  * Redisson配置构建接口

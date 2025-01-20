@@ -1,4 +1,4 @@
-package top.ticho.boot.view.log;
+package top.ticho.starter.view.log;
 
 import cn.hutool.http.useragent.UserAgent;
 import lombok.AllArgsConstructor;

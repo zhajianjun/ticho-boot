@@ -1,4 +1,4 @@
-package top.ticho.boot.cache.prop;
+package top.ticho.starter.cache.prop;
 
 import lombok.Data;
 

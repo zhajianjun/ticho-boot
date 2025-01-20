@@ -1,4 +1,4 @@
-package top.ticho.boot.web.util.valid;
+package top.ticho.starter.web.util.valid;
 
 import org.springframework.lang.NonNull;
 

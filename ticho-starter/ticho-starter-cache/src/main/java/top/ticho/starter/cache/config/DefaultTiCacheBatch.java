@@ -1,7 +1,7 @@
-package top.ticho.boot.cache.config;
+package top.ticho.starter.cache.config;
 
 import lombok.AllArgsConstructor;
-import top.ticho.boot.cache.prop.TiCacheProperty;
+import top.ticho.starter.cache.prop.TiCacheProperty;
 
 import java.util.Collections;
 import java.util.List;

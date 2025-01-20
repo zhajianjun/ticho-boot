@@ -9,7 +9,7 @@
        <version>${revision}</version>
     </parent>
 
-    <artifactId>ticho-intranet</artifactId>
+    <artifactId>ticho-tool-intranet</artifactId>
 
     <properties>
         <!-- 项目版本信息 -->

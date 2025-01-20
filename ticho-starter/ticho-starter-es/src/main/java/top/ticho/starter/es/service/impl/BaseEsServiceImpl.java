@@ -1,11 +1,11 @@
-package top.ticho.boot.es.service.impl;
+package top.ticho.starter.es.service.impl;
 
 import cn.easyes.core.biz.EntityInfo;
 import cn.easyes.core.conditions.select.LambdaEsQueryWrapper;
 import cn.easyes.core.core.BaseEsMapper;
 import cn.hutool.core.collection.CollUtil;
 import lombok.extern.slf4j.Slf4j;
-import top.ticho.boot.es.service.BaseEsService;
+import top.ticho.starter.es.service.BaseEsService;
 
 import javax.annotation.Resource;
 import java.io.Serializable;

@@ -1,4 +1,4 @@
-package top.ticho.boot.web.util;
+package top.ticho.starter.web.util;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

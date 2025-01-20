@@ -1,4 +1,4 @@
-package top.ticho.boot.web.annotation;
+package top.ticho.starter.web.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,4 +1,4 @@
-package top.ticho.boot.mail.component;
+package top.ticho.starter.mail.component;
 
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;

@@ -1,4 +1,4 @@
-package top.ticho.boot.datasource.prop;
+package top.ticho.starter.datasource.prop;
 
 import lombok.Data;
 

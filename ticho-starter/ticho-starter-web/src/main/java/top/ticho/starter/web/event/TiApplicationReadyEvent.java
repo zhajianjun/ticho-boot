@@ -1,4 +1,4 @@
-package top.ticho.boot.web.event;
+package top.ticho.starter.web.event;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;

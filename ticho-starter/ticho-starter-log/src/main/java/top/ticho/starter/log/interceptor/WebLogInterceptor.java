@@ -1,4 +1,4 @@
-package top.ticho.boot.log.interceptor;
+package top.ticho.starter.log.interceptor;
 
 import cn.hutool.core.date.SystemClock;
 import cn.hutool.core.map.MapUtil;
@@ -20,12 +20,12 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerInterceptor;
-import top.ticho.boot.log.annotation.TiLog;
-import top.ticho.boot.log.event.WebLogEvent;
-import top.ticho.boot.log.wrapper.RequestWrapper;
-import top.ticho.boot.log.wrapper.ResponseWrapper;
-import top.ticho.boot.view.log.TiHttpLog;
-import top.ticho.boot.view.log.TiLogProperty;
+import top.ticho.starter.log.annotation.TiLog;
+import top.ticho.starter.log.event.WebLogEvent;
+import top.ticho.starter.log.wrapper.RequestWrapper;
+import top.ticho.starter.log.wrapper.ResponseWrapper;
+import top.ticho.starter.view.log.TiHttpLog;
+import top.ticho.starter.view.log.TiLogProperty;
 import top.ticho.tool.json.util.TiJsonUtil;
 import top.ticho.trace.spring.util.IpUtil;
 

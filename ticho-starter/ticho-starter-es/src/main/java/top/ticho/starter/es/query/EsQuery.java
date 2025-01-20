@@ -1,4 +1,4 @@
-package top.ticho.boot.es.query;
+package top.ticho.starter.es.query;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

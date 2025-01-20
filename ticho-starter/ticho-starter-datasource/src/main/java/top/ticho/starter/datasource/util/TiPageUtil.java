@@ -1,9 +1,9 @@
-package top.ticho.boot.datasource.util;
+package top.ticho.starter.datasource.util;
 
 import com.github.pagehelper.Page;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import top.ticho.boot.view.core.TiPageResult;
+import top.ticho.starter.view.core.TiPageResult;
 
 import java.math.BigDecimal;
 

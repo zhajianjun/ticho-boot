@@ -1,4 +1,4 @@
-package top.ticho.tool.trace.core.util;
+package top.ticho.trace.core.util;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;

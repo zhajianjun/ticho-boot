@@ -1,4 +1,4 @@
-package top.ticho.tool.trace.feign;
+package top.ticho.trace.feign;
 
 import cn.hutool.core.util.StrUtil;
 import feign.RequestInterceptor;
@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import top.ticho.trace.common.constant.LogConst;
-import top.ticho.tool.trace.core.util.TraceUtil;
+import top.ticho.trace.core.util.TraceUtil;
 
 /**
  * 链路feign拦截器

@@ -1,11 +1,11 @@
-package top.ticho.boot.gateway.filter;
+package top.ticho.starter.gateway.filter;
 
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
-import top.ticho.boot.gateway.constant.CommonConst;
+import top.ticho.starter.gateway.constant.CommonConst;
 
 /**
  * 权限请求头处理

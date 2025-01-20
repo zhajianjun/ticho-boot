@@ -1,4 +1,4 @@
-package top.ticho.boot.datasource.injector;
+package top.ticho.starter.datasource.injector;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.core.enums.SqlMethod;

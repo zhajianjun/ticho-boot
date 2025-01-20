@@ -1,4 +1,4 @@
-package top.ticho.boot.web.config;
+package top.ticho.starter.web.config;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;

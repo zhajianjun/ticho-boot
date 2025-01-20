@@ -1,4 +1,4 @@
-package top.ticho.boot.redisson.util;
+package top.ticho.starter.redisson.util;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -6,9 +6,9 @@ import org.redisson.Redisson;
 import org.redisson.api.RLock;
 import org.slf4j.MDC;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import top.ticho.boot.redisson.thread.RedisDelayRunnable;
-import top.ticho.boot.view.enums.TiBizErrCode;
-import top.ticho.boot.view.exception.TiBizException;
+import top.ticho.starter.redisson.thread.RedisDelayRunnable;
+import top.ticho.starter.view.enums.TiBizErrCode;
+import top.ticho.starter.view.exception.TiBizException;
 
 import java.util.Map;
 import java.util.concurrent.Executor;

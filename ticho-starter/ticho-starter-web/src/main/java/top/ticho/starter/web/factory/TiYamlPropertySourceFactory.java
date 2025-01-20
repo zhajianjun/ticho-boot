@@ -1,4 +1,4 @@
-package top.ticho.boot.web.factory;
+package top.ticho.starter.web.factory;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;

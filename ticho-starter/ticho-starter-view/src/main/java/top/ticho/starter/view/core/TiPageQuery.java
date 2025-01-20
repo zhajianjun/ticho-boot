@@ -1,4 +1,4 @@
-package top.ticho.boot.view.core;
+package top.ticho.starter.view.core;
 
 import lombok.Data;
 

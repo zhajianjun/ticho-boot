@@ -1,15 +1,15 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  top.ticho.boot.web.config.TiWebMvcConfig,\
-  top.ticho.boot.web.config.TiCorsConfig,\
-  top.ticho.boot.web.config.TiActuatorConifg,\
-  top.ticho.boot.web.util.TiSpringUtil,\
-  top.ticho.boot.web.config.TiJacksonCustomizerConfig,\
-  top.ticho.boot.web.handle.TiResponseHandle,\
-  top.ticho.boot.web.converter.TiDateConverter,\
-  top.ticho.boot.web.converter.TiLocalDateConverter,\
-  top.ticho.boot.web.converter.TiLocalDateTimeConverter,\
-  top.ticho.boot.web.event.TiApplicationReadyEvent,\
-  top.ticho.boot.web.util.TiIdUtil,\
-  top.ticho.boot.web.config.TiWebBeanConfig
+  top.ticho.starter.web.config.TiWebMvcConfig,\
+  top.ticho.starter.web.config.TiCorsConfig,\
+  top.ticho.starter.web.config.TiActuatorConifg,\
+  top.ticho.starter.web.util.TiSpringUtil,\
+  top.ticho.starter.web.config.TiJacksonCustomizerConfig,\
+  top.ticho.starter.web.handle.TiResponseHandle,\
+  top.ticho.starter.web.converter.TiDateConverter,\
+  top.ticho.starter.web.converter.TiLocalDateConverter,\
+  top.ticho.starter.web.converter.TiLocalDateTimeConverter,\
+  top.ticho.starter.web.event.TiApplicationReadyEvent,\
+  top.ticho.starter.web.util.TiIdUtil,\
+  top.ticho.starter.web.config.TiWebBeanConfig
 
 

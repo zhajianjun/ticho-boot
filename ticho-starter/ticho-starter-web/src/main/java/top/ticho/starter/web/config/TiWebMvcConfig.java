@@ -1,4 +1,4 @@
-package top.ticho.boot.web.config;
+package top.ticho.starter.web.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -9,8 +9,8 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import top.ticho.boot.web.factory.TiYamlPropertySourceFactory;
-import top.ticho.boot.web.handle.TiResponseHandle;
+import top.ticho.starter.web.factory.TiYamlPropertySourceFactory;
+import top.ticho.starter.web.handle.TiResponseHandle;
 
 import java.util.List;
 

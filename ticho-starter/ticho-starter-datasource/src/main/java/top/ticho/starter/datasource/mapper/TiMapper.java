@@ -1,4 +1,4 @@
-package top.ticho.boot.datasource.mapper;
+package top.ticho.starter.datasource.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;

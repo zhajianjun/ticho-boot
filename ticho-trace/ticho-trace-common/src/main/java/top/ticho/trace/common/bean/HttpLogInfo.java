@@ -1,4 +1,4 @@
-package top.ticho.tool.trace.common.bean;
+package top.ticho.trace.common.bean;
 
 import cn.hutool.http.useragent.UserAgent;
 import lombok.AllArgsConstructor;

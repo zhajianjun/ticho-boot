@@ -1,4 +1,4 @@
-package top.ticho.boot.rabbitmq.event;
+package top.ticho.starter.rabbitmq.event;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

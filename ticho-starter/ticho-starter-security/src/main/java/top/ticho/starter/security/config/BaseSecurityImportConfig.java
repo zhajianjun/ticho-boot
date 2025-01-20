@@ -28,7 +28,7 @@ import top.ticho.starter.security.handle.jwt.JwtSigner;
 import top.ticho.starter.security.prop.BaseSecurityProperty;
 import top.ticho.starter.security.view.BaseAccessDeniedHandler;
 import top.ticho.starter.security.view.BaseAuthenticationEntryPoint;
-import top.ticho.boot.view.task.TiTaskDecortor;
+import top.ticho.starter.view.task.TiTaskDecortor;
 
 /**
  * springsecurity 相关bean配置

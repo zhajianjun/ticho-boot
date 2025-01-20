@@ -1,4 +1,4 @@
-package top.ticho.boot.swagger.config;
+package top.ticho.starter.swagger.config;
 
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;

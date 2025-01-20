@@ -6,7 +6,7 @@ import top.ticho.starter.security.annotation.IgnoreJwtCheck;
 import top.ticho.starter.security.annotation.IgnoreType;
 import top.ticho.starter.security.constant.BaseOAuth2Const;
 import top.ticho.starter.security.prop.BaseSecurityProperty;
-import top.ticho.boot.web.util.TiSpringUtil;
+import top.ticho.starter.web.util.TiSpringUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;

@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-    top.ticho.boot.mail.config.TiEmailConfig
+    top.ticho.starter.mail.config.TiEmailConfig

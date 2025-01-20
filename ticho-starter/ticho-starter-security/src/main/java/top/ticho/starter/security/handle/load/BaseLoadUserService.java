@@ -9,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import top.ticho.starter.security.constant.BaseSecurityConst;
 import top.ticho.starter.security.prop.BaseSecurityProperty;
-import top.ticho.boot.view.core.TiSecurityUser;
+import top.ticho.starter.view.core.TiSecurityUser;
 import top.ticho.tool.json.util.TiJsonUtil;
 
 import javax.annotation.Resource;

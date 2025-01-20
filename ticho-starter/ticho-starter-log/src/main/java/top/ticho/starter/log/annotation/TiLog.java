@@ -1,4 +1,4 @@
-package top.ticho.boot.log.annotation;
+package top.ticho.starter.log.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

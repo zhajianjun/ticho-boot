@@ -1,4 +1,4 @@
-package top.ticho.boot.swagger.config;
+package top.ticho.starter.swagger.config;
 
 import com.github.xiaoymin.knife4j.spring.configuration.Knife4jAutoConfiguration;
 import io.swagger.annotations.Api;

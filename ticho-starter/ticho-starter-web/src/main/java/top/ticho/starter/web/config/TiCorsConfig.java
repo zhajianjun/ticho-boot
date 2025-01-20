@@ -1,4 +1,4 @@
-package top.ticho.boot.web.config;
+package top.ticho.starter.web.config;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;

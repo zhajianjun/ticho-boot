@@ -1,7 +1,7 @@
-package top.ticho.boot.log.filter;
+package top.ticho.starter.log.filter;
 
-import top.ticho.boot.log.wrapper.RequestWrapper;
-import top.ticho.boot.log.wrapper.ResponseWrapper;
+import top.ticho.starter.log.wrapper.RequestWrapper;
+import top.ticho.starter.log.wrapper.ResponseWrapper;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

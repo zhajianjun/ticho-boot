@@ -1,4 +1,4 @@
-package top.ticho.boot.redisson.enums;
+package top.ticho.starter.redisson.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

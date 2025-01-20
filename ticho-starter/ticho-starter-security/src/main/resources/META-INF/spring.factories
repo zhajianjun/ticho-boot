@@ -1,4 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  top.ticho.boot.security.handle.BaseSecurityControllerAdvice,\
-  top.ticho.boot.security.config.BaseSecurityImportConfig,\
-  top.ticho.boot.security.config.BaseWebSecurityConfig
+  top.ticho.starter.security.handle.BaseSecurityControllerAdvice,\
+  top.ticho.starter.security.config.BaseSecurityImportConfig,\
+  top.ticho.starter.security.config.BaseWebSecurityConfig

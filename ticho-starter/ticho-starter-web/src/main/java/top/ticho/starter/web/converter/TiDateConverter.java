@@ -1,4 +1,4 @@
-package top.ticho.boot.web.converter;
+package top.ticho.starter.web.converter;
 
 import cn.hutool.core.text.CharSequenceUtil;
 import lombok.extern.slf4j.Slf4j;

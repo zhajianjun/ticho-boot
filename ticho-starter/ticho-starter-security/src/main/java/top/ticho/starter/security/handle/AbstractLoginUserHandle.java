@@ -12,7 +12,7 @@ import top.ticho.starter.security.dto.Oauth2AccessToken;
 import top.ticho.starter.security.handle.jwt.JwtEncode;
 import top.ticho.starter.security.handle.jwt.JwtExtra;
 import top.ticho.starter.security.handle.jwt.JwtSigner;
-import top.ticho.boot.view.core.TiSecurityUser;
+import top.ticho.starter.view.core.TiSecurityUser;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;

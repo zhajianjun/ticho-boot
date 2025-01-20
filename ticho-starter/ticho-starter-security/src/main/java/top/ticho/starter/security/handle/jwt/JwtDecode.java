@@ -6,9 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.jwt.crypto.sign.SignatureVerifier;
 import top.ticho.starter.security.constant.BaseSecurityConst;
-import top.ticho.boot.view.enums.TiBizErrCode;
-import top.ticho.boot.view.exception.TiBizException;
-import top.ticho.boot.view.util.TiAssert;
+import top.ticho.starter.view.enums.TiBizErrCode;
+import top.ticho.starter.view.exception.TiBizException;
+import top.ticho.starter.view.util.TiAssert;
 import top.ticho.tool.json.util.TiJsonUtil;
 
 import java.math.BigDecimal;

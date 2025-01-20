@@ -1,4 +1,4 @@
-package top.ticho.boot.redisson.aop;
+package top.ticho.starter.redisson.aop;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import top.ticho.boot.redisson.annotation.RedisLock;
-import top.ticho.boot.redisson.util.RedissonUtil;
+import top.ticho.starter.redisson.annotation.RedisLock;
+import top.ticho.starter.redisson.util.RedissonUtil;
 
 
 /**

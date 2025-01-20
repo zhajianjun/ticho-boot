@@ -1,4 +1,4 @@
-package top.ticho.boot.redis.util;
+package top.ticho.starter.redis.util;
 
 import cn.hutool.core.util.ObjUtil;
 import org.slf4j.Logger;

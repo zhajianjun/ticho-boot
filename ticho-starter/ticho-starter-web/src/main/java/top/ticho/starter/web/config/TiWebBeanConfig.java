@@ -1,4 +1,4 @@
-package top.ticho.boot.web.config;
+package top.ticho.starter.web.config;
 
 import org.slf4j.MDC;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -8,8 +8,8 @@ import org.springframework.core.task.TaskDecorator;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
-import top.ticho.boot.view.task.TiTaskDecortor;
-import top.ticho.boot.web.prop.TiAsyncProperty;
+import top.ticho.starter.view.task.TiTaskDecortor;
+import top.ticho.starter.web.prop.TiAsyncProperty;
 
 import java.util.List;
 import java.util.Map;

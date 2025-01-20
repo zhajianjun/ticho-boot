@@ -1,4 +1,4 @@
-package top.ticho.boot.redisson.constant;
+package top.ticho.starter.redisson.constant;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package top.ticho.boot.http.interceptor;
+package top.ticho.starter.http.interceptor;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
@@ -18,9 +18,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.lang.NonNull;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import top.ticho.boot.http.event.HttpLogEvent;
-import top.ticho.boot.http.prop.BaseHttpProperty;
-import top.ticho.boot.view.log.TiHttpLog;
+import top.ticho.starter.http.event.HttpLogEvent;
+import top.ticho.starter.http.prop.BaseHttpProperty;
+import top.ticho.starter.view.log.TiHttpLog;
 import top.ticho.tool.json.util.TiJsonUtil;
 
 import javax.servlet.http.HttpServletRequest;

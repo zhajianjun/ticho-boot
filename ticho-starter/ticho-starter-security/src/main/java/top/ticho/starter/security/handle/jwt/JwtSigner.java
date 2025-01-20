@@ -13,8 +13,8 @@ import org.springframework.security.jwt.crypto.sign.RsaVerifier;
 import org.springframework.security.jwt.crypto.sign.SignatureVerifier;
 import org.springframework.security.jwt.crypto.sign.Signer;
 import org.springframework.security.rsa.crypto.KeyStoreKeyFactory;
-import top.ticho.boot.view.enums.TiBizErrCode;
-import top.ticho.boot.view.util.TiAssert;
+import top.ticho.starter.view.enums.TiBizErrCode;
+import top.ticho.starter.view.util.TiAssert;
 
 import java.security.KeyPair;
 import java.security.PrivateKey;

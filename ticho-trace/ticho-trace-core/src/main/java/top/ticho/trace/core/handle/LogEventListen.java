@@ -1,4 +1,4 @@
-package top.ticho.tool.trace.core.handle;
+package top.ticho.trace.core.handle;
 
 import cn.hutool.core.date.SystemClock;
 import com.lmax.disruptor.EventHandler;

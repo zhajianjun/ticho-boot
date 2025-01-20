@@ -1,4 +1,4 @@
-package top.ticho.tool.trace.spring.util;
+package top.ticho.trace.spring.util;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.useragent.UserAgent;

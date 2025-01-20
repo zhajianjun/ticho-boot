@@ -1,12 +1,12 @@
-package top.ticho.boot.web.util;
+package top.ticho.starter.web.util;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import top.ticho.boot.view.core.TiResult;
-import top.ticho.boot.view.enums.TiBizErrCode;
-import top.ticho.boot.view.exception.TiBizException;
-import top.ticho.boot.view.exception.TiSysException;
+import top.ticho.starter.view.core.TiResult;
+import top.ticho.starter.view.enums.TiBizErrCode;
+import top.ticho.starter.view.exception.TiBizException;
+import top.ticho.starter.view.exception.TiSysException;
 
 import java.util.function.Supplier;
 

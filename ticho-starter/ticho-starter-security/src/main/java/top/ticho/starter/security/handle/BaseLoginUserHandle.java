@@ -10,11 +10,11 @@ import top.ticho.starter.security.dto.Oauth2AccessToken;
 import top.ticho.starter.security.handle.jwt.JwtDecode;
 import top.ticho.starter.security.handle.jwt.JwtSigner;
 import top.ticho.starter.security.handle.load.LoadUserService;
-import top.ticho.boot.view.core.TiSecurityUser;
-import top.ticho.boot.view.enums.TiBizErrCode;
-import top.ticho.boot.view.enums.TiHttpErrCode;
-import top.ticho.boot.view.exception.TiBizException;
-import top.ticho.boot.view.util.TiAssert;
+import top.ticho.starter.view.core.TiSecurityUser;
+import top.ticho.starter.view.enums.TiBizErrCode;
+import top.ticho.starter.view.enums.TiHttpErrCode;
+import top.ticho.starter.view.exception.TiBizException;
+import top.ticho.starter.view.util.TiAssert;
 
 import javax.annotation.Resource;
 import java.util.Map;

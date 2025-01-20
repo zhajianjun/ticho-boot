@@ -1,10 +1,10 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  top.ticho.boot.swagger.prop.BaseSwaggerSecurityProperty,\
-  top.ticho.boot.swagger.config.BaseModelPropertySortPlugin,\
-  top.ticho.boot.swagger.config.BaseModelToSwaggerMapper,\
-  top.ticho.boot.swagger.config.BaseSwaggerParameterBuilder,\
-  top.ticho.boot.swagger.config.BaseSwaggerConfig,\
-  top.ticho.boot.swagger.config.BaseSwaggerSecurityConfig
+  top.ticho.starter.swagger.prop.BaseSwaggerSecurityProperty,\
+  top.ticho.starter.swagger.config.BaseModelPropertySortPlugin,\
+  top.ticho.starter.swagger.config.BaseModelToSwaggerMapper,\
+  top.ticho.starter.swagger.config.BaseSwaggerParameterBuilder,\
+  top.ticho.starter.swagger.config.BaseSwaggerConfig,\
+  top.ticho.starter.swagger.config.BaseSwaggerSecurityConfig
 
 
 

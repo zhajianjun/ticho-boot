@@ -6,8 +6,8 @@ import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.slf4j.MDC;
-import top.ticho.tool.trace.common.constant.LogConst;
-import top.ticho.tool.trace.core.util.TraceUtil;
+import top.ticho.trace.common.constant.LogConst;
+import top.ticho.trace.core.util.TraceUtil;
 
 import java.io.IOException;
 

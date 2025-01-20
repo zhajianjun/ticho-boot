@@ -8,7 +8,7 @@
         <artifactId>ticho-tool</artifactId>
         <version>${revision}</version>
     </parent>
-    <artifactId>ticho-generator</artifactId>
+    <artifactId>ticho-tool-generator</artifactId>
 
     <dependencies>
 
@@ -40,7 +40,7 @@
 
         <dependency>
             <groupId>top.ticho.tool</groupId>
-            <artifactId>ticho-json</artifactId>
+            <artifactId>ticho-tool-json</artifactId>
         </dependency>
 
     </dependencies>

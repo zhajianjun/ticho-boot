@@ -6,9 +6,9 @@ import org.springframework.util.CollectionUtils;
 import top.ticho.starter.security.constant.BaseSecurityConst;
 import top.ticho.starter.security.dto.Oauth2AccessToken;
 import top.ticho.starter.security.prop.BaseOauthProperty;
-import top.ticho.boot.view.core.TiSecurityUser;
-import top.ticho.boot.view.enums.TiBizErrCode;
-import top.ticho.boot.view.util.TiAssert;
+import top.ticho.starter.view.core.TiSecurityUser;
+import top.ticho.starter.view.enums.TiBizErrCode;
+import top.ticho.starter.view.util.TiAssert;
 import top.ticho.tool.json.util.TiJsonUtil;
 
 import java.util.ArrayList;

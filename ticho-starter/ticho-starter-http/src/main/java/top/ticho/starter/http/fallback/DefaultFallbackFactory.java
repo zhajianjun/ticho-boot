@@ -1,4 +1,4 @@
-package top.ticho.boot.http.fallback;
+package top.ticho.starter.http.fallback;
 
 import feign.Target;
 import lombok.AllArgsConstructor;

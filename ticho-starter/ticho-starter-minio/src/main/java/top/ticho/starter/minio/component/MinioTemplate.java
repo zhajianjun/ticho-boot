@@ -1,4 +1,4 @@
-package top.ticho.boot.minio.component;
+package top.ticho.starter.minio.component;
 
 import io.minio.BucketExistsArgs;
 import io.minio.ComposeObjectArgs;
@@ -31,9 +31,9 @@ import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.multipart.MultipartFile;
-import top.ticho.boot.minio.prop.MinioProperty;
-import top.ticho.boot.view.enums.TiBizErrCode;
-import top.ticho.boot.view.exception.TiBizException;
+import top.ticho.starter.minio.prop.MinioProperty;
+import top.ticho.starter.view.enums.TiBizErrCode;
+import top.ticho.starter.view.exception.TiBizException;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;

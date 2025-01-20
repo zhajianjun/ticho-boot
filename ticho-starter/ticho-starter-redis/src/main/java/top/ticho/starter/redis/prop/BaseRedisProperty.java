@@ -1,4 +1,4 @@
-package top.ticho.boot.redis.prop;
+package top.ticho.starter.redis.prop;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

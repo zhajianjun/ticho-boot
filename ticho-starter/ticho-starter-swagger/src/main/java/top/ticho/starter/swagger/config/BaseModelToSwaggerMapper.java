@@ -1,4 +1,4 @@
-package top.ticho.boot.swagger.config;
+package top.ticho.starter.swagger.config;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Primary;

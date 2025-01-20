@@ -10,7 +10,7 @@
 
     <modules>
         <module>ticho-dependencies</module>
-        <module>ticho-starter-parent</module>
+        <module>ticho-starter</module>
         <module>ticho-tool</module>
         <module>ticho-trace</module>
     </modules>

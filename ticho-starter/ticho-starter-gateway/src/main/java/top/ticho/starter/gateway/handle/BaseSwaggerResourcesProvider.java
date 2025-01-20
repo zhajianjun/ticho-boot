@@ -1,4 +1,4 @@
-package top.ticho.boot.gateway.handle;
+package top.ticho.starter.gateway.handle;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

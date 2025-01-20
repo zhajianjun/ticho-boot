@@ -1,4 +1,4 @@
-package top.ticho.boot.cache.config;
+package top.ticho.starter.cache.config;
 
 import java.util.List;
 

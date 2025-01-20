@@ -1,10 +1,10 @@
-package top.ticho.boot.log.event;
+package top.ticho.starter.log.event;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.ApplicationContextEvent;
-import top.ticho.boot.view.log.TiHttpLog;
+import top.ticho.starter.view.log.TiHttpLog;
 
 /**
  * 服务接口调用日志事件

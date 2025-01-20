@@ -1,4 +1,4 @@
-package top.ticho.boot.redis.config;
+package top.ticho.starter.redis.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import top.ticho.boot.redis.util.RedisUtil;
+import top.ticho.starter.redis.util.RedisUtil;
 
 /**
  * redis 配置

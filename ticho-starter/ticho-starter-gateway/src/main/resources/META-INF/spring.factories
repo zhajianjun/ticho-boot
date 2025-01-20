@@ -1,8 +1,8 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  top.ticho.boot.gateway.filter.SwaggerHeaderFilter,\
-  top.ticho.boot.gateway.filter.SecurityHeaderFilter,\
-  top.ticho.boot.gateway.handle.BaseSwaggerResourcesProvider,\
+  top.ticho.starter.gateway.filter.SwaggerHeaderFilter,\
+  top.ticho.starter.gateway.filter.SecurityHeaderFilter,\
+  top.ticho.starter.gateway.handle.BaseSwaggerResourcesProvider,\
   top.ticho.boot.gateway.controller.HeathController,\
-  top.ticho.boot.gateway.controller.SwaggerController,\
-  top.ticho.boot.gateway.config.BeanConfig
+  top.ticho.starter.gateway.controller.SwaggerController,\
+  top.ticho.starter.gateway.config.BeanConfig
 

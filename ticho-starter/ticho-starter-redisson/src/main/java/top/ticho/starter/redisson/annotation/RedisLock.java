@@ -1,4 +1,4 @@
-package top.ticho.boot.redisson.annotation;
+package top.ticho.starter.redisson.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

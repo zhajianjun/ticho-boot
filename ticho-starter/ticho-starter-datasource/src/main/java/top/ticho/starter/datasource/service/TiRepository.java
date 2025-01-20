@@ -1,4 +1,4 @@
-package top.ticho.boot.datasource.service;
+package top.ticho.starter.datasource.service;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.extension.service.IService;

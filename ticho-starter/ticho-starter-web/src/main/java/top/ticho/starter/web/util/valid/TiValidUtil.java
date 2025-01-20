@@ -1,4 +1,4 @@
-package top.ticho.boot.web.util.valid;
+package top.ticho.starter.web.util.valid;
 
 import cn.hutool.core.util.ObjUtil;
 import lombok.AccessLevel;
@@ -7,8 +7,8 @@ import org.hibernate.validator.BaseHibernateValidatorConfiguration;
 import org.hibernate.validator.HibernateValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.ticho.boot.view.enums.TiBizErrCode;
-import top.ticho.boot.view.exception.TiBizException;
+import top.ticho.starter.view.enums.TiBizErrCode;
+import top.ticho.starter.view.exception.TiBizException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;

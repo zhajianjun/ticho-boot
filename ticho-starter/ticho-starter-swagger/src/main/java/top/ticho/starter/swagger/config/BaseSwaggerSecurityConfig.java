@@ -1,4 +1,4 @@
-package top.ticho.boot.swagger.config;
+package top.ticho.starter.swagger.config;
 
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ import springfox.documentation.service.TokenRequestEndpoint;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
-import top.ticho.boot.swagger.prop.BaseSwaggerSecurityProperty;
+import top.ticho.starter.swagger.prop.BaseSwaggerSecurityProperty;
 
 import java.util.ArrayList;
 import java.util.Collections;

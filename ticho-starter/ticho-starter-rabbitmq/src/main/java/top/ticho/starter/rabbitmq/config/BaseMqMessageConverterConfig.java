@@ -1,4 +1,4 @@
-package top.ticho.boot.rabbitmq.config;
+package top.ticho.starter.rabbitmq.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;

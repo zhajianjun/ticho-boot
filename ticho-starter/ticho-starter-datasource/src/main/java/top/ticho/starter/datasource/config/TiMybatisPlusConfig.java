@@ -1,4 +1,4 @@
-package top.ticho.boot.datasource.config;
+package top.ticho.starter.datasource.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
@@ -10,7 +10,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import top.ticho.boot.datasource.injector.TiSqlInjector;
+import top.ticho.starter.datasource.injector.TiSqlInjector;
 
 /**
  * mybatis plus config

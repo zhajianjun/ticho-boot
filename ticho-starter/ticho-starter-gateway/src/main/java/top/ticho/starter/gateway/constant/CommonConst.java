@@ -1,4 +1,4 @@
-package top.ticho.boot.gateway.constant;
+package top.ticho.starter.gateway.constant;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

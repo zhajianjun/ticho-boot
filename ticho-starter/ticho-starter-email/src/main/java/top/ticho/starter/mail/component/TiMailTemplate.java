@@ -1,4 +1,4 @@
-package top.ticho.boot.mail.component;
+package top.ticho.starter.mail.component;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
@@ -8,9 +8,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.multipart.MultipartFile;
-import top.ticho.boot.mail.prop.TiMailProperty;
-import top.ticho.boot.view.enums.TiBizErrCode;
-import top.ticho.boot.view.util.TiAssert;
+import top.ticho.starter.mail.prop.TiMailProperty;
+import top.ticho.starter.view.enums.TiBizErrCode;
+import top.ticho.starter.view.util.TiAssert;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;

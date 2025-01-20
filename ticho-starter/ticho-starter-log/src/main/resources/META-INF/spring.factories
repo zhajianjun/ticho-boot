@@ -1,5 +1,5 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  top.ticho.boot.log.config.BaseWebBeanConfig,\
-  top.ticho.boot.log.config.BaseLogMvcConfig
+  top.ticho.starter.log.config.BaseWebBeanConfig,\
+  top.ticho.starter.log.config.BaseLogMvcConfig
 
 

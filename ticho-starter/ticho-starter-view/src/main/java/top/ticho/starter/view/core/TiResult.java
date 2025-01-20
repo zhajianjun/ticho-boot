@@ -1,8 +1,8 @@
-package top.ticho.boot.view.core;
+package top.ticho.starter.view.core;
 
 import lombok.Data;
-import top.ticho.boot.view.enums.TiBizErrCode;
-import top.ticho.boot.view.enums.TiErrCode;
+import top.ticho.starter.view.enums.TiBizErrCode;
+import top.ticho.starter.view.enums.TiErrCode;
 
 /**
  * 统一响应消息

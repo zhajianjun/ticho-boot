@@ -8,7 +8,7 @@
        <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>ticho-json</artifactId>
+    <artifactId>ticho-tool-json</artifactId>
 
     <properties>
         <!-- 项目版本信息 -->

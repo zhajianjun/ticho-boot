@@ -2,7 +2,7 @@ package top.ticho.starter.security.filter;
 
 import cn.hutool.core.convert.Convert;
 import top.ticho.starter.security.constant.BaseSecurityConst;
-import top.ticho.boot.view.core.TiSecurityUser;
+import top.ticho.starter.view.core.TiSecurityUser;
 
 import java.util.List;
 import java.util.Map;

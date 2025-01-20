@@ -1,6 +1,6 @@
 package top.ticho.starter.security.handle.load;
 
-import top.ticho.boot.view.core.TiSecurityUser;
+import top.ticho.starter.view.core.TiSecurityUser;
 
 /**
  * 用户查询服务

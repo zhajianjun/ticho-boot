@@ -1,4 +1,4 @@
-package top.ticho.tool.trace.core.factory;
+package top.ticho.trace.core.factory;
 
 /**
  * 工厂工具类

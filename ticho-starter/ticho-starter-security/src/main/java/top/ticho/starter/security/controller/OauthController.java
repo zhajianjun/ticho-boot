@@ -11,7 +11,7 @@ import top.ticho.starter.security.constant.BaseOAuth2Const;
 import top.ticho.starter.security.dto.BaseLoginRequest;
 import top.ticho.starter.security.dto.Oauth2AccessToken;
 import top.ticho.starter.security.handle.LoginUserHandle;
-import top.ticho.boot.view.core.TiResult;
+import top.ticho.starter.view.core.TiResult;
 
 import java.security.Principal;
 

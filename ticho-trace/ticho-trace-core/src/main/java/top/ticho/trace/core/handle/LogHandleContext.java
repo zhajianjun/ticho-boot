@@ -1,4 +1,4 @@
-package top.ticho.tool.trace.core.handle;
+package top.ticho.trace.core.handle;
 
 import cn.hutool.core.thread.ThreadUtil;
 import com.lmax.disruptor.EventFactory;

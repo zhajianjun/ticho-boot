@@ -1,8 +1,8 @@
-package top.ticho.boot.view.exception;
+package top.ticho.starter.view.exception;
 
 import lombok.Getter;
-import top.ticho.boot.view.enums.TiErrCode;
-import top.ticho.boot.view.enums.TiHttpErrCode;
+import top.ticho.starter.view.enums.TiErrCode;
+import top.ticho.starter.view.enums.TiHttpErrCode;
 
 /**
  * 基础异常处理

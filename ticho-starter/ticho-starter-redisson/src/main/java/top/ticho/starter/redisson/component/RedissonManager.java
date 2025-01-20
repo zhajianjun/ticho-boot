@@ -1,4 +1,4 @@
-package top.ticho.boot.redisson.component;
+package top.ticho.starter.redisson.component;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -6,13 +6,13 @@ import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
 import org.springframework.util.Assert;
-import top.ticho.boot.redisson.component.strategy.ClusterRedissonConfigStrategyImpl;
-import top.ticho.boot.redisson.component.strategy.MasterslaveRedissonConfigStrategyImpl;
-import top.ticho.boot.redisson.component.strategy.RedissonConfigContext;
-import top.ticho.boot.redisson.component.strategy.SentinelRedissonConfigStrategyImpl;
-import top.ticho.boot.redisson.component.strategy.StandaloneRedissonConfigStrategyImpl;
-import top.ticho.boot.redisson.enums.RedissonType;
-import top.ticho.boot.redisson.prop.BaseRedissonProperty;
+import top.ticho.starter.redisson.component.strategy.ClusterRedissonConfigStrategyImpl;
+import top.ticho.starter.redisson.component.strategy.MasterslaveRedissonConfigStrategyImpl;
+import top.ticho.starter.redisson.component.strategy.RedissonConfigContext;
+import top.ticho.starter.redisson.component.strategy.SentinelRedissonConfigStrategyImpl;
+import top.ticho.starter.redisson.component.strategy.StandaloneRedissonConfigStrategyImpl;
+import top.ticho.starter.redisson.enums.RedissonType;
+import top.ticho.starter.redisson.prop.BaseRedissonProperty;
 
 /**
  * Redisson核心配置，用于提供初始化的redisson实例

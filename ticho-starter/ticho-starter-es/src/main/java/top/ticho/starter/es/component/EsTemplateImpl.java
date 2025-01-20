@@ -1,4 +1,4 @@
-package top.ticho.boot.es.component;
+package top.ticho.starter.es.component;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.IdUtil;
@@ -33,10 +33,10 @@ import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.sort.SortOrder;
-import top.ticho.boot.es.query.EsQuery;
-import top.ticho.boot.view.core.TiEntity;
-import top.ticho.boot.view.core.TiEsPageResult;
-import top.ticho.boot.view.exception.TiBizException;
+import top.ticho.starter.es.query.EsQuery;
+import top.ticho.starter.view.core.TiEntity;
+import top.ticho.starter.view.core.TiEsPageResult;
+import top.ticho.starter.view.exception.TiBizException;
 import top.ticho.tool.json.util.TiJsonUtil;
 
 import java.io.IOException;

@@ -1,13 +1,13 @@
-package top.ticho.boot.view.util;
+package top.ticho.starter.view.util;
 
 
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import top.ticho.boot.view.enums.TiBizErrCode;
-import top.ticho.boot.view.enums.TiErrCode;
-import top.ticho.boot.view.exception.TiBizException;
+import top.ticho.starter.view.enums.TiBizErrCode;
+import top.ticho.starter.view.enums.TiErrCode;
+import top.ticho.starter.view.exception.TiBizException;
 
 import java.util.Optional;
 import java.util.function.Supplier;

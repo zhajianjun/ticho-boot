@@ -1,4 +1,4 @@
-package top.ticho.boot.web.util;
+package top.ticho.starter.web.util;
 
 
 import lombok.AccessLevel;

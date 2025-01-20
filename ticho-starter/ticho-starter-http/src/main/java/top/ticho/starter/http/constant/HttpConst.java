@@ -1,4 +1,4 @@
-package top.ticho.boot.http.constant;
+package top.ticho.starter.http.constant;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

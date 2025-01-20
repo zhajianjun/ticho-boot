@@ -1,4 +1,4 @@
-package top.ticho.boot.cache.config;
+package top.ticho.starter.cache.config;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.CacheLoader;
@@ -16,8 +16,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.lang.NonNull;
-import top.ticho.boot.cache.component.TiCacheTemplate;
-import top.ticho.boot.cache.prop.TiCacheProperty;
+import top.ticho.starter.cache.component.TiCacheTemplate;
+import top.ticho.starter.cache.prop.TiCacheProperty;
 
 import java.util.Collection;
 import java.util.List;

@@ -1,4 +1,4 @@
-package top.ticho.boot.http.interceptor;
+package top.ticho.starter.http.interceptor;
 
 import cn.hutool.core.util.StrUtil;
 import feign.RequestInterceptor;
@@ -11,7 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import top.ticho.boot.http.constant.HttpConst;
+import top.ticho.starter.http.constant.HttpConst;
 
 import javax.servlet.http.HttpServletRequest;
 

@@ -1,10 +1,10 @@
-package top.ticho.boot.health;
+package top.ticho.starter.health;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.ticho.boot.view.core.TiResult;
+import top.ticho.starter.view.core.TiResult;
 
 /**
  * 健康检查

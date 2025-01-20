@@ -1,4 +1,4 @@
-package top.ticho.boot.web.config;
+package top.ticho.starter.web.config;
 
 import org.springframework.boot.actuate.autoconfigure.endpoint.web.CorsEndpointProperties;
 import org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointProperties;

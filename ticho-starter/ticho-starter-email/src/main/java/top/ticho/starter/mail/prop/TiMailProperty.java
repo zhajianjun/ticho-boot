@@ -1,4 +1,4 @@
-package top.ticho.boot.mail.prop;
+package top.ticho.starter.mail.prop;
 
 import lombok.Data;
 

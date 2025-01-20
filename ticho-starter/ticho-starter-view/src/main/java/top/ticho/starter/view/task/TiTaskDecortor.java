@@ -1,4 +1,4 @@
-package top.ticho.boot.view.task;
+package top.ticho.starter.view.task;
 
 import lombok.Data;
 

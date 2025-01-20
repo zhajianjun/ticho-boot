@@ -1,4 +1,4 @@
-package top.ticho.boot.http.config;
+package top.ticho.starter.http.config;
 
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.ConnectionPool;
@@ -13,8 +13,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
-import top.ticho.boot.http.interceptor.OkHttpLogInterceptor;
-import top.ticho.boot.http.prop.BaseHttpProperty;
+import top.ticho.starter.http.interceptor.OkHttpLogInterceptor;
+import top.ticho.starter.http.prop.BaseHttpProperty;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;

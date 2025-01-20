@@ -1,4 +1,4 @@
-package top.ticho.tool.trace.core.handle;
+package top.ticho.trace.core.handle;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.AntPathMatcher;
@@ -8,7 +8,7 @@ import top.ticho.trace.common.bean.LogInfo;
 import top.ticho.trace.common.bean.TraceInfo;
 import top.ticho.trace.common.constant.LogConst;
 import top.ticho.trace.common.prop.TraceProperty;
-import top.ticho.tool.trace.core.util.OkHttpUtil;
+import top.ticho.trace.core.util.OkHttpUtil;
 
 import java.util.List;
 import java.util.Objects;

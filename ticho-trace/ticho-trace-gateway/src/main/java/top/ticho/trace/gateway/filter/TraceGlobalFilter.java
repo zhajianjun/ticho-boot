@@ -1,4 +1,4 @@
-package top.ticho.tool.trace.gateway.filter;
+package top.ticho.trace.gateway.filter;
 
 import cn.hutool.core.date.SystemClock;
 import cn.hutool.core.util.StrUtil;
@@ -27,9 +27,9 @@ import top.ticho.trace.common.bean.HttpLogInfo;
 import top.ticho.trace.common.bean.TraceInfo;
 import top.ticho.trace.common.constant.LogConst;
 import top.ticho.trace.common.prop.TraceProperty;
-import top.ticho.tool.trace.core.handle.TracePushContext;
-import top.ticho.tool.trace.core.util.JsonUtil;
-import top.ticho.tool.trace.core.util.TraceUtil;
+import top.ticho.trace.core.handle.TracePushContext;
+import top.ticho.trace.core.util.JsonUtil;
+import top.ticho.trace.core.util.TraceUtil;
 
 import java.net.InetAddress;
 import java.net.InetSocketAddress;

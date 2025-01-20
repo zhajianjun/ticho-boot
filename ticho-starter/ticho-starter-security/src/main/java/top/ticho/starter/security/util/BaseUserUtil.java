@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import top.ticho.boot.view.core.TiSecurityUser;
+import top.ticho.starter.view.core.TiSecurityUser;
 
 import java.util.ArrayList;
 import java.util.List;

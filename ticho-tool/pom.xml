@@ -13,9 +13,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>ticho-generator</module>
-        <module>ticho-intranet</module>
-        <module>ticho-json</module>
+        <module>ticho-tool-generator</module>
+        <module>ticho-tool-intranet</module>
+        <module>ticho-tool-json</module>
     </modules>
 
     <properties>

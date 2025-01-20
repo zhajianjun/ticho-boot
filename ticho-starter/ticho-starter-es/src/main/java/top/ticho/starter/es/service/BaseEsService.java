@@ -1,4 +1,4 @@
-package top.ticho.boot.es.service;
+package top.ticho.starter.es.service;
 
 import cn.easyes.core.biz.EntityInfo;
 import cn.easyes.core.conditions.select.LambdaEsQueryWrapper;

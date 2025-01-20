@@ -1,4 +1,4 @@
-package top.ticho.boot.datasource.interceptor;
+package top.ticho.starter.datasource.interceptor;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DatePattern;
@@ -27,7 +27,7 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
-import top.ticho.boot.datasource.prop.TiDataSourceProperty;
+import top.ticho.starter.datasource.prop.TiDataSourceProperty;
 import top.ticho.tool.json.util.TiJsonUtil;
 
 import java.sql.Statement;

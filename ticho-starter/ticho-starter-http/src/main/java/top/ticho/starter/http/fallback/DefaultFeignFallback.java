@@ -1,4 +1,4 @@
-package top.ticho.boot.http.fallback;
+package top.ticho.starter.http.fallback;
 
 import cn.hutool.core.util.StrUtil;
 import feign.FeignException;
@@ -7,8 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
 import org.springframework.lang.Nullable;
-import top.ticho.boot.view.core.TiResult;
-import top.ticho.boot.view.enums.TiBizErrCode;
+import top.ticho.starter.view.core.TiResult;
+import top.ticho.starter.view.enums.TiBizErrCode;
 
 import java.lang.reflect.Method;
 import java.util.Objects;

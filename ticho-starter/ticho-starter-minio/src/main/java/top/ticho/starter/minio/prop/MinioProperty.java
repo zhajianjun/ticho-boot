@@ -1,4 +1,4 @@
-package top.ticho.boot.minio.prop;
+package top.ticho.starter.minio.prop;
 
 import lombok.Data;
 import org.springframework.util.unit.DataSize;

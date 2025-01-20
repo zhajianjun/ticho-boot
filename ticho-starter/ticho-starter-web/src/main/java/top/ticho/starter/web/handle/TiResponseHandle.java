@@ -1,4 +1,4 @@
-package top.ticho.boot.web.handle;
+package top.ticho.starter.web.handle;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.ConversionNotSupportedException;
@@ -28,11 +28,11 @@ import org.springframework.web.context.request.async.AsyncRequestTimeoutExceptio
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
-import top.ticho.boot.view.core.TiResult;
-import top.ticho.boot.view.enums.TiHttpErrCode;
-import top.ticho.boot.view.exception.TiBizException;
-import top.ticho.boot.view.exception.TiSysException;
-import top.ticho.boot.web.annotation.TiView;
+import top.ticho.starter.view.core.TiResult;
+import top.ticho.starter.view.enums.TiHttpErrCode;
+import top.ticho.starter.view.exception.TiBizException;
+import top.ticho.starter.view.exception.TiSysException;
+import top.ticho.starter.web.annotation.TiView;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;

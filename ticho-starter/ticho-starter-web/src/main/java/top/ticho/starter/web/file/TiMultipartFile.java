@@ -1,4 +1,4 @@
-package top.ticho.boot.web.file;
+package top.ticho.starter.web.file;
 
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;

@@ -1,10 +1,10 @@
-package top.ticho.boot.datasource.component;
+package top.ticho.starter.datasource.component;
 
 import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Component;
-import top.ticho.boot.web.util.TiIdUtil;
+import top.ticho.starter.web.util.TiIdUtil;
 
 import java.io.Serializable;
 

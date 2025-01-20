@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import top.ticho.boot.view.core.TiSecurityUser;
-import top.ticho.boot.web.util.TiSpringUtil;
+import top.ticho.starter.view.core.TiSecurityUser;
+import top.ticho.starter.web.util.TiSpringUtil;
 
 import java.util.ArrayList;
 import java.util.List;

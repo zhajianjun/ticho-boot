@@ -1,4 +1,4 @@
-package top.ticho.boot.web.prop;
+package top.ticho.starter.web.prop;
 
 import lombok.Data;
 

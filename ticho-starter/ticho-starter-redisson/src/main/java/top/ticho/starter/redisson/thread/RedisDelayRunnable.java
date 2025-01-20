@@ -1,4 +1,4 @@
-package top.ticho.boot.redisson.thread;
+package top.ticho.starter.redisson.thread;
 
 import org.redisson.api.RLock;
 import org.slf4j.Logger;

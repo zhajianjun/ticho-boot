@@ -1,11 +1,11 @@
-package top.ticho.boot.minio;
+package top.ticho.starter.minio;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileNameUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import top.ticho.boot.minio.component.MinioTemplate;
-import top.ticho.boot.minio.prop.MinioProperty;
+import top.ticho.starter.minio.component.MinioTemplate;
+import top.ticho.starter.minio.prop.MinioProperty;
 
 import java.io.File;
 import java.io.IOException;

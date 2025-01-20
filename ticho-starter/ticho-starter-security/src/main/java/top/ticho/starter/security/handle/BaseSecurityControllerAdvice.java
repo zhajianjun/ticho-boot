@@ -9,8 +9,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import top.ticho.boot.view.core.TiResult;
-import top.ticho.boot.view.enums.TiHttpErrCode;
+import top.ticho.starter.view.core.TiResult;
+import top.ticho.starter.view.enums.TiHttpErrCode;
 
 import javax.servlet.http.HttpServletRequest;
 

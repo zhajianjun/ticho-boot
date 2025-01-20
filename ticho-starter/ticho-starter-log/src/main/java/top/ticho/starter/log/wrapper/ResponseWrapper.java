@@ -1,4 +1,4 @@
-package top.ticho.boot.log.wrapper;
+package top.ticho.starter.log.wrapper;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;

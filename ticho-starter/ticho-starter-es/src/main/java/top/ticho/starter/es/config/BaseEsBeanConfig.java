@@ -1,10 +1,10 @@
-package top.ticho.boot.es.config;
+package top.ticho.starter.es.config;
 
 import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import top.ticho.boot.es.component.EsTemplate;
-import top.ticho.boot.es.component.EsTemplateImpl;
+import top.ticho.starter.es.component.EsTemplate;
+import top.ticho.starter.es.component.EsTemplateImpl;
 
 /**
  * es bean 配置

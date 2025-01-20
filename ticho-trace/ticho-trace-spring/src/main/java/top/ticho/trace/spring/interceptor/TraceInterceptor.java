@@ -1,4 +1,4 @@
-package top.ticho.tool.trace.spring.interceptor;
+package top.ticho.trace.spring.interceptor;
 
 import cn.hutool.core.date.SystemClock;
 import cn.hutool.extra.spring.SpringUtil;
@@ -14,10 +14,10 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import top.ticho.trace.common.bean.TraceInfo;
 import top.ticho.trace.common.constant.LogConst;
 import top.ticho.trace.common.prop.TraceProperty;
-import top.ticho.tool.trace.core.handle.TracePushContext;
-import top.ticho.tool.trace.core.util.TraceUtil;
-import top.ticho.tool.trace.spring.event.TraceEvent;
-import top.ticho.tool.trace.spring.util.IpUtil;
+import top.ticho.trace.core.handle.TracePushContext;
+import top.ticho.trace.core.util.TraceUtil;
+import top.ticho.trace.spring.event.TraceEvent;
+import top.ticho.trace.spring.util.IpUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

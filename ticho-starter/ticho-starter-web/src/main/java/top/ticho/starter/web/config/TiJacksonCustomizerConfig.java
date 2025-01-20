@@ -1,4 +1,4 @@
-package top.ticho.boot.web.config;
+package top.ticho.starter.web.config;
 
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import top.ticho.boot.web.converter.TiLocalDateDeserializer;
-import top.ticho.boot.web.converter.TiLocalDateTimeDeserializer;
+import top.ticho.starter.web.converter.TiLocalDateDeserializer;
+import top.ticho.starter.web.converter.TiLocalDateTimeDeserializer;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

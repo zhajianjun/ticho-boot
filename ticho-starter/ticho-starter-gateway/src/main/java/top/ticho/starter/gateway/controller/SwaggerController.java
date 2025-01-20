@@ -1,4 +1,4 @@
-package top.ticho.boot.gateway.controller;
+package top.ticho.starter.gateway.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

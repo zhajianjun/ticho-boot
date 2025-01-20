@@ -1,9 +1,9 @@
-package top.ticho.boot.cache.config;
+package top.ticho.starter.cache.config;
 
 import com.github.benmanes.caffeine.cache.RemovalCause;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import top.ticho.boot.cache.prop.TiCacheProperty;
+import top.ticho.starter.cache.prop.TiCacheProperty;
 
 import java.util.Map;
 
