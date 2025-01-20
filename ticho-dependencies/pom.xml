@@ -2,10 +2,13 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <groupId>top.ticho.boot</groupId>
-    <artifactId>ticho-dependencies</artifactId>
-    <version>${revision}</version>
+    <parent>
+        <groupId>top.ticho.boot</groupId>
+        <artifactId>ticho-boot</artifactId>
+        <version>${revision}</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
+    <artifactId>ticho-dependencies</artifactId>
 
     <properties>
         <!-- 项目版本信息 -->
@@ -138,25 +141,25 @@
             </dependency>
 
             <dependency>
-                <groupId>top.ticho.tool</groupId>
+                <groupId>top.ticho.trace</groupId>
                 <artifactId>ticho-trace-spring</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>top.ticho.tool</groupId>
+                <groupId>top.ticho.trace</groupId>
                 <artifactId>ticho-trace-gateway</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>top.ticho.tool</groupId>
+                <groupId>top.ticho.trace</groupId>
                 <artifactId>ticho-trace-feign</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>top.ticho.tool</groupId>
+                <groupId>top.ticho.trace</groupId>
                 <artifactId>ticho-trace-okhttp</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -418,139 +421,5 @@
         </dependencies>
 
     </dependencyManagement>
-
-    <build>
-        <finalName>${project.artifactId}-${project.version}</finalName>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.1</version>
-                    <configuration>
-                        <source>${java.version}</source>
-                        <target>${java.version}</target>
-                        <encoding>${project.build.sourceEncoding}</encoding>
-                    </configuration>
-                </plugin>
-                <!-- 上传源码 -->
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>3.0.1</version>
-                    <configuration>
-                        <attach>true</attach>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <phase>compile</phase>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
-
-    <distributionManagement>
-        <repository>
-            <id>rdc-releases</id>
-            <name>rdc releases</name>
-            <url>https://packages.aliyun.com/maven/repository/2256283-release-lllfCh/</url>
-        </repository>
-        <snapshotRepository>
-            <id>rdc-snapshots</id>
-            <name>rdc snapshots</name>
-            <url>https://packages.aliyun.com/maven/repository/2256283-snapshot-4ykLJ4/</url>
-        </snapshotRepository>
-    </distributionManagement>
-
-    <repositories>
-        <repository>
-            <id>central</id>
-            <url>https://maven.aliyun.com/nexus/content/groups/public</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>snapshots</id>
-            <url>https://maven.aliyun.com/nexus/content/groups/public</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>rdc-releases</id>
-            <url>https://packages.aliyun.com/maven/repository/2256283-release-lllfCh/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>rdc-snapshots</id>
-            <url>https://packages.aliyun.com/maven/repository/2256283-snapshot-4ykLJ4/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>central</id>
-            <url>https://maven.aliyun.com/nexus/content/groups/public</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-        <pluginRepository>
-            <id>snapshots</id>
-            <url>https://maven.aliyun.com/nexus/content/groups/public</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </pluginRepository>
-        <pluginRepository>
-            <id>rdc-releases</id>
-            <url>https://packages.aliyun.com/maven/repository/2256283-release-lllfCh/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-        <pluginRepository>
-            <id>rdc-snapshots</id>
-            <url>https://packages.aliyun.com/maven/repository/2256283-snapshot-4ykLJ4/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
 
 </project>

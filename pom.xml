@@ -2,32 +2,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>top.ticho.boot</groupId>
+    <artifactId>ticho-boot</artifactId>
+    <version>${revision}</version>
+    <packaging>pom</packaging>
+
     <modules>
         <module>ticho-dependencies</module>
-        <module>ticho-starter-view</module>
-        <module>ticho-starter-web</module>
-        <module>ticho-starter-datasource</module>
-        <module>ticho-starter-email</module>
-        <module>ticho-starter-cloud</module>
-        <module>ticho-starter-minio</module>
-        <module>ticho-starter-swagger</module>
-        <module>ticho-starter-http</module>
-        <module>ticho-starter-rabbitmq</module>
-        <module>ticho-starter-security</module>
-        <module>ticho-starter-redis</module>
-        <module>ticho-starter-log</module>
-        <module>ticho-starter-cache</module>
-        <module>ticho-starter-gateway</module>
-        <module>ticho-starter-redisson</module>
-        <module>ticho-starter-es</module>
-        <module>ticho-starter-health</module>
+        <module>ticho-starter-parent</module>
+        <module>ticho-tool</module>
+        <module>ticho-trace</module>
     </modules>
-    <modelVersion>4.0.0</modelVersion>
-    <artifactId>ticho-boot</artifactId>
-    <groupId>top.ticho.boot</groupId>
-    <version>${revision}</version>
-    <name>ticho-boot</name>
-    <packaging>pom</packaging>
 
     <properties>
         <!-- 项目版本信息 -->
@@ -42,22 +28,8 @@
         <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
         <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
         <flatten-maven-plugin.version>1.3.0</flatten-maven-plugin.version>
+        <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
     </properties>
-
-    <dependencyManagement>
-
-        <dependencies>
-            <dependency>
-                <groupId>top.ticho.boot</groupId>
-                <artifactId>ticho-dependencies</artifactId>
-                <version>${project.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-
-    </dependencyManagement>
-
 
     <build>
         <finalName>${project.artifactId}-${project.version}</finalName>
@@ -135,21 +107,44 @@
                         </execution>
                     </executions>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven-jar-plugin.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
-        <!--mvn versions:set -DnewVersion=1.0.0 //升级版本号到1.0.0-->
-        <!--mvn versions:set -DgroupId=com.xxx.xxx -DartifactId=xxx-xxx-xxx -DnewVersion=1.1.8 -DallowSnapshots=true //修改制定模块版本号-->
-        <!--mvn versions:use-next-releases -DprocessDependencyManagement=false //升级到下一个版本，不要升级dependencyManagement中的版本-->
-        <!--mvn versions:use-next-releases -DprocessDependencies=false //升级到下一个版本，不要升级dependencies中的版本-->
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
-                <artifactId>versions-maven-plugin</artifactId>
-                <version>${versions-maven-plugin.version}</version>
-                <configuration>
-                    <!--pom不备份-->
-                    <generateBackupPoms>false</generateBackupPoms>
-                </configuration>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <inherited>true</inherited>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                        <configuration>
+                            <!-- 避免IDE将 .flattened-pom.xml 自动识别为功能模块 -->
+                            <updatePomFile>true</updatePomFile>
+                            <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                            <pomElements>
+                                <parent>expand</parent>
+                                <distributionManagement>remove</distributionManagement>
+                                <repositories>remove</repositories>
+                            </pomElements>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

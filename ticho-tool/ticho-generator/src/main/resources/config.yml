@@ -1,0 +1,14 @@
+globalConfig:
+  envs: [ default,ticho,ticho-ddd ]
+  ignoreError: true
+  date:
+  dateFormat: "yyyy-MM-dd HH:mm"
+  globalParams:
+    enableLombok: true
+    enableMybatisPlus: true
+    enableSwagger: true
+    enableMybatisCache: false
+    author: "zhajianjun"
+    keyName: "id"
+    keyNameUF: "id"
+    keyNameLF: "id"

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>top.ticho.boot</groupId>
+        <artifactId>ticho-boot</artifactId>
+        <version>${revision}</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>ticho-starter-parent</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>ticho-starter-view</module>
+        <module>ticho-starter-web</module>
+        <module>ticho-starter-datasource</module>
+        <module>ticho-starter-email</module>
+        <module>ticho-starter-cloud</module>
+        <module>ticho-starter-minio</module>
+        <module>ticho-starter-swagger</module>
+        <module>ticho-starter-http</module>
+        <module>ticho-starter-rabbitmq</module>
+        <module>ticho-starter-security</module>
+        <module>ticho-starter-redis</module>
+        <module>ticho-starter-log</module>
+        <module>ticho-starter-cache</module>
+        <module>ticho-starter-gateway</module>
+        <module>ticho-starter-redisson</module>
+        <module>ticho-starter-es</module>
+        <module>ticho-starter-health</module>
+    </modules>
+
+    <properties>
+        <!-- 项目版本信息 -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <java.version>1.8</java.version>
+
+    </properties>
+
+    <dependencyManagement>
+
+        <dependencies>
+            <dependency>
+                <groupId>top.ticho.boot</groupId>
+                <artifactId>ticho-dependencies</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+
+    </dependencyManagement>
+
+
+</project>
