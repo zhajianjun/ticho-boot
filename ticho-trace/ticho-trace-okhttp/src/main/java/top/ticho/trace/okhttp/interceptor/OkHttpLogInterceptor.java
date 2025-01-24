@@ -25,7 +25,9 @@ public class OkHttpLogInterceptor implements Interceptor {
         Request req = chain.request();
         String traceId = MDC.get(LogConst.TRACE_ID_KEY);
         if (StrUtil.isBlank(traceId)) {
-            log.debug("MDC中不存在链路信息,本次调用不传递traceId");
+            if (log.isDebugEnabled()) {
+                log.debug("MDC中不存在链路信息,本次调用不传递traceId");
+            }
             return chain.proceed(req);
         }
         Request.Builder builder = req.newBuilder();
