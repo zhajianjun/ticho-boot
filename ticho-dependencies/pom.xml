@@ -402,7 +402,7 @@
             <dependency>
                 <groupId>com.ibeetl</groupId>
                 <artifactId>beetl</artifactId>
-                <version>3.15.10.RELEASE</version>
+                <version>3.15.12.RELEASE</version>
             </dependency>
 
             <dependency>
@@ -428,6 +428,18 @@
                 <groupId>com.xuxueli</groupId>
                 <artifactId>xxl-job-core</artifactId>
                 <version>2.3.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>1.2.13</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>1.2.13</version>
             </dependency>
 
         </dependencies>
