@@ -22,7 +22,6 @@ import org.springframework.stereotype.Component;
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class TiApplicationReadyEvent implements ApplicationListener<ApplicationReadyEvent> {
-
     public static final String SPRING_APPLICATION_NAME_KEY = "spring.application.name";
     public static final String SERVER_PORT = "server.port";
 
@@ -40,4 +39,5 @@ public class TiApplicationReadyEvent implements ApplicationListener<ApplicationR
         String port = env.getProperty(SERVER_PORT);
         log.info("{}:{} is ready", application, port);
     }
+
 }
