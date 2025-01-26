@@ -6,7 +6,7 @@
     <parent>
         <groupId>top.ticho.tool</groupId>
         <artifactId>ticho-tool</artifactId>
-       <version>${revision}</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>ticho-tool-intranet</artifactId>

@@ -326,7 +326,7 @@ public class EsTemplateImpl implements EsTemplate {
     /**
      * 根据id更改数据
      *
-     * @param index  索引
+     * @param index    索引
      * @param tiEntity 对象
      */
     public void updateById(String index, TiEntity tiEntity) {
@@ -669,7 +669,7 @@ public class EsTemplateImpl implements EsTemplate {
      * 得到更新请求
      *
      * @param index       索引
-     * @param tiEntity      实体
+     * @param tiEntity    实体
      * @param docAsUpsert true-文档不存在则插入，有则更新；false-文档不存在,会抛出ElasticsearchException
      * @return {@link UpdateRequest}
      */

@@ -17,7 +17,7 @@ public interface EsTemplate {
     /**
      * 保存es数据
      *
-     * @param index  索引
+     * @param index    索引
      * @param tiEntity 对象
      */
     void save(String index, TiEntity tiEntity);
@@ -49,7 +49,7 @@ public interface EsTemplate {
     /**
      * 保存或者更新es数据
      *
-     * @param index  索引
+     * @param index    索引
      * @param tiEntity 对象
      */
     void saveOrUpdate(String index, TiEntity tiEntity);
@@ -97,7 +97,7 @@ public interface EsTemplate {
     /**
      * 根据id更改数据
      *
-     * @param index  索引
+     * @param index    索引
      * @param tiEntity 对象
      */
     void updateById(String index, TiEntity tiEntity);

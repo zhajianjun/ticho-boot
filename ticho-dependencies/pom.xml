@@ -39,103 +39,103 @@
 
         <dependencies>
             <dependency>
-                 <groupId>top.ticho.starter</groupId>
+                <groupId>top.ticho.starter</groupId>
                 <artifactId>ticho-starter-cloud</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                 <groupId>top.ticho.starter</groupId>
+                <groupId>top.ticho.starter</groupId>
                 <artifactId>ticho-starter-view</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                 <groupId>top.ticho.starter</groupId>
+                <groupId>top.ticho.starter</groupId>
                 <artifactId>ticho-starter-health</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                 <groupId>top.ticho.starter</groupId>
+                <groupId>top.ticho.starter</groupId>
                 <artifactId>ticho-starter-swagger</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                 <groupId>top.ticho.starter</groupId>
+                <groupId>top.ticho.starter</groupId>
                 <artifactId>ticho-starter-http</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                 <groupId>top.ticho.starter</groupId>
+                <groupId>top.ticho.starter</groupId>
                 <artifactId>ticho-starter-web</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                 <groupId>top.ticho.starter</groupId>
+                <groupId>top.ticho.starter</groupId>
                 <artifactId>ticho-starter-datasource</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                 <groupId>top.ticho.starter</groupId>
+                <groupId>top.ticho.starter</groupId>
                 <artifactId>ticho-starter-email</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                 <groupId>top.ticho.starter</groupId>
+                <groupId>top.ticho.starter</groupId>
                 <artifactId>ticho-starter-minio</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                 <groupId>top.ticho.starter</groupId>
+                <groupId>top.ticho.starter</groupId>
                 <artifactId>ticho-starter-security</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                 <groupId>top.ticho.starter</groupId>
+                <groupId>top.ticho.starter</groupId>
                 <artifactId>ticho-starter-log</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                 <groupId>top.ticho.starter</groupId>
+                <groupId>top.ticho.starter</groupId>
                 <artifactId>ticho-starter-rabbitmq</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                 <groupId>top.ticho.starter</groupId>
+                <groupId>top.ticho.starter</groupId>
                 <artifactId>ticho-starter-redis</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                 <groupId>top.ticho.starter</groupId>
+                <groupId>top.ticho.starter</groupId>
                 <artifactId>ticho-starter-gateway</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                 <groupId>top.ticho.starter</groupId>
+                <groupId>top.ticho.starter</groupId>
                 <artifactId>ticho-starter-cache</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                 <groupId>top.ticho.starter</groupId>
+                <groupId>top.ticho.starter</groupId>
                 <artifactId>ticho-starter-redisson</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
-                 <groupId>top.ticho.starter</groupId>
+                <groupId>top.ticho.starter</groupId>
                 <artifactId>ticho-starter-es</artifactId>
                 <version>${project.version}</version>
             </dependency>
