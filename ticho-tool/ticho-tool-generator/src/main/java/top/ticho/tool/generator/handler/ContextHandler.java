@@ -44,11 +44,11 @@ public class ContextHandler {
         GlobalYml globalYml = getGlobalYml();
         GlobalConfig globalConfig = Optional.ofNullable(globalYml).map(GlobalYml::getGlobalConfig).orElse(null);
         if (Objects.isNull(globalConfig)) {
-            log.warn("全局配置[{}]不存在", CommConst.GLOBAL_YML);
+            log.warn("全局配置[{}]不存在", CommConst.CONFIG_YML);
             return;
         }
         handleDate(globalConfig);
-        log.info("全局配置[{}]加载完成", CommConst.GLOBAL_YML);
+        log.info("全局配置[{}]加载完成", CommConst.CONFIG_YML);
         List<String> envs = globalConfig.getEnvs();
         if (ObjUtil.isEmpty(envs)) {
             log.warn("环境变量[globalConfig.envs]不存在");
@@ -107,7 +107,7 @@ public class ContextHandler {
     }
 
     private GlobalYml getGlobalYml() {
-        String globalConfigFilePath = String.format("%s%s%s", CommConst.PROJECT_PATH, File.separator, CommConst.GLOBAL_YML);
+        String globalConfigFilePath = String.format("%s%s%s", CommConst.PROJECT_PATH, File.separator, CommConst.CONFIG_YML);
         File globalConfigFile = new File(globalConfigFilePath);
         if (!globalConfigFile.exists()) {
             return null;

@@ -20,7 +20,7 @@ public class CommConst {
 
     public static final String CONFIG_FILE_PROPERTY = ContextInitializer.CONFIG_FILE_PROPERTY;
     public static final String CONFIG_LOGBACK_XML = "config/logback.xml";
-    public static final String GLOBAL_YML = "global.yml";
+    public static final String CONFIG_YML = "config.yml";
     public static final String CONFIG_ENV_YML = "config-%s.yml";
     public static final String PROJECT_PATH = System.getProperty("user.dir");
     public static final String DATA_PATH = "data";
