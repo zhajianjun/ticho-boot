@@ -1,6 +1,5 @@
 package top.ticho.starter.web.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.Ordered;
@@ -12,6 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import top.ticho.starter.web.factory.TiYamlPropertySourceFactory;
 import top.ticho.starter.web.handle.TiResponseHandle;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -30,7 +30,7 @@ public class TiWebMvcConfig implements WebMvcConfigurer {
      *
      * @see TiJacksonCustomizerConfig#jackson2ObjectMapperBuilderCustomizer()
      */
-    @Autowired(required = false)
+    @Resource
     private MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter;
 
     /**
@@ -44,4 +44,5 @@ public class TiWebMvcConfig implements WebMvcConfigurer {
         converters.add(0, mappingJackson2HttpMessageConverter);
         converters.removeIf(httpMessageConverter -> httpMessageConverter.getClass() == StringHttpMessageConverter.class);
     }
+
 }

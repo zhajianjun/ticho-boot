@@ -40,4 +40,5 @@ public class TiApplicationReadyEvent implements ApplicationListener<ApplicationR
         String port = env.getProperty(SERVER_PORT);
         log.info("{}:{} is ready", application, port);
     }
+
 }
