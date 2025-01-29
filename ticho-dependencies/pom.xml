@@ -38,15 +38,16 @@
     <dependencyManagement>
 
         <dependencies>
+
             <dependency>
                 <groupId>top.ticho.starter</groupId>
-                <artifactId>ticho-starter-cloud</artifactId>
+                <artifactId>ticho-starter-view</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>top.ticho.starter</groupId>
-                <artifactId>ticho-starter-view</artifactId>
+                <artifactId>ticho-starter-cloud</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
