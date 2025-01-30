@@ -47,12 +47,6 @@
 
             <dependency>
                 <groupId>top.ticho.starter</groupId>
-                <artifactId>ticho-starter-cloud</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>top.ticho.starter</groupId>
                 <artifactId>ticho-starter-health</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -138,6 +132,13 @@
             <dependency>
                 <groupId>top.ticho.starter</groupId>
                 <artifactId>ticho-starter-es</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- 微服务注册相关 -->
+            <dependency>
+                <groupId>top.ticho.starter</groupId>
+                <artifactId>ticho-starter-cloud</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
