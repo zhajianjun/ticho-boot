@@ -31,7 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 import okhttp3.Response;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.multipart.MultipartFile;
-import top.ticho.starter.minio.prop.MinioProperty;
+import top.ticho.starter.minio.prop.TiMinioProperty;
 import top.ticho.starter.view.enums.TiBizErrCode;
 import top.ticho.starter.view.exception.TiBizException;
 
@@ -56,17 +56,17 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class MinioTemplate {
 
-    private MinioProperty minioProperty;
+    private TiMinioProperty tiMinioProperty;
 
     @Getter
     private MinioClient minioClient;
 
-    public MinioTemplate(MinioProperty minioProperty) {
-        this.minioProperty = minioProperty;
+    public MinioTemplate(TiMinioProperty tiMinioProperty) {
+        this.tiMinioProperty = tiMinioProperty;
         this.minioClient = MinioClient
             .builder()
-            .credentials(minioProperty.getAccessKey(), minioProperty.getSecretKey())
-            .endpoint(minioProperty.getEndpoint())
+            .credentials(tiMinioProperty.getAccessKey(), tiMinioProperty.getSecretKey())
+            .endpoint(tiMinioProperty.getEndpoint())
             .build();
     }
 
@@ -152,7 +152,7 @@ public class MinioTemplate {
                 .object(objectName)
                 .userMetadata(userMetadata)
                 // 分段上传中允许的最小分段大小为5MiB。
-                .stream(stream, stream.available(), minioProperty.getPartSize())
+                .stream(stream, stream.available(), tiMinioProperty.getPartSize())
                 .contentType(contentType)
                 .build());
         } catch (Exception e) {
@@ -178,7 +178,7 @@ public class MinioTemplate {
                     .object(objectName)
                     .userMetadata(userMetadata)
                     // 分段上传中允许的最小分段大小为5MiB。
-                    .stream(stream, stream.available(), minioProperty.getPartSize())
+                    .stream(stream, stream.available(), tiMinioProperty.getPartSize())
                     .contentType(multipartFile.getContentType()).build()
             );
         } catch (Exception e) {
@@ -266,7 +266,7 @@ public class MinioTemplate {
      */
     public Map<Integer, String> mapChunkObjectNames(String bucketName, String objectMd5) {
         if (null == bucketName) {
-            bucketName = minioProperty.getChunkBucket();
+            bucketName = tiMinioProperty.getChunkBucket();
         }
         if (null == objectMd5) {
             return null;

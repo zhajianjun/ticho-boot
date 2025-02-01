@@ -10,7 +10,7 @@ import org.springframework.util.unit.DataSize;
  * @date 2022-07-13 22:40:25
  */
 @Data
-public class MinioProperty {
+public class TiMinioProperty {
 
     /** 是否开启配置 */
     private Boolean enable;

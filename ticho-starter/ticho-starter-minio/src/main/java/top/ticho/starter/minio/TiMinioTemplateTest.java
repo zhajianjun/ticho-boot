@@ -5,7 +5,7 @@ import cn.hutool.core.io.file.FileNameUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.starter.minio.component.MinioTemplate;
-import top.ticho.starter.minio.prop.MinioProperty;
+import top.ticho.starter.minio.prop.TiMinioProperty;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,11 +22,11 @@ import java.util.Objects;
  */
 @Data
 @Slf4j
-public class MinioTemplateTest {
+public class TiMinioTemplateTest {
 
     private MinioTemplate minioTemplate;
 
-    public MinioTemplateTest(MinioTemplate minioTemplate) {
+    public TiMinioTemplateTest(MinioTemplate minioTemplate) {
         this.minioTemplate = minioTemplate;
     }
 
@@ -164,28 +164,28 @@ public class MinioTemplateTest {
         String localChunkFolderFilePath = parentFilePath + File.separator + chunkFolderFileName;
         File localChunkFolderFile = new File(localChunkFolderFilePath);
         String mimeType = FileUtil.getMimeType(localFilePath);
-        MinioTemplateTest minioTemplateTest = getMinioTemplateTest(chunkBucket, localFile, localChunkFolderFile);
+        TiMinioTemplateTest tiMinioTemplateTest = getMinioTemplateTest(chunkBucket, localFile, localChunkFolderFile);
         // 分片上传到minio
-        minioTemplateTest.uploadChunkToMinio(localChunkFolderFile, chunkBucket, chunkFolderFileName);
+        tiMinioTemplateTest.uploadChunkToMinio(localChunkFolderFile, chunkBucket, chunkFolderFileName);
         // minio分片文件进行合并
-        minioTemplateTest.composeMinioObject(chunkBucket, chunkBucket, chunkFolderFileName, fileName, mimeType, true);
+        tiMinioTemplateTest.composeMinioObject(chunkBucket, chunkBucket, chunkFolderFileName, fileName, mimeType, true);
         // 本地分片进行合并
         String newFilePath = parentFilePath + File.separator + System.currentTimeMillis() + "." + FileNameUtil.extName(localFilePath);
-        minioTemplateTest.composeLocalObject(localChunkFolderFilePath, newFilePath);
+        tiMinioTemplateTest.composeLocalObject(localChunkFolderFilePath, newFilePath);
     }
 
-    private static MinioTemplateTest getMinioTemplateTest(String chunkBucket, File localFile, File localChunkFolderFile) throws IOException {
-        MinioProperty minioProperty = new MinioProperty();
-        minioProperty.setEndpoint("http://127.0.0.1:9000");
-        minioProperty.setAccessKey("root");
-        minioProperty.setSecretKey("123456");
-        minioProperty.setDefaultBucket(chunkBucket);
-        minioProperty.setChunkBucket(chunkBucket);
-        MinioTemplate minioTemplate = new MinioTemplate(minioProperty);
-        MinioTemplateTest minioTemplateTest = new MinioTemplateTest(minioTemplate);
+    private static TiMinioTemplateTest getMinioTemplateTest(String chunkBucket, File localFile, File localChunkFolderFile) throws IOException {
+        TiMinioProperty tiMinioProperty = new TiMinioProperty();
+        tiMinioProperty.setEndpoint("http://127.0.0.1:9000");
+        tiMinioProperty.setAccessKey("root");
+        tiMinioProperty.setSecretKey("123456");
+        tiMinioProperty.setDefaultBucket(chunkBucket);
+        tiMinioProperty.setChunkBucket(chunkBucket);
+        MinioTemplate minioTemplate = new MinioTemplate(tiMinioProperty);
+        TiMinioTemplateTest tiMinioTemplateTest = new TiMinioTemplateTest(minioTemplate);
         // 大文件分片
-        minioTemplateTest.fileSpliceChunk(localFile, localChunkFolderFile);
-        return minioTemplateTest;
+        tiMinioTemplateTest.fileSpliceChunk(localFile, localChunkFolderFile);
+        return tiMinioTemplateTest;
     }
 
 }

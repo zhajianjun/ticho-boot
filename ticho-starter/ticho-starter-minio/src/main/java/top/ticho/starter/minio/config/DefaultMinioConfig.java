@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import top.ticho.starter.minio.component.MinioTemplate;
-import top.ticho.starter.minio.prop.MinioProperty;
+import top.ticho.starter.minio.prop.TiMinioProperty;
 
 /**
  * minio配置
@@ -21,13 +21,13 @@ public class DefaultMinioConfig {
 
     @Bean
     @ConfigurationProperties(prefix = "ticho.minio")
-    public MinioProperty minioProperty() {
-        return new MinioProperty();
+    public TiMinioProperty minioProperty() {
+        return new TiMinioProperty();
     }
 
     @Bean
-    public MinioTemplate minioTemplate(MinioProperty minioProperty) {
-        return new MinioTemplate(minioProperty);
+    public MinioTemplate minioTemplate(TiMinioProperty tiMinioProperty) {
+        return new MinioTemplate(tiMinioProperty);
     }
 
 }
