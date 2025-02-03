@@ -54,14 +54,14 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("all")
 @Data
 @Slf4j
-public class MinioTemplate {
+public class TiMinioTemplate {
 
     private TiMinioProperty tiMinioProperty;
 
     @Getter
     private MinioClient minioClient;
 
-    public MinioTemplate(TiMinioProperty tiMinioProperty) {
+    public TiMinioTemplate(TiMinioProperty tiMinioProperty) {
         this.tiMinioProperty = tiMinioProperty;
         this.minioClient = MinioClient
             .builder()

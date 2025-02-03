@@ -4,7 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileNameUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import top.ticho.starter.minio.component.MinioTemplate;
+import top.ticho.starter.minio.component.TiMinioTemplate;
 import top.ticho.starter.minio.prop.TiMinioProperty;
 
 import java.io.File;
@@ -24,10 +24,10 @@ import java.util.Objects;
 @Slf4j
 public class TiMinioTemplateTest {
 
-    private MinioTemplate minioTemplate;
+    private TiMinioTemplate tiMinioTemplate;
 
-    public TiMinioTemplateTest(MinioTemplate minioTemplate) {
-        this.minioTemplate = minioTemplate;
+    public TiMinioTemplateTest(TiMinioTemplate tiMinioTemplate) {
+        this.tiMinioTemplate = tiMinioTemplate;
     }
 
 
@@ -123,7 +123,7 @@ public class TiMinioTemplateTest {
         // 将分块文件上传至minio
         for (File file : files) {
             String objectName = prefix + "/" + file.getName();
-            minioTemplate.uploadObject(bucket, file.getAbsolutePath(), objectName, "application/octet-stream", null);
+            tiMinioTemplate.uploadObject(bucket, file.getAbsolutePath(), objectName, "application/octet-stream", null);
             log.info("上传分块成功{}", objectName);
         }
     }
@@ -146,8 +146,8 @@ public class TiMinioTemplateTest {
         String contentType,
         boolean isDeleteChunkObject
     ) {
-        List<String> strings = minioTemplate.listObjectNames(chunkBucKetName, prefix, false);
-        minioTemplate.composeObject(chunkBucKetName, composeBucketName, strings, objectName, contentType, null, isDeleteChunkObject);
+        List<String> strings = tiMinioTemplate.listObjectNames(chunkBucKetName, prefix, false);
+        tiMinioTemplate.composeObject(chunkBucKetName, composeBucketName, strings, objectName, contentType, null, isDeleteChunkObject);
         log.info("【{}】minio文件合并成功", objectName);
     }
 
@@ -181,8 +181,8 @@ public class TiMinioTemplateTest {
         tiMinioProperty.setSecretKey("123456");
         tiMinioProperty.setDefaultBucket(chunkBucket);
         tiMinioProperty.setChunkBucket(chunkBucket);
-        MinioTemplate minioTemplate = new MinioTemplate(tiMinioProperty);
-        TiMinioTemplateTest tiMinioTemplateTest = new TiMinioTemplateTest(minioTemplate);
+        TiMinioTemplate tiMinioTemplate = new TiMinioTemplate(tiMinioProperty);
+        TiMinioTemplateTest tiMinioTemplateTest = new TiMinioTemplateTest(tiMinioTemplate);
         // 大文件分片
         tiMinioTemplateTest.fileSpliceChunk(localFile, localChunkFolderFile);
         return tiMinioTemplateTest;
