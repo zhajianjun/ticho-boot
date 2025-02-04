@@ -17,7 +17,7 @@ import top.ticho.starter.minio.prop.TiMinioProperty;
 @Configuration
 @ConditionalOnProperty(value = "ticho.minio.enable", havingValue = "true")
 @PropertySource("classpath:DefaultSevletMultiartConfig.properties")
-public class DefaultMinioConfig {
+public class TiMinioConfig {
 
     @Bean
     @ConfigurationProperties(prefix = "ticho.minio")
