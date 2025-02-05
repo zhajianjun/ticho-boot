@@ -21,7 +21,7 @@ import java.util.Map;
  * @date 2023-01-11 10:09
  */
 @Slf4j
-public class RequestWrapper extends HttpServletRequestWrapper {
+public class TiRequestWrapper extends HttpServletRequestWrapper {
 
     private final String body;
 
@@ -38,7 +38,7 @@ public class RequestWrapper extends HttpServletRequestWrapper {
      * @param request The request to wrap
      * @throws IllegalArgumentException if the request is null
      */
-    public RequestWrapper(HttpServletRequest request) {
+    public TiRequestWrapper(HttpServletRequest request) {
         super(request);
         // 需要执行下request.getParameterMap()，才能正常解析form-data类型的参数数据
         this.parameterMap = request.getParameterMap();

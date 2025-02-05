@@ -14,11 +14,11 @@ import top.ticho.starter.view.log.TiHttpLog;
  */
 @Slf4j
 @Getter
-public class WebLogEvent extends ApplicationContextEvent {
+public class TiWebLogEvent extends ApplicationContextEvent {
 
     private final TiHttpLog tiHttpLog;
 
-    public WebLogEvent(ApplicationContext source, TiHttpLog tiHttpLog) {
+    public TiWebLogEvent(ApplicationContext source, TiHttpLog tiHttpLog) {
         super(source);
         this.tiHttpLog = tiHttpLog;
     }

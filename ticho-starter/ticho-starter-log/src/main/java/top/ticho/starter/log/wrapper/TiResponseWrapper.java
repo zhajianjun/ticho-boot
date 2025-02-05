@@ -19,13 +19,13 @@ import java.nio.charset.StandardCharsets;
  * @date 2023-01-11 14:00
  */
 @Slf4j
-public class ResponseWrapper extends HttpServletResponseWrapper {
+public class TiResponseWrapper extends HttpServletResponseWrapper {
 
     private final ByteArrayOutputStream outputStream;
     private final ServletOutputStream servletOutputStream;
     private final PrintWriter printWriter;
 
-    public ResponseWrapper(HttpServletResponse response) {
+    public TiResponseWrapper(HttpServletResponse response) {
         super(response);
         outputStream = new ByteArrayOutputStream(2048);
         servletOutputStream = new WrapperOutputStream(outputStream, response);

@@ -1,7 +1,7 @@
 package top.ticho.starter.log.filter;
 
-import top.ticho.starter.log.wrapper.RequestWrapper;
-import top.ticho.starter.log.wrapper.ResponseWrapper;
+import top.ticho.starter.log.wrapper.TiRequestWrapper;
+import top.ticho.starter.log.wrapper.TiResponseWrapper;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -21,7 +21,7 @@ import java.io.IOException;
  * @date 2023-01-11 10:25
  */
 @WebFilter(urlPatterns = "/*", filterName = "wapperRequestFilter")
-public class WapperRequestFilter implements Filter {
+public class TiWapperRequestFilter implements Filter {
 
 
     @Override
@@ -32,11 +32,11 @@ public class WapperRequestFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         ServletRequest requestWrapper = null;
         if (servletRequest instanceof HttpServletRequest) {
-            requestWrapper = new RequestWrapper((HttpServletRequest) servletRequest);
+            requestWrapper = new TiRequestWrapper((HttpServletRequest) servletRequest);
         }
         ServletResponse responseWrapper = null;
         if (servletResponse instanceof HttpServletResponse) {
-            responseWrapper = new ResponseWrapper((HttpServletResponse) servletResponse);
+            responseWrapper = new TiResponseWrapper((HttpServletResponse) servletResponse);
         }
         if (requestWrapper != null) {
             servletRequest = requestWrapper;

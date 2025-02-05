@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import top.ticho.starter.log.filter.WapperRequestFilter;
-import top.ticho.starter.log.interceptor.WebLogInterceptor;
+import top.ticho.starter.log.filter.TiWapperRequestFilter;
+import top.ticho.starter.log.interceptor.TiWebLogInterceptor;
 import top.ticho.starter.view.log.TiLogProperty;
 import top.ticho.starter.view.task.TiTaskDecortor;
 import top.ticho.trace.core.util.TraceUtil;
@@ -25,11 +25,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Configuration
 @ConditionalOnClass(WebMvcConfigurer.class)
 @ConditionalOnProperty(value = "ticho.log.enable", havingValue = "true", matchIfMissing = true)
-public class BaseWebBeanConfig {
+public class TiWebBeanConfig {
 
     @Bean
-    public WapperRequestFilter wapperRequestFilter() {
-        return new WapperRequestFilter();
+    public TiWapperRequestFilter wapperRequestFilter() {
+        return new TiWapperRequestFilter();
     }
 
     @Bean
@@ -39,9 +39,9 @@ public class BaseWebBeanConfig {
     }
 
     @Bean
-    @ConditionalOnBean(WapperRequestFilter.class)
-    public WebLogInterceptor webLogInterceptor(TiLogProperty tiLogProperty, Environment environment) {
-        return new WebLogInterceptor(tiLogProperty, environment);
+    @ConditionalOnBean(TiWapperRequestFilter.class)
+    public TiWebLogInterceptor webLogInterceptor(TiLogProperty tiLogProperty, Environment environment) {
+        return new TiWebLogInterceptor(tiLogProperty, environment);
     }
 
     /**

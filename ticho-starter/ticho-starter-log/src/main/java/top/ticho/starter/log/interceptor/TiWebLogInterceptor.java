@@ -21,9 +21,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerInterceptor;
 import top.ticho.starter.log.annotation.TiLog;
-import top.ticho.starter.log.event.WebLogEvent;
-import top.ticho.starter.log.wrapper.RequestWrapper;
-import top.ticho.starter.log.wrapper.ResponseWrapper;
+import top.ticho.starter.log.event.TiWebLogEvent;
+import top.ticho.starter.log.wrapper.TiRequestWrapper;
+import top.ticho.starter.log.wrapper.TiResponseWrapper;
 import top.ticho.starter.view.log.TiHttpLog;
 import top.ticho.starter.view.log.TiLogProperty;
 import top.ticho.tool.json.util.TiJsonUtil;
@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
  * @date 2023-01-11 09:44
  */
 @Slf4j
-public class WebLogInterceptor implements HandlerInterceptor, Ordered {
+public class TiWebLogInterceptor implements HandlerInterceptor, Ordered {
 
     /** 用户代理key */
     private static final String USER_AGENT = "User-Agent";
@@ -63,7 +63,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
     /** 环境变量 */
     private final Environment environment;
 
-    public WebLogInterceptor(TiLogProperty tiLogProperty, Environment environment) {
+    public TiWebLogInterceptor(TiLogProperty tiLogProperty, Environment environment) {
         this.tiLogProperty = tiLogProperty;
         this.environment = environment;
     }
@@ -86,7 +86,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
                 finalParamsMap.put(x, collect);
             });
         }
-        if (!(request instanceof RequestWrapper) || !(handler instanceof HandlerMethod)) {
+        if (!(request instanceof TiRequestWrapper) || !(handler instanceof HandlerMethod)) {
             return true;
         }
         long millis = SystemClock.now();
@@ -100,8 +100,8 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         reqParamsAllMap.putAll(reqParamsMap);
         String params = toJson(reqParamsAllMap);
         // reqBody
-        RequestWrapper requestWrapper = (RequestWrapper) request;
-        String reqBody = requestWrapper.getBody();
+        TiRequestWrapper tiRequestWrapper = (TiRequestWrapper) request;
+        String reqBody = tiRequestWrapper.getBody();
         // header
         Map<String, String> headersMap = getHeaders(request);
         String reqHeaders = toJson(headersMap);
@@ -167,7 +167,7 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
             log.info("[REQ] {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}, 响应头={}", type, url, status, consume, nullOfDefault(resBody), nullOfDefault(resHeaders));
         }
         ApplicationContext applicationContext = SpringUtil.getApplicationContext();
-        applicationContext.publishEvent(new WebLogEvent(applicationContext, TIHttpLog));
+        applicationContext.publishEvent(new TiWebLogEvent(applicationContext, TIHttpLog));
         logTheadLocal.remove();
         antPathMatchLocal.remove();
     }
@@ -179,8 +179,8 @@ public class WebLogInterceptor implements HandlerInterceptor, Ordered {
         if (!flag) {
             return null;
         }
-        ResponseWrapper responseWrapper = (ResponseWrapper) response;
-        return responseWrapper.getBody();
+        TiResponseWrapper tiResponseWrapper = (TiResponseWrapper) response;
+        return tiResponseWrapper.getBody();
     }
 
     public Map<String, String> getParams(HttpServletRequest request) {
