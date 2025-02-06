@@ -11,7 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import top.ticho.starter.http.constant.HttpConst;
+import top.ticho.starter.http.constant.TiHttpConst;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -22,12 +22,12 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 @Configuration
 @ConditionalOnMissingBean(RequestInterceptor.class)
-public class FeignRequestInterceptor implements RequestInterceptor {
+public class TiFeignRequestInterceptor implements RequestInterceptor {
 
     @Override
     public void apply(RequestTemplate template) {
         // feign则是内部调用，添加header inner = true
-        template.header(HttpConst.INNER, HttpConst.INNER_VALUE);
+        template.header(TiHttpConst.INNER, TiHttpConst.INNER_VALUE);
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         String authorization = null;
         if (requestAttributes != null) {

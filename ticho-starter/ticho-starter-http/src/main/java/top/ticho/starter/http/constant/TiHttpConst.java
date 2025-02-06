@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
  * @date 2023-02-08 08:56
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class HttpConst {
+public class TiHttpConst {
 
     public static final String INNER = "inner";
 

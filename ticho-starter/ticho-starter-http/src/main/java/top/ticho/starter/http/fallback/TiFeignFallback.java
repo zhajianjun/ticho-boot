@@ -21,7 +21,7 @@ import java.util.Objects;
  */
 @Slf4j
 @AllArgsConstructor
-public class DefaultFeignFallback<T> implements MethodInterceptor {
+public class TiFeignFallback<T> implements MethodInterceptor {
 
     private final Class<T> targetType;
     private final String targetName;
@@ -59,7 +59,7 @@ public class DefaultFeignFallback<T> implements MethodInterceptor {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        DefaultFeignFallback<?> that = (DefaultFeignFallback<?>) o;
+        TiFeignFallback<?> that = (TiFeignFallback<?>) o;
         return targetType.equals(that.targetType);
     }
 

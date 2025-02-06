@@ -13,8 +13,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
-import top.ticho.starter.http.interceptor.OkHttpLogInterceptor;
-import top.ticho.starter.http.prop.BaseHttpProperty;
+import top.ticho.starter.http.interceptor.TiOkHttpLogInterceptor;
+import top.ticho.starter.http.prop.TiHttpProperty;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 @Slf4j
 @PropertySource(value = "classpath:ticho-http.properties")
-public class OkHttpConfig {
+public class TiOkHttpConfig {
 
     /**
      * 用于修改okhttp
@@ -44,8 +44,8 @@ public class OkHttpConfig {
     @Bean
     @ConditionalOnProperty(value = "ticho.http.enable", havingValue = "true", matchIfMissing = true)
     @ConfigurationProperties(prefix = "ticho.http")
-    public BaseHttpProperty tichoFeignProperty() {
-        return new BaseHttpProperty();
+    public TiHttpProperty tichoFeignProperty() {
+        return new TiHttpProperty();
     }
 
     @Bean
@@ -60,11 +60,11 @@ public class OkHttpConfig {
     @Bean
     @ConditionalOnProperty(value = "ticho.http.enable", havingValue = "true", matchIfMissing = true)
     @ConditionalOnMissingBean({OkHttpClient.class})
-    public OkHttpClient okHttpClient(BaseHttpProperty prop, List<Interceptor> interceptors) {
+    public OkHttpClient okHttpClient(TiHttpProperty prop, List<Interceptor> interceptors) {
         OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
         interceptors.forEach(builder::addInterceptor);
         if (Boolean.TRUE.equals(prop.getOpenLog())) {
-            builder.addInterceptor(new OkHttpLogInterceptor(prop));
+            builder.addInterceptor(new TiOkHttpLogInterceptor(prop));
         }
         return builder
             // 设置连接超时

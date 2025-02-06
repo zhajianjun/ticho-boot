@@ -12,7 +12,7 @@ import org.springframework.cloud.openfeign.FallbackFactory;
  * @date 2022-08-06 14:09:58
  */
 @AllArgsConstructor
-public class DefaultFallbackFactory<T> implements FallbackFactory<T> {
+public class TiFallbackFactory<T> implements FallbackFactory<T> {
     private final Target<T> target;
 
     @Override
@@ -23,7 +23,7 @@ public class DefaultFallbackFactory<T> implements FallbackFactory<T> {
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(targetType);
         enhancer.setUseCache(true);
-        enhancer.setCallback(new DefaultFeignFallback<>(targetType, targetName, cause));
+        enhancer.setCallback(new TiFeignFallback<>(targetType, targetName, cause));
         return (T) enhancer.create();
     }
 }

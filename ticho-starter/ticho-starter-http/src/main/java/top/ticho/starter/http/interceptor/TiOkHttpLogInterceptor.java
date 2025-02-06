@@ -18,8 +18,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.lang.NonNull;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import top.ticho.starter.http.event.HttpLogEvent;
-import top.ticho.starter.http.prop.BaseHttpProperty;
+import top.ticho.starter.http.event.TiHttpLogEvent;
+import top.ticho.starter.http.prop.TiHttpProperty;
 import top.ticho.starter.view.log.TiHttpLog;
 import top.ticho.tool.json.util.TiJsonUtil;
 
@@ -39,12 +39,12 @@ import java.util.stream.Collectors;
  * @date 2022-11-01 14:46
  */
 @Slf4j
-public class OkHttpLogInterceptor implements Interceptor {
+public class TiOkHttpLogInterceptor implements Interceptor {
 
     /** 日志配置 */
-    private final BaseHttpProperty baseHttpProperty;
+    private final TiHttpProperty baseHttpProperty;
 
-    public OkHttpLogInterceptor(BaseHttpProperty baseHttpProperty) {
+    public TiOkHttpLogInterceptor(TiHttpProperty baseHttpProperty) {
         this.baseHttpProperty = baseHttpProperty;
     }
 
@@ -102,7 +102,7 @@ public class OkHttpLogInterceptor implements Interceptor {
             .mdcMap(MDC.getCopyOfContextMap())
             .build();
         ApplicationContext applicationContext = SpringUtil.getApplicationContext();
-        applicationContext.publishEvent(new HttpLogEvent(applicationContext, TIHttpLog));
+        applicationContext.publishEvent(new TiHttpLogEvent(applicationContext, TIHttpLog));
         return res;
     }
 

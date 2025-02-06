@@ -9,7 +9,7 @@ import lombok.Data;
  * @date 2022-11-01 13:12
  */
 @Data
-public class BaseHttpProperty {
+public class TiHttpProperty {
 
     /** 开启ticho http，默认使用okhttp */
     private Boolean enable = true;
