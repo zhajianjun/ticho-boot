@@ -13,6 +13,8 @@ public class FileTemplateConfig {
 
     /** 相对路径 */
     private String relativePath;
+    /** 文件名前缀 */
+    private String prefix;
     /** 文件名后缀 */
     private String suffix;
     /** 文件首字母是否小写 */

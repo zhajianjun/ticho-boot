@@ -44,11 +44,11 @@ public class ContextHandler {
         GlobalYml globalYml = getGlobalYml();
         GlobalConfig globalConfig = Optional.ofNullable(globalYml).map(GlobalYml::getGlobalConfig).orElse(null);
         if (Objects.isNull(globalConfig)) {
-            log.warn("全局配置[{}]不存在", CommConst.CONFIG_YML);
+            log.warn("全局配置[{}]不存在", CommConst.GLOBAL_YML);
             return;
         }
         handleDate(globalConfig);
-        log.info("全局配置[{}]加载完成", CommConst.CONFIG_YML);
+        log.info("全局配置[{}]加载完成", CommConst.GLOBAL_YML);
         List<String> envs = globalConfig.getEnvs();
         if (ObjUtil.isEmpty(envs)) {
             log.warn("环境变量[globalConfig.envs]不存在");
@@ -98,7 +98,8 @@ public class ContextHandler {
             return null;
         }
         // 获取项目配置
-        ProjectYml projectYml = TiJsonUtil.toJavaObjectFromYaml(projectConfigFile, new TypeReference<ProjectYml>() {});
+        ProjectYml projectYml = TiJsonUtil.toJavaObjectFromYaml(projectConfigFile, new TypeReference<ProjectYml>() {
+        });
         log.warn("项目配置加载成功，配置根路径[{}]", projectConfigFilePath);
         if (Objects.isNull(projectYml)) {
             return null;
@@ -107,13 +108,14 @@ public class ContextHandler {
     }
 
     private GlobalYml getGlobalYml() {
-        String globalConfigFilePath = String.format("%s%s%s", CommConst.PROJECT_PATH, File.separator, CommConst.CONFIG_YML);
+        String globalConfigFilePath = String.format("%s%s%s", CommConst.PROJECT_PATH, File.separator, CommConst.GLOBAL_YML);
         File globalConfigFile = new File(globalConfigFilePath);
         if (!globalConfigFile.exists()) {
             return null;
         }
         // 获取全局配置
-        return TiJsonUtil.toJavaObjectFromYaml(globalConfigFile, new TypeReference<GlobalYml>() {});
+        return TiJsonUtil.toJavaObjectFromYaml(globalConfigFile, new TypeReference<GlobalYml>() {
+        });
     }
 
 }

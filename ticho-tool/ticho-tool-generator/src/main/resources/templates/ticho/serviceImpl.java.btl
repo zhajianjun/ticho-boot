@@ -6,10 +6,10 @@ import com.github.pagehelper.PageHelper;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import impl.service.top.ticho.boot.datasource.RootServiceImpl;
-import enums.top.ticho.boot.view.BizErrCode;
-import core.top.ticho.boot.view.PageResult;
-import util.top.ticho.boot.view.Assert;
+import top.ticho.starter.datasource.service.impl.TiRepositoryImpl;
+import top.ticho.starter.view.enums.TiBizErrCode;
+import top.ticho.starter.view.core.TiPageResult;
+import top.ticho.starter.view.util.TiAssert;
 import ${package.assembler}.${className.assembler};
 import ${package.dto}.${className.dto};
 import ${package.entity}.${className.entity};
@@ -32,9 +32,9 @@ import java.util.stream.Collectors;
 import cn.hutool.core.collection.CollUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import enums.top.ticho.boot.view.BizErrCode;
-import core.top.ticho.boot.view.PageResult;
-import util.top.ticho.boot.view.Assert;
+import top.ticho.starter.view.enums.TiBizErrCode;
+import top.ticho.starter.view.core.TiPageResult;
+import top.ticho.starter.view.util.TiAssert;
 import ${package.assembler}.${className.assembler};
 import ${package.dto}.${className.dto};
 import ${package.entity}.${className.entity};
@@ -61,7 +61,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 <% if(enableMybatisPlus){ %>
-public class ${className.serviceImpl} extends RootServiceImpl<${className.mapper}, ${className.entity}> implements ${className.service} {
+public class ${className.serviceImpl} extends TiRepositoryImpl<${className.mapper}, ${className.entity}> implements ${className.service} {
 
     @Autowired
     private ${table.entityName}Mapper ${lowEntity}Mapper;
@@ -69,41 +69,41 @@ public class ${className.serviceImpl} extends RootServiceImpl<${className.mapper
     @Override
     public void save${className.entity}(${className.dto} ${lowEntity}DTO) {
         ${className.entity} ${lowEntity} = ${className.assembler}.INSTANCE.dtoToEntity(${lowEntity}DTO);
-        Assert.isTrue(save(${lowEntity}), BizErrCode.FAIL, "保存失败");
+        TiAssert.isTrue(save(${lowEntity}), TiBizErrCode.FAIL, "保存失败");
     }
 
     @Transactional(rollbackFor = {Exception.class})
     public void save${className.entity}Batch(Collection<${className.dto}> ${lowEntity}DTOs) {
-        Assert.isNotEmpty(${lowEntity}DTOs, BizErrCode.FAIL, "数据不存在");
+        TiAssert.isNotEmpty(${lowEntity}DTOs, TiBizErrCode.FAIL, "数据不存在");
         List<${className.entity}> ${lowEntity}s = ${lowEntity}DTOs
             .stream()
             .map(${className.assembler}.INSTANCE::dtoToEntity)
             .collect(Collectors.toList());
-        Assert.isTrue(saveBatch(${lowEntity}s), BizErrCode.FAIL, "保存失败");
+        TiAssert.isTrue(saveBatch(${lowEntity}s), TiBizErrCode.FAIL, "保存失败");
     }
 
     @Override
     public void remove${className.entity}By${keyNameUF}(Long ${keyNameLF}) {
-        Assert.isNotNull(${keyNameLF}, "编号不能为空");
-        Assert.isTrue(removeById(${keyNameLF}), BizErrCode.FAIL, "删除失败");
+        TiAssert.isNotNull(${keyNameLF}, "编号不能为空");
+        TiAssert.isTrue(removeById(${keyNameLF}), TiBizErrCode.FAIL, "删除失败");
     }
 
     @Override
     public void remove${className.entity}By${keyNameUF}s(Collection<? extends Long> ${keyNameLF}s) {
-        Assert.isNotEmpty(${keyNameLF}s, "编号不能为空");
+        TiAssert.isNotEmpty(${keyNameLF}s, "编号不能为空");
         removeByIds(${keyNameLF}s, 200);
     }
 
     @Override
     public void update${className.entity}By${keyNameUF}(${className.dto} ${lowEntity}DTO) {
         ${className.entity} ${lowEntity} = ${className.assembler}.INSTANCE.dtoToEntity(${lowEntity}DTO);
-        Assert.isNotNull(${lowEntity}, BizErrCode.FAIL, "数据不能为空");
-        Assert.isTrue(updateById(${lowEntity}), BizErrCode.FAIL, "保存失败");
+        TiAssert.isNotNull(${lowEntity}, TiBizErrCode.FAIL, "数据不能为空");
+        TiAssert.isTrue(updateById(${lowEntity}), TiBizErrCode.FAIL, "保存失败");
     }
 
     @Override
     public ${className.dto} get${className.entity}By${keyNameUF}(Long ${keyNameLF}) {
-        Assert.isNotNull(${keyNameLF}, "编号不能为空");
+        TiAssert.isNotNull(${keyNameLF}, "编号不能为空");
         ${className.entity} ${lowEntity} = getById(${keyNameLF});
         return ${className.assembler}.INSTANCE.entityToDto(${lowEntity});
     }
@@ -144,8 +144,8 @@ public class ${className.serviceImpl} implements ${className.service} {
     @Override
     public void save${className.entity}(${className.dto} ${lowEntity}DTO) {
         ${className.entity} ${lowEntity} = ${className.assembler}.INSTANCE.dtoToEntity(${lowEntity}DTO);
-        Assert.isNotNull(${lowEntity}, BizErrCode.FAIL, "数据不能为空");
-        Assert.isTrue(${lowEntity}Mapper.insert(${lowEntity}) == 1, BizErrCode.FAIL, "保存失败");
+        TiAssert.isNotNull(${lowEntity}, TiBizErrCode.FAIL, "数据不能为空");
+        TiAssert.isTrue(${lowEntity}Mapper.insert(${lowEntity}) == 1, TiBizErrCode.FAIL, "保存失败");
     }
 
     @Transactional(rollbackFor = {Exception.class})
@@ -155,7 +155,7 @@ public class ${className.serviceImpl} implements ${className.service} {
 
     @Transactional(rollbackFor = {Exception.class})
     public void save${className.entity}Batch(Collection<${className.dto}> ${lowEntity}DTOs, int batchSize) {
-        Assert.isNotEmpty(${lowEntity}DTOs, BizErrCode.FAIL, "数据不存在");
+        TiAssert.isNotEmpty(${lowEntity}DTOs, TiBizErrCode.FAIL, "数据不存在");
         if (batchSize <= 0 || batchSize > 1000) {
             batchSize = 200;
         }
@@ -165,18 +165,18 @@ public class ${className.serviceImpl} implements ${className.service} {
             .map(x-> x.stream().map(${className.assembler}.INSTANCE::dtoToEntity).collect(Collectors.toList()))
             .map(${lowEntity}Mapper::insertBatch)
             .reduce(1, Integer::sum);
-        Assert.isTrue(total == ${lowEntity}DTOs.size(), BizErrCode.FAIL, "保存失败");
+        TiAssert.isTrue(total == ${lowEntity}DTOs.size(), TiBizErrCode.FAIL, "保存失败");
      }
 
     @Override
     public void remove${className.entity}By${keyNameUF}(Long ${keyNameLF}) {
-        Assert.isNotNull(${keyNameLF}, "编号不能为空");
-        Assert.isTrue(${lowEntity}Mapper.deleteById(${keyNameLF}) == 1, BizErrCode.FAIL, "删除失败");
+        TiAssert.isNotNull(${keyNameLF}, "编号不能为空");
+        TiAssert.isTrue(${lowEntity}Mapper.deleteById(${keyNameLF}) == 1, TiBizErrCode.FAIL, "删除失败");
     }
 
     @Override
     public void remove${className.entity}By${keyNameUF}s(Collection<? extends Long> ${keyNameLF}s) {
-        Assert.isNotEmpty(${keyNameLF}s, "编号不能为空");
+        TiAssert.isNotEmpty(${keyNameLF}s, "编号不能为空");
         remove${className.entity}By${keyNameUF}s(${keyNameLF}s, 200);
     }
 
@@ -187,19 +187,19 @@ public class ${className.serviceImpl} implements ${className.service} {
         List<? extends List<? extends Long>> split = CollUtil.split(${keyNameLF}s, batchSize);
         Integer total = split.stream().map(${lowEntity}Mapper::deleteBatchIds).reduce(1, Integer::sum);
         boolean removed = total == ${keyNameLF}s.size();
-        Assert.isTrue(removed, BizErrCode.FAIL, "删除失败");
+        TiAssert.isTrue(removed, TiBizErrCode.FAIL, "删除失败");
     }
 
     @Override
     public void update${className.entity}By${keyNameUF}(${className.dto} ${lowEntity}DTO) {
         ${className.entity} ${lowEntity} = ${className.assembler}.INSTANCE.dtoToEntity(${lowEntity}DTO);
-        Assert.isNotNull(${lowEntity}, BizErrCode.FAIL, "数据不能为空");
-        Assert.isTrue(${lowEntity}Mapper.updateById(${lowEntity}) == 1, BizErrCode.FAIL, "保存失败");
+        TiAssert.isNotNull(${lowEntity}, TiBizErrCode.FAIL, "数据不能为空");
+        TiAssert.isTrue(${lowEntity}Mapper.updateById(${lowEntity}) == 1, TiBizErrCode.FAIL, "保存失败");
     }
 
     @Override
     public ${className.dto} get${className.entity}By${keyNameUF}(Long ${keyNameLF}) {
-        Assert.isNotNull(${keyNameLF}, "编号不能为空");
+        TiAssert.isNotNull(${keyNameLF}, "编号不能为空");
         ${className.entity} ${lowEntity} = ${lowEntity}Mapper.selectById(${keyNameLF});
         return ${className.assembler}.INSTANCE.entityToDto(${lowEntity});
     }

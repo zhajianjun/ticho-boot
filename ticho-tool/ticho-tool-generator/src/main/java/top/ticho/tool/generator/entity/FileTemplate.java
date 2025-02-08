@@ -18,6 +18,8 @@ public class FileTemplate {
     private Boolean addToJavaDir;
     /** package路径 */
     private String packagePath;
+    /** 文件名前缀 */
+    private String prefix;
     /** 文件名后缀 */
     private String suffix;
     /** 文件后缀名 */

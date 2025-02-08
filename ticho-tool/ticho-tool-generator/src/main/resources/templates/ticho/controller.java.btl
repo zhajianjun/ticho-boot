@@ -3,8 +3,8 @@ package ${package.controller};
 <% if(enableSwagger){ %>
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 <% }%>
-import core.top.ticho.boot.view.PageResult;
-import core.top.ticho.boot.view.Result;
+import top.ticho.starter.view.core.TiPageResult;
+import top.ticho.starter.view.core.TiResult;
 import ${package.service}.${className.service};
 import ${package.dto}.${className.dto};
 import ${package.query}.${className.query};
@@ -51,9 +51,9 @@ public class ${className.controller} {
      */
      <% }%>
     @PostMapping
-    public Result<Void> save(@RequestBody ${className.dto} ${lowEntity}DTO) {
+    public TiResult<Void> save(@RequestBody ${className.dto} ${lowEntity}DTO) {
         ${lowEntity}Service.save${className.entity}(${lowEntity}DTO);
-        return Result.ok();
+        return TiResult.ok();
     }
 
      <% if(enableSwagger){ %>
@@ -69,9 +69,9 @@ public class ${className.controller} {
      */
      <% }%>
     @DeleteMapping
-    public Result<Void> removeBy${keyNameUF}(Long ${keyNameLF}) {
+    public TiResult<Void> removeBy${keyNameUF}(Long ${keyNameLF}) {
         ${lowEntity}Service.remove${className.entity}By${keyNameUF}(${keyNameLF});
-        return Result.ok();
+        return TiResult.ok();
     }
 
      <% if(enableSwagger){ %>
@@ -85,9 +85,9 @@ public class ${className.controller} {
      */
      <% }%>
     @PutMapping
-    public Result<Void> update(@RequestBody ${className.dto} ${lowEntity}DTO) {
+    public TiResult<Void> update(@RequestBody ${className.dto} ${lowEntity}DTO) {
         ${lowEntity}Service.update${className.entity}By${keyNameUF}(${lowEntity}DTO);
-        return Result.ok();
+        return TiResult.ok();
     }
 
      <% if(enableSwagger){ %>
@@ -103,8 +103,8 @@ public class ${className.controller} {
      */
      <% }%>
     @GetMapping
-    public Result<${className.dto}> getBy${keyNameUF}(Long ${keyNameLF}) {
-        return Result.ok(${lowEntity}Service.get${className.entity}By${keyNameUF}(${keyNameLF}));
+    public TiResult<${className.dto}> getBy${keyNameUF}(Long ${keyNameLF}) {
+        return TiResult.ok(${lowEntity}Service.get${className.entity}By${keyNameUF}(${keyNameLF}));
     }
 
      <% if(enableSwagger){ %>
@@ -114,12 +114,12 @@ public class ${className.controller} {
     /**
      * 分页查询${table.comment!}
      *
-     * @return {@link PageResult}<{@link ${className.dto}}>
+     * @return {@link TiPageResult}<{@link ${className.dto}}>
      */
      <% }%>
     @GetMapping("page")
-    public Result<PageResult<${className.dto}>> page(${className.query} query) {
-        return Result.ok(${lowEntity}Service.page(query));
+    public TiResult<TiPageResult<${className.dto}>> page(${className.query} query) {
+        return TiResult.ok(${lowEntity}Service.page(query));
     }
 
 }

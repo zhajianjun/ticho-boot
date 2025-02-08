@@ -12,7 +12,7 @@ import java.util.List;
 <% } %>
 <% /** --------------------------------- **/ %>
 <% if(enableMybatisPlus){ %>
-import mapper.top.ticho.boot.datasource.RootMapper;
+import top.ticho.starter.datasource.mapper.TiMapper;
 import ${package.entity}.${className.entity};
 import ${package.query}.${className.query};
 import org.springframework.stereotype.Repository;
@@ -29,7 +29,7 @@ import java.util.List;
 <% var lowEntity = strutil.toLowerCase(strutil.subStringTo(table.entityName,0,1))+strutil.subString(table.entityName,1); %>
 @Repository
 <% if(enableMybatisPlus){ %>
-public interface ${className.mapper} extends RootMapper<${table.entityName}> {
+public interface ${className.mapper} extends TiMapper<${table.entityName}> {
 <% }else{ %>
 public interface ${className.mapper} {
 
@@ -47,7 +47,7 @@ public interface ${className.mapper} {
      * @param ${lowEntity}s ${table.comment!} 对象
      * @return int 数量
      */
-    int insertBatch(Collection<${table.entityName}> ${lowEntity}s);
+    int insertBatch(@Param("list") Collection<${table.entityName}> ${lowEntity}s);
 
     /**
      * 删除 ${table.comment!}

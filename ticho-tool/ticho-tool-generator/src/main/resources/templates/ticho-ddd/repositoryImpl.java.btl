@@ -4,7 +4,7 @@ package ${package.repositoryImpl};
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import impl.service.top.ticho.boot.datasource.RootServiceImpl;
+import top.ticho.starter.datasource.service.impl.TiRepositoryImpl;
 import ${package.repository}.${className.repository};
 import ${package.entity}.${className.entity};
 import ${package.mapper}.${className.mapper};
@@ -42,7 +42,7 @@ import java.util.List;
 @Slf4j
 @Service
 <% if(enableMybatisPlus){ %>
-public class ${className.repositoryImpl} extends RootServiceImpl<${className.mapper}, ${className.entity}> implements ${className.repository} {
+public class ${className.repositoryImpl} extends TiRepositoryImpl<${className.mapper}, ${className.entity}> implements ${className.repository} {
 
     @Override
     public List<${table.entityName}> list(${className.query} query) {

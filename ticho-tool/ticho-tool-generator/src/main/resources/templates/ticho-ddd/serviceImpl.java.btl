@@ -2,9 +2,9 @@ package ${package.serviceImpl};
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import enums.top.ticho.boot.view.BizErrCode;
-import core.top.ticho.boot.view.PageResult;
-import util.top.ticho.boot.view.Assert;
+import top.ticho.starter.view.enums.TiBizErrCode;
+import top.ticho.starter.view.core.TiPageResult;
+import top.ticho.starter.view.util.TiAssert;
 import ${package.service}.${className.service};
 import ${package.repository}.${className.repository};
 import ${package.entity}.${className.entity};
@@ -33,24 +33,24 @@ public class ${className.serviceImpl} implements ${className.service} {
     @Override
     public void save(${className.dto} ${lowEntity}DTO) {
         ${className.entity} ${lowEntity} = ${className.assembler}.INSTANCE.dtoToEntity(${lowEntity}DTO);
-        Assert.isTrue(${lowEntity}Repository.save(${lowEntity}), BizErrCode.FAIL, "保存失败");
+        TiAssert.isTrue(${lowEntity}Repository.save(${lowEntity}), TiBizErrCode.FAIL, "保存失败");
     }
 
     @Override
     public void removeBy${keyNameUF}(Long ${keyNameLF}) {
-        Assert.isNotNull(${keyNameLF}, "编号不能为空");
-        Assert.isTrue(${lowEntity}Repository.removeById(${keyNameLF}), BizErrCode.FAIL, "删除失败");
+        TiAssert.isNotNull(${keyNameLF}, "编号不能为空");
+        TiAssert.isTrue(${lowEntity}Repository.removeById(${keyNameLF}), TiBizErrCode.FAIL, "删除失败");
     }
 
     @Override
     public void updateBy${keyNameUF}(${className.dto} ${lowEntity}DTO) {
         ${className.entity} ${lowEntity} = ${className.assembler}.INSTANCE.dtoToEntity(${lowEntity}DTO);
-        Assert.isTrue(${lowEntity}Repository.updateById(${lowEntity}), BizErrCode.FAIL, "修改失败");
+        TiAssert.isTrue(${lowEntity}Repository.updateById(${lowEntity}), TiBizErrCode.FAIL, "修改失败");
     }
 
     @Override
     public ${className.dto} getBy${keyNameUF}(Long ${keyNameLF}) {
-        Assert.isNotNull(${keyNameLF}, "编号不能为空");
+        TiAssert.isNotNull(${keyNameLF}, "编号不能为空");
         ${className.entity} ${lowEntity} = ${lowEntity}Repository.getById(${keyNameLF});
         return ${className.assembler}.INSTANCE.entityToDto(${lowEntity});
     }

@@ -3,8 +3,8 @@ package ${package.controller};
 <% if(enableSwagger){ %>
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 <% }%>
-import core.top.ticho.boot.view.PageResult;
-import core.top.ticho.boot.view.Result;
+import top.ticho.starter.view.core.TiPageResult;
+import top.ticho.starter.view.core.TiResult;
 import ${package.service}.${className.service};
 import ${package.dto}.${className.dto};
 import ${package.query}.${className.query};
@@ -51,7 +51,7 @@ public class ${className.controller} {
      */
      <% }%>
     @PostMapping
-    public Result<Void> save(@RequestBody ${className.dto} ${lowEntity}DTO) {
+    public TiPageResult<Void> save(@RequestBody ${className.dto} ${lowEntity}DTO) {
         ${lowEntity}Service.save(${lowEntity}DTO);
         return Result.ok();
     }
@@ -69,7 +69,7 @@ public class ${className.controller} {
      */
      <% }%>
     @DeleteMapping
-    public Result<Void> remove(Long ${keyNameLF}) {
+    public TiPageResult<Void> remove(Long ${keyNameLF}) {
         ${lowEntity}Service.removeBy${keyNameUF}(${keyNameLF});
         return Result.ok();
     }
@@ -85,7 +85,7 @@ public class ${className.controller} {
      */
      <% }%>
     @PutMapping
-    public Result<Void> update(@RequestBody ${className.dto} ${lowEntity}DTO) {
+    public TiPageResult<Void> update(@RequestBody ${className.dto} ${lowEntity}DTO) {
         ${lowEntity}Service.updateBy${keyNameUF}(${lowEntity}DTO);
         return Result.ok();
     }
@@ -103,7 +103,7 @@ public class ${className.controller} {
      */
      <% }%>
     @GetMapping
-    public Result<${className.dto}> getBy${keyNameUF}(Long ${keyNameLF}) {
+    public TiPageResult<${className.dto}> getBy${keyNameUF}(Long ${keyNameLF}) {
         return Result.ok(${lowEntity}Service.getBy${keyNameUF}(${keyNameLF}));
     }
 
@@ -118,7 +118,7 @@ public class ${className.controller} {
      */
      <% }%>
     @GetMapping("page")
-    public Result<PageResult<${className.dto}>> page(${className.query} query) {
+    public TiPageResult<PageResult<${className.dto}>> page(${className.query} query) {
         return Result.ok(${lowEntity}Service.page(query));
     }
 

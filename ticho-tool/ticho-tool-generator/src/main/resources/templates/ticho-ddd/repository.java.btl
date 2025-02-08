@@ -1,7 +1,7 @@
 package ${package.repository};
 
 <% if(enableMybatisPlus){ %>
-import service.top.ticho.boot.datasource.RootService;
+import top.ticho.starter.datasource.service.TiRepository;
 import ${package.entity}.${className.entity};
 import ${package.query}.${className.query};
 
@@ -25,7 +25,7 @@ import java.util.List;
  */
 <% var lowEntity = strutil.toLowerCase(strutil.subStringTo(table.entityName,0,1))+strutil.subString(table.entityName,1); %>
 <% if(enableMybatisPlus){ %>
-public interface ${className.repository} extends RootService<${table.entityName}> {
+public interface ${className.repository} extends TiRepository<${table.entityName}> {
 
     /**
      * 根据条件查询${table.comment!}列表

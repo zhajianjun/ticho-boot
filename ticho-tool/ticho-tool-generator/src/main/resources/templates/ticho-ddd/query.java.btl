@@ -1,7 +1,7 @@
 package ${package.query};
 
 import java.io.Serializable;
-import core.top.ticho.boot.view.BasePageQuery;
+import top.ticho.starter.view.core.TiPageQuery;
     <% for(pkg in table.imports){ %>
         <% if(!@pkg.contains("baomidou")) { %>
 import ${pkg};
@@ -43,7 +43,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
     <% if(enableSwagger){ %>
 @ApiModel(value = "${table.comment!}查询条件")
     <% } %>
-public class ${className.query} extends BasePageQuery implements Serializable {
+public class ${className.query} extends TiPageQuery implements Serializable {
     private static final long serialVersionUID = 1L;
 <% /** -----------START 字段循环遍历----------- **/ %>
 <% for(field in table.fields){ %>

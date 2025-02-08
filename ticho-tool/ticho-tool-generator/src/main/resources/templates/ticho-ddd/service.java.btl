@@ -1,6 +1,6 @@
 package ${package.service};
 
-import core.top.ticho.boot.view.PageResult;
+import top.ticho.starter.view.core.TiPageResult;
 import ${package.dto}.${className.dto};
 import ${package.query}.${className.query};
 
