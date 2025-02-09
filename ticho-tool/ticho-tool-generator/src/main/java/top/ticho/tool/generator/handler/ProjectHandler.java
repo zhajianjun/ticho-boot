@@ -361,7 +361,9 @@ public class ProjectHandler {
         List<Table> tables = getTables();
         boolean fileOverride = Boolean.TRUE.equals(projectConfig.getFileOverride());
         for (Table table : tables) {
+            // 模板参数
             Map<String, Object> templateParams = new HashMap<>(globalConfig.getGlobalParams());
+            // 自定义参数，会覆盖模板参数
             templateParams.putAll(projectConfig.getCustomParams());
             Map<String, Object> classNameMap = new HashMap<>(fileTemplates.size());
             Map<String, Object> pkgMap = new HashMap<>(fileTemplates.size());
