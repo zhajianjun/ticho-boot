@@ -35,13 +35,13 @@ import java.util.stream.Collectors;
  * @date 2022-06-27 14:20
  */
 @SuppressWarnings("unchecked")
-public class RedisUtil<K, V> {
+public class TiRedisUtil<K, V> {
     public static final long DEFAULT_EXPIRE_TIME = -1;
     public static final long DEFAULT_COUNT = 0;
-    private static final Logger log = LoggerFactory.getLogger(RedisUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(TiRedisUtil.class);
     private final RedisTemplate<K, V> redisTemplate;
 
-    public RedisUtil(RedisTemplate<K, V> redisTemplate) {
+    public TiRedisUtil(RedisTemplate<K, V> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
     /* ---------------------------------------------------- key操作 ---------------------------------------------------- */

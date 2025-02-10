@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import top.ticho.starter.redis.util.RedisUtil;
+import top.ticho.starter.redis.util.TiRedisUtil;
 
 /**
  * redis 配置
@@ -18,12 +18,12 @@ import top.ticho.starter.redis.util.RedisUtil;
 @Configuration
 @PropertySource(value = "classpath:ticho-redis.properties")
 @Slf4j
-public class BaseRedisConfig {
+public class TiRedisConfig {
 
     @Bean
-    @ConditionalOnMissingBean(RedisUtil.class)
-    public RedisUtil<String, String> redisUtil(StringRedisTemplate stringRedisTemplate) {
-        return new RedisUtil<>(stringRedisTemplate);
+    @ConditionalOnMissingBean(TiRedisUtil.class)
+    public TiRedisUtil<String, String> redisUtil(StringRedisTemplate stringRedisTemplate) {
+        return new TiRedisUtil<>(stringRedisTemplate);
     }
 
 }
