@@ -18,7 +18,6 @@ public class MqSendSuccessEvent extends ApplicationContextEvent {
 
     private final Message message;
 
-
     public MqSendSuccessEvent(ApplicationContext source, Message message) {
         super(source);
         this.message = message;

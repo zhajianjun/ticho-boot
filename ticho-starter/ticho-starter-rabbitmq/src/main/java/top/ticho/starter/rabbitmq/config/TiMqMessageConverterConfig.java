@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean;
  * @author zhajianjun
  * @date 2023-07-08 21:04
  */
-public class BaseMqMessageConverterConfig {
+public class TiMqMessageConverterConfig {
 
     @Bean
     public MessageConverter jsonMessageConverter(ObjectMapper objectMapper) {

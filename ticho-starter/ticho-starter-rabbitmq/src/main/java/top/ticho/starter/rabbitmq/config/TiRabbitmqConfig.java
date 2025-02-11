@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.lang.NonNull;
 import top.ticho.starter.rabbitmq.event.MqSendSuccessEvent;
-import top.ticho.starter.rabbitmq.event.MqSendToExchangeFailEvent;
+import top.ticho.starter.rabbitmq.event.TiMqSendToExchangeFailEvent;
 
 import javax.annotation.PostConstruct;
 
@@ -25,7 +25,7 @@ import javax.annotation.PostConstruct;
 @Configuration
 @PropertySource(value = "classpath:ticho-rabbitmq.properties")
 @Slf4j
-public class BaseRabbitmqConfig implements RabbitTemplate.ConfirmCallback, RabbitTemplate.ReturnCallback {
+public class TiRabbitmqConfig implements RabbitTemplate.ConfirmCallback, RabbitTemplate.ReturnCallback {
 
 
     @Autowired
@@ -62,7 +62,7 @@ public class BaseRabbitmqConfig implements RabbitTemplate.ConfirmCallback, Rabbi
             applicationContext.publishEvent(new MqSendSuccessEvent(applicationContext, returnedMessage));
         } else {
             log.error("消息发送到交换机失败,correlationDataId={}，原因：{}", id, cause);
-            applicationContext.publishEvent(new MqSendToExchangeFailEvent(applicationContext, returnedMessage));
+            applicationContext.publishEvent(new TiMqSendToExchangeFailEvent(applicationContext, returnedMessage));
         }
     }
 
@@ -84,6 +84,6 @@ public class BaseRabbitmqConfig implements RabbitTemplate.ConfirmCallback, Rabbi
         @NonNull String routingKey
     ) {
         log.error("发送到队列失败，replyCode={},replyText={}", replyCode, replyText);
-        applicationContext.publishEvent(new MqSendToExchangeFailEvent(applicationContext, message));
+        applicationContext.publishEvent(new TiMqSendToExchangeFailEvent(applicationContext, message));
     }
 }

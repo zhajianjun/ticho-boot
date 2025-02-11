@@ -14,10 +14,10 @@ import org.springframework.context.event.ApplicationContextEvent;
  */
 @Slf4j
 @Getter
-public class MqSendToExchangeFailEvent extends ApplicationContextEvent {
+public class TiMqSendToExchangeFailEvent extends ApplicationContextEvent {
     private final Message message;
 
-    public MqSendToExchangeFailEvent(ApplicationContext source, Message message) {
+    public TiMqSendToExchangeFailEvent(ApplicationContext source, Message message) {
         super(source);
         this.message = message;
     }
