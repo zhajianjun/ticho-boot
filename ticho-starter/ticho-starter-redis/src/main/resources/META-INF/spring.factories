@@ -1,3 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   top.ticho.starter.redis.config.TiRedisConfig,\
-  top.ticho.starter.redis.prop.TiBaseRedisProperty
+  top.ticho.starter.redis.prop.TiRedisProperty

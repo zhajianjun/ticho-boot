@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "ticho.redis")
-public class TiBaseRedisProperty {
+public class TiRedisProperty {
 
     private String host;
 
