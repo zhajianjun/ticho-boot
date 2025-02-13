@@ -1,4 +1,4 @@
-package top.ticho.starter.redisson.aop;
+package top.ticho.starter.redisson.aspect;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -22,7 +22,7 @@ import top.ticho.starter.redisson.util.RedissonUtil;
 @Component
 @Order(1)
 @ConditionalOnClass(Aspect.class)
-public class RedisLockAop {
+public class RedisLockAspect {
 
     @Autowired
     private RedissonUtil redissonUtil;
