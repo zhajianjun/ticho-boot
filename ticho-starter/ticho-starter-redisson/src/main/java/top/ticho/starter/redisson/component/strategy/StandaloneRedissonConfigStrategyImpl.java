@@ -3,8 +3,8 @@ package top.ticho.starter.redisson.component.strategy;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.config.Config;
-import top.ticho.starter.redisson.constant.BaseRedissonConst;
-import top.ticho.starter.redisson.prop.BaseRedissonProperty;
+import top.ticho.starter.redisson.constant.TiRedissonConst;
+import top.ticho.starter.redisson.prop.TiRedissonProperty;
 
 /**
  * 单机方式Redisson配置
@@ -16,13 +16,13 @@ import top.ticho.starter.redisson.prop.BaseRedissonProperty;
 public class StandaloneRedissonConfigStrategyImpl implements RedissonConfigStrategy {
 
     @Override
-    public Config createRedissonConfig(BaseRedissonProperty redissonProperties) {
+    public Config createRedissonConfig(TiRedissonProperty redissonProperties) {
         Config config = new Config();
         try {
             String address = redissonProperties.getAddress();
             String password = redissonProperties.getPassword();
             int database = redissonProperties.getDatabase();
-            String redisAddr = BaseRedissonConst.prefix + address;
+            String redisAddr = TiRedissonConst.prefix + address;
             config.useSingleServer().setAddress(redisAddr);
             config.useSingleServer().setDatabase(database);
             if (StrUtil.isNotBlank(password)) {

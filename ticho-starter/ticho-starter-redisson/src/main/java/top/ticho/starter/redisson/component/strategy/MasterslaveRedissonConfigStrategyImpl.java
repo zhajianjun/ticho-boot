@@ -3,8 +3,8 @@ package top.ticho.starter.redisson.component.strategy;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.config.Config;
-import top.ticho.starter.redisson.constant.BaseRedissonConst;
-import top.ticho.starter.redisson.prop.BaseRedissonProperty;
+import top.ticho.starter.redisson.constant.TiRedissonConst;
+import top.ticho.starter.redisson.prop.TiRedissonProperty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.List;
 public class MasterslaveRedissonConfigStrategyImpl implements RedissonConfigStrategy {
 
     @Override
-    public Config createRedissonConfig(BaseRedissonProperty redissonProperties) {
+    public Config createRedissonConfig(TiRedissonProperty redissonProperties) {
         Config config = new Config();
         try {
             String address = redissonProperties.getAddress();
@@ -35,7 +35,7 @@ public class MasterslaveRedissonConfigStrategyImpl implements RedissonConfigStra
             // 设置从节点，移除第一个节点，默认第一个为主节点
             List<String> slaveList = new ArrayList<>();
             for (String addrToken : addrTokens) {
-                slaveList.add(BaseRedissonConst.prefix + addrToken);
+                slaveList.add(TiRedissonConst.prefix + addrToken);
             }
             slaveList.remove(0);
 

@@ -3,8 +3,8 @@ package top.ticho.starter.redisson.component.strategy;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.config.Config;
-import top.ticho.starter.redisson.constant.BaseRedissonConst;
-import top.ticho.starter.redisson.prop.BaseRedissonProperty;
+import top.ticho.starter.redisson.constant.TiRedissonConst;
+import top.ticho.starter.redisson.prop.TiRedissonProperty;
 
 /**
  * 集群方式Redisson配置
@@ -16,7 +16,7 @@ import top.ticho.starter.redisson.prop.BaseRedissonProperty;
 public class ClusterRedissonConfigStrategyImpl implements RedissonConfigStrategy {
 
     @Override
-    public Config createRedissonConfig(BaseRedissonProperty redissonProperties) {
+    public Config createRedissonConfig(TiRedissonProperty redissonProperties) {
         Config config = new Config();
         try {
             String address = redissonProperties.getAddress();
@@ -24,7 +24,7 @@ public class ClusterRedissonConfigStrategyImpl implements RedissonConfigStrategy
             String[] addrTokens = address.split(",");
             // 设置cluster节点的服务IP和端口
             for (String addrToken : addrTokens) {
-                config.useClusterServers().addNodeAddress(BaseRedissonConst.prefix + addrToken);
+                config.useClusterServers().addNodeAddress(TiRedissonConst.prefix + addrToken);
                 if (StrUtil.isNotBlank(password)) {
                     config.useClusterServers().setPassword(password);
                 }

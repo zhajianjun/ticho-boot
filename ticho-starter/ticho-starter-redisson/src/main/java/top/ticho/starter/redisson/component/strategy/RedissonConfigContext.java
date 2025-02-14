@@ -2,7 +2,7 @@ package top.ticho.starter.redisson.component.strategy;
 
 import lombok.AllArgsConstructor;
 import org.redisson.config.Config;
-import top.ticho.starter.redisson.prop.BaseRedissonProperty;
+import top.ticho.starter.redisson.prop.TiRedissonProperty;
 
 /**
  * Redisson配置上下文，产出真正的Redisson的Config
@@ -21,7 +21,7 @@ public class RedissonConfigContext {
      * @param redissonProperties redisson配置
      * @return Config
      */
-    public Config createRedissonConfig(BaseRedissonProperty redissonProperties) {
+    public Config createRedissonConfig(TiRedissonProperty redissonProperties) {
         return this.redissonConfigStrategy.createRedissonConfig(redissonProperties);
     }
 }

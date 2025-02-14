@@ -3,7 +3,7 @@ package top.ticho.starter.redisson.prop;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import top.ticho.starter.redisson.enums.RedissonType;
+import top.ticho.starter.redisson.enums.TiRedissonType;
 
 /**
  * @author zhajianjun
@@ -12,7 +12,7 @@ import top.ticho.starter.redisson.enums.RedissonType;
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "ticho.redisson")
-public class BaseRedissonProperty {
+public class TiRedissonProperty {
 
     private Boolean enable = false;
 
@@ -22,6 +22,6 @@ public class BaseRedissonProperty {
 
     private int database = 0;
 
-    private RedissonType type = RedissonType.STANDALONE;
+    private TiRedissonType type = TiRedissonType.STANDALONE;
 
 }

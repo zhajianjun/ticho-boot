@@ -1,7 +1,7 @@
 package top.ticho.starter.redisson.component.strategy;
 
 import org.redisson.config.Config;
-import top.ticho.starter.redisson.prop.BaseRedissonProperty;
+import top.ticho.starter.redisson.prop.TiRedissonProperty;
 
 /**
  * Redisson配置构建接口
@@ -17,5 +17,5 @@ public interface RedissonConfigStrategy {
      * @param redissonProperties redisson配置
      * @return Config
      */
-    Config createRedissonConfig(BaseRedissonProperty redissonProperties);
+    Config createRedissonConfig(TiRedissonProperty redissonProperties);
 }

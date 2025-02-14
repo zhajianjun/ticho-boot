@@ -3,8 +3,8 @@ package top.ticho.starter.redisson.component.strategy;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.config.Config;
-import top.ticho.starter.redisson.constant.BaseRedissonConst;
-import top.ticho.starter.redisson.prop.BaseRedissonProperty;
+import top.ticho.starter.redisson.constant.TiRedissonConst;
+import top.ticho.starter.redisson.prop.TiRedissonProperty;
 
 /**
  * 哨兵方式Redis连接配置
@@ -16,7 +16,7 @@ import top.ticho.starter.redisson.prop.BaseRedissonProperty;
 public class SentinelRedissonConfigStrategyImpl implements RedissonConfigStrategy {
 
     @Override
-    public Config createRedissonConfig(BaseRedissonProperty redissonProperties) {
+    public Config createRedissonConfig(TiRedissonProperty redissonProperties) {
         Config config = new Config();
         try {
             String address = redissonProperties.getAddress();
@@ -32,7 +32,7 @@ public class SentinelRedissonConfigStrategyImpl implements RedissonConfigStrateg
             }
             // 设置sentinel节点的服务IP和端口
             for (int i = 1; i < addrTokens.length; i++) {
-                config.useSentinelServers().addSentinelAddress(BaseRedissonConst.prefix + addrTokens[i]);
+                config.useSentinelServers().addSentinelAddress(TiRedissonConst.prefix + addrTokens[i]);
             }
             log.info("初始化[sentinel]方式Config,redisAddress:{}", address);
         } catch (Exception e) {

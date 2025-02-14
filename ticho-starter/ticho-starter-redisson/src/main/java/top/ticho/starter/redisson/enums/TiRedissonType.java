@@ -17,23 +17,18 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum RedissonType {
+public enum TiRedissonType {
 
     /** 单节点部署方式 */
     STANDALONE("standalone", "单节点部署方式"),
-
-
     /** 哨兵部署方式 */
     SENTINEL("sentinel", "哨兵部署方式"),
-
-
     /** 集群部署方式 */
     CLUSTER("cluster", "集群方式"),
-
-
     /** 主从部署方式 */
     MASTERSLAVE("masterslave", "主从部署方式");
 
     private final String type;
     private final String desc;
+
 }

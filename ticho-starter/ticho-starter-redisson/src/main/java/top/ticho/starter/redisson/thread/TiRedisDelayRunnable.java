@@ -14,8 +14,8 @@ import java.util.concurrent.TimeUnit;
  * @author zhajianjun
  * @date 2023-02-17 16:42
  */
-public class RedisDelayRunnable implements Runnable {
-    private static final Logger log = LoggerFactory.getLogger(RedisDelayRunnable.class);
+public class TiRedisDelayRunnable implements Runnable {
+    private static final Logger log = LoggerFactory.getLogger(TiRedisDelayRunnable.class);
 
     private final RLock rLock;
 
@@ -42,7 +42,7 @@ public class RedisDelayRunnable implements Runnable {
     /** mdc数据 */
     private final Map<String, String> mdcMap;
 
-    public RedisDelayRunnable(RLock rLock, String key, long threadId, int expireTime, Map<String, String> mdcMap) {
+    public TiRedisDelayRunnable(RLock rLock, String key, long threadId, int expireTime, Map<String, String> mdcMap) {
         this.rLock = rLock;
         this.key = key;
         this.threadId = threadId;

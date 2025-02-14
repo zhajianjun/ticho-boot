@@ -6,7 +6,7 @@ import org.redisson.Redisson;
 import org.redisson.api.RLock;
 import org.slf4j.MDC;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import top.ticho.starter.redisson.thread.RedisDelayRunnable;
+import top.ticho.starter.redisson.thread.TiRedisDelayRunnable;
 import top.ticho.starter.view.enums.TiBizErrCode;
 import top.ticho.starter.view.exception.TiBizException;
 
@@ -21,7 +21,7 @@ import java.util.function.Supplier;
  */
 @Slf4j
 @AllArgsConstructor
-public class RedissonUtil {
+public class TiRedissonTemplate {
 
     private final Redisson redisson;
 
@@ -35,7 +35,7 @@ public class RedissonUtil {
         T obj;
         RLock rLock = null;
         // 定义锁的延时操作类
-        RedisDelayRunnable redisDelayRunnable = null;
+        TiRedisDelayRunnable tiRedisDelayRunnable = null;
         // 定义守护线程
         Thread redisDelayThread = null;
         boolean res = false;
@@ -49,9 +49,9 @@ public class RedissonUtil {
                 log.info("取到锁:{}", key);
                 if (delayThread) {
                     Map<String, String> mdcMap = MDC.getCopyOfContextMap();
-                    redisDelayRunnable = new RedisDelayRunnable(rLock, key, Thread.currentThread().getId(), expireTime, mdcMap);
+                    tiRedisDelayRunnable = new TiRedisDelayRunnable(rLock, key, Thread.currentThread().getId(), expireTime, mdcMap);
                     ThreadPoolTaskExecutor asyncExecutor = (ThreadPoolTaskExecutor) executor;
-                    redisDelayThread = asyncExecutor.newThread(redisDelayRunnable);
+                    redisDelayThread = asyncExecutor.newThread(tiRedisDelayRunnable);
                     redisDelayThread.setDaemon(Boolean.TRUE);
                     redisDelayThread.start();
                     log.info("守护线程{}创建成功,当前线程{}", redisDelayThread.getId(), Thread.currentThread().getId());
@@ -65,8 +65,8 @@ public class RedissonUtil {
             log.error(e.getMessage(), e);
             throw new TiBizException(e.getMessage());
         } finally {
-            if (null != redisDelayRunnable) {
-                redisDelayRunnable.stop();
+            if (null != tiRedisDelayRunnable) {
+                tiRedisDelayRunnable.stop();
             }
             if (null != redisDelayThread) {
                 redisDelayThread.interrupt();
@@ -84,7 +84,7 @@ public class RedissonUtil {
         T obj;
         RLock rLock = null;
         // 定义锁的延时操作类
-        RedisDelayRunnable redisDelayRunnable = null;
+        TiRedisDelayRunnable tiRedisDelayRunnable = null;
         // 定义守护线程
         Thread redisDelayThread = null;
         boolean res = false;
@@ -98,9 +98,9 @@ public class RedissonUtil {
                 log.info("取到锁:{}", key);
                 if (delayThread) {
                     Map<String, String> mdcMap = MDC.getCopyOfContextMap();
-                    redisDelayRunnable = new RedisDelayRunnable(rLock, key, Thread.currentThread().getId(), expireTime, mdcMap);
+                    tiRedisDelayRunnable = new TiRedisDelayRunnable(rLock, key, Thread.currentThread().getId(), expireTime, mdcMap);
                     ThreadPoolTaskExecutor asyncExecutor = (ThreadPoolTaskExecutor) executor;
-                    redisDelayThread = asyncExecutor.newThread(redisDelayRunnable);
+                    redisDelayThread = asyncExecutor.newThread(tiRedisDelayRunnable);
                     redisDelayThread.setDaemon(Boolean.TRUE);
                     redisDelayThread.start();
                     log.info("守护线程{}创建成功,当前线程{}", redisDelayThread.getId(), Thread.currentThread().getId());
@@ -114,8 +114,8 @@ public class RedissonUtil {
             log.error(e.getMessage(), e);
             throw new TiBizException(e.getMessage());
         } finally {
-            if (null != redisDelayRunnable) {
-                redisDelayRunnable.stop();
+            if (null != tiRedisDelayRunnable) {
+                tiRedisDelayRunnable.stop();
             }
             if (null != redisDelayThread) {
                 redisDelayThread.interrupt();

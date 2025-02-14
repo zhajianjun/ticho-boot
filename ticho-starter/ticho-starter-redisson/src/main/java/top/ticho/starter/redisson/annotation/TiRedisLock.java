@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RedisLock {
+public @interface TiRedisLock {
     /**
      * 要锁该方法的第几个参数作为key
      */
