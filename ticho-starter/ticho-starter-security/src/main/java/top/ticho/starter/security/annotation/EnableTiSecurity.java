@@ -30,6 +30,6 @@ import java.lang.annotation.Target;
     OauthController.class,
 })
 @ConditionalOnWebApplication
-public @interface EnableOauth2AuthServer {
+public @interface EnableTiSecurity {
 
 }
