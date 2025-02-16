@@ -3,37 +3,37 @@ package top.ticho.starter.security.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import top.ticho.starter.security.constant.BaseSecurityConst;
+import top.ticho.starter.security.constant.TiSecurityConst;
 
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Oauth2AccessToken信息
+ * Token信息
  *
  * @author zhajianjun
  * @date 2022-09-21 16:52
  */
 @Data
-public class Oauth2AccessToken {
+public class TiToken {
 
     /** token */
-    @JsonProperty(BaseSecurityConst.ACCESS_TOKEN)
+    @JsonProperty(TiSecurityConst.ACCESS_TOKEN)
     public String accessToken;
     /** refresh token */
-    @JsonProperty(BaseSecurityConst.REFRESH_TOKEN)
+    @JsonProperty(TiSecurityConst.REFRESH_TOKEN)
     public String refreshToken;
     /** token type */
-    @JsonProperty(BaseSecurityConst.TOKEN_TYPE)
+    @JsonProperty(TiSecurityConst.TOKEN_TYPE)
     public String tokenType;
     /** 开始时间戳，单位(s) */
-    @JsonProperty(BaseSecurityConst.IAT)
+    @JsonProperty(TiSecurityConst.IAT)
     public Long iat;
     /** 剩余时间，单位(s) */
-    @JsonProperty(BaseSecurityConst.EXPIRES_IN)
+    @JsonProperty(TiSecurityConst.EXPIRES_IN)
     public Long expiresIn;
     /** 结束时间时间戳，单位(s) */
-    @JsonProperty(BaseSecurityConst.EXP)
+    @JsonProperty(TiSecurityConst.EXP)
     public Long exp;
     @JsonIgnore
     public Map<String, Object> extInfo;

@@ -13,7 +13,7 @@ import top.ticho.tool.json.util.TiJsonUtil;
  * @date 2022-09-26 17:31:58
  */
 @Slf4j
-public class BasePermissionServiceImpl implements PermissionService {
+public class TiPermissionServiceImpl implements PermissionService {
 
     public boolean hasPerms(String... permissions) {
         if (ArrayUtil.isEmpty(permissions)) {

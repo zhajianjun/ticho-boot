@@ -1,7 +1,7 @@
 package top.ticho.starter.security.handle;
 
 import top.ticho.starter.security.dto.LoginRequest;
-import top.ticho.starter.security.dto.Oauth2AccessToken;
+import top.ticho.starter.security.dto.TiToken;
 
 /**
  * 登录处理接口
@@ -17,7 +17,7 @@ public interface LoginUserHandle {
      * @param loginRequest 登录请求参数
      * @return token信息
      */
-    Oauth2AccessToken token(LoginRequest loginRequest);
+    TiToken token(LoginRequest loginRequest);
 
     /**
      * refresh token 刷新token
@@ -25,7 +25,7 @@ public interface LoginUserHandle {
      * @param refreshToken refresh token
      * @return token信息
      */
-    Oauth2AccessToken refreshToken(String refreshToken);
+    TiToken refreshToken(String refreshToken);
 
     /**
      * 获取公钥

@@ -22,7 +22,7 @@ import java.nio.charset.StandardCharsets;
  * @date 2022-09-23 17:44:39
  */
 @Slf4j
-public class BaseAccessDeniedHandler implements AccessDeniedHandler {
+public class TiAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest req, HttpServletResponse res, AccessDeniedException e) throws IOException {

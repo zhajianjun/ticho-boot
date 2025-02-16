@@ -3,9 +3,9 @@ package top.ticho.starter.security.handle.jwt;
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.jwt.crypto.sign.Signer;
 import org.springframework.util.CollectionUtils;
-import top.ticho.starter.security.constant.BaseSecurityConst;
-import top.ticho.starter.security.dto.Oauth2AccessToken;
-import top.ticho.starter.security.prop.BaseOauthProperty;
+import top.ticho.starter.security.constant.TiSecurityConst;
+import top.ticho.starter.security.dto.TiToken;
+import top.ticho.starter.security.prop.TiSecurityProperty;
 import top.ticho.starter.view.core.TiSecurityUser;
 import top.ticho.starter.view.enums.TiBizErrCode;
 import top.ticho.starter.view.util.TiAssert;
@@ -27,33 +27,33 @@ import java.util.concurrent.TimeUnit;
 public class JwtEncode {
 
     public final JwtSigner jwtSigner;
-    public final BaseOauthProperty oauthProperty;
+    public final TiSecurityProperty tiSecurityProperty;
 
-    public JwtEncode(JwtSigner jwtSigner, BaseOauthProperty oauthProperty) {
+    public JwtEncode(JwtSigner jwtSigner, TiSecurityProperty tiSecurityProperty) {
         TiAssert.isNotNull(jwtSigner, TiBizErrCode.FAIL, "signer is null");
         this.jwtSigner = jwtSigner;
-        this.oauthProperty = oauthProperty;
+        this.tiSecurityProperty = tiSecurityProperty;
     }
 
-    public void encode(Oauth2AccessToken oAuth2AccessToken, TiSecurityUser tiSecurityUser) {
+    public void encode(TiToken oAuth2AccessToken, TiSecurityUser tiSecurityUser) {
         Signer signer = jwtSigner.getSigner();
         TiAssert.isNotNull(signer, TiBizErrCode.FAIL, "signer is null");
         long iat = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
-        long accessTokenValidity = oauthProperty.getAccessTokenValidity();
-        long refreshTokenValidity = oauthProperty.getRefreshTokenValidity();
+        long accessTokenValidity = tiSecurityProperty.getAccessTokenValidity();
+        long refreshTokenValidity = tiSecurityProperty.getRefreshTokenValidity();
         Long exp = iat + accessTokenValidity;
         Long refreTokenExp = iat + refreshTokenValidity;
         oAuth2AccessToken.setIat(iat);
         oAuth2AccessToken.setExp(exp);
         oAuth2AccessToken.setExpiresIn(oAuth2AccessToken.getExpiresIn());
-        oAuth2AccessToken.setTokenType(BaseSecurityConst.BEARER.toLowerCase());
+        oAuth2AccessToken.setTokenType(TiSecurityConst.BEARER.toLowerCase());
         List<String> authorities = Optional.ofNullable(tiSecurityUser.getRoles()).orElseGet(ArrayList::new);
         // access token信息
         Map<String, Object> accessTokenInfo = new HashMap<>();
-        accessTokenInfo.put(BaseSecurityConst.TYPE, BaseSecurityConst.ACCESS_TOKEN);
-        accessTokenInfo.put(BaseSecurityConst.EXP, exp);
-        accessTokenInfo.put(BaseSecurityConst.USERNAME, tiSecurityUser.getUsername());
-        accessTokenInfo.put(BaseSecurityConst.AUTHORITIES, authorities);
+        accessTokenInfo.put(TiSecurityConst.TYPE, TiSecurityConst.ACCESS_TOKEN);
+        accessTokenInfo.put(TiSecurityConst.EXP, exp);
+        accessTokenInfo.put(TiSecurityConst.USERNAME, tiSecurityUser.getUsername());
+        accessTokenInfo.put(TiSecurityConst.AUTHORITIES, authorities);
         // access token 加载扩展信息
         Map<String, Object> extInfo = oAuth2AccessToken.getExtInfo();
         if (!CollectionUtils.isEmpty(extInfo)) {
@@ -61,9 +61,9 @@ public class JwtEncode {
         }
         // refresh token信息
         Map<String, Object> refreshTokenInfo = new HashMap<>();
-        refreshTokenInfo.put(BaseSecurityConst.TYPE, BaseSecurityConst.REFRESH_TOKEN);
-        refreshTokenInfo.put(BaseSecurityConst.EXP, refreTokenExp);
-        refreshTokenInfo.put(BaseSecurityConst.USERNAME, tiSecurityUser.getUsername());
+        refreshTokenInfo.put(TiSecurityConst.TYPE, TiSecurityConst.REFRESH_TOKEN);
+        refreshTokenInfo.put(TiSecurityConst.EXP, refreTokenExp);
+        refreshTokenInfo.put(TiSecurityConst.USERNAME, tiSecurityUser.getUsername());
         String accessToken = JwtHelper.encode(TiJsonUtil.toJsonString(accessTokenInfo), signer).getEncoded();
         String refreshToken = JwtHelper.encode(TiJsonUtil.toJsonString(refreshTokenInfo), signer).getEncoded();
         oAuth2AccessToken.setAccessToken(accessToken);

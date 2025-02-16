@@ -2,11 +2,11 @@ package top.ticho.starter.security.annotation;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Import;
-import top.ticho.starter.security.controller.OauthController;
-import top.ticho.starter.security.handle.BaseLoginUserHandle;
+import top.ticho.starter.security.controller.TiOauthController;
+import top.ticho.starter.security.handle.TiLoginUserHandle;
 import top.ticho.starter.security.handle.jwt.JwtEncode;
-import top.ticho.starter.security.handle.load.BaseLoadUserService;
-import top.ticho.starter.security.prop.BaseOauthProperty;
+import top.ticho.starter.security.handle.load.TiLoadUserService;
+import top.ticho.starter.security.prop.TiOauthProperty;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -23,11 +23,11 @@ import java.lang.annotation.Target;
 @Target(value = {java.lang.annotation.ElementType.TYPE})
 @Documented
 @Import({
-    BaseOauthProperty.class,
-    JwtEncode.class,
-    BaseLoadUserService.class,
-    BaseLoginUserHandle.class,
-    OauthController.class,
+        TiOauthProperty.class,
+        JwtEncode.class,
+        TiLoadUserService.class,
+        TiLoginUserHandle.class,
+        TiOauthController.class,
 })
 @ConditionalOnWebApplication
 public @interface EnableTiSecurity {

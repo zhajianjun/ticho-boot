@@ -4,8 +4,8 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.method.HandlerMethod;
 import top.ticho.starter.security.annotation.IgnoreJwtCheck;
 import top.ticho.starter.security.annotation.IgnoreType;
-import top.ticho.starter.security.constant.BaseOAuth2Const;
-import top.ticho.starter.security.prop.BaseSecurityProperty;
+import top.ticho.starter.security.constant.TiSecurityConst;
+import top.ticho.starter.security.prop.TiSecurityProperty;
 import top.ticho.starter.web.util.TiSpringUtil;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,19 +20,19 @@ import java.util.Objects;
  */
 public class AntPatternsAuthHandle {
     /** security参数配置对象 */
-    private final BaseSecurityProperty baseSecurityProperty;
+    private final TiSecurityProperty tiSecurityProperty;
     /** url地址匹配 */
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
-    public AntPatternsAuthHandle(BaseSecurityProperty baseSecurityProperty) {
-        this.baseSecurityProperty = baseSecurityProperty;
+    public AntPatternsAuthHandle(TiSecurityProperty tiSecurityProperty) {
+        this.tiSecurityProperty = tiSecurityProperty;
     }
 
     public boolean ignoreAuth(HttpServletRequest request) {
         if (ignoreHandleMethodJwtCheck(request)) {
             return true;
         }
-        List<String> antPatterns = baseSecurityProperty.getAntPatterns();
+        List<String> antPatterns = tiSecurityProperty.getAntPatterns();
         return antPatterns.stream().anyMatch(x -> antPathMatcher.match(x, request.getRequestURI()));
     }
 
@@ -58,7 +58,7 @@ public class AntPatternsAuthHandle {
             return true;
         }
         // inner=true,内部服务访问，则header中存在 inner = true,则权限放开
-        return Objects.equals(request.getHeader(BaseOAuth2Const.INNER), BaseOAuth2Const.INNER_VALUE);
+        return Objects.equals(request.getHeader(TiSecurityConst.INNER), TiSecurityConst.INNER_VALUE);
     }
 
 }

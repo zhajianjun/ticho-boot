@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 @RestControllerAdvice
 @Order(Ordered.LOWEST_PRECEDENCE - 20)
-public class BaseSecurityControllerAdvice {
+public class TiSecurityControllerAdvice {
 
 
     /**

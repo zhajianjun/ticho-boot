@@ -11,7 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 import top.ticho.starter.security.auth.AntPatternsAuthHandle;
-import top.ticho.starter.security.constant.BaseSecurityConst;
+import top.ticho.starter.security.constant.TiSecurityConst;
 import top.ticho.starter.security.handle.jwt.JwtDecode;
 import top.ticho.starter.view.core.TiResult;
 import top.ticho.starter.view.core.TiSecurityUser;
@@ -78,16 +78,16 @@ public abstract class AbstractAuthTokenFilter<T extends TiSecurityUser> extends 
 
     @Override
     protected void doFilterInternal(
-        @NonNull HttpServletRequest request,
-        @NonNull HttpServletResponse response,
-        @NonNull FilterChain chain
+            @NonNull HttpServletRequest request,
+            @NonNull HttpServletResponse response,
+            @NonNull FilterChain chain
     ) throws IOException {
         try {
             support(request, response);
             String token = request.getHeader(HttpHeaders.AUTHORIZATION);
             if (antPatternsAuthHandle.ignoreAuth(request)) {
                 if (Objects.nonNull(token)) {
-                    token = StrUtil.removePrefixIgnoreCase(token, BaseSecurityConst.BEARER);
+                    token = StrUtil.removePrefixIgnoreCase(token, TiSecurityConst.BEARER);
                     token = StrUtil.trimStart(token);
                     Map<String, Object> map = jwtDecode.decode(token);
                     boolean expired = jwtDecode.isExpired(map);
@@ -101,11 +101,11 @@ public abstract class AbstractAuthTokenFilter<T extends TiSecurityUser> extends 
                 return;
             }
             TiAssert.isNotNull(token, TiHttpErrCode.NOT_LOGIN);
-            token = StrUtil.removePrefixIgnoreCase(token, BaseSecurityConst.BEARER);
+            token = StrUtil.removePrefixIgnoreCase(token, TiSecurityConst.BEARER);
             token = StrUtil.trimStart(token);
             Map<String, Object> map = jwtDecode.decodeAndVerify(token);
-            Object type = map.getOrDefault(BaseSecurityConst.TYPE, "");
-            TiAssert.isTrue(Objects.equals(type, BaseSecurityConst.ACCESS_TOKEN), TiBizErrCode.FAIL, "token不合法");
+            Object type = map.getOrDefault(TiSecurityConst.TYPE, "");
+            TiAssert.isTrue(Objects.equals(type, TiSecurityConst.ACCESS_TOKEN), TiBizErrCode.FAIL, "token不合法");
             T securityUser = convert(map);
             TiAssert.isNotNull(securityUser, TiBizErrCode.FAIL, "token不合法");
             setAuthentication(request, securityUser, token);

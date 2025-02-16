@@ -15,19 +15,18 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.web.filter.OncePerRequestFilter;
 import top.ticho.starter.security.auth.AntPatternsAuthHandle;
-import top.ticho.starter.security.auth.BasePermissionServiceImpl;
 import top.ticho.starter.security.auth.PermissionService;
-import top.ticho.starter.security.constant.BaseOAuth2Const;
-import top.ticho.starter.security.constant.BaseSecurityConst;
+import top.ticho.starter.security.auth.TiPermissionServiceImpl;
+import top.ticho.starter.security.constant.TiSecurityConst;
 import top.ticho.starter.security.filter.BaseAccessDecisionManager;
 import top.ticho.starter.security.filter.BaseTokenAuthenticationTokenFilter;
-import top.ticho.starter.security.handle.jwt.BaseJwtExtra;
 import top.ticho.starter.security.handle.jwt.JwtDecode;
 import top.ticho.starter.security.handle.jwt.JwtExtra;
 import top.ticho.starter.security.handle.jwt.JwtSigner;
-import top.ticho.starter.security.prop.BaseSecurityProperty;
-import top.ticho.starter.security.view.BaseAccessDeniedHandler;
-import top.ticho.starter.security.view.BaseAuthenticationEntryPoint;
+import top.ticho.starter.security.handle.jwt.TiJwtExtra;
+import top.ticho.starter.security.prop.TiSecurityProperty;
+import top.ticho.starter.security.view.TiAccessDeniedHandler;
+import top.ticho.starter.security.view.TiAuthenticationEntryPoint;
 import top.ticho.starter.view.task.TiTaskDecortor;
 
 /**
@@ -37,7 +36,7 @@ import top.ticho.starter.view.task.TiTaskDecortor;
  * @date 2022-09-22 10:32
  */
 @Configuration
-public class BaseSecurityImportConfig {
+public class TiSecurityImportConfig {
 
     /**
      * 密码编码器
@@ -61,8 +60,8 @@ public class BaseSecurityImportConfig {
         return new JwtSigner("ticho");
     }
 
-    @Bean(BaseOAuth2Const.OAUTH2_TOKEN_FILTER_BEAN_NAME)
-    @ConditionalOnMissingBean(name = BaseOAuth2Const.OAUTH2_TOKEN_FILTER_BEAN_NAME)
+    @Bean(TiSecurityConst.OAUTH2_TOKEN_FILTER_BEAN_NAME)
+    @ConditionalOnMissingBean(name = TiSecurityConst.OAUTH2_TOKEN_FILTER_BEAN_NAME)
     public OncePerRequestFilter baseTokenAuthenticationTokenFilter() {
         return new BaseTokenAuthenticationTokenFilter();
     }
@@ -75,7 +74,7 @@ public class BaseSecurityImportConfig {
     @Bean
     @ConditionalOnMissingBean(AccessDeniedHandler.class)
     public AccessDeniedHandler accessDeniedHandler() {
-        return new BaseAccessDeniedHandler();
+        return new TiAccessDeniedHandler();
     }
 
     /**
@@ -86,7 +85,7 @@ public class BaseSecurityImportConfig {
     @Bean
     @ConditionalOnMissingBean(AuthenticationEntryPoint.class)
     public AuthenticationEntryPoint authenticationEntryPoint() {
-        return new BaseAuthenticationEntryPoint();
+        return new TiAuthenticationEntryPoint();
     }
 
     /**
@@ -96,7 +95,7 @@ public class BaseSecurityImportConfig {
      */
     @Bean
     public JwtExtra jwtExtra() {
-        return new BaseJwtExtra();
+        return new TiJwtExtra();
     }
 
     /**
@@ -113,12 +112,12 @@ public class BaseSecurityImportConfig {
     /**
      * security参数配置对象
      *
-     * @return {@link BaseSecurityProperty}
+     * @return {@link TiSecurityProperty}
      */
     @Bean
     @ConfigurationProperties(prefix = "ticho.security")
-    public BaseSecurityProperty tichoSecurityProperty() {
-        return new BaseSecurityProperty();
+    public TiSecurityProperty tichoSecurityProperty() {
+        return new TiSecurityProperty();
     }
 
     /**
@@ -132,8 +131,8 @@ public class BaseSecurityImportConfig {
     }
 
     @Bean
-    public AntPatternsAuthHandle antPatternsAuthHandle(BaseSecurityProperty baseSecurityProperty) {
-        return new AntPatternsAuthHandle(baseSecurityProperty);
+    public AntPatternsAuthHandle antPatternsAuthHandle(TiSecurityProperty tiSecurityProperty) {
+        return new AntPatternsAuthHandle(tiSecurityProperty);
     }
 
     /**
@@ -141,10 +140,10 @@ public class BaseSecurityImportConfig {
      *
      * @return {@link PermissionService}
      */
-    @Bean(BaseSecurityConst.PM)
-    @ConditionalOnMissingBean(name = BaseSecurityConst.PM)
+    @Bean(TiSecurityConst.PM)
+    @ConditionalOnMissingBean(name = TiSecurityConst.PM)
     public PermissionService permissionService() {
-        return new BasePermissionServiceImpl();
+        return new TiPermissionServiceImpl();
     }
 
     /**

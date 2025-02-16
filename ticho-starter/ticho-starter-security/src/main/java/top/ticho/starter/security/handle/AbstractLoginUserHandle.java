@@ -8,7 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import top.ticho.starter.security.dto.Oauth2AccessToken;
+import top.ticho.starter.security.dto.TiToken;
 import top.ticho.starter.security.handle.jwt.JwtEncode;
 import top.ticho.starter.security.handle.jwt.JwtExtra;
 import top.ticho.starter.security.handle.jwt.JwtSigner;
@@ -51,7 +51,7 @@ public abstract class AbstractLoginUserHandle implements LoginUserHandle {
      * @param tiSecurityUser 权限用户
      * @return token返回信息
      */
-    protected Oauth2AccessToken getOauth2TokenAndSetAuthentication(TiSecurityUser tiSecurityUser) {
+    protected TiToken getOauth2TokenAndSetAuthentication(TiSecurityUser tiSecurityUser) {
         List<String> authoritieStrs = Optional.ofNullable(tiSecurityUser.getRoles()).orElseGet(ArrayList::new);
         tiSecurityUser.setPassword("N/A");
         List<SimpleGrantedAuthority> authorities = authoritieStrs.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
@@ -62,7 +62,7 @@ public abstract class AbstractLoginUserHandle implements LoginUserHandle {
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
         }
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        Oauth2AccessToken oAuth2AccessToken = new Oauth2AccessToken();
+        TiToken oAuth2AccessToken = new TiToken();
         Map<String, Object> map = getAllJwtExtInfo();
         // jwt扩展接口的所有数据放入token中
         oAuth2AccessToken.setExtInfo(map);

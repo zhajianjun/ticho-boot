@@ -5,7 +5,7 @@ import cn.hutool.core.util.NumberUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.jwt.crypto.sign.SignatureVerifier;
-import top.ticho.starter.security.constant.BaseSecurityConst;
+import top.ticho.starter.security.constant.TiSecurityConst;
 import top.ticho.starter.view.enums.TiBizErrCode;
 import top.ticho.starter.view.exception.TiBizException;
 import top.ticho.starter.view.util.TiAssert;
@@ -55,9 +55,9 @@ public class JwtDecode {
     }
 
     public boolean isExpired(Map<String, Object> map) {
-        boolean isExpired = CollUtil.isEmpty(map) || !map.containsKey(BaseSecurityConst.EXP);
+        boolean isExpired = CollUtil.isEmpty(map) || !map.containsKey(TiSecurityConst.EXP);
         if (!isExpired) {
-            String numberStr = Optional.ofNullable(map.get(BaseSecurityConst.EXP)).map(Object::toString).orElse(null);
+            String numberStr = Optional.ofNullable(map.get(TiSecurityConst.EXP)).map(Object::toString).orElse(null);
             BigDecimal exp = NumberUtil.toBigDecimal(numberStr);
             isExpired = exp.longValue() < TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
         }

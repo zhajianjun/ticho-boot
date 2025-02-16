@@ -2,9 +2,7 @@ package top.ticho.starter.security.prop;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import top.ticho.starter.view.core.TiSecurityUser;
@@ -19,16 +17,17 @@ import java.util.List;
  * @author zhajianjun
  * @date 2022-09-23 14:46
  */
-@Getter
-@NoArgsConstructor
+@Data
 @Slf4j
-public class BaseSecurityProperty {
+public class TiSecurityProperty {
 
+    /** ccess_token的有效时间(秒) 默认12小时 */
+    private Integer accessTokenValidity = 43200;
+    /** refresh_token有效期(秒) 默认24小时 */
+    private Integer refreshTokenValidity = 86400;
     /** 默认用户，如果UserDetailsService接口被实现则没有啥作用了 */
     private List<TiSecurityUser> users = new ArrayList<>();
-
     /** 权限过滤地址 */
-    @Setter
     private List<String> antPatterns = new ArrayList<>();
 
     public void setUsers(List<TiSecurityUser> users) {

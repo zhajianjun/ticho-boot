@@ -9,7 +9,7 @@ import lombok.Data;
  * @date 2022-09-22 16:35
  */
 @Data
-public class BaseLoginRequest implements LoginRequest {
+public class TiLoginRequest implements LoginRequest {
 
     /** 用户名 */
     private String username;

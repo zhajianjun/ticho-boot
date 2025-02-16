@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
  * @date 2022-09-22 11:07
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class BaseSecurityConst {
+public class TiSecurityConst {
 
     public static final String DEFAULT_USERNAME = "admin";
     public static final String DEFAULT_ROLE = "admin";
@@ -63,6 +63,15 @@ public class BaseSecurityConst {
     public static final String LOGIN_USER_TYPE_PHONE = LOGIN_USER_TYPE + EMAIL;
     /** 登录方式:邮箱 */
     public static final String LOGIN_USER_TYPE_EMAIL = LOGIN_USER_TYPE + PHONE;
+
+
+    public static final String OAUTH2_TOKEN_FILTER_BEAN_NAME = "oauth2_token_filter_bean_name";
+
+    public static final String OAUTH2_CONTROLLER = "oauth2_controller";
+
+    public static final String INNER = "inner";
+
+    public static final String INNER_VALUE = "true";
 
 
 }

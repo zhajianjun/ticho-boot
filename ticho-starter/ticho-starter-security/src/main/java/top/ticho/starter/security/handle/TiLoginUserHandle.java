@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import top.ticho.starter.security.constant.BaseSecurityConst;
+import top.ticho.starter.security.constant.TiSecurityConst;
 import top.ticho.starter.security.dto.LoginRequest;
-import top.ticho.starter.security.dto.Oauth2AccessToken;
+import top.ticho.starter.security.dto.TiToken;
 import top.ticho.starter.security.handle.jwt.JwtDecode;
 import top.ticho.starter.security.handle.jwt.JwtSigner;
 import top.ticho.starter.security.handle.load.LoadUserService;
@@ -29,7 +29,7 @@ import java.util.Optional;
  */
 @ConditionalOnMissingBean(LoginUserHandle.class)
 @Component
-public class BaseLoginUserHandle extends AbstractLoginUserHandle {
+public class TiLoginUserHandle extends AbstractLoginUserHandle {
 
     @Resource
     private PasswordEncoder passwordEncoder;
@@ -43,7 +43,7 @@ public class BaseLoginUserHandle extends AbstractLoginUserHandle {
     @Autowired
     private JwtSigner jwtSigner;
 
-    public Oauth2AccessToken token(LoginRequest loginRequest) {
+    public TiToken token(LoginRequest loginRequest) {
         String account = loginRequest.getUsername();
         String credentials = loginRequest.getPassword();
         TiSecurityUser tiSecurityUser = checkPassword(account, credentials);
@@ -62,14 +62,14 @@ public class BaseLoginUserHandle extends AbstractLoginUserHandle {
         return tiSecurityUser;
     }
 
-    public Oauth2AccessToken refreshToken(String refreshToken) {
+    public TiToken refreshToken(String refreshToken) {
         TiAssert.isNotNull(refreshToken, TiBizErrCode.PARAM_ERROR, "参数不能为空");
         Map<String, Object> decodeAndVerify = jwtDecode.decodeAndVerify(refreshToken);
-        Object type = decodeAndVerify.getOrDefault(BaseSecurityConst.TYPE, "");
-        TiAssert.isTrue(Objects.equals(type, BaseSecurityConst.REFRESH_TOKEN), TiBizErrCode.FAIL, "refreshToken不合法");
-        String username = Optional.ofNullable(decodeAndVerify.get(BaseSecurityConst.USERNAME))
-            .map(Object::toString)
-            .orElseThrow(() -> new TiBizException(TiBizErrCode.FAIL, "用户名不存在"));
+        Object type = decodeAndVerify.getOrDefault(TiSecurityConst.TYPE, "");
+        TiAssert.isTrue(Objects.equals(type, TiSecurityConst.REFRESH_TOKEN), TiBizErrCode.FAIL, "refreshToken不合法");
+        String username = Optional.ofNullable(decodeAndVerify.get(TiSecurityConst.USERNAME))
+                .map(Object::toString)
+                .orElseThrow(() -> new TiBizException(TiBizErrCode.FAIL, "用户名不存在"));
         TiSecurityUser tiSecurityUser = loadUserService.load(username);
         return getOauth2TokenAndSetAuthentication(tiSecurityUser);
     }

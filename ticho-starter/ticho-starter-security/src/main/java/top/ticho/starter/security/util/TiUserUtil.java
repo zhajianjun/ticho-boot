@@ -15,7 +15,7 @@ import java.util.Optional;
  * @date 2022-09-30 10:45
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class BaseUserUtil {
+public class TiUserUtil {
 
 
     public static <T extends TiSecurityUser> T getCurrentUser() {

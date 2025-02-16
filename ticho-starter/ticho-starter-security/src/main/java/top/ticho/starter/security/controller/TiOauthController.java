@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.ticho.starter.security.constant.BaseOAuth2Const;
-import top.ticho.starter.security.dto.BaseLoginRequest;
-import top.ticho.starter.security.dto.Oauth2AccessToken;
+import top.ticho.starter.security.constant.TiSecurityConst;
+import top.ticho.starter.security.dto.TiLoginRequest;
+import top.ticho.starter.security.dto.TiToken;
 import top.ticho.starter.security.handle.LoginUserHandle;
 import top.ticho.starter.view.core.TiResult;
 
@@ -21,10 +21,10 @@ import java.security.Principal;
  * @author zhajianjun
  * @date 2022-09-22 15:36
  */
-@ConditionalOnMissingBean(name = BaseOAuth2Const.OAUTH2_CONTROLLER)
-@RestController(BaseOAuth2Const.OAUTH2_CONTROLLER)
+@ConditionalOnMissingBean(name = TiSecurityConst.OAUTH2_CONTROLLER)
+@RestController(TiSecurityConst.OAUTH2_CONTROLLER)
 @RequestMapping("oauth")
-public class OauthController {
+public class TiOauthController {
 
     @Autowired
     private LoginUserHandle loginUserHandle;
@@ -33,10 +33,10 @@ public class OauthController {
      * 登录
      *
      * @param loginRequest 登录请求
-     * @return {@link TiResult }<{@link Oauth2AccessToken }>
+     * @return {@link TiResult }<{@link TiToken }>
      */
     @PostMapping("token")
-    public TiResult<Oauth2AccessToken> token(BaseLoginRequest loginRequest) {
+    public TiResult<TiToken> token(TiLoginRequest loginRequest) {
         return TiResult.ok(loginUserHandle.token(loginRequest));
     }
 
@@ -44,10 +44,10 @@ public class OauthController {
      * 刷新令牌
      *
      * @param refreshToken 刷新令牌
-     * @return {@link TiResult }<{@link Oauth2AccessToken }>
+     * @return {@link TiResult }<{@link TiToken }>
      */
     @PostMapping("refreshToken")
-    public TiResult<Oauth2AccessToken> refreshToken(String refreshToken) {
+    public TiResult<TiToken> refreshToken(String refreshToken) {
         return TiResult.ok(loginUserHandle.refreshToken(refreshToken));
     }
 

@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "ticho.oauth")
 @Slf4j
-public class BaseOauthProperty {
+public class TiOauthProperty {
 
     /** ccess_token的有效时间(秒) 默认12小时 */
     private Integer accessTokenValidity = 43200;

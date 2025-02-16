@@ -7,8 +7,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import top.ticho.starter.security.constant.BaseSecurityConst;
-import top.ticho.starter.security.prop.BaseSecurityProperty;
+import top.ticho.starter.security.constant.TiSecurityConst;
+import top.ticho.starter.security.prop.TiSecurityProperty;
 import top.ticho.starter.view.core.TiSecurityUser;
 import top.ticho.tool.json.util.TiJsonUtil;
 
@@ -26,23 +26,23 @@ import java.util.Objects;
 @Component
 @ConditionalOnMissingBean(LoadUserService.class)
 @Slf4j
-public class BaseLoadUserService implements LoadUserService, InitializingBean {
+public class TiLoadUserService implements LoadUserService, InitializingBean {
     private TiSecurityUser user = null;
 
     @Resource
-    private BaseSecurityProperty baseSecurityProperty;
+    private TiSecurityProperty tiSecurityProperty;
 
     @Resource
     private PasswordEncoder passwordEncoder;
 
     @Override
     public TiSecurityUser load(String account) {
-        List<TiSecurityUser> users = baseSecurityProperty.getUsers();
+        List<TiSecurityUser> users = tiSecurityProperty.getUsers();
         TiSecurityUser tiSecurityUser = users
-            .stream()
-            .filter(x -> Objects.equals(x.getUsername(), account))
-            .findFirst()
-            .orElse(null);
+                .stream()
+                .filter(x -> Objects.equals(x.getUsername(), account))
+                .findFirst()
+                .orElse(null);
         // 拷贝一份对象进行返回，防止对源对象进行属性修改
         return TiJsonUtil.copy(tiSecurityUser, TiSecurityUser.class);
     }
@@ -50,7 +50,7 @@ public class BaseLoadUserService implements LoadUserService, InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-        List<TiSecurityUser> users = baseSecurityProperty.getUsers();
+        List<TiSecurityUser> users = tiSecurityProperty.getUsers();
         if (CollUtil.isNotEmpty(users)) {
             return;
         }
@@ -59,13 +59,13 @@ public class BaseLoadUserService implements LoadUserService, InitializingBean {
             return;
         }
         TiSecurityUser userInfo = new TiSecurityUser();
-        userInfo.setUsername(BaseSecurityConst.DEFAULT_USERNAME);
+        userInfo.setUsername(TiSecurityConst.DEFAULT_USERNAME);
         String password = IdUtil.fastUUID();
         userInfo.setPassword(passwordEncoder.encode(password));
-        userInfo.setRoles(Collections.singletonList(BaseSecurityConst.DEFAULT_ROLE));
+        userInfo.setRoles(Collections.singletonList(TiSecurityConst.DEFAULT_ROLE));
         users.add(userInfo);
         user = userInfo;
-        log.info("默认用户信息：{}， 密码：{}", BaseSecurityConst.DEFAULT_USERNAME, password);
+        log.info("默认用户信息：{}， 密码：{}", TiSecurityConst.DEFAULT_USERNAME, password);
     }
 
 }

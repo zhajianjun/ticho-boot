@@ -1,7 +1,7 @@
 package top.ticho.starter.security.filter;
 
 import cn.hutool.core.convert.Convert;
-import top.ticho.starter.security.constant.BaseSecurityConst;
+import top.ticho.starter.security.constant.TiSecurityConst;
 import top.ticho.starter.view.core.TiSecurityUser;
 
 import java.util.List;
@@ -18,8 +18,8 @@ public class BaseTokenAuthenticationTokenFilter extends AbstractAuthTokenFilter<
 
     @Override
     public TiSecurityUser convert(Map<String, Object> decodeAndVerify) {
-        String username = Optional.ofNullable(decodeAndVerify.get(BaseSecurityConst.USERNAME)).map(Object::toString).orElse(null);
-        List<String> authorities = Optional.ofNullable(decodeAndVerify.get(BaseSecurityConst.AUTHORITIES)).map(x -> Convert.toList(String.class, x)).orElse(null);
+        String username = Optional.ofNullable(decodeAndVerify.get(TiSecurityConst.USERNAME)).map(Object::toString).orElse(null);
+        List<String> authorities = Optional.ofNullable(decodeAndVerify.get(TiSecurityConst.AUTHORITIES)).map(x -> Convert.toList(String.class, x)).orElse(null);
         TiSecurityUser user = new TiSecurityUser();
         user.setUsername(username);
         user.setRoles(authorities);
