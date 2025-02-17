@@ -22,7 +22,7 @@ import java.util.Collection;
  * @link <a href="https://blog.csdn.net/u012373815/article/details/54633046">...</a>
  */
 @Slf4j
-public class BaseAccessDecisionManager implements AccessDecisionManager {
+public class TiAccessDecisionManager implements AccessDecisionManager {
 
     @Resource
     private AntPatternsAuthHandle antPatternsAuthHandle;
@@ -60,4 +60,5 @@ public class BaseAccessDecisionManager implements AccessDecisionManager {
     public boolean supports(Class<?> clazz) {
         return true;
     }
+
 }

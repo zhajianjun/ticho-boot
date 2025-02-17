@@ -14,7 +14,7 @@ import java.util.Optional;
  * @author zhajianjun
  * @date 2022-09-24 14:14:06
  */
-public class BaseTokenAuthenticationTokenFilter extends AbstractAuthTokenFilter<TiSecurityUser> {
+public class TiTokenAuthenticationTokenFilter extends AbstractAuthTokenFilter<TiSecurityUser> {
 
     @Override
     public TiSecurityUser convert(Map<String, Object> decodeAndVerify) {

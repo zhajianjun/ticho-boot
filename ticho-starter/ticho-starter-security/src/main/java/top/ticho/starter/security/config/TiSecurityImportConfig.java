@@ -18,8 +18,8 @@ import top.ticho.starter.security.auth.AntPatternsAuthHandle;
 import top.ticho.starter.security.auth.PermissionService;
 import top.ticho.starter.security.auth.TiPermissionServiceImpl;
 import top.ticho.starter.security.constant.TiSecurityConst;
-import top.ticho.starter.security.filter.BaseAccessDecisionManager;
-import top.ticho.starter.security.filter.BaseTokenAuthenticationTokenFilter;
+import top.ticho.starter.security.filter.TiAccessDecisionManager;
+import top.ticho.starter.security.filter.TiTokenAuthenticationTokenFilter;
 import top.ticho.starter.security.handle.jwt.JwtDecode;
 import top.ticho.starter.security.handle.jwt.JwtExtra;
 import top.ticho.starter.security.handle.jwt.JwtSigner;
@@ -63,7 +63,7 @@ public class TiSecurityImportConfig {
     @Bean(TiSecurityConst.OAUTH2_TOKEN_FILTER_BEAN_NAME)
     @ConditionalOnMissingBean(name = TiSecurityConst.OAUTH2_TOKEN_FILTER_BEAN_NAME)
     public OncePerRequestFilter baseTokenAuthenticationTokenFilter() {
-        return new BaseTokenAuthenticationTokenFilter();
+        return new TiTokenAuthenticationTokenFilter();
     }
 
     /**
@@ -123,11 +123,11 @@ public class TiSecurityImportConfig {
     /**
      * ticho访问决策管理
      *
-     * @return {@link BaseAccessDecisionManager}
+     * @return {@link TiAccessDecisionManager}
      */
     @Bean
-    public BaseAccessDecisionManager tichoAccessDecisionManager() {
-        return new BaseAccessDecisionManager();
+    public TiAccessDecisionManager tichoAccessDecisionManager() {
+        return new TiAccessDecisionManager();
     }
 
     @Bean
