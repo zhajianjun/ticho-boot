@@ -1,21 +1,98 @@
-这个项目是用于快速搭建基于Spring Boot的应用程序的starter库。每个starter都提供了特定功能的配置和依赖项，以便开发人员可以轻松地集成这些功能到他们的应用程序中。
+# Ticho-Boot 项目说明
 
-- ticho-dependencies: 包含了所有ticho-starters所需的依赖项
-- ticho-starter-view: 提供了视图模板的支持
-- ticho-starter-web: 提供了Web应用程序的基本配置，包括HTTP请求处理和响应处理
-- ticho-starter-datasource: 配置数据库连接和数据访问
-- ticho-starter-email: 集成邮件发送功能
-- ticho-starter-cloud: 集成云服务，如Nacos
-- ticho-starter-minio: 集成Minio对象存储服务
-- ticho-starter-swagger: 集成Swagger API文档生成工具
-- ticho-starter-http: 配置HTTP客户端
-- ticho-starter-rabbitmq: 集成RabbitMQ消息队列
-- ticho-starter-security: 提供安全性配置，例如身份验证和授权
-- ticho-starter-redis: 集成Redis缓存和数据存储
-- ticho-starter-log: 配置日志记录
-- ticho-starter-cache: 配置应用程序缓存
-- ticho-starter-gateway: 配置API网关
-- ticho-starter-redisson: 集成Redisson分布式锁和数据结构
-- ticho-starter-es: 集成Elasticsearch搜索引擎
+Ticho-Boot 是一个高度模块化的 Java 基础开发框架，基于 Spring Boot 深度封装，提供企业级开发中常用的功能组件、工具类及标准化
+Starter，助力快速搭建高可用微服务系统。
 
-这些starters可以帮助开发人员快速搭建不同类型的Spring Boot应用程序，并集成各种常用功能和服务。开发人员可以根据自己的需求选择需要的starter，以简化开发过程并提高开发效率。
+---
+
+## 📂 项目结构概览
+
+### 1. **ticho-dependencies**
+
+- **项目依赖管理模块**  
+  统一管理全局依赖版本，提供 Maven 父级 POM 配置，简化子模块版本控制。
+
+---
+
+### 2. **ticho-starter**
+
+Spring Boot Starter 系列模块，开箱即用：
+
+- **ticho-starter-cache**  
+  缓存抽象层，支持本地缓存与分布式缓存（如 Redis）混合策略。
+- **ticho-starter-cloud**  
+  微服务核心组件，集成服务发现、配置中心等云原生能力。
+- **ticho-starter-email**  
+  邮件服务封装，支持模板化邮件发送。
+- **ticho-starter-es**  
+  ElasticSearch 快速集成，提供 DSL 构建器与高效查询工具。
+- **ticho-starter-gateway**  
+  动态网关支持，集成路由、限流、鉴权等 API 治理功能。
+- **ticho-starter-health**  
+  增强型健康检查，暴露应用状态与自定义探针接口。
+- **ticho-starter-http**  
+  feign 客户端增强，默认使用okhttp，支持负载均衡与自定义拦截器。
+- **ticho-starter-log**  
+  分布式日志追踪，集成 MDC 与日志染色功能。
+- **ticho-starter-minio**  
+  对象存储服务，支持 MinIO的S3协议的文件操作。
+- **ticho-starter-rabbitmq**  
+  RabbitMQ 消息队列增强。
+- **ticho-starter-redis**  
+  Redis简化配置、工具封装等。
+- **ticho-starter-redisson**  
+  分布式锁与并发控制，基于 Redisson 实现。
+- **ticho-starter-security**  
+  安全认证模块，支持 OAuth2/JWT 鉴权与动态权限管理。
+- **ticho-starter-swagger**  
+  API 文档自动化，集成 Swagger2、knife4j。
+- **ticho-starter-view**  
+  统一视图渲染。
+- **ticho-starter-web**  
+  Web 层增强，全局异常处理、参数校验与跨域配置。
+
+---
+
+### 3. **ticho-tool**
+
+**通用工具库**，独立于框架的核心工具类：
+
+- **ticho-tool-generator**  
+  代码生成器，基于 Beetl 模板动态生成 CRUD 代码。
+- **ticho-tool-intranet**  
+  内网穿透工具，基于 Netty 实现 NAT 内网服务暴露。
+- **ticho-tool-json**  
+  Jackson实现，提供简化工具类。
+
+---
+
+### 4. **ticho-trace**
+
+**全链路追踪体系**，兼容 OpenTracing 标准：
+
+- **ticho-trace-common**  
+  公共模型定义（Span、TraceID 等）。
+- **ticho-trace-core**  
+  链路上下文管理，支持日志关联与透传。
+- **ticho-trace-feign**  
+  Feign 客户端拦截器，自动注入追踪标识。
+- **ticho-trace-gateway**  
+  网关层流量标识生成与传播。
+- **ticho-trace-okhttp**  
+  OkHttp 调用链路透传支持。
+- **ticho-trace-spring**  
+  Spring MVC 拦截器，实现请求链路追踪。
+
+---
+
+## 🚀 快速开始
+
+### 引入 Starter 依赖
+
+```xml
+<!-- 示例：引入 Redis Starter -->
+<dependency>
+    <groupId>top.ticho.starter</groupId>
+    <artifactId>ticho-starter-redis</artifactId>
+    <version>${ticho.boot.version}</version>
+</dependency>
