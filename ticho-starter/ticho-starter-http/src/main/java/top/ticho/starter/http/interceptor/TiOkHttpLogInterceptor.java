@@ -4,6 +4,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Headers;
 import okhttp3.HttpUrl;
@@ -39,22 +40,17 @@ import java.util.stream.Collectors;
  * @date 2022-11-01 14:46
  */
 @Slf4j
+@RequiredArgsConstructor
 public class TiOkHttpLogInterceptor implements Interceptor {
-
     /** 日志配置 */
-    private final TiHttpProperty baseHttpProperty;
-
-    public TiOkHttpLogInterceptor(TiHttpProperty baseHttpProperty) {
-        this.baseHttpProperty = baseHttpProperty;
-    }
+    private final TiHttpProperty tiHttpProperty;
 
     @Override
     @NonNull
     public Response intercept(Chain chain) throws IOException {
-        // @formatter:of
         Request req = chain.request();
         // 如果不打印日志，则直接返回
-        if (!Boolean.TRUE.equals(baseHttpProperty.getPrintLog())) {
+        if (!Boolean.TRUE.equals(tiHttpProperty.getPrintLog())) {
             return chain.proceed(req);
         }
         long t1 = System.currentTimeMillis();
@@ -148,7 +144,7 @@ public class TiOkHttpLogInterceptor implements Interceptor {
         return null;
     }
 
-    private String toJson(Map<String, ?> map) {
+    private String toJson(Map<String, Object> map) {
         if (MapUtil.isEmpty(map)) {
             return null;
         }

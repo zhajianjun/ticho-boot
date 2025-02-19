@@ -27,7 +27,6 @@ public class TiFeignFallback<T> implements MethodInterceptor {
     private final String targetName;
     private final Throwable cause;
 
-
     @Nullable
     @Override
     public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) {
@@ -67,4 +66,5 @@ public class TiFeignFallback<T> implements MethodInterceptor {
     public int hashCode() {
         return Objects.hash(targetType);
     }
+
 }

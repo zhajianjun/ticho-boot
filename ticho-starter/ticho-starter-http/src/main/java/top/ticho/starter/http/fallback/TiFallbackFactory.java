@@ -18,8 +18,8 @@ public class TiFallbackFactory<T> implements FallbackFactory<T> {
     @Override
     @SuppressWarnings("unchecked")
     public T create(Throwable cause) {
-        final Class<T> targetType = target.type();
-        final String targetName = target.name();
+        Class<T> targetType = target.type();
+        String targetName = target.name();
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(targetType);
         enhancer.setUseCache(true);
