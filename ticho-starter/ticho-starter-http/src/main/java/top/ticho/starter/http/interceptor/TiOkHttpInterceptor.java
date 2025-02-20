@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @RequiredArgsConstructor
-public class TiOkHttpLogInterceptor implements Interceptor {
+public class TiOkHttpInterceptor implements Interceptor {
     /** 日志配置 */
     private final TiHttpProperty tiHttpProperty;
 

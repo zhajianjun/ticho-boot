@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.client.OkHttp3ClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
-import top.ticho.starter.http.interceptor.TiOkHttpLogInterceptor;
+import top.ticho.starter.http.interceptor.TiOkHttpInterceptor;
 import top.ticho.starter.http.prop.TiHttpProperty;
 
 import javax.net.ssl.HostnameVerifier;
@@ -64,7 +64,7 @@ public class TiOkHttpConfig {
         OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
         interceptors.forEach(builder::addInterceptor);
         if (Boolean.TRUE.equals(prop.getOpenLog())) {
-            builder.addInterceptor(new TiOkHttpLogInterceptor(prop));
+            builder.addInterceptor(new TiOkHttpInterceptor(prop));
         }
         return builder
             // 设置连接超时

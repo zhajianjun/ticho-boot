@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 @Configuration
 @ConditionalOnMissingBean(RequestInterceptor.class)
-public class TiFeignRequestInterceptor implements RequestInterceptor {
+public class TiFeignInterceptor implements RequestInterceptor {
 
     @Override
     public void apply(RequestTemplate template) {
