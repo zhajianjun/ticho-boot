@@ -4,6 +4,8 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import top.ticho.tool.generator.function.StringUtil;
 
+import java.util.List;
+
 /**
  * 字符串工具
  *
@@ -86,5 +88,10 @@ public class StrUtil {
     public static String emptyDefault(String suffix, String defaultValue) {
         return stringUtil.emptyDefault(suffix, defaultValue);
     }
+
+    public static List<String> splitLine(String str, int maxLength) {
+        return stringUtil.splitLine(str, maxLength);
+    }
+
 
 }

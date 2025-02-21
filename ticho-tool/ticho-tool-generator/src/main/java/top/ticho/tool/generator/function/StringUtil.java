@@ -2,7 +2,9 @@ package top.ticho.tool.generator.function;
 
 import top.ticho.tool.generator.util.StrUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -16,10 +18,10 @@ public class StringUtil extends org.beetl.ext.fn.StringUtil {
     public final String UNDERSCORE = "_";
     public final String UNDERLINE = "_";
     private final String[] chars = new String[]{
-        "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p",
-        "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5",
-        "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
-        "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
+            "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p",
+            "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5",
+            "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
+            "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
     };
 
     public String generateId() {
@@ -106,8 +108,8 @@ public class StringUtil extends org.beetl.ext.fn.StringUtil {
         }
         String[] split = str.split("(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])|(?<=[a-z0-9])(?=[A-Z])|(?<=[0-9])(?=[a-zA-Z])|-|_");
         return Arrays.stream(split)
-            .filter(StrUtil::isNotBlank)
-            .map(String::toLowerCase);
+                .filter(StrUtil::isNotBlank)
+                .map(String::toLowerCase);
     }
 
     public boolean isBlank(CharSequence cs) {
@@ -121,6 +123,43 @@ public class StringUtil extends org.beetl.ext.fn.StringUtil {
 
         }
         return true;
+    }
+
+    /**
+     * 字符串按照长度分割
+     * 分割位置为逗号，如果找不到逗号，则分割位置为字符串长度
+     *
+     * @param str       str
+     * @param maxLength 最大长度
+     * @return {@link List }<{@link String }>
+     */
+    public List<String> splitLine(String str, int maxLength) {
+        List<String> result = new ArrayList<>();
+        if (isEmpty(str)) {
+            return result;
+        }
+        if (str.length() <= maxLength) {
+            result.add(str);
+            return result;
+        }
+        int start = 0;
+        int length = str.length();
+        while (start < length) {
+            int end = Math.min(start + maxLength, length);
+            // 查找从start到end范围内最后一个逗号的位置
+            int lastComma = str.lastIndexOf(',', end);
+            if (lastComma != -1 && lastComma >= start) {
+                // 截取到逗号后一位（保留逗号）
+                String segment = str.substring(start, lastComma + 1);
+                result.add(segment);
+                start = lastComma + 1; // 下一次从逗号后开始
+            } else {
+                // 无逗号，直接截取当前段（保证不超过maxLength）
+                result.add(str.substring(start, end));
+                start = end;
+            }
+        }
+        return result;
     }
 
     public boolean isNotBlank(CharSequence cs) {
