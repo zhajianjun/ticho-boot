@@ -115,10 +115,10 @@ public class ProjectHandler {
             return Collections.emptyList();
         }
         return Arrays.stream(files)
-                .filter(file -> fileTemplateConfigMap.containsKey(file.getName()))
-                .map(file -> getFileTemplate(file, fileTemplateConfigMap))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+            .filter(file -> fileTemplateConfigMap.containsKey(file.getName()))
+            .map(file -> getFileTemplate(file, fileTemplateConfigMap))
+            .filter(Objects::nonNull)
+            .collect(Collectors.toList());
     }
 
     private KeyWordsHandler getKeyWordsHandler(DbType dbType) {
@@ -249,10 +249,10 @@ public class ProjectHandler {
         List<String> tableNames = projectConfig.getTables();
         List<Table> tables = new ArrayList<>();
         try (
-                Connection connection = getSafeConnection();
-                // 使用参数化查询
-                PreparedStatement tableStatement = connection.prepareStatement(dbQuery.tablesSql());
-                ResultSet tableResult = tableStatement.executeQuery()
+            Connection connection = getSafeConnection();
+            // 使用参数化查询
+            PreparedStatement tableStatement = connection.prepareStatement(dbQuery.tablesSql());
+            ResultSet tableResult = tableStatement.executeQuery()
         ) {
             while (tableResult.next()) {
                 String tableName = tableResult.getString(dbQuery.tableNameKey());
@@ -301,8 +301,8 @@ public class ProjectHandler {
         List<String> imports = new ArrayList<>();
         String tableFieldsSql = String.format(dbQuery.tableFieldsSql(), tableName);
         try (
-                PreparedStatement tableFieldStatement = connection.prepareStatement(tableFieldsSql);
-                ResultSet tableFieldResult = tableFieldStatement.executeQuery()
+            PreparedStatement tableFieldStatement = connection.prepareStatement(tableFieldsSql);
+            ResultSet tableFieldResult = tableFieldStatement.executeQuery()
         ) {
             while (tableFieldResult.next()) {
                 TableField tableField = new TableField();
@@ -415,7 +415,7 @@ public class ProjectHandler {
 
     private void createParamJsonFile(Map<String, Object> templateParams) {
         String paramJsonPath = CommConst.PROJECT_PATH + File.separator + CommConst.DATA_PATH
-                + File.separator + env + File.separator + CommConst.JSON_FILE_NAME;
+            + File.separator + env + File.separator + CommConst.JSON_FILE_NAME;
         File file = new File(paramJsonPath);
         FileUtil.checkFile(file);
         try (FileOutputStream out = new FileOutputStream(file)) {

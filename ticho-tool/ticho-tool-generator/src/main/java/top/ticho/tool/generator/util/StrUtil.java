@@ -89,9 +89,8 @@ public class StrUtil {
         return stringUtil.emptyDefault(suffix, defaultValue);
     }
 
-    public static List<String> splitLine(String str, int maxLength) {
-        return stringUtil.splitLine(str, maxLength);
+    public static List<String> splitLine(String str, String split, int maxLength) {
+        return stringUtil.splitLine(str, split, maxLength);
     }
-
 
 }
