@@ -139,6 +139,7 @@ public class StringUtil extends org.beetl.ext.fn.StringUtil {
         if (isEmpty(str)) {
             return result;
         }
+        // 长度小于等于最大长度，直接返回
         if (str.length() <= maxLength) {
             result.add(str);
             return result;
@@ -146,15 +147,20 @@ public class StringUtil extends org.beetl.ext.fn.StringUtil {
         int start = 0;
         while (start < str.length()) {
             int end = Math.min(start + maxLength, str.length());
-            int commaPos = str.lastIndexOf(split, end); // 当前段内最后一个逗号
-
-            if (commaPos <= start) { // 当前段无逗号，向后找第一个逗号
+            // 当前段内最后一个逗号
+            int commaPos = str.lastIndexOf(split, end);
+            // 当前段无逗号，向后找第一个逗号
+            if (commaPos <= start) {
                 commaPos = str.indexOf(split, end);
-                if (commaPos == -1) commaPos = str.length(); // 无后续逗号则截取到末尾
+                // 无后续逗号则截取到末尾
+                if (commaPos == -1) {
+                    commaPos = str.length();
+                }
             }
-
-            if (commaPos == -1) break; // 异常保护
-
+            // 异常保护
+            if (commaPos == -1) {
+                break;
+            }
             result.add(str.substring(start, Math.min(commaPos + 1, str.length())));
             start = commaPos + 1;
         }
