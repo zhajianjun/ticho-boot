@@ -1,6 +1,8 @@
 package top.ticho.tool.intranet.server.entity;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
  * @date 2024-02-01 12:30
  */
 @Data
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AppDataCollector {
     private static final Map<Integer, AppDataCollector> collectors = new ConcurrentHashMap<>();
 
@@ -31,9 +34,6 @@ public class AppDataCollector {
     private final AtomicLong writeMsgs = new AtomicLong();
     /** 访问通道数 */
     private final AtomicInteger channels = new AtomicInteger();
-
-    private AppDataCollector() {
-    }
 
     public static AppDataCollector getCollector(Integer port) {
         AppDataCollector collector = collectors.get(port);

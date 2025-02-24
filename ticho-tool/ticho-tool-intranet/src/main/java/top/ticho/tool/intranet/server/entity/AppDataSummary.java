@@ -2,8 +2,6 @@ package top.ticho.tool.intranet.server.entity;
 
 import lombok.Data;
 
-import java.io.Serializable;
-
 /**
  * 数据收集汇总
  *
@@ -11,8 +9,7 @@ import java.io.Serializable;
  * @date 2024-02-01 12:30
  */
 @Data
-public class AppDataSummary implements Serializable {
-    private static final long serialVersionUID = 1L;
+public class AppDataSummary {
 
     /** 端口号 */
     private int port;
