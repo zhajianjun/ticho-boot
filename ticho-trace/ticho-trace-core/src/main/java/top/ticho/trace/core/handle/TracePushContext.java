@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.AntPathMatcher;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.thread.ThreadUtil;
+import lombok.NoArgsConstructor;
 import top.ticho.trace.common.bean.LogInfo;
 import top.ticho.trace.common.bean.TraceInfo;
 import top.ticho.trace.common.constant.LogConst;
@@ -21,9 +22,8 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @author zhajianjun
  * @date 2024-02-01 12:30
  */
+@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class TracePushContext {
-    private TracePushContext() {
-    }
 
     /** url地址匹配 */
     private static final AntPathMatcher antPathMatcher = new AntPathMatcher();

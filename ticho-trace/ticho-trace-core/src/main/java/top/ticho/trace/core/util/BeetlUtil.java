@@ -1,6 +1,6 @@
 package top.ticho.trace.core.util;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.NoArgsConstructor;
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.ReThrowConsoleErrorHandler;
@@ -16,10 +16,8 @@ import java.util.Map;
  * @author zhajianjun
  * @date 2024-02-01 12:30
  */
-@Slf4j
+@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class BeetlUtil {
-    private BeetlUtil() {
-    }
 
     public static GroupTemplate gt;
 

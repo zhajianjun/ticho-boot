@@ -1,6 +1,7 @@
 package top.ticho.trace.core.util;
 
 import cn.hutool.json.JSONUtil;
+import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,10 +13,8 @@ import java.util.Map;
  * @author zhajianjun
  * @date 2024-02-01 12:30
  */
+@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class JsonUtil {
-
-    private JsonUtil() {
-    }
 
     public static String toJsonString(Object obj) {
         return JSONUtil.toJsonStr(obj);

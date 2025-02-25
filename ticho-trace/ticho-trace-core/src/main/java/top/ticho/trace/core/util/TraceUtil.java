@@ -3,6 +3,7 @@ package top.ticho.trace.core.util;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
+import lombok.NoArgsConstructor;
 import org.slf4j.MDC;
 import top.ticho.trace.common.bean.TraceInitInfo;
 import top.ticho.trace.common.constant.LogConst;
@@ -18,10 +19,8 @@ import java.util.function.Supplier;
  * @author zhajianjun
  * @date 2024-02-01 12:30
  */
+@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class TraceUtil {
-
-    private TraceUtil() {
-    }
 
     /** 下个跨度id的索引 */
     private static final TransmittableThreadLocal<AtomicInteger> NEXT_SPAN_INDEX_TL = new TransmittableThreadLocal<>();
