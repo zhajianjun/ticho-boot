@@ -19,21 +19,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @date 2024-02-01 12:30
  */
 public class LogEventListen implements EventHandler<LogInfo> {
-    // 推送地址
+    /** 推送地址 */
     private final String url;
     /** 日志推送的秘钥 */
     private final String secret;
-    // 批次数据缓存
+    /** 日志数据 */
     private final List<LogInfo> logInfos = new ArrayList<>();
-    // 批次大小
+    /** 批处理大小 */
     private final int batchSize;
-    // 定时任务间隔时间
+    /** 定时任务间隔时间 */
     private final long flushInterval;
-    // 上次消费时间
+    /** 上次消费时间 */
     private long lastTime = System.currentTimeMillis();
-    // 定时任务
+    /** 定时处理 */
     private final ScheduledExecutorService executorService;
-    // 定时任务逻辑是否执行
+    /** 定时任务逻辑是否执行 */
     private final AtomicBoolean taskExecute = new AtomicBoolean(false);
 
     public LogEventListen(String url, String secret, int batchSize, long flushInterval, ThreadFactory threadFactory) {
