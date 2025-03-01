@@ -48,10 +48,19 @@ public class TiCacheTemplate {
         getOptCache(name).ifPresent(x -> x.put(key, value));
     }
 
+    /**
+     * 删除缓存
+     *
+     * @param name 缓存名称
+     * @param key  缓存键
+     */
     public void evict(String name, Object key) {
         getOptCache(name).ifPresent(x -> x.evict(key));
     }
 
+    /**
+     * 清除缓存
+     */
     public void clear(String name) {
         getOptCache(name).ifPresent(Cache::clear);
     }
