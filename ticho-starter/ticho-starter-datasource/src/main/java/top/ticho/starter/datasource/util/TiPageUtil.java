@@ -3,9 +3,11 @@ package top.ticho.starter.datasource.util;
 import com.github.pagehelper.Page;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import top.ticho.starter.view.core.TiPageQuery;
 import top.ticho.starter.view.core.TiPageResult;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -17,6 +19,18 @@ import java.util.stream.Collectors;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TiPageUtil {
+
+    public static <T> TiPageResult<T> ofEmpty(TiPageQuery query) {
+        return new TiPageResult<>(query.getPageNum(), query.getPageSize(), 0);
+    }
+
+    public static <T> TiPageResult<T> ofEmpty(Number pageNum, Number pageSize) {
+        return new TiPageResult<>(pageNum, pageSize, 0);
+    }
+
+    public static <T> TiPageResult<T> of(Number pageNum, Number pageSize, Number total, List<T> rows) {
+        return new TiPageResult<>(pageNum, pageSize, total, rows);
+    }
 
     public static <T> TiPageResult<T> of(Page<T> page) {
         TiPageResult<T> tiPageResult = new TiPageResult<>();
