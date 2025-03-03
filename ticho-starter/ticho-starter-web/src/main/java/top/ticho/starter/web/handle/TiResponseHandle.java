@@ -27,6 +27,7 @@ import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
@@ -40,11 +41,14 @@ import top.ticho.starter.view.exception.TiSysException;
 import top.ticho.starter.web.annotation.TiView;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
@@ -62,7 +66,6 @@ import java.util.stream.Collectors;
 public class TiResponseHandle implements ResponseBodyAdvice<Object> {
     public static Map<Class<? extends Throwable>, TiHttpErrCode> errCodeMap = null;
     private final HttpServletResponse response;
-
 
     static {
         Map<Class<? extends Throwable>, TiHttpErrCode> errCodeMap = new HashMap<>();
@@ -90,6 +93,7 @@ public class TiResponseHandle implements ResponseBodyAdvice<Object> {
      * 参数校验异常处理
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.OK)
     public TiResult<String> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException ex) {
         BindingResult bindingResult = ex.getBindingResult();
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();
@@ -99,9 +103,25 @@ public class TiResponseHandle implements ResponseBodyAdvice<Object> {
             .sorted(Comparator.comparing(ObjectError::getObjectName))
             .peek(next -> joiner.add(next.getField() + ":" + next.getDefaultMessage()))
             .collect(Collectors.toList());
-        response.setStatus(HttpStatus.OK.value());
         log.warn("catch error\t{}", joiner);
         return TiResult.fail(TiBizErrCode.PARAM_ERROR, errors.get(0).getDefaultMessage());
+    }
+
+    /**
+     * 参数校验异常处理
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.OK)
+    public TiResult<String> constraintViolationExceptionHandler(ConstraintViolationException ex) {
+        Set<ConstraintViolation<?>> fieldErrors = ex.getConstraintViolations();
+        StringJoiner joiner = new StringJoiner(",", "{", "}");
+        List<ConstraintViolation<?>> errors = fieldErrors
+            .stream()
+            .sorted(Comparator.comparing(ConstraintViolation::getMessage))
+            .peek(next -> joiner.add(next.getPropertyPath() + ":" + next.getMessage()))
+            .collect(Collectors.toList());
+        log.warn("catch error\t{}", joiner);
+        return TiResult.fail(TiBizErrCode.PARAM_ERROR, errors.get(0).getMessage());
     }
 
     /**
@@ -158,4 +178,5 @@ public class TiResponseHandle implements ResponseBodyAdvice<Object> {
         }
         return TiResult.ok(o);
     }
+
 }
