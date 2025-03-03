@@ -1,5 +1,6 @@
 package top.ticho.starter.web.handle;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
@@ -15,6 +16,9 @@ import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.lang.NonNull;
 import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -29,6 +33,7 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 import top.ticho.starter.view.core.TiResult;
+import top.ticho.starter.view.enums.TiBizErrCode;
 import top.ticho.starter.view.enums.TiHttpErrCode;
 import top.ticho.starter.view.exception.TiBizException;
 import top.ticho.starter.view.exception.TiSysException;
@@ -36,8 +41,12 @@ import top.ticho.starter.web.annotation.TiView;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
 
 /**
@@ -47,10 +56,12 @@ import java.util.Map;
  * @date 2022-07-10 15:56:30
  */
 @Slf4j
+@RequiredArgsConstructor
 @RestControllerAdvice
 @Order(Ordered.LOWEST_PRECEDENCE - 10)
 public class TiResponseHandle implements ResponseBodyAdvice<Object> {
     public static Map<Class<? extends Throwable>, TiHttpErrCode> errCodeMap = null;
+    private final HttpServletResponse response;
 
 
     static {
@@ -60,7 +71,6 @@ public class TiResponseHandle implements ResponseBodyAdvice<Object> {
         errCodeMap.put(NoHandlerFoundException.class, TiHttpErrCode.BAD_REQUEST);
         errCodeMap.put(ServletRequestBindingException.class, TiHttpErrCode.BAD_REQUEST);
         errCodeMap.put(HttpMessageNotReadableException.class, TiHttpErrCode.BAD_REQUEST);
-        errCodeMap.put(MethodArgumentNotValidException.class, TiHttpErrCode.BAD_REQUEST);
         errCodeMap.put(MissingServletRequestPartException.class, TiHttpErrCode.BAD_REQUEST);
         errCodeMap.put(MissingServletRequestParameterException.class, TiHttpErrCode.BAD_REQUEST);
 
@@ -77,14 +87,32 @@ public class TiResponseHandle implements ResponseBodyAdvice<Object> {
     }
 
     /**
+     * 参数校验异常处理
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public TiResult<String> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException ex) {
+        BindingResult bindingResult = ex.getBindingResult();
+        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+        StringJoiner joiner = new StringJoiner(",", "{", "}");
+        List<FieldError> errors = fieldErrors
+            .stream()
+            .sorted(Comparator.comparing(ObjectError::getObjectName))
+            .peek(next -> joiner.add(next.getField() + ":" + next.getDefaultMessage()))
+            .collect(Collectors.toList());
+        response.setStatus(HttpStatus.OK.value());
+        log.warn("catch error\t{}", joiner);
+        return TiResult.fail(TiBizErrCode.PARAM_ERROR, errors.get(0).getDefaultMessage());
+    }
+
+    /**
      * 全局错误用于捕获不可预知的异常
      */
     @ExceptionHandler(Exception.class)
-    public TiResult<String> exception(Exception ex, HttpServletResponse res) {
+    public TiResult<String> exception(Exception ex) {
         if (ex instanceof TiBizException) {
             // 业务异常
             TiBizException tiBizException = (TiBizException) ex;
-            res.setStatus(HttpStatus.OK.value());
+            response.setStatus(HttpStatus.OK.value());
             log.warn("catch error\t{}", ex.getMessage());
             return TiResult.of(tiBizException.getCode(), tiBizException.getMsg());
         }
@@ -92,17 +120,17 @@ public class TiResponseHandle implements ResponseBodyAdvice<Object> {
         TiResult<String> tiResult;
         if (tiHttpErrorCode != null) {
             tiResult = TiResult.of(tiHttpErrorCode);
-            res.setStatus(tiResult.getCode());
+            response.setStatus(tiResult.getCode());
         } else if (ex instanceof TiSysException) {
             // 系统异常
             TiSysException systemException = (TiSysException) ex;
             tiResult = TiResult.of(systemException.getCode(), systemException.getMsg());
-            res.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         } else {
             // 未知异常
             tiResult = TiResult.of(TiHttpErrCode.FAIL);
             tiResult.setMsg(ex.getMessage());
-            res.setStatus(tiResult.getCode());
+            response.setStatus(tiResult.getCode());
         }
         log.error("catch error\t{}", ex.getMessage(), ex);
         return tiResult;
