@@ -19,6 +19,8 @@ public class TiPageQuery implements Serializable {
     private Integer pageNum;
     /** 页面大小 */
     private Integer pageSize;
+    /** 是否进行count查询 */
+    private Boolean count;
 
     public void checkPage(int defaultPageSize) {
         if (Objects.isNull(pageNum) || pageNum <= 0) {
@@ -26,6 +28,9 @@ public class TiPageQuery implements Serializable {
         }
         if (Objects.isNull(pageSize) || pageSize <= 0) {
             pageSize = defaultPageSize;
+        }
+        if (Objects.isNull(count)) {
+            count = true;
         }
     }
 

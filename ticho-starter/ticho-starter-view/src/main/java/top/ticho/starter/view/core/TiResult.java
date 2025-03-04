@@ -88,6 +88,10 @@ public class TiResult<T> {
         return of(TiBizErrCode.FAIL.getCode(), msg, null);
     }
 
+    public static <T> TiResult<T> fail(TiErrCode errCode, String msg) {
+        return of(errCode, msg, null);
+    }
+
     public static <T> TiResult<T> condition(boolean flag) {
         return flag ? ok() : fail();
     }
