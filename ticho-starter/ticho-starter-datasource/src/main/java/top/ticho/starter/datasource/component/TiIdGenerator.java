@@ -41,7 +41,9 @@ public class TiIdGenerator implements IdentifierGenerator {
     }
 
     private void printLog(Object entity, Serializable id) {
-        log.debug("{}对象主键防空策略生成主键值->:{}", entity.getClass().getName(), id);
+        if (log.isDebugEnabled()) {
+            log.debug("{}DB对象主键ID生成->:{}", entity.getClass().getName(), id);
+        }
     }
 
 }
