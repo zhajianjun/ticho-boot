@@ -51,7 +51,7 @@ public abstract class AbstractLoginUserHandle implements LoginUserHandle {
      * @param tiSecurityUser 权限用户
      * @return token返回信息
      */
-    protected TiToken getOauth2TokenAndSetAuthentication(TiSecurityUser tiSecurityUser) {
+    protected TiToken toToken(TiSecurityUser tiSecurityUser) {
         List<String> authoritieStrs = Optional.ofNullable(tiSecurityUser.getRoles()).orElseGet(ArrayList::new);
         tiSecurityUser.setPassword("N/A");
         List<SimpleGrantedAuthority> authorities = authoritieStrs.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
@@ -84,4 +84,5 @@ public abstract class AbstractLoginUserHandle implements LoginUserHandle {
         }
         return map;
     }
+
 }

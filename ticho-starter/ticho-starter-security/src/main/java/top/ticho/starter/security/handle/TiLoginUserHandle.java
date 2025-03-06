@@ -1,6 +1,6 @@
 package top.ticho.starter.security.handle;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,6 @@ import top.ticho.starter.view.enums.TiHttpErrCode;
 import top.ticho.starter.view.exception.TiBizException;
 import top.ticho.starter.view.util.TiAssert;
 
-import javax.annotation.Resource;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -29,25 +28,18 @@ import java.util.Optional;
  */
 @ConditionalOnMissingBean(LoginUserHandle.class)
 @Component
+@RequiredArgsConstructor
 public class TiLoginUserHandle extends AbstractLoginUserHandle {
-
-    @Resource
-    private PasswordEncoder passwordEncoder;
-
-    @Resource
-    private LoadUserService loadUserService;
-
-    @Autowired
-    private JwtDecode jwtDecode;
-
-    @Autowired
-    private JwtSigner jwtSigner;
+    private final PasswordEncoder passwordEncoder;
+    private final LoadUserService loadUserService;
+    private final JwtDecode jwtDecode;
+    private final JwtSigner jwtSigner;
 
     public TiToken token(LoginRequest loginRequest) {
         String account = loginRequest.getUsername();
         String credentials = loginRequest.getPassword();
         TiSecurityUser tiSecurityUser = checkPassword(account, credentials);
-        return getOauth2TokenAndSetAuthentication(tiSecurityUser);
+        return toToken(tiSecurityUser);
     }
 
     public TiSecurityUser checkPassword(String account, String credentials) {
@@ -68,14 +60,15 @@ public class TiLoginUserHandle extends AbstractLoginUserHandle {
         Object type = decodeAndVerify.getOrDefault(TiSecurityConst.TYPE, "");
         TiAssert.isTrue(Objects.equals(type, TiSecurityConst.REFRESH_TOKEN), TiBizErrCode.FAIL, "refreshToken不合法");
         String username = Optional.ofNullable(decodeAndVerify.get(TiSecurityConst.USERNAME))
-                .map(Object::toString)
-                .orElseThrow(() -> new TiBizException(TiBizErrCode.FAIL, "用户名不存在"));
+            .map(Object::toString)
+            .orElseThrow(() -> new TiBizException(TiBizErrCode.FAIL, "用户名不存在"));
         TiSecurityUser tiSecurityUser = loadUserService.load(username);
-        return getOauth2TokenAndSetAuthentication(tiSecurityUser);
+        return toToken(tiSecurityUser);
     }
 
     @Override
     public String publicKey() {
         return jwtSigner.getVerifierKey();
     }
+
 }

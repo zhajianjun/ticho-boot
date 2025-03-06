@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 public class TiOauthProperty {
 
-    /** ccess_token的有效时间(秒) 默认12小时 */
+    /** access_token的有效时间(秒) 默认12小时 */
     private Integer accessTokenValidity = 43200;
 
     /** refresh_token有效期(秒) 默认24小时 */

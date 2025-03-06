@@ -21,7 +21,7 @@ import java.util.List;
 @Slf4j
 public class TiSecurityProperty {
 
-    /** ccess_token的有效时间(秒) 默认12小时 */
+    /** access_token的有效时间(秒) 默认12小时 */
     private Integer accessTokenValidity = 43200;
     /** refresh_token有效期(秒) 默认24小时 */
     private Integer refreshTokenValidity = 86400;
