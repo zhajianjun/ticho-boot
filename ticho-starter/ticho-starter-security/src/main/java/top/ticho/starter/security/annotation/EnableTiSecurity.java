@@ -23,11 +23,11 @@ import java.lang.annotation.Target;
 @Target(value = {java.lang.annotation.ElementType.TYPE})
 @Documented
 @Import({
-        TiOauthProperty.class,
-        JwtEncode.class,
-        TiLoadUserService.class,
-        TiLoginUserHandle.class,
-        TiOauthController.class,
+    TiOauthProperty.class,
+    JwtEncode.class,
+    TiLoadUserService.class,
+    TiLoginUserHandle.class,
+    TiOauthController.class,
 })
 @ConditionalOnWebApplication
 public @interface EnableTiSecurity {

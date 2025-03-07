@@ -78,9 +78,9 @@ public abstract class AbstractAuthTokenFilter<T extends TiSecurityUser> extends 
 
     @Override
     protected void doFilterInternal(
-            @NonNull HttpServletRequest request,
-            @NonNull HttpServletResponse response,
-            @NonNull FilterChain chain
+        @NonNull HttpServletRequest request,
+        @NonNull HttpServletResponse response,
+        @NonNull FilterChain chain
     ) throws IOException {
         try {
             support(request, response);

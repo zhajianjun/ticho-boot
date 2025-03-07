@@ -51,29 +51,29 @@ public class TiWebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                // 动态给特定资源接口放行
-                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
-                    @Override
-                    public <O extends FilterSecurityInterceptor> O postProcess(O o) {
-                        // 权限判断
-                        o.setAccessDecisionManager(accessDecisionManager);
-                        return o;
-                    }
-                })
-                .anyRequest().authenticated()
-                .and()
-                .headers()
-                .cacheControl();
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .authorizeRequests()
+            .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+            // 动态给特定资源接口放行
+            .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+                @Override
+                public <O extends FilterSecurityInterceptor> O postProcess(O o) {
+                    // 权限判断
+                    o.setAccessDecisionManager(accessDecisionManager);
+                    return o;
+                }
+            })
+            .anyRequest().authenticated()
+            .and()
+            .headers()
+            .cacheControl();
         http.addFilterBefore(oncePerRequestFilter, UsernamePasswordAuthenticationFilter.class);
         http.exceptionHandling()
-                // 无Authorization相关header参数
-                .accessDeniedHandler(accessDeniedHandler)
-                // 认证成功,权限不足返回视图
-                .authenticationEntryPoint(authenticationEntryPoint);
+            // 无Authorization相关header参数
+            .accessDeniedHandler(accessDeniedHandler)
+            // 认证成功,权限不足返回视图
+            .authenticationEntryPoint(authenticationEntryPoint);
     }
 
 }

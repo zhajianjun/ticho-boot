@@ -39,10 +39,10 @@ public class TiLoadUserService implements LoadUserService, InitializingBean {
     public TiSecurityUser load(String account) {
         List<TiSecurityUser> users = tiSecurityProperty.getUsers();
         TiSecurityUser tiSecurityUser = users
-                .stream()
-                .filter(x -> Objects.equals(x.getUsername(), account))
-                .findFirst()
-                .orElse(null);
+            .stream()
+            .filter(x -> Objects.equals(x.getUsername(), account))
+            .findFirst()
+            .orElse(null);
         // 拷贝一份对象进行返回，防止对源对象进行属性修改
         return TiJsonUtil.copy(tiSecurityUser, TiSecurityUser.class);
     }
