@@ -15,4 +15,5 @@ public class TiLoginRequest implements LoginRequest {
     private String username;
     /** 密码 */
     private String password;
+
 }

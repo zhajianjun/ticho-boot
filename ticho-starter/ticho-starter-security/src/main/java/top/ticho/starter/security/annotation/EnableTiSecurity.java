@@ -6,7 +6,6 @@ import top.ticho.starter.security.controller.TiOauthController;
 import top.ticho.starter.security.handle.TiLoginUserHandle;
 import top.ticho.starter.security.handle.jwt.JwtEncode;
 import top.ticho.starter.security.handle.load.TiLoadUserService;
-import top.ticho.starter.security.prop.TiOauthProperty;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -23,7 +22,6 @@ import java.lang.annotation.Target;
 @Target(value = {java.lang.annotation.ElementType.TYPE})
 @Documented
 @Import({
-    TiOauthProperty.class,
     JwtEncode.class,
     TiLoadUserService.class,
     TiLoginUserHandle.class,
