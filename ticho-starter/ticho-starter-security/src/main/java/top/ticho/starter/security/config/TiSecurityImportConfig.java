@@ -40,8 +40,6 @@ public class TiSecurityImportConfig {
 
     /**
      * 密码编码器
-     *
-     * @return {@link PasswordEncoder}
      */
     @Bean
     @ConditionalOnMissingBean(PasswordEncoder.class)
@@ -51,8 +49,6 @@ public class TiSecurityImportConfig {
 
     /**
      * jwt签名
-     *
-     * @return {@link JwtSigner}
      */
     @Bean
     @ConditionalOnMissingBean(JwtSigner.class)
@@ -68,8 +64,6 @@ public class TiSecurityImportConfig {
 
     /**
      * 拒绝访问处理程序
-     *
-     * @return {@link AccessDeniedHandler}
      */
     @Bean
     @ConditionalOnMissingBean(AccessDeniedHandler.class)
@@ -79,8 +73,6 @@ public class TiSecurityImportConfig {
 
     /**
      * 认证入口点
-     *
-     * @return {@link AuthenticationEntryPoint}
      */
     @Bean
     @ConditionalOnMissingBean(AuthenticationEntryPoint.class)
@@ -90,8 +82,6 @@ public class TiSecurityImportConfig {
 
     /**
      * jwt 扩展信息
-     *
-     * @return {@link JwtExtra}
      */
     @Bean
     public JwtExtra jwtExtra() {
@@ -100,9 +90,6 @@ public class TiSecurityImportConfig {
 
     /**
      * jwt解码
-     *
-     * @param jwtSigner jwt签名
-     * @return {@link JwtDecode}
      */
     @Bean
     public JwtDecode jwtDecode(JwtSigner jwtSigner) {
@@ -111,8 +98,6 @@ public class TiSecurityImportConfig {
 
     /**
      * security参数配置对象
-     *
-     * @return {@link TiSecurityProperty}
      */
     @Bean
     @ConfigurationProperties(prefix = "ticho.security")
@@ -122,8 +107,6 @@ public class TiSecurityImportConfig {
 
     /**
      * ticho访问决策管理
-     *
-     * @return {@link TiAccessDecisionManager}
      */
     @Bean
     public TiAccessDecisionManager tichoAccessDecisionManager() {
@@ -137,8 +120,6 @@ public class TiSecurityImportConfig {
 
     /**
      * 权限许可服务
-     *
-     * @return {@link PermissionService}
      */
     @Bean(TiSecurityConst.PM)
     @ConditionalOnMissingBean(name = TiSecurityConst.PM)
@@ -159,8 +140,6 @@ public class TiSecurityImportConfig {
 
     /**
      * 权限上下文传递
-     *
-     * @return {@link TiTaskDecortor}<{@link Authentication}>
      */
     @Bean
     public TiTaskDecortor<Authentication> authenticationTaskDecortor() {
