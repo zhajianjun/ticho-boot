@@ -1,6 +1,7 @@
 package top.ticho.starter.datasource.util;
 
 import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,13 @@ import java.util.stream.Collectors;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TiPageUtil {
+
+    public static <T extends TiPageQuery, R> TiPageResult<R> of(T pageQuery, Function<T, R> select) {
+        pageQuery.checkPage();
+        Page<R> page = PageHelper.startPage(pageQuery.getPageNum(), pageQuery.getPageSize(), pageQuery.getCount());
+        page.doSelectPage(() -> select.apply(pageQuery));
+        return of(page);
+    }
 
     public static <T> TiPageResult<T> of(Number pageNum, Number pageSize, Number total, List<T> rows) {
         return new TiPageResult<>(pageNum, pageSize, total, rows);
