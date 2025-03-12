@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import top.ticho.starter.view.core.TiPageQuery;
 import top.ticho.starter.view.core.TiPageResult;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TiPageUtil {
 
-    public static <T extends TiPageQuery, R> TiPageResult<R> of(T pageQuery, Function<T, R> select) {
+    public static <T extends TiPageQuery, R> TiPageResult<R> select(T pageQuery, Function<T, R> select) {
         pageQuery.checkPage();
         Page<R> page = PageHelper.startPage(pageQuery.getPageNum(), pageQuery.getPageSize(), pageQuery.getCount());
         page.doSelectPage(() -> select.apply(pageQuery));
@@ -48,7 +47,7 @@ public class TiPageUtil {
         tiPageResult.setPageNum(page.getPageNum());
         tiPageResult.setPageSize(page.getPageSize());
         tiPageResult.setPages(page.getPages());
-        tiPageResult.setTotal(BigDecimal.valueOf(page.getTotal()).intValue());
+        tiPageResult.setTotal(Long.valueOf(page.getTotal()).intValue());
         tiPageResult.setRows(page.getResult());
         return tiPageResult;
     }
@@ -58,7 +57,7 @@ public class TiPageUtil {
         tiPageResult.setPageNum(page.getPageNum());
         tiPageResult.setPageSize(page.getPageSize());
         tiPageResult.setPages(page.getPages());
-        tiPageResult.setTotal(BigDecimal.valueOf(page.getTotal()).intValue());
+        tiPageResult.setTotal(Long.valueOf(page.getTotal()).intValue());
         tiPageResult.setRows(page.getResult().stream().map(function).collect(Collectors.toList()));
         return tiPageResult;
     }
@@ -68,7 +67,7 @@ public class TiPageUtil {
         tiPageResult.setPageNum(page.getPageNum());
         tiPageResult.setPageSize(page.getPageSize());
         tiPageResult.setPages(page.getPages());
-        tiPageResult.setTotal(BigDecimal.valueOf(page.getTotal()).intValue());
+        tiPageResult.setTotal(Long.valueOf(page.getTotal()).intValue());
         tiPageResult.setRows(page.getList());
         return tiPageResult;
     }
@@ -78,7 +77,7 @@ public class TiPageUtil {
         tiPageResult.setPageNum(page.getPageNum());
         tiPageResult.setPageSize(page.getPageSize());
         tiPageResult.setPages(page.getPages());
-        tiPageResult.setTotal(BigDecimal.valueOf(page.getTotal()).intValue());
+        tiPageResult.setTotal(Long.valueOf(page.getTotal()).intValue());
         tiPageResult.setRows(page.getList().stream().map(function).collect(Collectors.toList()));
         return tiPageResult;
     }
@@ -88,7 +87,7 @@ public class TiPageUtil {
         tiPageResult.setPageNum(Long.valueOf(page.getCurrent()).intValue());
         tiPageResult.setPageSize(Long.valueOf(page.getSize()).intValue());
         tiPageResult.setPages(Long.valueOf(page.getPages()).intValue());
-        tiPageResult.setTotal(BigDecimal.valueOf(page.getTotal()).intValue());
+        tiPageResult.setTotal(Long.valueOf(page.getTotal()).intValue());
         tiPageResult.setRows(page.getRecords());
         return tiPageResult;
     }
@@ -98,7 +97,7 @@ public class TiPageUtil {
         tiPageResult.setPageNum(Long.valueOf(page.getCurrent()).intValue());
         tiPageResult.setPageSize(Long.valueOf(page.getSize()).intValue());
         tiPageResult.setPages(Long.valueOf(page.getPages()).intValue());
-        tiPageResult.setTotal(BigDecimal.valueOf(page.getTotal()).intValue());
+        tiPageResult.setTotal(Long.valueOf(page.getTotal()).intValue());
         tiPageResult.setRows(page.getRecords().stream().map(function).collect(Collectors.toList()));
         return tiPageResult;
     }
