@@ -23,6 +23,7 @@ import java.util.Properties;
 @AllArgsConstructor
 public class TiYamlPropertySourceFactory implements PropertySourceFactory {
 
+    @NonNull
     @Override
     public PropertySource<?> createPropertySource(String name, @NonNull EncodedResource resource) throws IOException {
         Properties propertiesFromYaml = loadYamlIntoProperties(resource);
@@ -45,4 +46,5 @@ public class TiYamlPropertySourceFactory implements PropertySourceFactory {
             throw e;
         }
     }
+
 }

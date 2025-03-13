@@ -21,11 +21,10 @@ import java.io.InputStream;
 public class TiMultipartFile implements MultipartFile {
     private final String name;
     private final String originalFilename;
-    @Nullable
     private final String contentType;
     private final byte[] content;
 
-    public TiMultipartFile(String name, @Nullable byte[] content) {
+    public TiMultipartFile(String name, byte[] content) {
         this(name, "", null, content);
     }
 
@@ -33,8 +32,7 @@ public class TiMultipartFile implements MultipartFile {
         this(name, "", null, FileCopyUtils.copyToByteArray(contentStream));
     }
 
-    public TiMultipartFile(String name, @Nullable String originalFilename, @Nullable String contentType,
-                           @Nullable byte[] content) {
+    public TiMultipartFile(String name, String originalFilename, String contentType, byte[] content) {
         Assert.hasLength(name, "Name must not be empty");
         this.name = name;
         this.originalFilename = originalFilename != null ? originalFilename : "";
@@ -42,18 +40,15 @@ public class TiMultipartFile implements MultipartFile {
         this.content = content != null ? content : new byte[0];
     }
 
-    public TiMultipartFile(String name, @Nullable String originalFilename, @Nullable String contentType,
-                           InputStream contentStream) throws IOException {
+    public TiMultipartFile(String name, String originalFilename, String contentType, InputStream contentStream) throws IOException {
         this(name, originalFilename, contentType, FileCopyUtils.copyToByteArray(contentStream));
     }
 
-    public TiMultipartFile(@NonNull MultipartFile multipartFile) throws IOException {
-        this(
-            multipartFile.getName(), multipartFile.getOriginalFilename(), multipartFile.getContentType(),
-            multipartFile.getBytes()
-        );
+    public TiMultipartFile(@NonNull MultipartFile file) throws IOException {
+        this(file.getName(), file.getOriginalFilename(), file.getContentType(), file.getBytes());
     }
 
+    @NonNull
     @Override
     public String getName() {
         return this.name;
@@ -81,18 +76,21 @@ public class TiMultipartFile implements MultipartFile {
         return this.content.length;
     }
 
+    @NonNull
     @Override
     public byte[] getBytes() {
         return this.content;
     }
 
+    @NonNull
     @Override
     public InputStream getInputStream() {
         return new ByteArrayInputStream(this.content);
     }
 
     @Override
-    public void transferTo(File dest) throws IOException, IllegalStateException {
+    public void transferTo(@NonNull File dest) throws IOException, IllegalStateException {
         FileCopyUtils.copy(this.content, dest);
     }
+
 }

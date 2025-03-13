@@ -9,7 +9,7 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import top.ticho.starter.web.factory.TiYamlPropertySourceFactory;
-import top.ticho.starter.web.handle.TiResponseHandle;
+import top.ticho.starter.web.handle.TiResponseBodyAdvice;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -37,7 +37,7 @@ public class TiWebMvcConfig implements WebMvcConfigurer {
      * 主要处理  ResponseHandle#beforeBodyWrite中返回String,使用 StringHttpMessageConverter，但是最终返回的是Result对象，导致
      * StringHttpMessageConverter转换异常，所以去除StringHttpMessageConverter，并添加MappingJackson2HttpMessageConverter作为默认的转换器
      *
-     * @see TiResponseHandle#beforeBodyWrite(Object, org.springframework.core.MethodParameter, org.springframework.http.MediaType, Class, org.springframework.http.server.ServerHttpRequest, org.springframework.http.server.ServerHttpResponse)(Object, org.springframework.core.MethodParameter, org.springframework.http.MediaType, Class, org.springframework.http.server.ServerHttpRequest, org.springframework.http.server.ServerHttpResponse)
+     * @see TiResponseBodyAdvice#beforeBodyWrite(Object, org.springframework.core.MethodParameter, org.springframework.http.MediaType, Class, org.springframework.http.server.ServerHttpRequest, org.springframework.http.server.ServerHttpResponse)(Object, org.springframework.core.MethodParameter, org.springframework.http.MediaType, Class, org.springframework.http.server.ServerHttpRequest, org.springframework.http.server.ServerHttpResponse)
      */
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {

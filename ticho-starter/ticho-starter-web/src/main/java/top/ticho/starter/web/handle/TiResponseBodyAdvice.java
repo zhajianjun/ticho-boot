@@ -63,7 +63,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RestControllerAdvice
 @Order(Ordered.LOWEST_PRECEDENCE - 10)
-public class TiResponseHandle implements ResponseBodyAdvice<Object> {
+public class TiResponseBodyAdvice implements ResponseBodyAdvice<Object> {
     public static Map<Class<? extends Throwable>, TiHttpErrCode> errCodeMap = null;
     private final HttpServletResponse response;
 
@@ -86,7 +86,7 @@ public class TiResponseHandle implements ResponseBodyAdvice<Object> {
         errCodeMap.put(HttpMediaTypeNotAcceptableException.class, TiHttpErrCode.NOT_ACCEPTABLE);
 
         errCodeMap.put(AsyncRequestTimeoutException.class, TiHttpErrCode.SERVICE_UNAVAILABLE);
-        TiResponseHandle.errCodeMap = Collections.unmodifiableMap(errCodeMap);
+        TiResponseBodyAdvice.errCodeMap = Collections.unmodifiableMap(errCodeMap);
     }
 
     /**
