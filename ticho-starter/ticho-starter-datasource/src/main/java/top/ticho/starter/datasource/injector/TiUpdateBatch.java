@@ -44,9 +44,9 @@ public class TiUpdateBatch extends AbstractMethod {
         String valuesScript = SqlScriptUtils.convertForeach(property, "list", null, ENTITY, "union all");
         StringBuilder sqlSb = new StringBuilder();
         sqlSb.append("<script>");
-        sqlSb.append("update ").append(tableInfo.getTableName()).append(" as T1, (select ").append(columns).append(" from ").append(tableInfo.getTableName()).append(" where 1=2 union all");
+        sqlSb.append("update ").append(tableInfo.getTableName()).append(" as t1, (select ").append(columns).append(" from ").append(tableInfo.getTableName()).append("union all");
         sqlSb.append(valuesScript);
-        sqlSb.append(") as T2 set ");
+        sqlSb.append(") as t2 set ");
         for (TableFieldInfo fieldInfo : fieldList) {
             sqlSb.append(" t1.").append(fieldInfo.getColumn()).append(" = t2.").append(fieldInfo.getColumn()).append(",");
         }
