@@ -1,6 +1,5 @@
 package top.ticho.starter.security.handle;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -16,6 +15,7 @@ import top.ticho.starter.view.enums.TiHttpErrCode;
 import top.ticho.starter.view.exception.TiBizException;
 import top.ticho.starter.view.util.TiAssert;
 
+import javax.annotation.Resource;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -28,12 +28,15 @@ import java.util.Optional;
  */
 @ConditionalOnMissingBean(LoginUserHandle.class)
 @Component
-@RequiredArgsConstructor
 public class TiLoginUserHandle extends AbstractLoginUserHandle {
-    private final PasswordEncoder passwordEncoder;
-    private final LoadUserService loadUserService;
-    private final JwtDecode jwtDecode;
-    private final JwtSigner jwtSigner;
+    @Resource
+    private PasswordEncoder passwordEncoder;
+    @Resource
+    private LoadUserService loadUserService;
+    @Resource
+    private JwtDecode jwtDecode;
+    @Resource
+    private JwtSigner jwtSigner;
 
     public TiToken token(LoginRequest loginRequest) {
         String account = loginRequest.getUsername();

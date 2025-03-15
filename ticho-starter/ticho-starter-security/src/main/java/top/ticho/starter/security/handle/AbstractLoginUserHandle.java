@@ -1,7 +1,6 @@
 package top.ticho.starter.security.handle;
 
 import cn.hutool.core.collection.CollUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,6 +13,7 @@ import top.ticho.starter.security.handle.jwt.JwtExtra;
 import top.ticho.starter.security.handle.jwt.JwtSigner;
 import top.ticho.starter.view.core.TiSecurityUser;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,13 +31,11 @@ import java.util.stream.Collectors;
  */
 public abstract class AbstractLoginUserHandle implements LoginUserHandle {
 
-    @Autowired
+    @Resource
     private JwtEncode jwtEncode;
-
-    @Autowired
+    @Resource
     private JwtSigner jwtSigner;
-
-    @Autowired
+    @Resource
     private Map<String, JwtExtra> jwtExtInfoMap;
 
 
