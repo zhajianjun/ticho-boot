@@ -16,41 +16,29 @@ import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.lang.NonNull;
 import org.springframework.validation.BindException;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 import top.ticho.starter.view.core.TiResult;
-import top.ticho.starter.view.enums.TiBizErrCode;
+import top.ticho.starter.view.enums.TiErrCode;
 import top.ticho.starter.view.enums.TiHttpErrCode;
 import top.ticho.starter.view.exception.TiBizException;
 import top.ticho.starter.view.exception.TiSysException;
 import top.ticho.starter.web.annotation.TiView;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.StringJoiner;
-import java.util.stream.Collectors;
 
 
 /**
@@ -90,41 +78,6 @@ public class TiResponseBodyAdvice implements ResponseBodyAdvice<Object> {
     }
 
     /**
-     * 参数校验异常处理
-     */
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.OK)
-    public TiResult<String> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException ex) {
-        BindingResult bindingResult = ex.getBindingResult();
-        List<FieldError> fieldErrors = bindingResult.getFieldErrors();
-        StringJoiner joiner = new StringJoiner(",", "{", "}");
-        List<FieldError> errors = fieldErrors
-            .stream()
-            .sorted(Comparator.comparing(ObjectError::getObjectName))
-            .peek(next -> joiner.add(next.getField() + ":" + next.getDefaultMessage()))
-            .collect(Collectors.toList());
-        log.warn("catch error\t{}", joiner);
-        return TiResult.fail(TiBizErrCode.PARAM_ERROR, errors.get(0).getDefaultMessage());
-    }
-
-    /**
-     * 参数校验异常处理
-     */
-    @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseStatus(HttpStatus.OK)
-    public TiResult<String> constraintViolationExceptionHandler(ConstraintViolationException ex) {
-        Set<ConstraintViolation<?>> fieldErrors = ex.getConstraintViolations();
-        StringJoiner joiner = new StringJoiner(",", "{", "}");
-        List<ConstraintViolation<?>> errors = fieldErrors
-            .stream()
-            .sorted(Comparator.comparing(ConstraintViolation::getMessage))
-            .peek(next -> joiner.add(next.getPropertyPath() + ":" + next.getMessage()))
-            .collect(Collectors.toList());
-        log.warn("catch error\t{}", joiner);
-        return TiResult.fail(TiBizErrCode.PARAM_ERROR, errors.get(0).getMessage());
-    }
-
-    /**
      * 全局错误用于捕获不可预知的异常
      */
     @ExceptionHandler(Exception.class)
@@ -136,10 +89,10 @@ public class TiResponseBodyAdvice implements ResponseBodyAdvice<Object> {
             log.warn("catch error\t{}", ex.getMessage());
             return TiResult.of(tiBizException.getCode(), tiBizException.getMsg());
         }
-        TiHttpErrCode tiHttpErrorCode = errCodeMap.get(ex.getClass());
+        TiErrCode errCode = errCodeMap.get(ex.getClass());
         TiResult<String> tiResult;
-        if (tiHttpErrorCode != null) {
-            tiResult = TiResult.of(tiHttpErrorCode);
+        if (errCode != null) {
+            tiResult = TiResult.of(errCode);
             response.setStatus(tiResult.getCode());
         } else if (ex instanceof TiSysException) {
             // 系统异常
