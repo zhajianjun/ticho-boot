@@ -22,7 +22,7 @@ public enum TiBizErrCode implements Serializable, TiErrCode {
     FAIL(-1, "执行失败"),
     PARAM_ERROR(1000, "参数不能为空"),
     IS_NOT_EXISTS(1001, "数据不存在"),
-    APP_SERVICE_ERR(1001, "数据不存在");
+    APP_SERVICE_ERR(1001, "服务异常");
 
     private static final long serialVersionUID = 1L;
 
