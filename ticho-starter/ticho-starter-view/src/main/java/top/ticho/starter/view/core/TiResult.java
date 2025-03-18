@@ -4,6 +4,8 @@ import lombok.Data;
 import top.ticho.starter.view.enums.TiBizErrCode;
 import top.ticho.starter.view.enums.TiErrCode;
 
+import java.io.Serializable;
+
 /**
  * 统一响应消息
  *
@@ -11,7 +13,8 @@ import top.ticho.starter.view.enums.TiErrCode;
  * @date 2022-07-10 15:56:30
  */
 @Data
-public class TiResult<T> {
+public class TiResult<T> implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     /** 业务码 */
     private int code;
