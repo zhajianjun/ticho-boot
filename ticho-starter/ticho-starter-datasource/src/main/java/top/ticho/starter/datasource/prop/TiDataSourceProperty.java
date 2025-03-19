@@ -10,6 +10,7 @@ import lombok.Data;
  */
 @Data
 public class TiDataSourceProperty {
+
     /** 数据库URL */
     private String url;
     /** 数据库用户名 */

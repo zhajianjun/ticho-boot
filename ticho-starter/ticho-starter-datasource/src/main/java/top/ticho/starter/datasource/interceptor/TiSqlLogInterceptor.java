@@ -73,9 +73,8 @@ public class TiSqlLogInterceptor implements Interceptor {
         // 注意当前判断的类型是我们intercept方法所拦截的类型
         if (target instanceof StatementHandler) {
             return Plugin.wrap(target, this);
-        } else {
-            return target;
         }
+        return target;
     }
 
     @Override

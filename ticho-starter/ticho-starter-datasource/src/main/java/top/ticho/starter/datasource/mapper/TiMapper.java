@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.Collection;
 
 /**
- * RootMapper接口，继承自MyBatis-Plus的BaseMapper，提供自定义的批量操作方法
+ * TiMapper接口，继承自MyBatis-Plus的BaseMapper，提供自定义的批量操作方法
  *
  * @author zhajianjun
  * @date 2022-10-17 08:53
