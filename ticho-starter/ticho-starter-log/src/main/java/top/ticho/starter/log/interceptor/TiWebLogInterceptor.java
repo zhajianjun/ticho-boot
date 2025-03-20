@@ -6,7 +6,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
-import com.alibaba.ttl.TransmittableThreadLocal;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationContext;
@@ -53,9 +52,9 @@ public class TiWebLogInterceptor implements HandlerInterceptor, Ordered {
     /** 用户代理key */
     private static final String USER_AGENT = "User-Agent";
     /** 日志信息线程变量 */
-    private static final TransmittableThreadLocal<TiHttpLog> logTheadLocal = new TransmittableThreadLocal<>();
+    private static final ThreadLocal<TiHttpLog> logTheadLocal = new ThreadLocal<>();
     /** 日志过滤地址匹配线程变量 */
-    private static final TransmittableThreadLocal<Boolean> antPathMatchLocal = new TransmittableThreadLocal<>();
+    private static final ThreadLocal<Boolean> antPathMatchLocal = new ThreadLocal<>();
     /** 日志配置 */
     private final TiLogProperty tiLogProperty;
     /** url地址匹配 */

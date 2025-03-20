@@ -33,11 +33,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>transmittable-thread-local</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>top.ticho.tool</groupId>
             <artifactId>ticho-tool-json</artifactId>
         </dependency>
