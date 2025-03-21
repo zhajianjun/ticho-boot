@@ -1,4 +1,4 @@
-package top.ticho.tool.json.serializer;
+package top.ticho.starter.transform.serializer;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.BeanProperty;
@@ -7,14 +7,14 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.ContextualSerializer;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import top.ticho.tool.json.annotation.TiRender;
-import top.ticho.tool.json.annotation.TiRendering;
+import top.ticho.starter.transform.annotation.TiRender;
+import top.ticho.starter.transform.annotation.TiRendering;
 
 import java.io.IOException;
 
 /**
  * @author zhajianjun
- * @date 2024-12-28 23:57
+ * @date 2025-03-21 21:44
  */
 public class TiSerializer extends StdSerializer<Object> implements ContextualSerializer {
     private TiRendering<Object, Object> tiRendering;

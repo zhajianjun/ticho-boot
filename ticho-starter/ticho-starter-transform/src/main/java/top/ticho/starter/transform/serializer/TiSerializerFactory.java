@@ -1,13 +1,14 @@
-package top.ticho.tool.json.serializer;
+package top.ticho.starter.transform.serializer;
 
-import top.ticho.tool.json.annotation.TiRendering;
+
+import top.ticho.starter.transform.annotation.TiRendering;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author zhajianjun
- * @date 2024-12-29 00:05
+ * @date 2025-03-21 21:44
  */
 public class TiSerializerFactory {
     private static final Map<Class<?>, TiRendering<?, ?>> map = new ConcurrentHashMap<>();

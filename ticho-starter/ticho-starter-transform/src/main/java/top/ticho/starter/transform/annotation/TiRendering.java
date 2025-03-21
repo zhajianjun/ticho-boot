@@ -1,8 +1,8 @@
-package top.ticho.tool.json.annotation;
+package top.ticho.starter.transform.annotation;
 
 /**
  * @author zhajianjun
- * @date 2024-12-28 21:50
+ * @date 2025-03-21 21:44
  */
 public interface TiRendering<T, R> {
 

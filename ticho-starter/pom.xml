@@ -31,6 +31,7 @@
         <module>ticho-starter-redisson</module>
         <module>ticho-starter-es</module>
         <module>ticho-starter-health</module>
+        <module>ticho-starter-transform</module>
     </modules>
 
     <properties>

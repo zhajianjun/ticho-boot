@@ -1,8 +1,8 @@
-package top.ticho.tool.json.annotation;
+package top.ticho.starter.transform.annotation;
 
 import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import top.ticho.tool.json.serializer.TiSerializer;
+import top.ticho.starter.transform.serializer.TiSerializer;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 
 /**
  * @author zhajianjun
- * @date 2024-12-28 21:50
+ * @date 2025-03-21 21:44
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)

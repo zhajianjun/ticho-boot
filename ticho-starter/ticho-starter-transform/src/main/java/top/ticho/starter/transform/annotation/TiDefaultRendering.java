@@ -1,10 +1,10 @@
-package top.ticho.tool.json.annotation;
+package top.ticho.starter.transform.annotation;
 
-import top.ticho.tool.json.serializer.TiSerializerFactory;
+import top.ticho.starter.transform.serializer.TiSerializerFactory;
 
 /**
  * @author zhajianjun
- * @date 2024-12-28 21:50
+ * @date 2025-03-21 21:44
  */
 public class TiDefaultRendering implements TiRendering<Object, Object> {
     private TiRendering<Object, Object> tiRendering;
