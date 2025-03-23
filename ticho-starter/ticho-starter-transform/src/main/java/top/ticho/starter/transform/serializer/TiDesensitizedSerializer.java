@@ -31,21 +31,37 @@ public class TiDesensitizedSerializer extends StdSerializer<Object> implements C
         super(Object.class);
     }
 
+    /**
+     * 根据上下文创建适当的JsonSerializer实例。
+     * 该方法用于在序列化过程中根据Bean属性的类型和注解动态选择或创建序列化器。
+     *
+     * @param serializerProvider 提供序列化器的上下文环境，用于查找或创建序列化器。
+     * @param beanProperty       当前正在处理的Bean属性，包含属性的类型和注解信息。
+     * @return 返回一个适合当前属性的JsonSerializer实例。如果属性为null，则返回null值的序列化器。
+     * @throws JsonMappingException 如果在创建或查找序列化器过程中发生错误。
+     */
     @Override
     public JsonSerializer<Object> createContextual(SerializerProvider serializerProvider, BeanProperty beanProperty) throws JsonMappingException {
+        // 检查beanProperty是否为null，如果为null则直接返回null值的序列化器
         if (beanProperty != null) {
+            // 获取属性的原始类型
             Class<?> rawClass = beanProperty.getType().getRawClass();
+            // 检查属性类型是否为基本类型或String类型
             if (ClassUtil.isBasicType(rawClass) || rawClass == String.class) {
+                // 尝试从属性上获取TiDesensitized注解
                 TiDesensitized annotation = beanProperty.getAnnotation(TiDesensitized.class);
                 if (annotation == null) {
+                    // 如果属性上没有该注解，则尝试从上下文中获取
                     annotation = beanProperty.getContextAnnotation(TiDesensitized.class);
                 }
+                // 如果找到TiDesensitized注解，则创建并配置TiDesensitizedSerializer
                 if (annotation != null) {
                     TiDesensitizedSerializer tiDesensitizedSerializer = new TiDesensitizedSerializer();
                     tiDesensitizedSerializer.setTiDesensitized(annotation);
                     return tiDesensitizedSerializer;
                 }
             }
+            // 如果没有找到TiDesensitized注解，则返回默认的序列化器
             return serializerProvider.findValueSerializer(beanProperty.getType(), beanProperty);
         }
         return serializerProvider.findNullValueSerializer(null);
