@@ -48,7 +48,7 @@ public class TiDesensitizedSerializer extends StdSerializer<Object> implements C
             }
             return serializerProvider.findValueSerializer(beanProperty.getType(), beanProperty);
         }
-        return serializerProvider.findNullValueSerializer(beanProperty);
+        return serializerProvider.findNullValueSerializer(null);
     }
 
     @Override
