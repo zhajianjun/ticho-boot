@@ -73,12 +73,8 @@ public class TiDesensitizedSerializer extends StdSerializer<Object> implements C
             gen.writeObject(value);
             return;
         }
-        try {
-            String render = desensitized(value.toString(), tiDesensitized);
-            gen.writeObject(render);
-        } catch (Exception e) {
-            gen.writeObject(value);
-        }
+        String render = desensitized(value.toString(), tiDesensitized);
+        gen.writeObject(render);
     }
 
     public static String desensitized(CharSequence str, TiDesensitized tiDesensitized) {
@@ -86,7 +82,7 @@ public class TiDesensitizedSerializer extends StdSerializer<Object> implements C
             return StrUtil.EMPTY;
         }
         TiDesensitizedType tiDesensitizedType = tiDesensitized.type();
-        String newStr = String.valueOf(str);
+        String newStr;
         switch (tiDesensitizedType) {
             case USER_ID:
                 newStr = String.valueOf(DesensitizedUtil.userId());
@@ -133,6 +129,5 @@ public class TiDesensitizedSerializer extends StdSerializer<Object> implements C
         }
         return newStr;
     }
-
 
 }
