@@ -64,7 +64,6 @@ public class TiDictTransSerializer extends StdSerializer<Object> implements Cont
         }
         String cacheName = tiDictTrans.cacheName();
         String dictType = tiDictTrans.dictType();
-        String dictKey = tiDictTrans.dictKey();
         Object render = tiCacheTemplate.get(cacheName, dictType);
         gen.writeObject(render);
     }
