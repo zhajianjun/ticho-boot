@@ -10,7 +10,6 @@ import com.fasterxml.jackson.databind.ser.ContextualSerializer;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import lombok.Setter;
 import top.ticho.starter.cache.component.TiCacheTemplate;
-import top.ticho.starter.cache.prop.TiCacheProperty;
 import top.ticho.starter.transform.annotation.TiDictTrans;
 import top.ticho.starter.transform.factory.TiDictTransFactory;
 
@@ -27,7 +26,6 @@ public class TiDictTransSerializer extends StdSerializer<Object> implements Cont
 
     private TiDictTrans tiDictTrans;
     private TiCacheTemplate tiCacheTemplate;
-    private TiCacheProperty tiCacheProperty;
 
     public TiDictTransSerializer() {
         super(Object.class);
