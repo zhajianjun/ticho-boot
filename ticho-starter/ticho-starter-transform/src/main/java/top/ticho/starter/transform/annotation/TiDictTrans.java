@@ -26,4 +26,11 @@ import java.lang.annotation.Target;
 @JsonSerialize(using = TiDesensitizedSerializer.class)
 @Documented
 public @interface TiDictTrans {
+
+    String cacheName() default "default";
+    
+    String dictType();
+
+    String dictKey();
+
 }

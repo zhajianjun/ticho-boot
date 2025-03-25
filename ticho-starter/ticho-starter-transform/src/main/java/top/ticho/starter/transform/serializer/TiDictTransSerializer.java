@@ -8,7 +8,11 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.ContextualSerializer;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
+import lombok.Setter;
+import top.ticho.starter.cache.component.TiCacheTemplate;
+import top.ticho.starter.cache.prop.TiCacheProperty;
 import top.ticho.starter.transform.annotation.TiDictTrans;
+import top.ticho.starter.transform.factory.TiDictTransFactory;
 
 import java.io.IOException;
 
@@ -18,9 +22,14 @@ import java.io.IOException;
  * @author zhajianjun
  * @date 2025-03-24 22:15
  */
+@Setter
 public class TiDictTransSerializer extends StdSerializer<Object> implements ContextualSerializer {
 
-    protected TiDictTransSerializer() {
+    private TiDictTrans tiDictTrans;
+    private TiCacheTemplate tiCacheTemplate;
+    private TiCacheProperty tiCacheProperty;
+
+    public TiDictTransSerializer() {
         super(Object.class);
     }
 
@@ -40,9 +49,7 @@ public class TiDictTransSerializer extends StdSerializer<Object> implements Cont
                 }
                 // 如果找到TiDictTrans注解，则创建并配置TiDictTransSerializer
                 if (annotation != null) {
-                    TiDictTransSerializer tiDesensitizedSerializer = new TiDictTransSerializer();
-                    // TODO
-                    return tiDesensitizedSerializer;
+                    return TiDictTransFactory.createSerializer(annotation);
                 }
             }
             // 如果没有找到TiDictTrans注解，则返回默认的序列化器
@@ -53,8 +60,15 @@ public class TiDictTransSerializer extends StdSerializer<Object> implements Cont
 
     @Override
     public void serialize(Object value, JsonGenerator gen, SerializerProvider provider) throws IOException {
-        // TODO
-        gen.writeObject(value);
+        if (tiDictTrans == null || value == null) {
+            gen.writeObject(value);
+            return;
+        }
+        String cacheName = tiDictTrans.cacheName();
+        String dictType = tiDictTrans.dictType();
+        String dictKey = tiDictTrans.dictKey();
+        Object render = tiCacheTemplate.get(cacheName, dictType);
+        gen.writeObject(render);
     }
 
 }
