@@ -6,10 +6,10 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.starter.minio.component.TiMinioTemplate;
 import top.ticho.starter.minio.prop.TiMinioProperty;
+import top.ticho.starter.minio.util.StorageUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.util.List;
 import java.util.Objects;
 
@@ -30,83 +30,6 @@ public class TiMinioTemplateTest {
         this.tiMinioTemplate = tiMinioTemplate;
     }
 
-
-    /**
-     * 大文件分割
-     *
-     * @param localFile        本地大文件
-     * @param localChunkFolder 本地大文件分片文件夹
-     */
-    public void fileSpliceChunk(File localFile, File localChunkFolder) throws IOException {
-        if (!localFile.exists()) {
-            log.info("文件{}不存在", localFile.getAbsolutePath());
-            return;
-        }
-        if (!localChunkFolder.exists()) {
-            boolean mkdirs = localChunkFolder.mkdirs();
-            log.info("分块文件夹{}不存在，创建文件夹结果{}", localChunkFolder.getAbsolutePath(), mkdirs);
-        }
-        // 分块大小 1MB
-        long chunkSize = 1024 * 1024 * 5;
-        // 分块数量
-        long chunkNum = (long) Math.ceil(localFile.length() * 1.0 / chunkSize);
-        log.info("分块总数：{}", chunkNum);
-        // 缓冲区大小
-        byte[] bytes = new byte[1024];
-        // 使用RandomAccessFile访问文件
-        RandomAccessFile raf_read = new RandomAccessFile(localFile, "r");
-        // 分块
-        for (int i = 0; i < chunkNum; i++) {
-            // 创建分块文件
-            File chunkFile = new File(localChunkFolder.getAbsolutePath() + File.separator + i);
-            if (chunkFile.exists()) {
-                boolean delete = chunkFile.delete();
-                log.info("索引为{}分块文件｛｝已存在，删除块文件结果{}", localChunkFolder.getAbsolutePath(), delete);
-            }
-            boolean newFile = chunkFile.createNewFile();
-            if (newFile) {
-                // 向分块文件中写数据
-                RandomAccessFile raf_write = new RandomAccessFile(chunkFile, "rw");
-                int len;
-                while ((len = raf_read.read(bytes)) != -1) {
-                    raf_write.write(bytes, 0, len);
-                    if (chunkFile.length() >= chunkSize) {
-                        break;
-                    }
-                }
-                raf_write.close();
-                log.info("索引为{}分块文件{}已完成", i, localChunkFolder.getAbsolutePath());
-            }
-        }
-        raf_read.close();
-    }
-
-    /**
-     * 合并文件到本地
-     *
-     * @param chunkFolderPath 分片所在文件夹路径
-     * @param filePath        合并文件路径
-     */
-    public void composeLocalObject(String chunkFolderPath, String filePath) throws IOException {
-        File folder = new File(chunkFolderPath);
-        File[] files = folder.listFiles();
-        if (Objects.isNull(files)) {
-            return;
-        }
-        RandomAccessFile mergedFile = new RandomAccessFile(filePath, "rw");
-        // 缓冲区大小
-        byte[] bytes = new byte[1024];
-        for (File file : files) {
-            RandomAccessFile partFile = new RandomAccessFile(file, "r");
-            int len;
-            while ((len = partFile.read(bytes)) != -1) {
-                mergedFile.write(bytes, 0, len);
-            }
-            partFile.close();
-        }
-        mergedFile.close();
-        log.info("【{}】本地文件合并成功", filePath);
-    }
 
     /**
      * 将分块文件上传至minio
@@ -171,7 +94,7 @@ public class TiMinioTemplateTest {
         tiMinioTemplateTest.composeMinioObject(chunkBucket, chunkBucket, chunkFolderFileName, fileName, mimeType, true);
         // 本地分片进行合并
         String newFilePath = parentFilePath + File.separator + System.currentTimeMillis() + "." + FileNameUtil.extName(localFilePath);
-        tiMinioTemplateTest.composeLocalObject(localChunkFolderFilePath, newFilePath);
+        StorageUtil.composeLocalObject(localChunkFolderFilePath, newFilePath);
     }
 
     private static TiMinioTemplateTest getMinioTemplateTest(String chunkBucket, File localFile, File localChunkFolderFile) throws IOException {
@@ -184,7 +107,7 @@ public class TiMinioTemplateTest {
         TiMinioTemplate tiMinioTemplate = new TiMinioTemplate(tiMinioProperty);
         TiMinioTemplateTest tiMinioTemplateTest = new TiMinioTemplateTest(tiMinioTemplate);
         // 大文件分片
-        tiMinioTemplateTest.fileSpliceChunk(localFile, localChunkFolderFile);
+        StorageUtil.fileSpliceChunk(localFile, 5);
         return tiMinioTemplateTest;
     }
 
