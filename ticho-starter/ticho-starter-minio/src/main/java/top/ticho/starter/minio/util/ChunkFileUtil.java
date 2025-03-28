@@ -1,6 +1,8 @@
 package top.ticho.starter.minio.util;
 
 import cn.hutool.core.io.file.FileNameUtil;
+import cn.hutool.core.io.unit.DataSize;
+import cn.hutool.core.io.unit.DataUnit;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.Cleanup;
@@ -28,15 +30,29 @@ public class ChunkFileUtil {
      * @param bigFile   大文件
      * @param chunkSize 分片大小;单位:Mb
      * @return {@link File } 分片文件夹
+     * @throws IOException io异常
      */
     public static File fileSpliceChunk(File bigFile, long chunkSize) throws IOException {
+        return fileSpliceChunk(bigFile, chunkSize, DataUnit.MEGABYTES);
+    }
+
+    /**
+     * 大文件分割
+     *
+     * @param bigFile   大文件
+     * @param chunkSize 分片大小
+     * @param dataUnit  数据单位;缺省为MB
+     * @return {@link File } 分片文件夹
+     * @throws IOException io异常
+     */
+    public static File fileSpliceChunk(File bigFile, long chunkSize, DataUnit dataUnit) throws IOException {
         if (!bigFile.exists()) {
             throw new IOException(StrUtil.format("{}文件不存在", bigFile.getAbsolutePath()));
         }
         String chunkFolderFileName = FileNameUtil.mainName(bigFile.getAbsolutePath());
         // 本地大文件分片文件夹
         File localChunkFolder = new File(bigFile.getParentFile().getAbsolutePath() + File.separator + chunkFolderFileName);
-        return fileSpliceChunk(bigFile, localChunkFolder, chunkSize);
+        return fileSpliceChunk(bigFile, localChunkFolder, chunkSize, dataUnit);
     }
 
     /**
@@ -46,21 +62,41 @@ public class ChunkFileUtil {
      * @param localChunkFolder 分片文件夹
      * @param chunkSize        分片大小;单位:Mb
      * @return {@link File }
+     * @throws IOException io异常
      */
     public static File fileSpliceChunk(File bigFile, File localChunkFolder, long chunkSize) throws IOException {
+        return fileSpliceChunk(bigFile, localChunkFolder, chunkSize, DataUnit.MEGABYTES);
+    }
+
+    /**
+     * 文件拼接块
+     *
+     * @param bigFile          大文件
+     * @param localChunkFolder 分片文件夹
+     * @param chunkSize        分片大小
+     * @param dataUnit         数据单位;缺省为MB
+     * @return {@link File }
+     * @throws IOException io异常
+     */
+    public static File fileSpliceChunk(File bigFile, File localChunkFolder, long chunkSize, DataUnit dataUnit) throws IOException {
         if (!localChunkFolder.exists()) {
             boolean mkdirs = localChunkFolder.mkdirs();
             log.info("分块文件夹{}不存在，创建文件夹结果{}", localChunkFolder.getAbsolutePath(), mkdirs);
         }
+        DataUnit unit = dataUnit;
+        if (Objects.isNull(dataUnit)) {
+            unit = DataUnit.MEGABYTES;
+        }
+        DataSize dataSize = DataSize.of(chunkSize, unit);
         // 分块大小 1MB
-        long chunkSizeMb = 1024 * 1024 * chunkSize;
+        long chunkSizeMb = dataSize.toBytes();
         // 分块数量
         long chunkNum = (long) Math.ceil(bigFile.length() * 1.0 / chunkSizeMb);
         log.info("分块总数：{}", chunkNum);
         // 缓冲区大小
         byte[] bytes = new byte[1024];
         // 使用RandomAccessFile访问文件
-        @Cleanup RandomAccessFile raf_read = new RandomAccessFile(bigFile, "r");
+        @Cleanup RandomAccessFile rafRead = new RandomAccessFile(bigFile, "r");
         // 分块
         for (int i = 0; i < chunkNum; i++) {
             // 创建分块文件
@@ -72,10 +108,10 @@ public class ChunkFileUtil {
             boolean newFile = chunkFile.createNewFile();
             if (newFile) {
                 // 向分块文件中写数据
-                @Cleanup RandomAccessFile raf_write = new RandomAccessFile(chunkFile, "rw");
+                @Cleanup RandomAccessFile rafWrite = new RandomAccessFile(chunkFile, "rw");
                 int len;
-                while ((len = raf_read.read(bytes)) != -1) {
-                    raf_write.write(bytes, 0, len);
+                while ((len = rafRead.read(bytes)) != -1) {
+                    rafWrite.write(bytes, 0, len);
                     if (chunkFile.length() >= chunkSizeMb) {
                         break;
                     }
