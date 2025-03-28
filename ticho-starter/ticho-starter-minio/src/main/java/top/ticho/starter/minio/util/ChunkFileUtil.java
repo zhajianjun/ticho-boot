@@ -3,6 +3,7 @@ package top.ticho.starter.minio.util;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
+import lombok.Cleanup;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -12,31 +13,41 @@ import java.io.RandomAccessFile;
 import java.util.Objects;
 
 /**
- * 资源工具类
+ * 分片文件工具类
  *
  * @author zhajianjun
  * @date 2025-03-27 23:18
  */
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @Slf4j
-public class StorageUtil {
+public class ChunkFileUtil {
 
     /**
      * 大文件分割
      *
-     * @param file      本地大文件
+     * @param bigFile   大文件
      * @param chunkSize 分片大小;单位:Mb
      * @return {@link File } 分片文件夹
-     * @throws IOException io异常
      */
-    public static File fileSpliceChunk(File file, long chunkSize) throws IOException {
-        if (!file.exists()) {
-            log.info("文件{}不存在", file.getAbsolutePath());
-            return null;
+    public static File fileSpliceChunk(File bigFile, long chunkSize) throws IOException {
+        if (!bigFile.exists()) {
+            throw new IOException(StrUtil.format("{}文件不存在", bigFile.getAbsolutePath()));
         }
-        String chunkFolderFileName = FileNameUtil.mainName(file.getAbsolutePath());
+        String chunkFolderFileName = FileNameUtil.mainName(bigFile.getAbsolutePath());
         // 本地大文件分片文件夹
-        File localChunkFolder = new File(file.getParentFile().getAbsolutePath() + File.separator + chunkFolderFileName);
+        File localChunkFolder = new File(bigFile.getParentFile().getAbsolutePath() + File.separator + chunkFolderFileName);
+        return fileSpliceChunk(bigFile, localChunkFolder, chunkSize);
+    }
+
+    /**
+     * 文件拼接块
+     *
+     * @param bigFile          大文件
+     * @param localChunkFolder 分片文件夹
+     * @param chunkSize        分片大小;单位:Mb
+     * @return {@link File }
+     */
+    public static File fileSpliceChunk(File bigFile, File localChunkFolder, long chunkSize) throws IOException {
         if (!localChunkFolder.exists()) {
             boolean mkdirs = localChunkFolder.mkdirs();
             log.info("分块文件夹{}不存在，创建文件夹结果{}", localChunkFolder.getAbsolutePath(), mkdirs);
@@ -44,12 +55,12 @@ public class StorageUtil {
         // 分块大小 1MB
         long chunkSizeMb = 1024 * 1024 * chunkSize;
         // 分块数量
-        long chunkNum = (long) Math.ceil(file.length() * 1.0 / chunkSizeMb);
+        long chunkNum = (long) Math.ceil(bigFile.length() * 1.0 / chunkSizeMb);
         log.info("分块总数：{}", chunkNum);
         // 缓冲区大小
         byte[] bytes = new byte[1024];
         // 使用RandomAccessFile访问文件
-        RandomAccessFile raf_read = new RandomAccessFile(file, "r");
+        @Cleanup RandomAccessFile raf_read = new RandomAccessFile(bigFile, "r");
         // 分块
         for (int i = 0; i < chunkNum; i++) {
             // 创建分块文件
@@ -61,7 +72,7 @@ public class StorageUtil {
             boolean newFile = chunkFile.createNewFile();
             if (newFile) {
                 // 向分块文件中写数据
-                RandomAccessFile raf_write = new RandomAccessFile(chunkFile, "rw");
+                @Cleanup RandomAccessFile raf_write = new RandomAccessFile(chunkFile, "rw");
                 int len;
                 while ((len = raf_read.read(bytes)) != -1) {
                     raf_write.write(bytes, 0, len);
@@ -69,49 +80,51 @@ public class StorageUtil {
                         break;
                     }
                 }
-                raf_write.close();
                 log.info("索引为{}分块文件{}已完成", i, localChunkFolder.getAbsolutePath());
             }
         }
-        raf_read.close();
         return localChunkFolder;
     }
 
     /**
-     * 合并文件到本地
+     * 合并文件
      *
-     * @param chunkFolderPath 分片所在文件夹路径
-     * @param filePath        合并文件路径
+     * @param chunkFileFolderPath 分片文件夹路径
+     * @param composefilePath     合并文件
      */
-    public static void composeLocalObject(String chunkFolderPath, String filePath) throws IOException {
-        composeLocalObject(new File(chunkFolderPath), new File(filePath));
+    public static void composeLocalObject(String chunkFileFolderPath, String composefilePath) throws IOException {
+        composeLocalObject(new File(chunkFileFolderPath), new File(composefilePath));
     }
 
-    public static void composeLocalObject(File chunkFolder, File filePath) throws IOException {
-        if (!chunkFolder.exists() || !chunkFolder.isDirectory()) {
+    /**
+     * 合并文件
+     *
+     * @param chunkFileFolder 分片文件夹
+     * @param composeFile     合并文件
+     */
+    public static void composeLocalObject(File chunkFileFolder, File composeFile) throws IOException {
+        if (!chunkFileFolder.exists() || !chunkFileFolder.isDirectory()) {
             return;
         }
-        File[] chunkFiles = chunkFolder.listFiles();
+        File[] chunkFiles = chunkFileFolder.listFiles();
         if (Objects.isNull(chunkFiles) || chunkFiles.length == 0) {
-            log.error("[{}]分片文件目录为空！", chunkFolder);
+            log.error("[{}]分片文件目录为空！", chunkFileFolder);
             return;
         }
-        RandomAccessFile mergedFile = new RandomAccessFile(filePath, "rw");
+        @Cleanup RandomAccessFile mergedFile = new RandomAccessFile(composeFile, "rw");
         if (mergedFile.length() > 0) {
             mergedFile.setLength(0);
         }
         // 缓冲区大小
         byte[] bytes = new byte[1024];
         for (File chunkFile : chunkFiles) {
-            RandomAccessFile partFile = new RandomAccessFile(chunkFile, "r");
+            @Cleanup RandomAccessFile partFile = new RandomAccessFile(chunkFile, "r");
             int len;
             while ((len = partFile.read(bytes)) != -1) {
                 mergedFile.write(bytes, 0, len);
             }
-            partFile.close();
         }
-        mergedFile.close();
-        log.info("【{}】本地文件合并成功", filePath);
+        log.info("【{}】本地文件合并成功", composeFile);
     }
 
     public static void main(String[] args) throws IOException {

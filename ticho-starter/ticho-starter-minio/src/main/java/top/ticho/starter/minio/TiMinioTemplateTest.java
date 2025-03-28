@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.starter.minio.component.TiMinioTemplate;
 import top.ticho.starter.minio.prop.TiMinioProperty;
-import top.ticho.starter.minio.util.StorageUtil;
+import top.ticho.starter.minio.util.ChunkFileUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -94,7 +94,7 @@ public class TiMinioTemplateTest {
         tiMinioTemplateTest.composeMinioObject(chunkBucket, chunkBucket, chunkFolderFileName, fileName, mimeType, true);
         // 本地分片进行合并
         String newFilePath = parentFilePath + File.separator + System.currentTimeMillis() + "." + FileNameUtil.extName(localFilePath);
-        StorageUtil.composeLocalObject(localChunkFolderFilePath, newFilePath);
+        ChunkFileUtil.composeLocalObject(localChunkFolderFilePath, newFilePath);
     }
 
     private static TiMinioTemplateTest getMinioTemplateTest(String chunkBucket, File localFile, File localChunkFolderFile) throws IOException {
@@ -107,7 +107,7 @@ public class TiMinioTemplateTest {
         TiMinioTemplate tiMinioTemplate = new TiMinioTemplate(tiMinioProperty);
         TiMinioTemplateTest tiMinioTemplateTest = new TiMinioTemplateTest(tiMinioTemplate);
         // 大文件分片
-        StorageUtil.fileSpliceChunk(localFile, 5);
+        ChunkFileUtil.fileSpliceChunk(localFile, 5);
         return tiMinioTemplateTest;
     }
 
