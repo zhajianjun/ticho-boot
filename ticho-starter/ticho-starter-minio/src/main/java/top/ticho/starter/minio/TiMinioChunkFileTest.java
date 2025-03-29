@@ -14,22 +14,15 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Minio文件下载
- * 文档{@see https://docs.minio.io/cn/java-client-api-reference.html}
+ * Minio文件下载测试
  *
  * @author zhajianjun
  * @date 2022-07-13 22:40:25
  */
 @Data
 @Slf4j
-public class TiMinioTemplateTest {
-
-    private TiMinioTemplate tiMinioTemplate;
-
-    public TiMinioTemplateTest(TiMinioTemplate tiMinioTemplate) {
-        this.tiMinioTemplate = tiMinioTemplate;
-    }
-
+public class TiMinioChunkFileTest {
+    private static TiMinioTemplate tiMinioTemplate;
 
     /**
      * 将分块文件上传至minio
@@ -37,7 +30,7 @@ public class TiMinioTemplateTest {
      * @param chunkFolderFile 分块文件夹
      * @param bucket          文件桶
      */
-    public void uploadChunkToMinio(File chunkFolderFile, String bucket, String prefix) {
+    public static void uploadChunkToMinio(File chunkFolderFile, String bucket, String prefix) {
         // 分块文件
         File[] files = chunkFolderFile.listFiles();
         if (Objects.isNull(files)) {
@@ -61,7 +54,7 @@ public class TiMinioTemplateTest {
      * @param contentType         文件类型
      * @param isDeleteChunkObject 是否删除分片
      */
-    public void composeMinioObject(
+    public static void composeMinioObject(
         String chunkBucKetName,
         String composeBucketName,
         String prefix,
@@ -87,28 +80,23 @@ public class TiMinioTemplateTest {
         String localChunkFolderFilePath = parentFilePath + File.separator + chunkFolderFileName;
         File localChunkFolderFile = new File(localChunkFolderFilePath);
         String mimeType = FileUtil.getMimeType(localFilePath);
-        TiMinioTemplateTest tiMinioTemplateTest = getMinioTemplateTest(chunkBucket, localFile, localChunkFolderFile);
+        fileSpliceChunk(chunkBucket, localFile);
         // 分片上传到minio
-        tiMinioTemplateTest.uploadChunkToMinio(localChunkFolderFile, chunkBucket, chunkFolderFileName);
+        uploadChunkToMinio(localChunkFolderFile, chunkBucket, chunkFolderFileName);
         // minio分片文件进行合并
-        tiMinioTemplateTest.composeMinioObject(chunkBucket, chunkBucket, chunkFolderFileName, fileName, mimeType, true);
-        // 本地分片进行合并
-        String newFilePath = parentFilePath + File.separator + System.currentTimeMillis() + "." + FileNameUtil.extName(localFilePath);
-        ChunkFileUtil.composeLocalObject(localChunkFolderFilePath, newFilePath);
+        composeMinioObject(chunkBucket, chunkBucket, chunkFolderFileName, fileName, mimeType, true);
     }
 
-    private static TiMinioTemplateTest getMinioTemplateTest(String chunkBucket, File localFile, File localChunkFolderFile) throws IOException {
+    private static void fileSpliceChunk(String chunkBucket, File localFile) throws IOException {
         TiMinioProperty tiMinioProperty = new TiMinioProperty();
         tiMinioProperty.setEndpoint("http://127.0.0.1:9000");
         tiMinioProperty.setAccessKey("root");
         tiMinioProperty.setSecretKey("123456");
         tiMinioProperty.setDefaultBucket(chunkBucket);
         tiMinioProperty.setChunkBucket(chunkBucket);
-        TiMinioTemplate tiMinioTemplate = new TiMinioTemplate(tiMinioProperty);
-        TiMinioTemplateTest tiMinioTemplateTest = new TiMinioTemplateTest(tiMinioTemplate);
+        TiMinioChunkFileTest.tiMinioTemplate = new TiMinioTemplate(tiMinioProperty);
         // 大文件分片
         ChunkFileUtil.fileSpliceChunk(localFile, 5);
-        return tiMinioTemplateTest;
     }
 
 }
