@@ -9,11 +9,11 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.ContextualSerializer;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import lombok.Setter;
-import top.ticho.starter.cache.component.TiCacheTemplate;
 import top.ticho.starter.transform.annotation.TiDictTrans;
 import top.ticho.starter.transform.factory.TiDictTransFactory;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * 字典转换序列化器
@@ -23,9 +23,7 @@ import java.io.IOException;
  */
 @Setter
 public class TiDictTransSerializer extends StdSerializer<Object> implements ContextualSerializer {
-
-    private TiDictTrans tiDictTrans;
-    private TiCacheTemplate tiCacheTemplate;
+    private Map<String, String> dictMap;
 
     public TiDictTransSerializer() {
         super(Object.class);
@@ -58,14 +56,17 @@ public class TiDictTransSerializer extends StdSerializer<Object> implements Cont
 
     @Override
     public void serialize(Object value, JsonGenerator gen, SerializerProvider provider) throws IOException {
-        if (tiDictTrans == null || value == null) {
+        if (value == null) {
+            gen.writeNull();
+            return;
+        }
+        // 添加类型检查
+        if (!(value instanceof String)) {
             gen.writeObject(value);
             return;
         }
-        String cacheName = tiDictTrans.cacheName();
-        String dictType = tiDictTrans.dictType();
-        Object render = tiCacheTemplate.get(cacheName, dictType);
-        gen.writeObject(render);
+        String valueStr = value.toString();
+        gen.writeObject(dictMap.getOrDefault(valueStr, valueStr));
     }
 
 }
