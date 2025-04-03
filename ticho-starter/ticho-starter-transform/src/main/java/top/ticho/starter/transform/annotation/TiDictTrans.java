@@ -28,6 +28,6 @@ public @interface TiDictTrans {
 
     String dictType();
 
-    String[] targetField();
+    String targetField();
 
 }
