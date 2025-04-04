@@ -67,6 +67,7 @@ public class TiDictTransSerializer extends StdSerializer<Object> implements Cont
         }
         String valueStr = value.toString();
         gen.writeObject(dictMap.getOrDefault(valueStr, valueStr));
+
     }
 
 }

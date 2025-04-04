@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import top.ticho.starter.transform.component.TiDictTransStrategy;
 import top.ticho.starter.transform.constant.TiDictConst;
 import top.ticho.starter.transform.factory.TiDictTransFactory;
+import top.ticho.starter.transform.serializer.TiDictTrandModule;
+import top.ticho.tool.json.util.TiJsonUtil;
 
 import java.util.Map;
 
@@ -21,11 +23,12 @@ import java.util.Map;
 @Configuration
 public class TiDictTransConfig implements InitializingBean {
 
-    private final Map<String, TiDictTransStrategy> dictTransStrategyMap;
+    private final TiDictTransStrategy tiDictTransStrategy;
 
     @Override
     public void afterPropertiesSet() {
-        TiDictTransFactory.setDictTransStrategy(dictTransStrategyMap);
+        TiDictTransFactory.setDictTransStrategy(tiDictTransStrategy);
+        TiJsonUtil.registerModule(new TiDictTrandModule());
     }
 
     @Bean

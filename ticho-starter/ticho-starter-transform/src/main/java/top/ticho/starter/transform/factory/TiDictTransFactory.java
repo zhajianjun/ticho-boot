@@ -7,7 +7,6 @@ import top.ticho.starter.transform.serializer.TiDictTransSerializer;
 
 import java.util.Collections;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author zhajianjun
@@ -16,18 +15,26 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class TiDictTransFactory {
     public final static TiDictTransStrategy DEFAULT = dictType -> Collections.emptyMap();
-    private static final Map<String, TiDictTransStrategy> tiDictTransStrategyMap = new ConcurrentHashMap<>();
+    private static TiDictTransStrategy INSTANCE;
 
-    public static void setDictTransStrategy(Map<String, TiDictTransStrategy> tiDictTransStrategyMap) {
-        TiDictTransFactory.tiDictTransStrategyMap.putAll(tiDictTransStrategyMap);
+    public static void setDictTransStrategy(TiDictTransStrategy tiDictTransStrategy) {
+        INSTANCE = tiDictTransStrategy;
+    }
+
+    public static TiDictTransStrategy getDictTransStrategy() {
+        if (INSTANCE == null) {
+            INSTANCE = DEFAULT;
+        }
+        return INSTANCE;
     }
 
     public static TiDictTransSerializer createSerializer(TiDictTrans annotation) {
-        TiDictTransStrategy tiDictTransStrategy = tiDictTransStrategyMap.getOrDefault(annotation.dictName(), DEFAULT);
-        Map<String, String> dictMap = tiDictTransStrategy.dictMap(annotation.dictType());
+        TiDictTransStrategy dictTransStrategy = getDictTransStrategy();
+        Map<String, String> dictMap = dictTransStrategy.dictMap(annotation.dictType());
         TiDictTransSerializer tiDictTransSerializer = new TiDictTransSerializer();
         tiDictTransSerializer.setDictMap(dictMap);
         return tiDictTransSerializer;
     }
+
 
 }
