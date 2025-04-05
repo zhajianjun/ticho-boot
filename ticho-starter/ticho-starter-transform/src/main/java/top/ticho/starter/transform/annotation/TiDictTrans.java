@@ -20,8 +20,6 @@ import java.lang.annotation.Target;
 @Documented
 public @interface TiDictTrans {
 
-    String dictType() default "";
-
-    String[] targetFields() default {};
+    String dictType();
 
 }
