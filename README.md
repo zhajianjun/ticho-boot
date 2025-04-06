@@ -1,6 +1,6 @@
 # Ticho-Boot Project Description
 
-Ticho-Boot is a highly modular Java development framework deeply encapsulated based on Spring Boot. It provides enterprise-level functional components, utility classes, and standardized Starters to facilitate rapid construction of highly available microservice systems.
+Ticho-Boot is an initial library for quickly configuring Spring Boot applications, deeply encapsulated based on Spring Boot. It provides commonly used functional components, utility classes, and standardized starters, enabling developers to easily integrate these features into their applications.
 
 ---
 
@@ -20,7 +20,7 @@ Spring Boot Starter modules, ready to use out-of-the-box:
 - **ticho-starter-cache**  
   Caching abstraction layer supporting hybrid strategies for local and distributed caching (e.g., Redis).
 - **ticho-starter-cloud**  
-  Microservice core components integrating cloud-native capabilities like service discovery and configuration center.
+  The core components of microservices integrate components such as service discovery and configuration center.
 - **ticho-starter-email**  
   Email service encapsulation with templated email sending support.
 - **ticho-starter-es**  
@@ -92,6 +92,6 @@ Spring Boot Starter modules, ready to use out-of-the-box:
 <!-- Example: Add Redis Starter -->
 <dependency>
     <groupId>top.ticho.starter</groupId>
-    <artifactId>ticho-starter-redis</artifactId>
+    <artifactId>ticho-starter-web</artifactId>
     <version>${ticho.boot.version}</version>
 </dependency>

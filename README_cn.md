@@ -1,7 +1,7 @@
 # Ticho-Boot 项目说明
 
-Ticho-Boot 是一个高度模块化的 Java 基础开发框架，基于 Spring Boot 深度封装，提供企业级开发中常用的功能组件、工具类及标准化
-Starter，助力快速搭建高可用微服务系统。
+Ticho-Boot 是一个快速配置Spring Boot应用程序的初始库，基于Spring Boot深度封装，提供开发中常用的功能组件、工具类及标准化
+Starter，使开发人员能够轻松地将这些特性集成到他们的应用程序。
 
 ---
 
@@ -21,11 +21,11 @@ Spring Boot Starter 系列模块，开箱即用：
 - **ticho-starter-cache**  
   缓存抽象层，支持本地缓存与分布式缓存（如 Redis）混合策略。
 - **ticho-starter-cloud**  
-  微服务核心组件，集成服务发现、配置中心等云原生能力。
+  微服务核心组件，集成服务发现、配置中心等组件。
 - **ticho-starter-email**  
   邮件服务封装，支持模板化邮件发送。
 - **ticho-starter-es**  
-  ElasticSearch 快速集成，提供 DSL 构建器与高效查询工具。
+  ElasticSearch 快速集成，提供DSL构建器与高效查询工具。
 - **ticho-starter-gateway**  
   动态网关支持，集成路由、限流、鉴权等 API 治理功能。
 - **ticho-starter-health**  
@@ -93,6 +93,6 @@ Spring Boot Starter 系列模块，开箱即用：
 <!-- 示例：引入 Redis Starter -->
 <dependency>
     <groupId>top.ticho.starter</groupId>
-    <artifactId>ticho-starter-redis</artifactId>
+    <artifactId>ticho-starter-web</artifactId>
     <version>${ticho.boot.version}</version>
 </dependency>
