@@ -10,6 +10,7 @@ import top.ticho.starter.view.core.TiPageResult;
 
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -21,10 +22,17 @@ import java.util.stream.Collectors;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TiPageUtil {
 
-    public static <T extends TiPageQuery, R> TiPageResult<R> select(T pageQuery, Function<T, R> select) {
-        pageQuery.checkPage();
-        Page<R> page = PageHelper.startPage(pageQuery.getPageNum(), pageQuery.getPageSize(), pageQuery.getCount());
-        page.doSelectPage(() -> select.apply(pageQuery));
+    public static <T, R> TiPageResult<R> page(Supplier<List<T>> supplier, TiPageQuery query, Function<T, R> function) {
+        query.checkPage();
+        Page<T> page = PageHelper.startPage(query.getPageNum(), query.getPageSize(), query.getCount());
+        page.doSelectPage(supplier::get);
+        return of(page, function);
+    }
+
+    public static <T> TiPageResult<T> page(Supplier<List<T>> supplier, TiPageQuery query) {
+        query.checkPage();
+        Page<T> page = PageHelper.startPage(query.getPageNum(), query.getPageSize(), query.getCount());
+        page.doSelectPage(supplier::get);
         return of(page);
     }
 
