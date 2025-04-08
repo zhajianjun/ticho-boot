@@ -1,4 +1,4 @@
-package top.ticho.starter.web.handle;
+package top.ticho.starter.web.advice;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

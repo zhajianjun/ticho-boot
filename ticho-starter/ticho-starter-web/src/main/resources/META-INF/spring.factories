@@ -4,7 +4,7 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   top.ticho.starter.web.config.TiActuatorConifg,\
   top.ticho.starter.web.util.TiSpringUtil,\
   top.ticho.starter.web.config.TiJacksonCustomizerConfig,\
-  top.ticho.starter.web.handle.TiResponseBodyAdvice,\
+  top.ticho.starter.web.advice.TiResponseBodyAdvice,\
   top.ticho.starter.web.converter.TiDateConverter,\
   top.ticho.starter.web.converter.TiLocalDateConverter,\
   top.ticho.starter.web.converter.TiLocalDateTimeConverter,\
