@@ -10,6 +10,8 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import jakarta.net.ssl.SSLContext;
+import jakarta.net.ssl.SSLEngine;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.tool.intranet.common.IdleChecker;
@@ -24,8 +26,6 @@ import top.ticho.tool.intranet.server.filter.AppListenFilter;
 import top.ticho.tool.intranet.server.filter.DefaultAppListenFilter;
 import top.ticho.tool.intranet.util.IntranetUtil;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLEngine;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;

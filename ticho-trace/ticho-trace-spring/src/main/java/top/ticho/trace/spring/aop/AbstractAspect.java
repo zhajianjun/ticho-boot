@@ -3,6 +3,7 @@ package top.ticho.trace.spring.aop;
 import cn.hutool.core.date.SystemClock;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import jakarta.annotation.Resource;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.slf4j.MDC;
 import org.springframework.context.ApplicationContext;
@@ -15,8 +16,6 @@ import top.ticho.trace.core.handle.TracePushContext;
 import top.ticho.trace.core.util.TraceUtil;
 import top.ticho.trace.spring.event.TraceEvent;
 import top.ticho.trace.spring.util.IpUtil;
-
-import javax.annotation.Resource;
 
 /**
  * 通用链路处理

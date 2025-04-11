@@ -4,8 +4,6 @@ import com.baomidou.mybatisplus.core.injector.AbstractMethod;
 import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.toolkit.sql.SqlScriptUtils;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -21,14 +19,16 @@ import java.util.function.Predicate;
  * @date 2022-10-17 09:13
  */
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class TiUpdateBatch extends AbstractMethod {
     /**
      * 字段筛选条件
      */
     @Accessors(chain = true)
     private Predicate<TableFieldInfo> predicate;
+
+    protected TiUpdateBatch() {
+        super("updateBatch");
+    }
 
     @Override
     public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo) {
@@ -57,7 +57,7 @@ public class TiUpdateBatch extends AbstractMethod {
         }
         sqlSb.append("</script>");
         SqlSource sqlSource = languageDriver.createSqlSource(configuration, sqlSb.toString(), modelClass);
-        return this.addUpdateMappedStatement(mapperClass, modelClass, "updateBatch", sqlSource);
+        return this.addUpdateMappedStatement(mapperClass, modelClass, methodName, sqlSource);
     }
 
 }

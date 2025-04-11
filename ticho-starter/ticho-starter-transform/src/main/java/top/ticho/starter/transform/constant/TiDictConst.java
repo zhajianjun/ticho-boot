@@ -6,5 +6,5 @@ package top.ticho.starter.transform.constant;
  */
 public class TiDictConst {
     public static final String DEFAULT_DICT_NAME = "DEFAULT_DICT_NAME";
-    
+
 }

@@ -1,5 +1,6 @@
 package top.ticho.starter.rabbitmq.config;
 
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
@@ -12,8 +13,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.lang.NonNull;
 import top.ticho.starter.rabbitmq.event.MqSendSuccessEvent;
 import top.ticho.starter.rabbitmq.event.TiMqSendToExchangeFailEvent;
-
-import javax.annotation.PostConstruct;
 
 /**
  * rabbitmq 配置

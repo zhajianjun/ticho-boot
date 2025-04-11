@@ -3,8 +3,6 @@ package top.ticho.tool.intranet.server.entity;
 import lombok.Data;
 import top.ticho.tool.intranet.enums.ProtocolType;
 
-import java.io.Serializable;
-
 /**
  * 端口信息DTO
  *
@@ -12,7 +10,7 @@ import java.io.Serializable;
  * @date 2024-02-01 12:30
  */
 @Data
-public class PortInfo  {
+public class PortInfo {
 
     /** 客户端秘钥 */
     private String accessKey;

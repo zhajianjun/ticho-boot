@@ -1,6 +1,7 @@
 package top.ticho.starter.security.config;
 
 
+import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
@@ -19,8 +20,6 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
 import top.ticho.starter.security.constant.TiSecurityConst;
-
-import javax.annotation.Resource;
 
 
 /**

@@ -17,6 +17,10 @@ import java.util.List;
 @Setter
 public class TiInsertOrUpdate extends AbstractMethod {
 
+    protected TiInsertOrUpdate() {
+        super("insertOrUpdate");
+    }
+
     @Override
     public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo) {
         List<TableFieldInfo> fieldList = tableInfo.getFieldList();
@@ -48,7 +52,7 @@ public class TiInsertOrUpdate extends AbstractMethod {
         sqlSb.append("</trim>");
         sqlSb.append("</script>");
         SqlSource sqlSource = languageDriver.createSqlSource(configuration, sqlSb.toString(), modelClass);
-        return this.addUpdateMappedStatement(mapperClass, modelClass, "insertOrUpdate", sqlSource);
+        return this.addUpdateMappedStatement(mapperClass, modelClass, methodName, sqlSource);
     }
 
 

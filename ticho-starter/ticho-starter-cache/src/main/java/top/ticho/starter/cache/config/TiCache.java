@@ -14,8 +14,10 @@ public interface TiCache<K, V> {
 
     /** 缓存名称 */
     String getName();
+
     /** 最大存储数量 */
     int getMaxSize();
+
     /** 过期时间 */
     int getTtl();
 

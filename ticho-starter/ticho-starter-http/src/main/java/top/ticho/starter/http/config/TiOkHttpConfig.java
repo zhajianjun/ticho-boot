@@ -1,5 +1,11 @@
 package top.ticho.starter.http.config;
 
+import jakarta.net.ssl.HostnameVerifier;
+import jakarta.net.ssl.SSLContext;
+import jakarta.net.ssl.SSLSession;
+import jakarta.net.ssl.SSLSocketFactory;
+import jakarta.net.ssl.TrustManager;
+import jakarta.net.ssl.X509TrustManager;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.ConnectionPool;
 import okhttp3.Interceptor;
@@ -16,12 +22,6 @@ import org.springframework.web.client.RestTemplate;
 import top.ticho.starter.http.interceptor.TiOkHttpInterceptor;
 import top.ticho.starter.http.prop.TiHttpProperty;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.List;

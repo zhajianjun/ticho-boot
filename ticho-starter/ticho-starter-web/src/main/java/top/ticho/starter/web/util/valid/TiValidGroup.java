@@ -1,7 +1,7 @@
 package top.ticho.starter.web.util.valid;
 
-import javax.validation.GroupSequence;
-import javax.validation.groups.Default;
+import jakarta.validation.GroupSequence;
+import jakarta.validation.groups.Default;
 
 /**
  * 校验分组
@@ -11,11 +11,14 @@ import javax.validation.groups.Default;
  */
 public class TiValidGroup {
 
-    public interface Add {}
+    public interface Add {
+    }
 
-    public interface Upd {}
+    public interface Upd {
+    }
 
     @GroupSequence({Default.class, Add.class, Upd.class})
-    public interface CheckSequence {}
+    public interface CheckSequence {
+    }
 
 }

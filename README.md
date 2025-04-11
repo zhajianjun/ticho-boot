@@ -1,6 +1,8 @@
 # Ticho-Boot Project Description
 
-Ticho-Boot is an initial library for quickly configuring Spring Boot applications, deeply encapsulated based on Spring Boot. It provides commonly used functional components, utility classes, and standardized starters, enabling developers to easily integrate these features into their applications.
+Ticho-Boot is an initial library for quickly configuring Spring Boot applications, deeply encapsulated based on Spring
+Boot. It provides commonly used functional components, utility classes, and standardized starters, enabling developers
+to easily integrate these features into their applications.
 
 ---
 
@@ -9,7 +11,8 @@ Ticho-Boot is an initial library for quickly configuring Spring Boot application
 ### 1. **ticho-dependencies**
 
 - **Dependency Management Module**  
-  Manages global dependency versions uniformly through Maven parent POM configuration, simplifying version control for submodules.
+  Manages global dependency versions uniformly through Maven parent POM configuration, simplifying version control for
+  submodules.
 
 ---
 

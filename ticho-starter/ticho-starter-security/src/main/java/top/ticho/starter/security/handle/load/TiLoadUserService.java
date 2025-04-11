@@ -2,6 +2,7 @@ package top.ticho.starter.security.handle.load;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.IdUtil;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -12,7 +13,6 @@ import top.ticho.starter.security.prop.TiSecurityProperty;
 import top.ticho.starter.view.core.TiSecurityUser;
 import top.ticho.tool.json.util.TiJsonUtil;
 
-import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
