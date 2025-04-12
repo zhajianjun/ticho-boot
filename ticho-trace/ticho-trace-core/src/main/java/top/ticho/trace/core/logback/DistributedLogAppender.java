@@ -1,17 +1,20 @@
 package top.ticho.trace.core.logback;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.classic.spi.ThrowableProxy;
-import ch.qos.logback.core.AppenderBase;
 import lombok.Setter;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.core.Filter;
+import org.apache.logging.log4j.core.Layout;
+import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.appender.AbstractAppender;
+import org.apache.logging.log4j.core.config.Property;
+import org.apache.logging.log4j.core.impl.ThrowableProxy;
 import org.slf4j.helpers.MessageFormatter;
 import top.ticho.trace.common.constant.LogConst;
 import top.ticho.trace.core.handle.LogHandleContext;
 
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.io.StringWriter;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -20,7 +23,7 @@ import java.util.Map;
  * @author zhajianjun
  * @date 2024-02-01 12:30
  */
-public class DistributedLogAppender extends AppenderBase<ILoggingEvent> {
+public class DistributedLogAppender extends AbstractAppender {
 
     /** 应用名称 */
     @Setter
@@ -46,6 +49,10 @@ public class DistributedLogAppender extends AppenderBase<ILoggingEvent> {
     /** 日志处理上下文 */
     private LogHandleContext logHandleContext;
 
+    public DistributedLogAppender(String name, Filter filter, Layout<? extends Serializable> layout, boolean ignoreExceptions, Property[] properties) {
+        super(name, filter, layout, ignoreExceptions, properties);
+    }
+
 
     @Override
     public void start() {
@@ -67,7 +74,7 @@ public class DistributedLogAppender extends AppenderBase<ILoggingEvent> {
     }
 
     @Override
-    protected void append(ILoggingEvent event) {
+    public void append(LogEvent event) {
         if (!pushLog) {
             return;
         }
@@ -75,15 +82,15 @@ public class DistributedLogAppender extends AppenderBase<ILoggingEvent> {
             return;
         }
         logHandleContext.publish(logInfo -> {
-            Map<String, String> mdcMap = new HashMap<>(event.getMDCPropertyMap());
+            Map<String, String> mdcMap = event.getContextData().toMap();
             logInfo.setLogLevel(event.getLevel().toString());
-            logInfo.setDtTime(event.getTimeStamp());
+            logInfo.setDtTime(event.getTimeMillis());
             logInfo.setClassName(event.getLoggerName());
             logInfo.setContent(getMessage(event));
             logInfo.setThreadName(event.getThreadName());
             logInfo.setMdc(mdcMap);
             String method = "";
-            StackTraceElement[] stackTraceElements = event.getCallerData();
+            StackTraceElement[] stackTraceElements = event.getThrown().getStackTrace();
             if (stackTraceElements != null && stackTraceElements.length > 0) {
                 StackTraceElement stackTraceElement = stackTraceElements[0];
                 method = stackTraceElement.getMethodName();
@@ -94,25 +101,27 @@ public class DistributedLogAppender extends AppenderBase<ILoggingEvent> {
         });
     }
 
-    private static String getMessage(ILoggingEvent logEvent) {
+
+    private static String getMessage(LogEvent logEvent) {
+        String message = logEvent.getMessage().getFormattedMessage();
         if (!logEvent.getLevel().equals(Level.ERROR)) {
-            return logEvent.getFormattedMessage();
+            return message;
         }
-        if (logEvent.getThrowableProxy() != null) {
-            ThrowableProxy throwableProxy = (ThrowableProxy) logEvent.getThrowableProxy();
-            String arg = logEvent.getFormattedMessage() + "\n" + errorStackTrace(throwableProxy.getThrowable()).toString();
+        if (logEvent.getThrownProxy() != null) {
+            ThrowableProxy throwableProxy = logEvent.getThrownProxy();
+            String arg = message + "\n" + errorStackTrace(throwableProxy.getThrowable()).toString();
             return packageMessage("{}", arg);
         }
-        Object[] args = logEvent.getArgumentArray();
+        Object[] args = logEvent.getMessage().getParameters();
         if (args != null) {
             for (int i = 0; i < args.length; i++) {
                 if (args[i] instanceof Throwable) {
                     args[i] = errorStackTrace(args[i]);
                 }
             }
-            return packageMessage(logEvent.getMessage(), args);
+            return packageMessage(message, args);
         }
-        return logEvent.getFormattedMessage();
+        return message;
     }
 
     private static String packageMessage(String message, Object... args) {

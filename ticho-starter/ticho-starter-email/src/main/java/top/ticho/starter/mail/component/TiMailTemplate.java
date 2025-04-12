@@ -2,8 +2,11 @@ package top.ticho.starter.mail.component;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+import jakarta.mail.util.ByteArrayDataSource;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.lang.NonNull;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -12,9 +15,6 @@ import top.ticho.starter.mail.prop.TiMailProperty;
 import top.ticho.starter.view.enums.TiBizErrCode;
 import top.ticho.starter.view.util.TiAssert;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-import javax.mail.util.ByteArrayDataSource;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;

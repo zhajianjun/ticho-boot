@@ -1,9 +1,9 @@
 package top.ticho.starter.web.converter;
 
 import cn.hutool.core.text.CharSequenceUtil;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import top.ticho.tool.json.constant.TiDateFormatConst;
 

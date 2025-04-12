@@ -5,6 +5,7 @@ import com.github.benmanes.caffeine.cache.RemovalCause;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author zhajianjun
@@ -14,8 +15,10 @@ public interface TiCache<K, V> {
 
     /** 缓存名称 */
     String getName();
+
     /** 最大存储数量 */
     int getMaxSize();
+
     /** 过期时间 */
     int getTtl();
 
@@ -23,7 +26,7 @@ public interface TiCache<K, V> {
         return null;
     }
 
-    default Map<K, V> loadAll(Iterable<? extends K> keys) {
+    default Map<K, V> loadAll(Set<? extends K> keys) {
         return Collections.emptyMap();
     }
 

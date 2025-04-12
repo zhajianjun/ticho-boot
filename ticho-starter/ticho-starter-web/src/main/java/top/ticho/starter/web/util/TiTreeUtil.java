@@ -103,7 +103,9 @@ public class TiTreeUtil {
      * @param root  根节点数据
      */
     public static <T extends TiTreeNode<T>> void tree(List<T> datas, T root) {
-        tree(datas, root, (x, y) -> true, (x, y) -> {}, (x) -> {});
+        tree(datas, root, (x, y) -> true, (x, y) -> {
+        }, (x) -> {
+        });
     }
 
 }

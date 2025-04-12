@@ -3,6 +3,7 @@ package top.ticho.starter.http.interceptor;
 import cn.hutool.core.util.StrUtil;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -12,8 +13,6 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import top.ticho.starter.http.constant.TiHttpConst;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author zhajianjun

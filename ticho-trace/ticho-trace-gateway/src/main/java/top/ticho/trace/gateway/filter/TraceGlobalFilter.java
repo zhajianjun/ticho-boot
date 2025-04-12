@@ -2,6 +2,8 @@ package top.ticho.trace.gateway.filter;
 
 import cn.hutool.core.date.SystemClock;
 import cn.hutool.core.util.StrUtil;
+import jakarta.annotation.Nonnull;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.reactivestreams.Publisher;
 import org.slf4j.MDC;
@@ -15,10 +17,10 @@ import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.http.server.reactive.ServerHttpResponseDecorator;
-import org.springframework.lang.NonNull;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
@@ -83,7 +85,7 @@ public class TraceGlobalFilter implements GlobalFilter, Ordered {
         String ip = localIp();
         String appName = environment.getProperty("spring.application.name");
         String trace = traceProperty.getTrace();
-        String type = serverHttpRequest.getMethodValue();
+        String type = serverHttpRequest.getMethod().name();
         String url = serverHttpRequest.getPath().toString();
         httpLogInfo.setUrl(url);
         httpLogInfo.setPort(environment.getProperty("server.port"));
@@ -130,11 +132,12 @@ public class TraceGlobalFilter implements GlobalFilter, Ordered {
         DataBufferFactory bufferFactory = originalResponse.bufferFactory();
         return new ServerHttpResponseDecorator(originalResponse) {
             @Override
+            @Nonnull
             public Mono<Void> writeWith(@NonNull Publisher<? extends DataBuffer> body) {
-                HttpStatus statusCode = getStatusCode();
+                HttpStatusCode httpStatusCode = getStatusCode();
                 // 响应状态码
-                httpLogInfo.setStatus(Optional.ofNullable(statusCode).map(HttpStatus::value).orElse(null));
-                if (Objects.equals(statusCode, HttpStatus.OK) && body instanceof Flux) {
+                httpLogInfo.setStatus(httpStatusCode.value());
+                if (Objects.equals(httpStatusCode, HttpStatus.OK) && body instanceof Flux) {
                     Flux<? extends DataBuffer> fluxBody = Flux.from(body);
                     return super.writeWith(fluxBody.buffer().map(dataBuffers -> {
                         DataBufferFactory dataBufferFactory = new DefaultDataBufferFactory();
@@ -148,7 +151,7 @@ public class TraceGlobalFilter implements GlobalFilter, Ordered {
                         return bufferFactory.wrap(content);
                     }));
                 } else {
-                    log.error("获取响应体数据 ：" + statusCode);
+                    log.error("获取响应体数据 ：" + httpStatusCode);
                 }
                 httpLogInfo.setEnd(SystemClock.now());
                 return super.writeWith(body);

@@ -4,10 +4,10 @@ import cn.easyes.core.biz.EntityInfo;
 import cn.easyes.core.conditions.select.LambdaEsQueryWrapper;
 import cn.easyes.core.core.BaseEsMapper;
 import cn.hutool.core.collection.CollUtil;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.starter.es.service.BaseEsService;
 
-import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;

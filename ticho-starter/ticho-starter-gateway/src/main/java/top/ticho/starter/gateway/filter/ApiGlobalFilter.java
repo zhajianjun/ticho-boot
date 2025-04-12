@@ -4,6 +4,7 @@ import cn.hutool.core.date.SystemClock;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.reactivestreams.Publisher;
 import org.slf4j.MDC;
@@ -18,10 +19,10 @@ import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.http.server.reactive.ServerHttpResponseDecorator;
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.server.ServerWebExchange;
@@ -71,7 +72,7 @@ public class ApiGlobalFilter implements GlobalFilter, Ordered {
 
         MultiValueMap<String, String> queryParams = request.getQueryParams();
         String params = TiJsonUtil.toJsonString(queryParams);
-        String type = request.getMethodValue();
+        String type = request.getMethod().name();
         String url = request.getPath().toString();
         String header = headers.getFirst(USER_AGENT);
         UserAgent userAgent = UserAgentUtil.parse(header);
@@ -98,7 +99,7 @@ public class ApiGlobalFilter implements GlobalFilter, Ordered {
             @Override
             @NonNull
             public Mono<Void> writeWith(@NonNull Publisher<? extends DataBuffer> body) {
-                HttpStatus statusCode = getStatusCode();
+                HttpStatusCode statusCode = getStatusCode();
                 if (Objects.equals(statusCode, HttpStatus.OK) && body instanceof Flux) {
                     Flux<? extends DataBuffer> fluxBody = Flux.from(body);
                     return super.writeWith(fluxBody.buffer().map(dataBuffers -> {

@@ -1,5 +1,6 @@
 package top.ticho.starter.security.handle;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -11,8 +12,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import top.ticho.starter.view.core.TiResult;
 import top.ticho.starter.view.enums.TiHttpErrCode;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * 全局异常处理

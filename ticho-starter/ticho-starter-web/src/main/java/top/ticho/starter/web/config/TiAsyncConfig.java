@@ -1,5 +1,6 @@
 package top.ticho.starter.web.config;
 
+import jakarta.annotation.Resource;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
@@ -8,7 +9,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 
-import javax.annotation.Resource;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.concurrent.Executor;

@@ -1,5 +1,6 @@
 package top.ticho.starter.security.auth;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.method.HandlerMethod;
 import top.ticho.starter.security.annotation.IgnoreJwtCheck;
@@ -8,7 +9,6 @@ import top.ticho.starter.security.constant.TiSecurityConst;
 import top.ticho.starter.security.prop.TiSecurityProperty;
 import top.ticho.starter.web.util.TiSpringUtil;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Objects;
 

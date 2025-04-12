@@ -1,8 +1,8 @@
 package top.ticho.starter.web.util.valid;
 
-import org.springframework.lang.NonNull;
+import jakarta.validation.Valid;
+import lombok.NonNull;
 
-import javax.validation.Valid;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;

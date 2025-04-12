@@ -4,13 +4,13 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import top.ticho.starter.datasource.mapper.TiMapper;
 import top.ticho.starter.datasource.prop.TiDataSourceProperty;
 import top.ticho.starter.datasource.service.TiRepository;
 
-import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
@@ -83,11 +83,11 @@ public class TiRepositoryImpl<M extends TiMapper<T>, T> extends ServiceImpl<M, T
     }
 
     @Override
-    public boolean removeByIds(Collection<? extends Serializable> ids) {
+    public boolean removeByIds(Collection<?> ids) {
         return removeByIds(ids, batchSize());
     }
 
-    public boolean removeByIds(Collection<? extends Serializable> ids, int batchSize) {
+    public boolean removeByIds(Collection<?> ids, int batchSize) {
         if (CollUtil.isEmpty(ids)) {
             log.info("{}批量删除异常，集合为null或者大小为0", getTableName());
             return false;
@@ -99,7 +99,7 @@ public class TiRepositoryImpl<M extends TiMapper<T>, T> extends ServiceImpl<M, T
         if (size <= batchSize) {
             return size == baseMapper.deleteBatchIds(ids);
         }
-        List<? extends List<? extends Serializable>> split = CollUtil.split(ids, batchSize);
+        List<? extends List<?>> split = CollUtil.split(ids, batchSize);
         Integer total = split.stream().map(baseMapper::deleteBatchIds).reduce(0, Integer::sum);
         return total == size;
     }

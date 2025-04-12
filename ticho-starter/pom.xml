@@ -20,7 +20,6 @@
         <module>ticho-starter-email</module>
         <module>ticho-starter-cloud</module>
         <module>ticho-starter-minio</module>
-        <module>ticho-starter-swagger</module>
         <module>ticho-starter-http</module>
         <module>ticho-starter-rabbitmq</module>
         <module>ticho-starter-security</module>

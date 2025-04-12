@@ -235,7 +235,8 @@ public class TiJsonUtil {
      */
     public static <T> T toJavaObject(String jsonString) {
         try {
-            return isEmpty(jsonString) ? null : MAPPER.readValue(jsonString, new TypeReference<T>() {});
+            return isEmpty(jsonString) ? null : MAPPER.readValue(jsonString, new TypeReference<T>() {
+            });
         } catch (Exception e) {
             log.error("JsonString toJavaObject error, param={}, catch error {}", jsonString, e.getMessage(), e);
             return null;
