@@ -1,6 +1,5 @@
 package top.ticho.tool.intranet.client;
 
-import ch.qos.logback.classic.util.ContextInitializer;
 import cn.hutool.json.JSONUtil;
 import cn.hutool.setting.yaml.YamlUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +21,7 @@ public class ClientStart {
 
     public static void main(String[] args) {
         // logback.xml放在config文件夹里，其它地方调用不会生效config下的logback.xml配置了
-        System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, "conf/logback.xml");
+        // System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, "conf/logback.xml");
         String projectPath = System.getProperty("user.dir");
         String filePath = projectPath + File.separator + "/conf/client.yaml";
         ClientProperty clientProperty;

@@ -47,12 +47,6 @@
 
             <dependency>
                 <groupId>top.ticho.starter</groupId>
-                <artifactId>ticho-starter-swagger</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>top.ticho.starter</groupId>
                 <artifactId>ticho-starter-http</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -333,7 +327,7 @@
             <dependency>
                 <groupId>com.github.ulisesbocchio</groupId>
                 <artifactId>jasypt-spring-boot-starter</artifactId>
-                <version>3.0.6</version>
+                <version>3.0.5</version>
             </dependency>
 
             <!-- https://mvnrepository.com/artifact/cn.easy-es/easy-es-boot-starter -->
@@ -369,10 +363,17 @@
             </dependency>
 
             <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>2.0.9</version>
+            </dependency>
+
+            <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-slf4j2-impl</artifactId>
-                <version>2.23.1</version> <!-- 需 2.13.0+ -->
+                <version>2.23.1</version>
             </dependency>
+
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-core</artifactId>

@@ -1,4 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  top.ticho.starter.gateway.filter.SecurityHeaderFilter,\
-  top.ticho.starter.gateway.config.BeanConfig
-

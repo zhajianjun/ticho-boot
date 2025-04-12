@@ -13,7 +13,7 @@ import top.ticho.starter.es.component.EsTemplateImpl;
  * @date 2023-04-17 13:59
  */
 @Configuration
-public class BaseEsBeanConfig {
+public class TiEsBeanConfig {
 
     @Bean
     public EsTemplate esTemplate(RestHighLevelClient restHighLevelClient) {

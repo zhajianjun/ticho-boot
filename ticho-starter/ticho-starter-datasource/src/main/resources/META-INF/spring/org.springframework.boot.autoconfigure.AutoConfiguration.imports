@@ -1,0 +1,4 @@
+top.ticho.starter.datasource.config.TiDataSourceConfig
+top.ticho.starter.datasource.config.TiMybatisPlusConfig
+top.ticho.starter.datasource.interceptor.TiSqlLogInterceptor
+top.ticho.starter.datasource.component.TiIdGenerator
