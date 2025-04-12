@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
-import org.springframework.lang.Nullable;
 import top.ticho.starter.view.core.TiResult;
 import top.ticho.starter.view.enums.TiBizErrCode;
 
@@ -27,7 +26,6 @@ public class TiFeignFallback<T> implements MethodInterceptor {
     private final String targetName;
     private final Throwable cause;
 
-    @Nullable
     @Override
     public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) {
         String errorMessage = cause.getMessage();

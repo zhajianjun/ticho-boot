@@ -2,17 +2,16 @@ package top.ticho.starter.security.filter;
 
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.AccessDecisionManager;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authorization.AuthorizationDecision;
+import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.web.FilterInvocation;
+import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import top.ticho.starter.security.auth.AntPatternsAuthHandle;
 
-import java.util.Collection;
+import java.util.function.Supplier;
 
 /**
  * 自定义权限管理
@@ -22,8 +21,7 @@ import java.util.Collection;
  * @link <a href="https://blog.csdn.net/u012373815/article/details/54633046">...</a>
  */
 @Slf4j
-public class TiAccessDecisionManager implements AccessDecisionManager {
-
+public class TiAuthorizationManager implements AuthorizationManager<RequestAuthorizationContext> {
     @Resource
     private AntPatternsAuthHandle antPatternsAuthHandle;
 
@@ -34,31 +32,18 @@ public class TiAccessDecisionManager implements AccessDecisionManager {
      * object 包含客户端发起的请求的requset信息，可转换为 HttpServletRequest request = ((FilterInvocation) object).getHttpRequest();
      * configAttributes 为MyInvocationSecurityMetadataSource的getAttributes(Object object)这个方法返回的结果，此方法是为了判定用户请求的url 是否在权限表中，如果在权限表中，则返回给 decide 方法，用来判定用户是否有此权限。如果不在权限表中则放行。
      */
-    @SneakyThrows
     @Override
-    public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes) {
-        HttpServletRequest request = ((FilterInvocation) object).getRequest();
+    public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext object) {
+        HttpServletRequest request = object.getRequest();
         if (antPatternsAuthHandle.ignoreAuth(request)) {
-            return;
+            return new AuthorizationDecision(true);
         }
-        // 非放行的url没有权限信息 默认是 AnonymousAuthenticationToken
         if (authentication instanceof AnonymousAuthenticationToken) {
             // 说明没有token传入，所以没有权限信息，即是没有用户信息，即没有登录，抛出异常会
             throw new AccessDeniedException("无访问权限");
         }
+        return new AuthorizationDecision(true);
     }
 
-    /**
-     * 复制默认方法，使得@PreAuthorize("hasRole('ROLE_ADMIN')") 可用
-     */
-    @Override
-    public boolean supports(ConfigAttribute attribute) {
-        return true;
-    }
-
-    @Override
-    public boolean supports(Class<?> clazz) {
-        return true;
-    }
 
 }

@@ -9,8 +9,6 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
-import jakarta.net.ssl.SSLContext;
-import jakarta.net.ssl.SSLEngine;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +20,8 @@ import top.ticho.tool.intranet.constant.CommConst;
 import top.ticho.tool.intranet.prop.ClientProperty;
 import top.ticho.tool.intranet.util.IntranetUtil;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLEngine;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentLinkedQueue;
 

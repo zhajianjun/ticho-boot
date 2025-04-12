@@ -5,6 +5,7 @@ import com.github.benmanes.caffeine.cache.RemovalCause;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author zhajianjun
@@ -25,7 +26,7 @@ public interface TiCache<K, V> {
         return null;
     }
 
-    default Map<K, V> loadAll(Iterable<? extends K> keys) {
+    default Map<K, V> loadAll(Set<? extends K> keys) {
         return Collections.emptyMap();
     }
 

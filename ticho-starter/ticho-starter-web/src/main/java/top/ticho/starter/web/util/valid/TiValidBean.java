@@ -1,7 +1,7 @@
 package top.ticho.starter.web.util.valid;
 
 import jakarta.validation.Valid;
-import org.springframework.lang.NonNull;
+import lombok.NonNull;
 
 import java.util.Collection;
 import java.util.Iterator;

@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import top.ticho.starter.cache.prop.TiCacheProperty;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author zhajianjun
@@ -33,7 +34,7 @@ public class DefaultTiCache implements TiCache<String, Object> {
     }
 
     @Override
-    public Map<String, Object> loadAll(Iterable<? extends String> keys) {
+    public Map<String, Object> loadAll(Set<? extends String> keys) {
         return null;
     }
 

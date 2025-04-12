@@ -22,6 +22,12 @@
             <artifactId>ticho-trace-core</artifactId>
         </dependency>
 
+        <dependency>
+            <artifactId>okhttp</artifactId>
+            <groupId>com.squareup.okhttp3</groupId>
+            <optional>true</optional>
+        </dependency>
+
     </dependencies>
 
 </project>

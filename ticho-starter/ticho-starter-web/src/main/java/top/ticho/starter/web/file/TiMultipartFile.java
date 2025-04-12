@@ -1,7 +1,6 @@
 package top.ticho.starter.web.file;
 
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import lombok.NonNull;
 import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -61,7 +60,7 @@ public class TiMultipartFile implements MultipartFile {
     }
 
     @Override
-    @Nullable
+    @NonNull
     public String getContentType() {
         return this.contentType;
     }
@@ -76,9 +75,8 @@ public class TiMultipartFile implements MultipartFile {
         return this.content.length;
     }
 
-    @NonNull
     @Override
-    public byte[] getBytes() {
+    public byte @NonNull [] getBytes() {
         return this.content;
     }
 

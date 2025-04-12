@@ -1,12 +1,12 @@
 package top.ticho.tool.intranet.common;
 
-import jakarta.net.ssl.KeyManagerFactory;
-import jakarta.net.ssl.SSLContext;
-import jakarta.net.ssl.TrustManagerFactory;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.tool.intranet.constant.CommConst;
 
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

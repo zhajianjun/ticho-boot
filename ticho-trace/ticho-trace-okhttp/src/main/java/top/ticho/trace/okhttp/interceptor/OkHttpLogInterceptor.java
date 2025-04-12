@@ -1,6 +1,7 @@
 package top.ticho.trace.okhttp.interceptor;
 
 import cn.hutool.core.util.StrUtil;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Interceptor;
 import okhttp3.Request;
@@ -21,6 +22,7 @@ import java.io.IOException;
 public class OkHttpLogInterceptor implements Interceptor {
 
     @Override
+    @NonNull
     public Response intercept(Chain chain) throws IOException {
         Request req = chain.request();
         String traceId = MDC.get(LogConst.TRACE_ID_KEY);

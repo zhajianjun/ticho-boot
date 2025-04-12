@@ -18,7 +18,7 @@ import top.ticho.starter.security.auth.AntPatternsAuthHandle;
 import top.ticho.starter.security.auth.PermissionService;
 import top.ticho.starter.security.auth.TiPermissionServiceImpl;
 import top.ticho.starter.security.constant.TiSecurityConst;
-import top.ticho.starter.security.filter.TiAccessDecisionManager;
+import top.ticho.starter.security.filter.TiAuthorizationManager;
 import top.ticho.starter.security.filter.TiTokenAuthenticationTokenFilter;
 import top.ticho.starter.security.handle.jwt.JwtDecode;
 import top.ticho.starter.security.handle.jwt.JwtExtra;
@@ -109,8 +109,8 @@ public class TiSecurityImportConfig {
      * ticho访问决策管理
      */
     @Bean
-    public TiAccessDecisionManager tichoAccessDecisionManager() {
-        return new TiAccessDecisionManager();
+    public TiAuthorizationManager tichoAccessDecisionManager() {
+        return new TiAuthorizationManager();
     }
 
     @Bean

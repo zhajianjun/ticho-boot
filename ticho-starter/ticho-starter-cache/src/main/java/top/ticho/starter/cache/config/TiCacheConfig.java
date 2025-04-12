@@ -4,8 +4,8 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.Expiry;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.index.qual.NonNegative;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cache.CacheManager;
@@ -15,7 +15,6 @@ import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.lang.NonNull;
 import top.ticho.starter.cache.component.TiCacheTemplate;
 import top.ticho.starter.cache.prop.TiCacheProperty;
 
@@ -23,6 +22,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -142,7 +142,7 @@ public class TiCacheConfig {
 
             @Override
             @NonNull
-            public Map<K, V> loadAll(@NonNull Iterable<? extends K> keys) {
+            public Map<K, V> loadAll(@NonNull Set<? extends K> keys) {
                 return tiCache.loadAll(keys);
             }
 
@@ -183,7 +183,7 @@ public class TiCacheConfig {
              * @return 返回新的过期时间，单位取决于具体实现
              */
             @Override
-            public long expireAfterUpdate(@NonNull K key, @NonNull V value, long currentTime, @NonNegative long currentDuration) {
+            public long expireAfterUpdate(@NonNull K key, @NonNull V value, long currentTime, long currentDuration) {
                 // 调用tiCache的expireAfterUpdate方法来设置新的过期时间
                 return tiCache.expireAfterUpdate(key, value, currentTime, currentDuration);
             }
@@ -201,7 +201,7 @@ public class TiCacheConfig {
              * @return 返回新的过期时间，以毫秒为单位
              */
             @Override
-            public long expireAfterRead(@NonNull K key, @NonNull V value, long currentTime, @NonNegative long currentDuration) {
+            public long expireAfterRead(@NonNull K key, @NonNull V value, long currentTime, long currentDuration) {
                 // 调用tiCache的expireAfterRead方法，传入转换为字符串的键、值、当前时间和当前持续时间
                 // 并返回新的过期时间
                 return tiCache.expireAfterRead(key, value, currentTime, currentDuration);

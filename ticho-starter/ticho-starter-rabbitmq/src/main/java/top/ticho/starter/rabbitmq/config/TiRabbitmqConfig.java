@@ -3,6 +3,7 @@ package top.ticho.starter.rabbitmq.config;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.ReturnedMessage;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.lang.NonNull;
 import top.ticho.starter.rabbitmq.event.MqSendSuccessEvent;
 import top.ticho.starter.rabbitmq.event.TiMqSendToExchangeFailEvent;
 
@@ -24,7 +24,7 @@ import top.ticho.starter.rabbitmq.event.TiMqSendToExchangeFailEvent;
 @Configuration
 @PropertySource(value = "classpath:ticho-rabbitmq.properties")
 @Slf4j
-public class TiRabbitmqConfig implements RabbitTemplate.ConfirmCallback, RabbitTemplate.ReturnCallback {
+public class TiRabbitmqConfig implements RabbitTemplate.ConfirmCallback, RabbitTemplate.ReturnsCallback {
 
 
     @Autowired
@@ -36,7 +36,7 @@ public class TiRabbitmqConfig implements RabbitTemplate.ConfirmCallback, RabbitT
     @PostConstruct
     public void init() {
         rabbitTemplate.setConfirmCallback(this);
-        rabbitTemplate.setReturnCallback(this);
+        rabbitTemplate.setReturnsCallback(this);
         rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
     }
 
@@ -54,7 +54,7 @@ public class TiRabbitmqConfig implements RabbitTemplate.ConfirmCallback, RabbitT
         String id = null;
         if (correlationData != null) {
             id = correlationData.getId();
-            returnedMessage = correlationData.getReturnedMessage();
+            returnedMessage = correlationData.getReturned().getMessage();
         }
         if (ack) {
             log.debug("消息发送到交换机成功,correlationDataId={}", id);
@@ -67,21 +67,12 @@ public class TiRabbitmqConfig implements RabbitTemplate.ConfirmCallback, RabbitT
 
     /**
      * 路由发送到队列失败回调，只有失败才会触发
-     *
-     * @param message    message
-     * @param replyCode  replyCode
-     * @param replyText  replyText
-     * @param exchange   exchange
-     * @param routingKey routingKey
      */
     @Override
-    public void returnedMessage(
-        @NonNull Message message,
-        int replyCode,
-        @NonNull String replyText,
-        @NonNull String exchange,
-        @NonNull String routingKey
-    ) {
+    public void returnedMessage(ReturnedMessage returnedMessage) {
+        String replyText = returnedMessage.getReplyText();
+        int replyCode = returnedMessage.getReplyCode();
+        Message message = returnedMessage.getMessage();
         log.error("发送到队列失败，replyCode={},replyText={}", replyCode, replyText);
         applicationContext.publishEvent(new TiMqSendToExchangeFailEvent(applicationContext, message));
     }
