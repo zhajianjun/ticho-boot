@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <!-- @formatter:off -->
+    <Properties>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} %t %-5level %logger{50}:%line %X{trace}: %msg%n
+        </Property>
+        <Property name="COLOR_PATTERN">%style{%d{yyyy-MM-dd HH:mm:ss.SSS}}{cyan} %style{%t}{magenta} %highlight{%-5level} %style{%logger{50}:%line}{magenta} %style{%X{trace}}{cyan}: %msg%n
+        </Property>
+        <Property name="LOG_PATH">./logs</Property>
+        <Property name="MAX_HISTORY">7</Property>
+        <Property name="MAX_FILE_SIZE">20MB</Property>
+    </Properties>
+
+    <Appenders>
+        <!-- 控制台输出 -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${COLOR_PATTERN}" disableAnsi="false"/>
+            <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+        </Console>
+
+        <!-- 分级文件输出 -->
+        <RollingFile name="Debug" fileName="${LOG_PATH}/debug.log" filePattern="${LOG_PATH}/debug.%d{yyyy-MM-dd}-%i.gz">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <SizeBasedTriggeringPolicy size="${MAX_FILE_SIZE}"/>
+            </Policies>
+            <DefaultRolloverStrategy max="${MAX_HISTORY}"/>
+        </RollingFile>
+
+        <RollingFile name="Info" fileName="${LOG_PATH}/info.log" filePattern="${LOG_PATH}/info.%d{yyyy-MM-dd}-%i.gz">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <SizeBasedTriggeringPolicy size="${MAX_FILE_SIZE}"/>
+            </Policies>
+            <DefaultRolloverStrategy max="${MAX_HISTORY}"/>
+        </RollingFile>
+
+        <RollingFile name="Warn" fileName="${LOG_PATH}/warn.log" filePattern="${LOG_PATH}/warn.%d{yyyy-MM-dd}-%i.gz">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <SizeBasedTriggeringPolicy size="${MAX_FILE_SIZE}"/>
+            </Policies>
+            <DefaultRolloverStrategy max="${MAX_HISTORY}"/>
+        </RollingFile>
+
+        <RollingFile name="Error" fileName="${LOG_PATH}/error.log" filePattern="${LOG_PATH}/error.%d{yyyy-MM-dd}-%i.gz">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <SizeBasedTriggeringPolicy size="${MAX_FILE_SIZE}"/>
+            </Policies>
+            <DefaultRolloverStrategy max="${MAX_HISTORY}"/>
+        </RollingFile>
+
+
+        <RollingFile name="All" fileName="${LOG_PATH}/all.log" filePattern="${LOG_PATH}/all.%d{yyyy-MM-dd}-%i.gz">
+            <PatternLayout pattern="${LOG_PATTERN}"/>
+            <Filters>
+                <LevelRangeFilter minLevel="DEBUG" maxLevel="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
+            </Filters>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <SizeBasedTriggeringPolicy size="${MAX_FILE_SIZE}"/>
+            </Policies>
+            <DefaultRolloverStrategy max="${MAX_HISTORY}"/>
+        </RollingFile>
+
+    </Appenders>
+
+    <Loggers>
+        <Logger name="org.springframework.security" level="ERROR">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="Error"/>
+            <AppenderRef ref="All"/>
+        </Logger>
+        <AsyncRoot level="INFO">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="Debug"/>
+            <AppenderRef ref="Info"/>
+            <AppenderRef ref="Warn"/>
+            <AppenderRef ref="Error"/>
+            <AppenderRef ref="All"/>
+        </AsyncRoot>
+    </Loggers>
+
+</Configuration>
