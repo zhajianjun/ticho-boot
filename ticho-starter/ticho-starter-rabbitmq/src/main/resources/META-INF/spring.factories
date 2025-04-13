@@ -1,5 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  top.ticho.starter.rabbitmq.config.TiRabbitmqConfig,\
-  top.ticho.starter.rabbitmq.config.TiMqMessageConverterConfig
-
-

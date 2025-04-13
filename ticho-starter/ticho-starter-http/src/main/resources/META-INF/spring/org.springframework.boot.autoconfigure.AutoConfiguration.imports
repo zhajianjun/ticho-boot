@@ -1,0 +1,2 @@
+top.ticho.starter.http.config.TiOkHttpConfig
+top.ticho.starter.http.interceptor.TiFeignInterceptor

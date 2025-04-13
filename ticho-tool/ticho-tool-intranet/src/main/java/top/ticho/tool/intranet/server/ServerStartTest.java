@@ -1,6 +1,5 @@
 package top.ticho.tool.intranet.server;
 
-import ch.qos.logback.classic.util.ContextInitializer;
 import top.ticho.tool.intranet.prop.ServerProperty;
 import top.ticho.tool.intranet.server.entity.ClientInfo;
 import top.ticho.tool.intranet.server.entity.PortInfo;
@@ -19,7 +18,7 @@ public class ServerStartTest {
 
     public static void main(String[] args) {
         // 测试
-        System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, "conf/logback.xml");
+        // System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, "conf/logback.xml");
         ServerProperty serverProperty = new ServerProperty();
         serverProperty.setPort(5120);
         serverProperty.setSslEnable(false);

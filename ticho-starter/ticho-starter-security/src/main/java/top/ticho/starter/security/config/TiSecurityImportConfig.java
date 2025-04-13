@@ -13,7 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.web.filter.OncePerRequestFilter;
 import top.ticho.starter.security.auth.AntPatternsAuthHandle;
 import top.ticho.starter.security.auth.PermissionService;
 import top.ticho.starter.security.auth.TiPermissionServiceImpl;
@@ -58,7 +57,7 @@ public class TiSecurityImportConfig {
 
     @Bean(TiSecurityConst.OAUTH2_TOKEN_FILTER_BEAN_NAME)
     @ConditionalOnMissingBean(name = TiSecurityConst.OAUTH2_TOKEN_FILTER_BEAN_NAME)
-    public OncePerRequestFilter baseTokenAuthenticationTokenFilter() {
+    public TiTokenAuthenticationTokenFilter tiTokenAuthenticationTokenFilter() {
         return new TiTokenAuthenticationTokenFilter();
     }
 
@@ -109,7 +108,7 @@ public class TiSecurityImportConfig {
      * ticho访问决策管理
      */
     @Bean
-    public TiAuthorizationManager tichoAccessDecisionManager() {
+    public TiAuthorizationManager tiAuthorizationManager() {
         return new TiAuthorizationManager();
     }
 
