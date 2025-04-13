@@ -26,6 +26,8 @@
         <pagehelper-spring-boot-starter.version>1.4.7</pagehelper-spring-boot-starter.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <spring-boot-admin.version>3.1.5</spring-boot-admin.version>
+        <log4j.version>2.23.1</log4j.version>
+        <flyway.version>9.22.0</flyway.version>
     </properties>
 
 
@@ -371,7 +373,7 @@
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-api</artifactId>
-                <version>2.23.1</version>
+                <version>${log4j.version}</version>
             </dependency>
 
             <dependency>
@@ -383,13 +385,26 @@
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-slf4j2-impl</artifactId>
-                <version>2.23.1</version>
+                <version>${log4j.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-core</artifactId>
-                <version>2.23.1</version>
+                <version>${log4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-jul</artifactId>
+                <version>${log4j.version}</version>
+            </dependency>
+
+            <!-- ANSI颜色支持 -->
+            <dependency>
+                <groupId>org.fusesource.jansi</groupId>
+                <artifactId>jansi</artifactId>
+                <version>2.4.0</version>
             </dependency>
 
             <dependency>
@@ -401,12 +416,12 @@
             <dependency>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-core</artifactId>
-                <version>9.22.0</version>
+                <version>${flyway.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-mysql</artifactId>
-                <version>9.22.0</version>
+                <version>${flyway.version}</version>
             </dependency>
 
         </dependencies>

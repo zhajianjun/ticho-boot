@@ -1,4 +1,4 @@
-package top.ticho.trace.core.logback;
+package top.ticho.trace.core.log4j;
 
 import lombok.Setter;
 import org.apache.logging.log4j.Level;
@@ -23,7 +23,7 @@ import java.util.Map;
  * @author zhajianjun
  * @date 2024-02-01 12:30
  */
-public class DistributedLogAppender extends AbstractAppender {
+public class Log4jDistributedAppender extends AbstractAppender {
 
     /** 应用名称 */
     @Setter
@@ -49,7 +49,7 @@ public class DistributedLogAppender extends AbstractAppender {
     /** 日志处理上下文 */
     private LogHandleContext logHandleContext;
 
-    public DistributedLogAppender(String name, Filter filter, Layout<? extends Serializable> layout, boolean ignoreExceptions, Property[] properties) {
+    public Log4jDistributedAppender(String name, Filter filter, Layout<? extends Serializable> layout, boolean ignoreExceptions, Property[] properties) {
         super(name, filter, layout, ignoreExceptions, properties);
     }
 

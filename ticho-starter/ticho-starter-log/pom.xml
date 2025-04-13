@@ -57,6 +57,11 @@
             <artifactId>ticho-starter-view</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.fusesource.jansi</groupId>
+            <artifactId>jansi</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
