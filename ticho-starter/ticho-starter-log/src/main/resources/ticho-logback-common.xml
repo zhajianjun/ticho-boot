@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<included>
+<configuration debug="false" scan="true" scanPeriod="30 seconds">
     <!-- @formatter:off -->
     <!--1.日志格式和颜色渲染 -->
     <!-- 彩色日志依赖的渲染类 -->
@@ -253,6 +253,13 @@
     </appender>
 
     <springProfile name="local,dev,test,st">
+        <logger name="com.alibaba.nacos.clientPO" level="ERROR"/>
+        <logger name="com.ulisesbocchio.jasyptspringboot" level="ERROR"/>
+        <logger name="com.alibaba.cloud.nacos" level="INFO"/>
+        <logger name="io.undertow" level="ERROR"/>
+        <logger name="org.springframework" level="ERROR"/>
+        <logger name="springfox.documentation" level="ERROR"/>
+        <logger name="top.ticho" level="DEBUG"/>
         <!-- 日志输出级别 -->
         <root level="INFO">
             <appender-ref ref="async-console"/>
@@ -265,6 +272,13 @@
         </root>
     </springProfile>
     <springProfile name="prod,uat">
+        <logger name="com.alibaba.nacos.clientPO" level="ERROR"/>
+        <logger name="com.ulisesbocchio.jasyptspringboot" level="ERROR"/>
+        <logger name="com.alibaba.cloud.nacos" level="ERROR"/>
+        <logger name="io.undertow" level="ERROR"/>
+        <logger name="org.springframework" level="ERROR"/>
+        <logger name="springfox.documentation" level="ERROR"/>
+        <logger name="top.ticho" level="DEBUG"/>
         <!-- 日志输出级别 -->
         <root level="INFO">
             <appender-ref ref="async-console"/>
@@ -275,5 +289,4 @@
             <appender-ref ref="trace"/>
         </root>
     </springProfile>
-
-</included>
+</configuration>
