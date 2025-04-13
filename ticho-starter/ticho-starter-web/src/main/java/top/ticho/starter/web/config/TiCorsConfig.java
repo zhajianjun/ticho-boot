@@ -37,7 +37,7 @@ public class TiCorsConfig {
     }
 
     @Bean
-    public FilterRegistrationBean<CorsFilter> corsFilter() {
+    public FilterRegistrationBean<CorsFilter> corsFilterRegisttration() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         // 对接口配置跨域设置
         source.registerCorsConfiguration("/**", corsConfiguration());

@@ -4,7 +4,8 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationTrustResolver;
+import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.core.Authentication;
@@ -22,9 +23,10 @@ import java.util.function.Supplier;
  */
 @Slf4j
 public class TiAuthorizationManager implements AuthorizationManager<RequestAuthorizationContext> {
+    private final AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
+
     @Resource
     private AntPatternsAuthHandle antPatternsAuthHandle;
-
 
     /**
      * decide 方法是判定是否拥有权限的决策方法，
@@ -35,15 +37,15 @@ public class TiAuthorizationManager implements AuthorizationManager<RequestAutho
     @Override
     public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext object) {
         HttpServletRequest request = object.getRequest();
-        if (antPatternsAuthHandle.ignoreAuth(request)) {
+        if (antPatternsAuthHandle.ignoreAuth(request) || isGranted(authentication.get())) {
             return new AuthorizationDecision(true);
         }
-        if (authentication instanceof AnonymousAuthenticationToken) {
-            // 说明没有token传入，所以没有权限信息，即是没有用户信息，即没有登录，抛出异常会
-            throw new AccessDeniedException("无访问权限");
-        }
-        return new AuthorizationDecision(true);
+        throw new AccessDeniedException("无访问权限");
     }
 
+    private boolean isGranted(Authentication authentication) {
+        return authentication != null && !this.trustResolver.isAnonymous(authentication)
+            && authentication.isAuthenticated();
+    }
 
 }
