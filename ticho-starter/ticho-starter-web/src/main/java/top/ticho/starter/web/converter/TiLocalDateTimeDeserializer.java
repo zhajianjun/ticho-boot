@@ -10,6 +10,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import top.ticho.tool.json.constant.TiDateFormatConst;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.time.DateTimeException;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -30,6 +31,7 @@ import java.time.format.DateTimeFormatter;
  */
 @SuppressWarnings("all")
 public class TiLocalDateTimeDeserializer extends JSR310DateTimeDeserializerBase<LocalDateTime> {
+    @Serial
     private static final long serialVersionUID = 1L;
     private static final DateTimeFormatter DEFAULT_FORMATTER;
     public static final TiLocalDateTimeDeserializer INSTANCE;

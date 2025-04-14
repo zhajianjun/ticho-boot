@@ -119,8 +119,8 @@ public class TiSpringUtil implements ApplicationContextAware {
             return null;
         }
         Object handler = executionChain.getHandler();
-        if (handler instanceof HandlerMethod) {
-            return (HandlerMethod) handler;
+        if (handler instanceof HandlerMethod handlerMethod) {
+            return handlerMethod;
         } else {
             log.warn("Handler is not an instance of HandlerMethod: {}", handler.getClass());
             return null;

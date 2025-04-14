@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -24,6 +25,7 @@ public enum TiBizErrCode implements Serializable, TiErrCode {
     IS_NOT_EXISTS(1001, "数据不存在"),
     APP_SERVICE_ERR(1001, "服务异常");
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /** 状态码 */

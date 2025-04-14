@@ -36,8 +36,6 @@ import top.ticho.starter.view.exception.TiBizException;
 import top.ticho.starter.view.exception.TiSysException;
 import top.ticho.starter.web.annotation.TiView;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 
@@ -56,25 +54,22 @@ public class TiResponseBodyAdvice implements ResponseBodyAdvice<Object> {
     private final HttpServletResponse response;
 
     static {
-        Map<Class<? extends Throwable>, TiHttpErrCode> errCodeMap = new HashMap<>();
-        errCodeMap.put(BindException.class, TiHttpErrCode.BAD_REQUEST);
-        errCodeMap.put(TypeMismatchException.class, TiHttpErrCode.BAD_REQUEST);
-        errCodeMap.put(NoHandlerFoundException.class, TiHttpErrCode.BAD_REQUEST);
-        errCodeMap.put(ServletRequestBindingException.class, TiHttpErrCode.BAD_REQUEST);
-        errCodeMap.put(HttpMessageNotReadableException.class, TiHttpErrCode.BAD_REQUEST);
-        errCodeMap.put(MissingServletRequestPartException.class, TiHttpErrCode.BAD_REQUEST);
-        errCodeMap.put(MissingServletRequestParameterException.class, TiHttpErrCode.BAD_REQUEST);
-
-        errCodeMap.put(MissingPathVariableException.class, TiHttpErrCode.INTERNAL_SERVER_ERROR);
-        errCodeMap.put(ConversionNotSupportedException.class, TiHttpErrCode.INTERNAL_SERVER_ERROR);
-        errCodeMap.put(HttpMessageNotWritableException.class, TiHttpErrCode.INTERNAL_SERVER_ERROR);
-
-        errCodeMap.put(HttpRequestMethodNotSupportedException.class, TiHttpErrCode.METHOD_NOT_ALLOWED);
-        errCodeMap.put(HttpMediaTypeNotSupportedException.class, TiHttpErrCode.UNSUPPORTED_MEDIA_TYPE);
-        errCodeMap.put(HttpMediaTypeNotAcceptableException.class, TiHttpErrCode.NOT_ACCEPTABLE);
-
-        errCodeMap.put(AsyncRequestTimeoutException.class, TiHttpErrCode.SERVICE_UNAVAILABLE);
-        TiResponseBodyAdvice.errCodeMap = Collections.unmodifiableMap(errCodeMap);
+        TiResponseBodyAdvice.errCodeMap = Map.ofEntries(
+            Map.entry(BindException.class, TiHttpErrCode.BAD_REQUEST),
+            Map.entry(TypeMismatchException.class, TiHttpErrCode.BAD_REQUEST),
+            Map.entry(NoHandlerFoundException.class, TiHttpErrCode.BAD_REQUEST),
+            Map.entry(ServletRequestBindingException.class, TiHttpErrCode.BAD_REQUEST),
+            Map.entry(HttpMessageNotReadableException.class, TiHttpErrCode.BAD_REQUEST),
+            Map.entry(MissingServletRequestPartException.class, TiHttpErrCode.BAD_REQUEST),
+            Map.entry(MissingServletRequestParameterException.class, TiHttpErrCode.BAD_REQUEST),
+            Map.entry(MissingPathVariableException.class, TiHttpErrCode.INTERNAL_SERVER_ERROR),
+            Map.entry(ConversionNotSupportedException.class, TiHttpErrCode.INTERNAL_SERVER_ERROR),
+            Map.entry(HttpMessageNotWritableException.class, TiHttpErrCode.INTERNAL_SERVER_ERROR),
+            Map.entry(HttpRequestMethodNotSupportedException.class, TiHttpErrCode.METHOD_NOT_ALLOWED),
+            Map.entry(HttpMediaTypeNotSupportedException.class, TiHttpErrCode.UNSUPPORTED_MEDIA_TYPE),
+            Map.entry(HttpMediaTypeNotAcceptableException.class, TiHttpErrCode.NOT_ACCEPTABLE),
+            Map.entry(AsyncRequestTimeoutException.class, TiHttpErrCode.SERVICE_UNAVAILABLE)
+        );
     }
 
     /**
@@ -82,9 +77,8 @@ public class TiResponseBodyAdvice implements ResponseBodyAdvice<Object> {
      */
     @ExceptionHandler(Exception.class)
     public TiResult<String> exception(Exception ex) {
-        if (ex instanceof TiBizException) {
+        if (ex instanceof TiBizException tiBizException) {
             // 业务异常
-            TiBizException tiBizException = (TiBizException) ex;
             response.setStatus(HttpStatus.OK.value());
             log.warn("catch error\t{}", ex.getMessage());
             return TiResult.of(tiBizException.getCode(), tiBizException.getMsg());
@@ -94,9 +88,8 @@ public class TiResponseBodyAdvice implements ResponseBodyAdvice<Object> {
         if (errCode != null) {
             tiResult = TiResult.of(errCode);
             response.setStatus(tiResult.getCode());
-        } else if (ex instanceof TiSysException) {
+        } else if (ex instanceof TiSysException systemException) {
             // 系统异常
-            TiSysException systemException = (TiSysException) ex;
             tiResult = TiResult.of(systemException.getCode(), systemException.getMsg());
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         } else {

@@ -114,8 +114,8 @@ public abstract class AbstractAuthTokenFilter<T extends TiSecurityUser> extends 
             String message = e.getMessage();
             TiHttpErrCode tokenInvalid = TiHttpErrCode.TOKEN_INVALID;
             log.warn("{} {} {} catch error\t{}", request.getMethod(), request.getRequestURI(), tokenInvalid.getCode(), message, e);
-            if (e instanceof TiBizException) {
-                message = ((TiBizException) e).getMsg();
+            if (e instanceof TiBizException ex) {
+                message = ex.getMsg();
             }
             TiResult<String> tiResult = TiResult.of(tokenInvalid, message, request.getRequestURI());
             response.setStatus(tokenInvalid.getCode());

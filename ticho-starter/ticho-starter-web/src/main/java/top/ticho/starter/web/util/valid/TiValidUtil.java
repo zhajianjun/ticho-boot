@@ -291,12 +291,11 @@ public class TiValidUtil {
         if (ObjUtil.isEmpty(obj)) {
             throw new TiBizException(TiBizErrCode.PARAM_ERROR);
         }
-        if (obj instanceof Collection<?>) {
-            Collection<?> objnew = (Collection<?>) obj;
-            if (objnew.isEmpty()) {
+        if (obj instanceof Collection<?> collection) {
+            if (collection.isEmpty()) {
                 throw new TiBizException(TiBizErrCode.PARAM_ERROR);
             }
-            TiValidBean<?> tiValidBean = new TiValidBean<>(objnew);
+            TiValidBean<?> tiValidBean = new TiValidBean<>(collection);
             return (T) tiValidBean;
         }
         return obj;
@@ -317,12 +316,11 @@ public class TiValidUtil {
         if (ObjUtil.isEmpty(obj)) {
             throw new TiBizException(TiBizErrCode.PARAM_ERROR, customMessage);
         }
-        if (obj instanceof Collection<?>) {
-            Collection<?> objnew = (Collection<?>) obj;
-            if (objnew.isEmpty()) {
+        if (obj instanceof Collection<?> collection) {
+            if (collection.isEmpty()) {
                 throw new TiBizException(TiBizErrCode.PARAM_ERROR, customMessage);
             }
-            TiValidBean<?> tiValidBean = new TiValidBean<>(objnew);
+            TiValidBean<?> tiValidBean = new TiValidBean<>(collection);
             return (T) tiValidBean;
         }
         return obj;

@@ -158,21 +158,21 @@ public class TiSqlLogInterceptor implements Interceptor {
         if (obj == null) {
             return "null";
         }
-        if (obj instanceof String) {
-            return obj.toString().isEmpty() ? "''" : "'" + obj + "'";
+        if (obj instanceof String str) {
+            return str.isEmpty() ? "''" : "'" + obj + "'";
         }
         if (obj instanceof Date) {
             DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.CHINA);
             return "'" + formatter.format(obj) + "'";
         }
-        if (obj instanceof LocalDateTime) {
-            return "'" + LocalDateTimeUtil.formatNormal((LocalDateTime) obj) + "'";
+        if (obj instanceof LocalDateTime localDateTime) {
+            return "'" + LocalDateTimeUtil.formatNormal(localDateTime) + "'";
         }
-        if (obj instanceof LocalDate) {
-            return "'" + LocalDateTimeUtil.formatNormal((LocalDate) obj) + "'";
+        if (obj instanceof LocalDate localDate) {
+            return "'" + LocalDateTimeUtil.formatNormal(localDate) + "'";
         }
-        if (obj instanceof LocalTime) {
-            return "'" + ((LocalTime) obj).format(DatePattern.NORM_TIME_FORMATTER) + "'";
+        if (obj instanceof LocalTime localTime) {
+            return "'" + localTime.format(DatePattern.NORM_TIME_FORMATTER) + "'";
         }
         return obj.toString();
     }

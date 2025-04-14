@@ -74,9 +74,8 @@ public class TiWebLogInterceptor implements HandlerInterceptor, Ordered {
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
         Map<String, Object> reqParamsAllMap = null;
-        if (request instanceof StandardMultipartHttpServletRequest) {
+        if (request instanceof StandardMultipartHttpServletRequest sr) {
             reqParamsAllMap = new HashMap<>();
-            StandardMultipartHttpServletRequest sr = (StandardMultipartHttpServletRequest) request;
             request = sr.getRequest();
             MultiValueMap<String, MultipartFile> multiFileMap = sr.getMultiFileMap();
             Map<String, Object> finalParamsMap = reqParamsAllMap;
@@ -85,7 +84,7 @@ public class TiWebLogInterceptor implements HandlerInterceptor, Ordered {
                 finalParamsMap.put(x, collect);
             });
         }
-        if (!(request instanceof TiRequestWrapper) || !(handler instanceof HandlerMethod)) {
+        if (!(request instanceof TiRequestWrapper tiRequestWrapper) || !(handler instanceof HandlerMethod handlerMethod)) {
             return true;
         }
         long millis = SystemClock.now();
@@ -99,7 +98,6 @@ public class TiWebLogInterceptor implements HandlerInterceptor, Ordered {
         reqParamsAllMap.putAll(reqParamsMap);
         String params = toJson(reqParamsAllMap);
         // reqBody
-        TiRequestWrapper tiRequestWrapper = (TiRequestWrapper) request;
         String reqBody = tiRequestWrapper.getBody();
         // header
         Map<String, String> headersMap = getHeaders(request);
@@ -108,7 +106,6 @@ public class TiWebLogInterceptor implements HandlerInterceptor, Ordered {
         UserAgent userAgent = UserAgentUtil.parse(userAgentHeader);
         Principal principal = request.getUserPrincipal();
         String port = environment.getProperty("server.port");
-        HandlerMethod handlerMethod = (HandlerMethod) handler;
         TiLog annotation = handlerMethod.getMethodAnnotation(TiLog.class);
         String name = Optional.ofNullable(annotation).map(TiLog::value).orElse(null);
         String position = handlerMethod.getMethod().getDeclaringClass().getName() + "." + handlerMethod.getMethod().getName() + "()";

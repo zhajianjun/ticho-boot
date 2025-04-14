@@ -110,8 +110,8 @@ public class TiJsonUtil {
      */
     public static String toJsonString(Object obj) {
         try {
-            if (obj instanceof String) {
-                return obj.toString();
+            if (obj instanceof String string) {
+                return string;
             }
             return Objects.nonNull(obj) ? MAPPER.writeValueAsString(obj) : EMPTY;
         } catch (Exception e) {
@@ -128,8 +128,8 @@ public class TiJsonUtil {
      */
     public static String toJsonStringPretty(Object obj) {
         try {
-            if (obj instanceof String) {
-                return obj.toString();
+            if (obj instanceof String string) {
+                return string;
             }
             return Objects.nonNull(obj) ? MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(obj) : EMPTY;
         } catch (Exception e) {
@@ -244,13 +244,10 @@ public class TiJsonUtil {
     }
 
     public static String objToString(Object obj) {
-        String jsonString;
-        if (obj instanceof String) {
-            jsonString = (String) obj;
-        } else {
-            jsonString = toJsonString(obj);
+        if (obj instanceof String string) {
+            return string;
         }
-        return jsonString;
+        return toJsonString(obj);
     }
 
     /**

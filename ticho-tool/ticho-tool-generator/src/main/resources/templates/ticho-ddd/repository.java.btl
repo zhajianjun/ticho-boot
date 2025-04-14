@@ -12,6 +12,7 @@ import java.util.List;
 import ${package.entity}.${className.entity};
 import ${package.query}.${className.query};
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;

@@ -72,7 +72,7 @@ public class TraceInterceptor implements HandlerInterceptor, Ordered {
 
     @Override
     public void afterCompletion(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, Exception ex) {
-        if (!(handler instanceof HandlerMethod)) {
+        if (!(handler instanceof HandlerMethod handlerMethod)) {
             return;
         }
         Long start = startLocal.get();
@@ -83,7 +83,6 @@ public class TraceInterceptor implements HandlerInterceptor, Ordered {
         long end = SystemClock.now();
         int status = response.getStatus();
         Long consume = end - start;
-        HandlerMethod handlerMethod = (HandlerMethod) handler;
         TraceInfo traceInfo = TraceInfo.builder()
             .traceId(MDC.get(LogConst.TRACE_ID_KEY))
             .spanId(MDC.get(LogConst.SPAN_ID_KEY))

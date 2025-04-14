@@ -1,5 +1,6 @@
 package ${package.dto};
 
+import java.io.Serial;
 import java.io.Serializable;
     <% for(pkg in table.imports){ %>
         <% if(!@pkg.contains("baomidou")) { %>
@@ -43,6 +44,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @ApiModel(value = "${table.comment!}DTO")
     <% } %>
 public class ${className.dto} implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 <% /** -----------START 字段循环遍历----------- **/ %>
 <% for(field in table.fields){ %>

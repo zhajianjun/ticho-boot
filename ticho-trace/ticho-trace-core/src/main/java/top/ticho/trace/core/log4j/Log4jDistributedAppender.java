@@ -137,11 +137,10 @@ public class Log4jDistributedAppender extends AbstractAppender {
     }
 
     public static Object errorStackTrace(Object obj) {
-        if (obj instanceof Exception) {
-            Exception eObj = (Exception) obj;
+        if (obj instanceof Exception ex) {
             try (StringWriter sw = new StringWriter(); PrintWriter pw = new PrintWriter(sw)) {
                 String exceptionStack;
-                eObj.printStackTrace(pw);
+                ex.printStackTrace(pw);
                 exceptionStack = sw.toString();
                 return exceptionStack;
             } catch (Exception e) {

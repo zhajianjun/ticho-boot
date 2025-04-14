@@ -1108,23 +1108,22 @@ public class BaseEsMapperImpl<T> implements BaseEsMapper<T> {
         // 按排序器顺序封装排序字段值
         for (int i = 0; i < sortValues.length; i++) {
             Object sortValue = sortValues[i];
-            if (!(sortValue instanceof Double)) {
+            if (!(sortValue instanceof Double dou)) {
                 return;
             }
-            double distance = (double) sortValue;
-            if (Double.isNaN(distance)) {
+            if (Double.isNaN(dou)) {
                 return;
             }
             Integer distanceDecimalPlaces = entityInfo.getDistanceDecimalPlaces().get(i);
             if (distanceDecimalPlaces > ZERO) {
-                distance = NumericUtils.setDecimalPlaces(distance, distanceDecimalPlaces);
+                dou = NumericUtils.setDecimalPlaces(dou, distanceDecimalPlaces);
             }
             try {
                 Method invokeMethod = BaseCache.setterMethod(entity.getClass(), distanceFields.get(i));
-                invokeMethod.invoke(entity, distance);
+                invokeMethod.invoke(entity, dou);
             } catch (Throwable e) {
                 // 遇到异常只提示, 不阻断流程 distance未设置不影核心业务
-                LogUtils.formatError("set distance error, entity:%s,sortValues:%s,distanceField:%s,e:%s", entity, JSON.toJSONString(sortValues), distanceFields, e);
+                LogUtils.formatError("set dou error, entity:%s,sortValues:%s,distanceField:%s,e:%s", entity, JSON.toJSONString(sortValues), distanceFields, e);
             }
         }
     }
@@ -1238,8 +1237,7 @@ public class BaseEsMapperImpl<T> implements BaseEsMapper<T> {
                     if (Objects.isNull(invoke)) {
                         excludeColumn.add(column);
                     } else {
-                        if (invoke instanceof String) {
-                            String strValue = (String) invoke;
+                        if (invoke instanceof String strValue) {
                             if (StringUtils.isEmpty(strValue)) {
                                 excludeColumn.add(column);
                             }
