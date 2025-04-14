@@ -1,5 +1,6 @@
 package ${package.query};
 
+import java.io.Serial;
 import java.io.Serializable;
 import top.ticho.starter.view.core.TiPageQuery;
     <% for(pkg in table.imports){ %>
@@ -44,6 +45,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @ApiModel(value = "${table.comment!}查询条件")
     <% } %>
 public class ${className.query} extends TiPageQuery implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 <% /** -----------START 字段循环遍历----------- **/ %>
 <% for(field in table.fields){ %>

@@ -9,6 +9,7 @@ import ${package.mapper}.${className.mapper};
 import ${package.service}.${className.service};
 import org.springframework.stereotype.Service;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 <% } %>
@@ -22,6 +23,7 @@ import ${package.service}.${className.service};
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 <% } %>

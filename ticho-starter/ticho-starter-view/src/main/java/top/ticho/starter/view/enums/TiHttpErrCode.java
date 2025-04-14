@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -33,6 +34,7 @@ public enum TiHttpErrCode implements Serializable, TiErrCode {
     BAD_GATEWAY(502, "错误的网关"),
     SERVICE_UNAVAILABLE(503, "服务不可用");
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /** 状态码 */

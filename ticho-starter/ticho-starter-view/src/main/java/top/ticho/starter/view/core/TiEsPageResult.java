@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
@@ -22,6 +23,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 public class TiEsPageResult<T> extends TiPageResult<T> implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /** 索引列表 */

@@ -4,6 +4,7 @@ package top.ticho.starter.view.core;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = false)
 public class TiSecurityUser implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /** 账户名 */

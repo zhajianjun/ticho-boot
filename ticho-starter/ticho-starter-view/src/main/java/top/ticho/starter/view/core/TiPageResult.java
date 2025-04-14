@@ -5,6 +5,7 @@ import cn.hutool.core.util.NumberUtil;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -21,6 +22,7 @@ import java.util.Optional;
 @Data
 @NoArgsConstructor
 public class TiPageResult<T> implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /** 页码，从1开始 */

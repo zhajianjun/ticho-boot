@@ -46,14 +46,14 @@ public class TiWapperRequestFilter implements Filter {
         // 初始化请求包装器
         ServletRequest requestWrapper = null;
         // 如果请求是一个HTTP请求，则创建一个自定义的请求包装器
-        if (servletRequest instanceof HttpServletRequest) {
-            requestWrapper = new TiRequestWrapper((HttpServletRequest) servletRequest);
+        if (servletRequest instanceof HttpServletRequest httpServletRequest) {
+            requestWrapper = new TiRequestWrapper(httpServletRequest);
         }
         // 初始化响应包装器
         ServletResponse responseWrapper = null;
         // 如果响应是一个HTTP响应，则创建一个自定义的响应包装器
-        if (servletResponse instanceof HttpServletResponse) {
-            responseWrapper = new TiResponseWrapper((HttpServletResponse) servletResponse);
+        if (servletResponse instanceof HttpServletResponse httpServletResponse) {
+            responseWrapper = new TiResponseWrapper(httpServletResponse);
         }
         // 如果请求包装器被成功创建，则使用它来替换原始的请求对象
         if (requestWrapper != null) {

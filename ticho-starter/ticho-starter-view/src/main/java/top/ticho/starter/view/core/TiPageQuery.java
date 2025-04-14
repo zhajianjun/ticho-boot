@@ -2,6 +2,7 @@ package top.ticho.starter.view.core;
 
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -13,6 +14,7 @@ import java.util.Objects;
  */
 @Data
 public class TiPageQuery implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /** 当前页码 */

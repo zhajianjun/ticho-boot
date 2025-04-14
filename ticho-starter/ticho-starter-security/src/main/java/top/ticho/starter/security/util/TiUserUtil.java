@@ -17,7 +17,6 @@ import java.util.Optional;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TiUserUtil {
 
-
     public static <T extends TiSecurityUser> T getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
@@ -25,7 +24,7 @@ public class TiUserUtil {
         }
         Object principalObj = authentication.getPrincipal();
         // 直接检查是否为匿名用户或认证对象为空
-        if (principalObj == null || principalObj instanceof String) {
+        if (!(principalObj instanceof TiSecurityUser)) {
             return null;
         }
         // 安全地进行类型转换

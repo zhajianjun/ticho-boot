@@ -40,8 +40,8 @@ public class TiYamlPropertySourceFactory implements PropertySourceFactory {
             return Objects.requireNonNull(factory.getObject());
         } catch (IllegalStateException e) {
             Throwable cause = e.getCause();
-            if (cause instanceof FileNotFoundException) {
-                throw (FileNotFoundException) e.getCause();
+            if (cause instanceof FileNotFoundException ex) {
+                throw (FileNotFoundException) ex.getCause();
             }
             throw e;
         }

@@ -36,10 +36,9 @@ public class TiFeignFallback<T> implements MethodInterceptor {
             return null;
         }
         // 非 FeignException
-        if (!(cause instanceof FeignException)) {
+        if (!(cause instanceof FeignException exception)) {
             return TiResult.of(TiBizErrCode.APP_SERVICE_ERR, errorMessage);
         }
-        FeignException exception = (FeignException) cause;
         String content = exception.contentUTF8();
         // 如果返回的数据为空
         if (StrUtil.isBlank(content)) {

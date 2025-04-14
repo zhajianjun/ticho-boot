@@ -4,6 +4,7 @@ import lombok.Data;
 import top.ticho.starter.view.enums.TiBizErrCode;
 import top.ticho.starter.view.enums.TiErrCode;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -14,6 +15,7 @@ import java.io.Serializable;
  */
 @Data
 public class TiResult<T> implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     /** 业务码 */

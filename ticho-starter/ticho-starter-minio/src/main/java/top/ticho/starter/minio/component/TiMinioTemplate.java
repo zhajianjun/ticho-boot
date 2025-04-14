@@ -341,8 +341,7 @@ public class TiMinioTemplate {
             return minioClient.getObject(GetObjectArgs.builder().bucket(bucketName).object(objectName).build());
         } catch (Exception e) {
             log.error("文件下载异常，{}", e.getMessage(), e);
-            if (e instanceof ErrorResponseException) {
-                ErrorResponseException ex = (ErrorResponseException) e;
+            if (e instanceof ErrorResponseException ex) {
                 if (ex.errorResponse().code().equals("NoSuchKey")) {
                     throw new TiBizException(TiBizErrCode.FAIL, "文件下载异常");
                 }
@@ -370,8 +369,7 @@ public class TiMinioTemplate {
                 .build());
         } catch (Exception e) {
             log.error("文件下载异常，{}", e.getMessage(), e);
-            if (e instanceof ErrorResponseException) {
-                ErrorResponseException ex = (ErrorResponseException) e;
+            if (e instanceof ErrorResponseException ex) {
                 if (ex.errorResponse().code().equals("NoSuchKey")) {
                     throw new TiBizException(TiBizErrCode.FAIL);
                 }
@@ -391,8 +389,7 @@ public class TiMinioTemplate {
         try {
             return minioClient.statObject(StatObjectArgs.builder().bucket(bucketName).object(objectName).build());
         } catch (Exception e) {
-            if (e instanceof ErrorResponseException) {
-                ErrorResponseException e1 = (ErrorResponseException) e;
+            if (e instanceof ErrorResponseException e1) {
                 Response response = e1.response();
                 int code = response.code();
                 if (HttpURLConnection.HTTP_NOT_FOUND == code) {
