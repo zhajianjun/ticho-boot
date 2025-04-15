@@ -82,52 +82,22 @@ public class TiDesensitizedSerializer extends StdSerializer<Object> implements C
             return StrUtil.EMPTY;
         }
         TiDesensitizedType tiDesensitizedType = tiDesensitized.type();
-        String newStr;
-        switch (tiDesensitizedType) {
-            case USER_ID:
-                newStr = String.valueOf(DesensitizedUtil.userId());
-                break;
-            case CHINESE_NAME:
-                newStr = DesensitizedUtil.chineseName(String.valueOf(str));
-                break;
-            case ID_CARD:
-                newStr = DesensitizedUtil.idCardNum(String.valueOf(str), 1, 2);
-                break;
-            case FIXED_PHONE:
-                newStr = DesensitizedUtil.fixedPhone(String.valueOf(str));
-                break;
-            case MOBILE_PHONE:
-                newStr = DesensitizedUtil.mobilePhone(String.valueOf(str));
-                break;
-            case ADDRESS:
-                newStr = DesensitizedUtil.address(String.valueOf(str), 8);
-                break;
-            case EMAIL:
-                newStr = DesensitizedUtil.email(String.valueOf(str));
-                break;
-            case PASSWORD:
-                newStr = DesensitizedUtil.password(String.valueOf(str));
-                break;
-            case CAR_LICENSE:
-                newStr = DesensitizedUtil.carLicense(String.valueOf(str));
-                break;
-            case BANK_CARD:
-                newStr = DesensitizedUtil.bankCard(String.valueOf(str));
-                break;
-            case IPV4:
-                newStr = DesensitizedUtil.ipv4(String.valueOf(str));
-                break;
-            case IPV6:
-                newStr = DesensitizedUtil.ipv6(String.valueOf(str));
-                break;
-            case FIRST_MASK:
-                newStr = DesensitizedUtil.firstMask(String.valueOf(str));
-                break;
-            default:
-                newStr = StrUtil.hide(String.valueOf(str), tiDesensitized.start(), tiDesensitized.end());
-                break;
-        }
-        return newStr;
+        return switch (tiDesensitizedType) {
+            case USER_ID -> String.valueOf(DesensitizedUtil.userId());
+            case CHINESE_NAME -> DesensitizedUtil.chineseName(String.valueOf(str));
+            case ID_CARD -> DesensitizedUtil.idCardNum(String.valueOf(str), 1, 2);
+            case FIXED_PHONE -> DesensitizedUtil.fixedPhone(String.valueOf(str));
+            case MOBILE_PHONE -> DesensitizedUtil.mobilePhone(String.valueOf(str));
+            case ADDRESS -> DesensitizedUtil.address(String.valueOf(str), 8);
+            case EMAIL -> DesensitizedUtil.email(String.valueOf(str));
+            case PASSWORD -> DesensitizedUtil.password(String.valueOf(str));
+            case CAR_LICENSE -> DesensitizedUtil.carLicense(String.valueOf(str));
+            case BANK_CARD -> DesensitizedUtil.bankCard(String.valueOf(str));
+            case IPV4 -> DesensitizedUtil.ipv4(String.valueOf(str));
+            case IPV6 -> DesensitizedUtil.ipv6(String.valueOf(str));
+            case FIRST_MASK -> DesensitizedUtil.firstMask(String.valueOf(str));
+            default -> StrUtil.hide(String.valueOf(str), tiDesensitized.start(), tiDesensitized.end());
+        };
     }
 
 }

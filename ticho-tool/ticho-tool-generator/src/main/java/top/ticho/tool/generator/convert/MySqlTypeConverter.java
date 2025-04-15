@@ -63,27 +63,19 @@ public class MySqlTypeConverter implements TypeConverter {
                     return JavaType.DATE;
                 case SQL_PACK:
                     b = getType(type, year, time, date, (byte) -1);
-                    switch (b) {
-                        case 0:
-                        case 2:
-                            return JavaType.DATE_SQL;
-                        case 1:
-                            return JavaType.TIME;
-                        default:
-                            return JavaType.TIMESTAMP;
-                    }
+                    return switch (b) {
+                        case 0, 2 -> JavaType.DATE_SQL;
+                        case 1 -> JavaType.TIME;
+                        default -> JavaType.TIMESTAMP;
+                    };
                 case TIME_PACK:
                     b = getType(type, year, time, date, (byte) -1);
-                    switch (b) {
-                        case 0:
-                            return JavaType.LOCAL_DATE;
-                        case 1:
-                            return JavaType.LOCAL_TIME;
-                        case 2:
-                            return JavaType.YEAR;
-                        default:
-                            return JavaType.LOCAL_DATE_TIME;
-                    }
+                    return switch (b) {
+                        case 0 -> JavaType.LOCAL_DATE;
+                        case 1 -> JavaType.LOCAL_TIME;
+                        case 2 -> JavaType.YEAR;
+                        default -> JavaType.LOCAL_DATE_TIME;
+                    };
                 default:
             }
         }
@@ -110,4 +102,5 @@ public class MySqlTypeConverter implements TypeConverter {
         }
         return var5;
     }
+
 }
