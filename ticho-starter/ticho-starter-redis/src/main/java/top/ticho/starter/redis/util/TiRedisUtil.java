@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -72,8 +71,7 @@ public class TiRedisUtil<K, V> {
      */
     public long getExpire(K key) {
         try {
-            Long expireTime = redisTemplate.getExpire(key);
-            return Optional.ofNullable(expireTime).orElse(DEFAULT_EXPIRE_TIME);
+            return redisTemplate.getExpire(key);
         } catch (Exception e) {
             log.error("{}键获取过期时间失败,异常：{}", key, e.getMessage(), e);
             return DEFAULT_EXPIRE_TIME;
@@ -116,8 +114,7 @@ public class TiRedisUtil<K, V> {
      */
     public long delete(Collection<K> keys) {
         try {
-            Long count = redisTemplate.delete(keys);
-            return Optional.ofNullable(count).orElse(DEFAULT_COUNT);
+            return redisTemplate.delete(keys);
         } catch (Exception e) {
             log.error("{}键批量删除失败,异常：{}", keys, e.getMessage(), e);
             return DEFAULT_COUNT;

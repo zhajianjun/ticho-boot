@@ -13,7 +13,6 @@ import top.ticho.starter.security.prop.TiSecurityProperty;
 import top.ticho.starter.view.core.TiSecurityUser;
 import top.ticho.tool.json.util.TiJsonUtil;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -62,7 +61,7 @@ public class TiLoadUserService implements LoadUserService, InitializingBean {
         userInfo.setUsername(TiSecurityConst.DEFAULT_USERNAME);
         String password = IdUtil.fastUUID();
         userInfo.setPassword(passwordEncoder.encode(password));
-        userInfo.setRoles(Collections.singletonList(TiSecurityConst.DEFAULT_ROLE));
+        userInfo.setRoles(List.of(TiSecurityConst.DEFAULT_ROLE));
         users.add(userInfo);
         user = userInfo;
         log.info("默认用户信息：{}， 密码：{}", TiSecurityConst.DEFAULT_USERNAME, password);

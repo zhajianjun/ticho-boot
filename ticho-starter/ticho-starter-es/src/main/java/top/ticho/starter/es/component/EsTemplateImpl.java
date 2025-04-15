@@ -42,7 +42,6 @@ import top.ticho.tool.json.util.TiJsonUtil;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -494,7 +493,7 @@ public class EsTemplateImpl implements EsTemplate {
         query.must(QueryBuilders.matchQuery("id", id));
         esQuery.setQueryBuilder(query);
         esQuery.setClazz(tClass);
-        esQuery.setIndexs(Collections.singletonList(index));
+        esQuery.setIndexs(List.of(index));
         TiEsPageResult<T> pageInfo = page(esQuery);
         if (pageInfo == null || CollUtil.isEmpty(pageInfo.getRows())) {
             return null;
@@ -507,7 +506,7 @@ public class EsTemplateImpl implements EsTemplate {
         BoolQueryBuilder query = QueryBuilders.boolQuery();
         query.must(QueryBuilders.matchQuery("id", id));
         esQuery.setQueryBuilder(query);
-        esQuery.setIndexs(Collections.singletonList(index));
+        esQuery.setIndexs(List.of(index));
         TiEsPageResult<Map<String, Object>> pageInfo = pageForMap(esQuery);
         if (pageInfo == null || CollUtil.isEmpty(pageInfo.getRows())) {
             return null;

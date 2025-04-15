@@ -3,7 +3,6 @@ package top.ticho.starter.cache.config;
 import lombok.AllArgsConstructor;
 import top.ticho.starter.cache.prop.TiCacheProperty;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -27,7 +26,7 @@ public class DefaultTiCacheBatch implements TiCacheBatch {
     @Override
     public List<TiCache<?, ?>> getTiCaches() {
         // 使用单元素列表模式返回默认缓存实例，保证返回集合的不可修改性
-        return Collections.singletonList(new DefaultTiCache(tiCacheProperty));
+        return List.of(new DefaultTiCache(tiCacheProperty));
     }
 
 }
