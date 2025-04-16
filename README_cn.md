@@ -1,7 +1,18 @@
 # Ticho-Boot 项目说明
 
-Ticho-Boot 是一个快速配置Spring Boot应用程序的初始库，基于Spring Boot深度封装，提供开发中常用的功能组件、工具类及标准化
-Starter，使开发人员能够轻松地将这些特性集成到他们的应用程序。
+Ticho-Boot 是一款由Spring Boot深度集成开发框架，通过模块化设计和标准化组件封装，显著提升Spring
+Boot应用的快速构建能力。该框架基于前沿技术栈构建，提供开箱即用的功能组件与开发工具链，助力开发者聚焦核心业务逻辑实现。
+
+* 运行环境：JDK 17 LTS 长期支持版本
+* 核心框架：Spring Boot 3.4.4（兼容Spring Framework 6.1.6）
+* 分布式架构：Spring Cloud 2023.0.3 + Spring Cloud Alibaba 2023.0.3.2
+* 安全体系：Spring Security 6.4.4 深度整合
+* 持久层方案：Mybatis-Plus 3.5.11 + MySQL 8.0 驱动
+* 主要模块：
+
+1. [ticho-dependencies](ticho-dependencies) 封装了全局依赖版本管理，提供Maven父级POM配置，简化子模块版本控制。
+2. [ticho-tool](ticho-tool) 封装了一些常用的工具类，如代码生成、json序列化、内网穿透Netty等。
+3. [ticho-starter](ticho-starter) 封装了Spring Boot相关功能组件、工具类及标准化Starter，使开发人员能够轻松地将这些特性集成到他们的应用程序。
 
 ---
 
