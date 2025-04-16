@@ -9,7 +9,9 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -23,6 +25,7 @@ import top.ticho.starter.view.enums.TiBizErrCode;
 import top.ticho.starter.view.enums.TiHttpErrCode;
 import top.ticho.starter.view.exception.TiBizException;
 import top.ticho.starter.view.util.TiAssert;
+import top.ticho.starter.web.util.TiIdUtil;
 import top.ticho.tool.json.util.TiJsonUtil;
 
 import java.io.IOException;
@@ -128,7 +131,10 @@ public abstract class AbstractAuthTokenFilter<T extends TiSecurityUser> extends 
     }
 
     private void setAuthentication(HttpServletRequest request, T securityUser, String token) {
-        if (securityUser != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (Objects.nonNull(SecurityContextHolder.getContext().getAuthentication())) {
+            return;
+        }
+        if (Objects.nonNull(securityUser)) {
             securityUser.setPassword("N/A");
             securityUser.setToken(token);
             List<String> authoritieStrs = Optional.ofNullable(securityUser.getRoles()).orElseGet(ArrayList::new);
@@ -136,7 +142,9 @@ public abstract class AbstractAuthTokenFilter<T extends TiSecurityUser> extends 
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(securityUser, securityUser.getPassword(), authorities);
             authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            return;
         }
+        SecurityContextHolder.getContext().setAuthentication(new AnonymousAuthenticationToken(TiIdUtil.getSimpleUuid(), "anonymousUser", AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS")));
     }
 
 }

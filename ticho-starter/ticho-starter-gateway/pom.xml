@@ -49,6 +49,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <!-- 配合additional-spring-configuration-metadata.json时，添加配置时有提示 -->

@@ -18,7 +18,7 @@ import java.util.List;
 public class TiInsertOrUpdate extends AbstractMethod {
 
     protected TiInsertOrUpdate() {
-        super("insertOrUpdate");
+        super("insertOrUpdateT");
     }
 
     @Override

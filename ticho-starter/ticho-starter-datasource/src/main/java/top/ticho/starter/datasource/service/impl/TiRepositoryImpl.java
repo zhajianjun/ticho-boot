@@ -28,7 +28,7 @@ public class TiRepositoryImpl<M extends TiMapper<T>, T> extends ServiceImpl<M, T
     private TiDataSourceProperty tiDataSourceProperty;
 
     public TableInfo getTableInfo() {
-        return TableInfoHelper.getTableInfo(this.entityClass);
+        return TableInfoHelper.getTableInfo(this.getEntityClass());
     }
 
     public String getTableName() {
@@ -150,7 +150,7 @@ public class TiRepositoryImpl<M extends TiMapper<T>, T> extends ServiceImpl<M, T
             log.info("{}保存更新异常，对象为null", getTableName());
             return false;
         }
-        int result = baseMapper.insertOrUpdate(entity);
+        int result = baseMapper.insertOrUpdateT(entity);
         return result >= 1;
     }
 

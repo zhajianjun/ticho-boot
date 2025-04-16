@@ -16,18 +16,20 @@
         <maven.compiler.target>17</maven.compiler.target>
         <java.version>17</java.version>
         <!-- spring-boot spring-cloud-alibaba 版本信息 -->
-        <spring-boot-starter.version>3.1.5</spring-boot-starter.version>
-        <spring-cloud.version>2022.0.4</spring-cloud.version>
-        <spring-cloud-alibaba-dependencies.version>2022.0.0.0</spring-cloud-alibaba-dependencies.version>
+        <spring-boot-starter.version>3.4.4</spring-boot-starter.version>
+        <spring-cloud.version>2024.0.1</spring-cloud.version>
+        <spring-cloud-alibaba-dependencies.version>2023.0.3.2</spring-cloud-alibaba-dependencies.version>
         <!-- 其它的一些信息 -->
         <minio.version>8.1.0</minio.version>
-        <guava.version>29.0-jre</guava.version>
-        <mybatis-plus.version>3.5.3.2</mybatis-plus.version>
-        <pagehelper-spring-boot-starter.version>1.4.7</pagehelper-spring-boot-starter.version>
-        <mapstruct.version>1.5.5.Final</mapstruct.version>
-        <spring-boot-admin.version>3.1.5</spring-boot-admin.version>
-        <log4j.version>2.23.1</log4j.version>
-        <flyway.version>9.22.0</flyway.version>
+        <guava.version>33.4.8-jre</guava.version>
+        <mybatis-plus.version>3.5.11</mybatis-plus.version>
+        <pagehelper-spring-boot-starter.version>2.1.0</pagehelper-spring-boot-starter.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
+        <log4j.version>2.24.3</log4j.version>
+        <!-- 9.22.3是最后一个全功能免费版 -->
+        <flyway.version>10.5.0</flyway.version>
+
+        <jackson.version>2.18.3</jackson.version>
     </properties>
 
 
@@ -261,6 +263,17 @@
                 <artifactId>mybatis-plus-extension</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-jsqlparser</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+
 
             <dependency>
                 <groupId>com.github.pagehelper</groupId>
@@ -323,7 +336,7 @@
             <dependency>
                 <groupId>org.redisson</groupId>
                 <artifactId>redisson-spring-boot-starter</artifactId>
-                <version>3.17.6</version>
+                <version>3.27.0</version>
             </dependency>
 
             <dependency>
@@ -349,6 +362,18 @@
                 <groupId>cn.idev.excel</groupId>
                 <artifactId>fastexcel</artifactId>
                 <version>1.1.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-compress</artifactId>
+                <version>1.27.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>5.4.1</version>
             </dependency>
 
             <dependency>
@@ -410,7 +435,13 @@
             <dependency>
                 <groupId>com.mysql</groupId>
                 <artifactId>mysql-connector-j</artifactId>
-                <version>8.0.31</version>
+                <version>8.3.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>3.25.5</version>
             </dependency>
 
             <dependency>
@@ -422,6 +453,18 @@
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-mysql</artifactId>
                 <version>${flyway.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.18.38</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk18on</artifactId>
+                <version>1.78</version>
             </dependency>
 
         </dependencies>

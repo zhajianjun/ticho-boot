@@ -35,7 +35,7 @@ public interface TiMapper<T> extends BaseMapper<T> {
      * @param data 要插入或更新的实体对象
      * @return 插入或更新操作影响的行数
      */
-    int insertOrUpdate(T data);
+    int insertOrUpdateT(T data);
 
     /**
      * 自定义批量新增或者更新

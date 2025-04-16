@@ -11,6 +11,13 @@
     <artifactId>ticho-trace-spring</artifactId>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+
         <dependency>
             <groupId>top.ticho.trace</groupId>
             <artifactId>ticho-trace-common</artifactId>
