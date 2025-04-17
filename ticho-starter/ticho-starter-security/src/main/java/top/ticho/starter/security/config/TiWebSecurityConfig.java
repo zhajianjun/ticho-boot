@@ -18,8 +18,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
-import top.ticho.starter.security.auth.AntPatternsAuthHandle;
 import top.ticho.starter.security.constant.TiSecurityConst;
+import top.ticho.starter.security.filter.TiAuthorizationManager;
 
 
 /**
@@ -39,12 +39,10 @@ public class TiWebSecurityConfig {
     private AuthenticationEntryPoint authenticationEntryPoint;
     @Resource
     private AccessDeniedHandler accessDeniedHandler;
-    @Resource
-    private AntPatternsAuthHandle antPatternsAuthHandle;
 
     @Bean
     @Order(100)
-    public SecurityFilterChain tiSecurityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain tiSecurityFilterChain(HttpSecurity http, TiAuthorizationManager authorizationManager) throws Exception {
         http
             // 禁用表单登录
             .formLogin(AbstractHttpConfigurer::disable)
@@ -62,8 +60,9 @@ public class TiWebSecurityConfig {
             .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(registry -> registry
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .anyRequest().access(authorizationManager)
             )
-            .securityMatcher(request -> antPatternsAuthHandle.ignoreAuth(request))
+            .securityMatcher(request -> true)
             // 显式声明禁用缓存控制
             .headers(headers -> headers.cacheControl(HeadersConfigurer.CacheControlConfig::disable))
             .addFilterBefore(oncePerRequestFilter, LogoutFilter.class)
