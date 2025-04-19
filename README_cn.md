@@ -60,7 +60,7 @@ Spring Boot Starter 系列模块，开箱即用：
   Redis简化配置、工具封装等。
 - **[ticho-starter-redisson](ticho-starter/ticho-starter-redisson)**
   分布式锁与并发控制，基于 Redisson 实现。
-- **ticho-starter-security[ticho-starter-security](ticho-starter/ticho-starter-security)**  
+- **[ticho-starter-security](ticho-starter/ticho-starter-security)**  
   安全认证模块，支持 OAuth2/JWT 鉴权与动态权限管理。
 - **[ticho-starter-view](ticho-starter/ticho-starter-view)ticho-starter-view**
   统一视图渲染。

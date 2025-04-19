@@ -67,7 +67,7 @@ Spring Boot Starter modules, ready to use out-of-the-box:
   Simplified Redis configuration and utility encapsulation.
 - **[ticho-starter-redisson](ticho-starter/ticho-starter-redisson)**  
   Distributed locks and concurrency control based on Redisson.
-- **ticho-starter-security[ticho-starter-security](ticho-starter/ticho-starter-security)**  
+- **[ticho-starter-security](ticho-starter/ticho-starter-security)**  
   Security authentication module supporting OAuth2/JWT and dynamic permission management.
 - **[ticho-starter-view](ticho-starter/ticho-starter-view)ticho-starter-view**  
   Unified view rendering.
