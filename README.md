@@ -113,7 +113,7 @@ Spring Boot Starter modules, ready to use out-of-the-box:
 ### Add Starter Dependency
 
 ```xml
-<!-- Example: Add Redis Starter -->
+<!-- Example: Add Web Starter -->
 <dependency>
     <groupId>top.ticho.starter</groupId>
     <artifactId>ticho-starter-web</artifactId>

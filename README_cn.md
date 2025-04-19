@@ -106,7 +106,7 @@ Spring Boot Starter 系列模块，开箱即用：
 ### 引入 Starter 依赖
 
 ```xml
-<!-- 示例：引入 Redis Starter -->
+<!-- 示例：引入 Web Starter -->
 <dependency>
     <groupId>top.ticho.starter</groupId>
     <artifactId>ticho-starter-web</artifactId>
