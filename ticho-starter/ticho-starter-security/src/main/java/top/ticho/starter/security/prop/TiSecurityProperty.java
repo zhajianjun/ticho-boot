@@ -25,7 +25,9 @@ public class TiSecurityProperty {
     private Integer accessTokenValidity = 43200;
     /** refresh_token有效期(秒) 默认24小时 */
     private Integer refreshTokenValidity = 86400;
-    /** 默认用户，如果UserDetailsService接口被实现则没有啥作用了 */
+    /** 是否开启默认接口, 缺省为false */
+    private Web web;
+    /** 默认用户，如果TiLoginService接口被实现则没有啥作用了 */
     private List<TiSecurityUser> users = new ArrayList<>();
     /** 权限过滤地址 */
     private List<String> antPatterns = new ArrayList<>();
@@ -43,6 +45,11 @@ public class TiSecurityProperty {
             userInfo.setPassword(passwordEncoder.encode(password));
         }
         this.users = users;
+    }
+
+    @Data
+    public static class Web {
+        private Boolean enable;
     }
 
 }

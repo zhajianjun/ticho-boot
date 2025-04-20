@@ -1,4 +1,4 @@
-package top.ticho.starter.security.handle.jwt;
+package top.ticho.starter.security.core.jwt;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.StrUtil;
@@ -33,12 +33,10 @@ import java.util.stream.Collectors;
 @Slf4j
 @Getter
 public class JwtSigner implements InitializingBean {
-    private String verifierKey;
-
     private final Signer signer;
 
+    private String verifierKey;
     private String signingKey;
-
     private SignatureVerifier verifier;
 
     @Override
@@ -68,6 +66,10 @@ public class JwtSigner implements InitializingBean {
 
     /**
      * 通过证书加密
+     *
+     * @param path     路径，默认在classpath下
+     * @param alias    别名，也就是jks文件里的别名
+     * @param password 密码，默认为空
      */
     public JwtSigner(String path, String alias, String password) {
         ClassPathResource resource = new ClassPathResource(path);
@@ -85,16 +87,18 @@ public class JwtSigner implements InitializingBean {
 
     /**
      * 通过公钥加密
+     *
+     * @param signingKey 签证密钥
      */
-    public JwtSigner(String key) {
-        key = key.trim();
-        this.signingKey = key;
-        if (isPublic(key)) {
-            signer = new RsaSigner(key);
+    public JwtSigner(String signingKey) {
+        signingKey = signingKey.trim();
+        this.signingKey = signingKey;
+        if (isPublic(signingKey)) {
+            signer = new RsaSigner(signingKey);
             log.info("Configured with RSA signing key");
         } else {
-            this.verifierKey = key;
-            signer = new MacSigner(key);
+            this.verifierKey = signingKey;
+            signer = new MacSigner(signingKey);
         }
     }
 

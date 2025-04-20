@@ -6,7 +6,7 @@ package top.ticho.starter.security.auth;
  * @author zhajianjun
  * @date 2022-09-26 17:31:58
  */
-public interface PermissionService {
+public interface TiPermissionService {
 
     /**
      * 判断接口是否有任意xxx，xxx权限

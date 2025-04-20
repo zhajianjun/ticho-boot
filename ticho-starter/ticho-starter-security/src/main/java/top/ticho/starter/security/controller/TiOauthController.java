@@ -1,16 +1,15 @@
 package top.ticho.starter.security.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.ticho.starter.security.constant.TiSecurityConst;
 import top.ticho.starter.security.dto.TiLoginRequest;
 import top.ticho.starter.security.dto.TiToken;
-import top.ticho.starter.security.handle.LoginUserHandle;
+import top.ticho.starter.security.service.TiLoginService;
 import top.ticho.starter.view.core.TiResult;
 
 import java.security.Principal;
@@ -21,13 +20,12 @@ import java.security.Principal;
  * @author zhajianjun
  * @date 2022-09-22 15:36
  */
-@ConditionalOnMissingBean(name = TiSecurityConst.OAUTH2_CONTROLLER)
-@RestController(TiSecurityConst.OAUTH2_CONTROLLER)
+@Slf4j
+@RequiredArgsConstructor
+@RestController
 @RequestMapping("oauth")
 public class TiOauthController {
-
-    @Autowired
-    private LoginUserHandle loginUserHandle;
+    private final TiLoginService tiLoginService;
 
     /**
      * 登录
@@ -37,7 +35,7 @@ public class TiOauthController {
      */
     @PostMapping("token")
     public TiResult<TiToken> token(TiLoginRequest loginRequest) {
-        return TiResult.ok(loginUserHandle.token(loginRequest));
+        return TiResult.ok(tiLoginService.token(loginRequest));
     }
 
     /**
@@ -48,7 +46,7 @@ public class TiOauthController {
      */
     @PostMapping("refreshToken")
     public TiResult<TiToken> refreshToken(String refreshToken) {
-        return TiResult.ok(loginUserHandle.refreshToken(refreshToken));
+        return TiResult.ok(tiLoginService.refreshToken(refreshToken));
     }
 
     /**
@@ -68,7 +66,7 @@ public class TiOauthController {
      */
     @GetMapping("publicKey")
     public TiResult<String> publicKey() {
-        return TiResult.ok(loginUserHandle.publicKey());
+        return TiResult.ok(tiLoginService.publicKey());
     }
 
 

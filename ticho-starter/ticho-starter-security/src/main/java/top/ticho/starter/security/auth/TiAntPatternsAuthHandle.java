@@ -18,13 +18,13 @@ import java.util.Objects;
  * @author zhajianjun
  * @date 2022-09-26 15:22
  */
-public class AntPatternsAuthHandle {
+public class TiAntPatternsAuthHandle {
     /** security参数配置对象 */
     private final TiSecurityProperty tiSecurityProperty;
     /** url地址匹配 */
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
-    public AntPatternsAuthHandle(TiSecurityProperty tiSecurityProperty) {
+    public TiAntPatternsAuthHandle(TiSecurityProperty tiSecurityProperty) {
         this.tiSecurityProperty = tiSecurityProperty;
     }
 

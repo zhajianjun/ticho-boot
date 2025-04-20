@@ -1,4 +1,4 @@
-package top.ticho.starter.security.view;
+package top.ticho.starter.security.core;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,9 +31,9 @@ public class TiAccessDeniedHandler implements AccessDeniedHandler {
         res.setStatus(tiResult.getCode());
         res.setContentType(MediaType.APPLICATION_JSON_VALUE);
         res.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        PrintWriter writer = res.getWriter();
-        writer.write(TiJsonUtil.toJsonString(tiResult));
-        writer.close();
+        try (PrintWriter writer = res.getWriter()) {
+            writer.write(TiJsonUtil.toJsonString(tiResult));
+        }
     }
 
 }

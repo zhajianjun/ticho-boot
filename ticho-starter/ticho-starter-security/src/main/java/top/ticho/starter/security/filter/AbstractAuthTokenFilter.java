@@ -14,9 +14,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
-import top.ticho.starter.security.auth.AntPatternsAuthHandle;
+import top.ticho.starter.security.auth.TiAntPatternsAuthHandle;
 import top.ticho.starter.security.constant.TiSecurityConst;
-import top.ticho.starter.security.handle.jwt.JwtDecode;
+import top.ticho.starter.security.core.jwt.JwtDecode;
 import top.ticho.starter.view.core.TiResult;
 import top.ticho.starter.view.core.TiSecurityUser;
 import top.ticho.starter.view.enums.TiBizErrCode;
@@ -46,9 +46,8 @@ public abstract class AbstractAuthTokenFilter<T extends TiSecurityUser> extends 
 
     @Resource
     private JwtDecode jwtDecode;
-
     @Resource
-    private AntPatternsAuthHandle antPatternsAuthHandle;
+    private TiAntPatternsAuthHandle tiAntPatternsAuthHandle;
 
     /**
      * 前置处理
@@ -85,7 +84,7 @@ public abstract class AbstractAuthTokenFilter<T extends TiSecurityUser> extends 
         try {
             support(request, response);
             String token = request.getHeader(HttpHeaders.AUTHORIZATION);
-            if (antPatternsAuthHandle.ignoreAuth(request)) {
+            if (tiAntPatternsAuthHandle.ignoreAuth(request)) {
                 if (Objects.nonNull(token)) {
                     token = StrUtil.removePrefixIgnoreCase(token, TiSecurityConst.BEARER);
                     token = StrUtil.trimStart(token);

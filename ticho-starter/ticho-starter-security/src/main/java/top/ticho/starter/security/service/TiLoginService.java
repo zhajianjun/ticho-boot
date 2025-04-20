@@ -1,7 +1,8 @@
-package top.ticho.starter.security.handle;
+package top.ticho.starter.security.service;
 
 import top.ticho.starter.security.dto.LoginRequest;
 import top.ticho.starter.security.dto.TiToken;
+import top.ticho.starter.view.core.TiSecurityUser;
 
 /**
  * 登录处理接口
@@ -9,7 +10,15 @@ import top.ticho.starter.security.dto.TiToken;
  * @author zhajianjun
  * @date 2022-09-22 18:12
  */
-public interface LoginUserHandle {
+public interface TiLoginService {
+
+    /**
+     * 查询用户信息
+     *
+     * @param username 用户名
+     * @return {@link TiSecurityUser }
+     */
+    TiSecurityUser load(String username);
 
     /**
      * 登录获取token

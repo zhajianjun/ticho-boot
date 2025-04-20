@@ -1,4 +1,4 @@
-package top.ticho.starter.security.handle;
+package top.ticho.starter.security.advice;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package top.ticho.starter.security.handle.jwt;
+package top.ticho.starter.security.core.jwt;
 
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.jwt.crypto.sign.Signer;
@@ -24,15 +24,10 @@ import java.util.concurrent.TimeUnit;
  * @author zhajianjun
  * @date 2022-09-24 13:45:19
  */
-public class JwtEncode {
+public record JwtEncode(TiSecurityProperty tiSecurityProperty, JwtSigner jwtSigner) {
 
-    public final JwtSigner jwtSigner;
-    public final TiSecurityProperty tiSecurityProperty;
-
-    public JwtEncode(JwtSigner jwtSigner, TiSecurityProperty tiSecurityProperty) {
+    public JwtEncode {
         TiAssert.isNotNull(jwtSigner, TiBizErrCode.FAIL, "signer is null");
-        this.jwtSigner = jwtSigner;
-        this.tiSecurityProperty = tiSecurityProperty;
     }
 
     public void encode(TiToken oAuth2AccessToken, TiSecurityUser tiSecurityUser) {

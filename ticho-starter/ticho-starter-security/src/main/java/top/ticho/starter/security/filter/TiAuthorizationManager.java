@@ -1,7 +1,7 @@
 package top.ticho.starter.security.filter;
 
-import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
@@ -10,7 +10,7 @@ import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
-import top.ticho.starter.security.auth.AntPatternsAuthHandle;
+import top.ticho.starter.security.auth.TiAntPatternsAuthHandle;
 
 import java.util.function.Supplier;
 
@@ -22,11 +22,11 @@ import java.util.function.Supplier;
  * @link <a href="https://blog.csdn.net/u012373815/article/details/54633046">...</a>
  */
 @Slf4j
+@RequiredArgsConstructor
 public class TiAuthorizationManager implements AuthorizationManager<RequestAuthorizationContext> {
     private final AuthenticationTrustResolver trustResolver = new AuthenticationTrustResolverImpl();
 
-    @Resource
-    private AntPatternsAuthHandle antPatternsAuthHandle;
+    private final TiAntPatternsAuthHandle tiAntPatternsAuthHandle;
 
     /**
      * decide 方法是判定是否拥有权限的决策方法，
@@ -37,7 +37,7 @@ public class TiAuthorizationManager implements AuthorizationManager<RequestAutho
     @Override
     public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext object) {
         HttpServletRequest request = object.getRequest();
-        if (antPatternsAuthHandle.ignoreAuth(request) || isGranted(authentication.get())) {
+        if (tiAntPatternsAuthHandle.ignoreAuth(request) || isGranted(authentication.get())) {
             return new AuthorizationDecision(true);
         }
         throw new AccessDeniedException("无访问权限");

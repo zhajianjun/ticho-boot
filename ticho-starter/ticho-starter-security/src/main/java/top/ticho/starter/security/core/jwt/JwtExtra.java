@@ -1,4 +1,4 @@
-package top.ticho.starter.security.handle.jwt;
+package top.ticho.starter.security.core.jwt;
 
 import java.util.Map;
 

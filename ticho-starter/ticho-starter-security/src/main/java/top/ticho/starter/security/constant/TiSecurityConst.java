@@ -38,8 +38,6 @@ public class TiSecurityConst {
     /** 用户密码 */
     public static final String USERNAME = "username";
 
-    public static final String OAUTH2_TOKEN_FILTER_BEAN_NAME = "oauth2_token_filter_bean_name";
-
     public static final String OAUTH2_CONTROLLER = "oauth2_controller";
 
     public static final String INNER = "inner";

@@ -1,4 +1,4 @@
-package top.ticho.starter.security.handle.jwt;
+package top.ticho.starter.security.core.jwt;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.NumberUtil;
@@ -23,13 +23,10 @@ import java.util.concurrent.TimeUnit;
  * @date 2022-09-24 13:45:19
  */
 @Slf4j
-public class JwtDecode {
+public record JwtDecode(JwtSigner jwtSigner) {
 
-    public final JwtSigner jwtSigner;
-
-    public JwtDecode(JwtSigner jwtSigner) {
+    public JwtDecode {
         TiAssert.isNotNull(jwtSigner, TiBizErrCode.FAIL, "signer is null");
-        this.jwtSigner = jwtSigner;
     }
 
     public Map<String, Object> decode(String token) {

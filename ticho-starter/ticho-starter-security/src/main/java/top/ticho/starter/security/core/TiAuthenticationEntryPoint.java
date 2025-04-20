@@ -1,4 +1,4 @@
-package top.ticho.starter.security.view;
+package top.ticho.starter.security.core;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -32,8 +32,8 @@ public class TiAuthenticationEntryPoint implements AuthenticationEntryPoint {
         res.setContentType(MediaType.APPLICATION_JSON_VALUE);
         res.setCharacterEncoding(StandardCharsets.UTF_8.name());
         res.setStatus(tiResult.getCode());
-        PrintWriter writer = res.getWriter();
-        writer.write(TiJsonUtil.toJsonString(tiResult));
-        writer.close();
+        try (PrintWriter writer = res.getWriter()) {
+            writer.write(TiJsonUtil.toJsonString(tiResult));
+        }
     }
 }
