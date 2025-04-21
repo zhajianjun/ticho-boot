@@ -19,10 +19,10 @@ import java.util.concurrent.Executor;
  * @author zhajianjun
  * @date 2022-07-10 15:56:30
  */
-@ConditionalOnProperty(value = "ticho.async.enableAsync", havingValue = "true")
-@Configuration
 @Data
 @Slf4j
+@ConditionalOnProperty(value = "ticho.async.enable", havingValue = "true")
+@Configuration
 public class TiAsyncConfig implements AsyncConfigurer {
 
     @Resource

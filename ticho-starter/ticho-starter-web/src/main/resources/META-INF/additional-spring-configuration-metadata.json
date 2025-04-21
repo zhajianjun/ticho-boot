@@ -5,11 +5,6 @@
       "type": "java.lang.Boolean",
       "description": "开启跨域配置.",
       "defaultValue": false
-    },
-    {
-      "name": "ticho.health",
-      "type": "java.lang.String",
-      "description": "探针接口内容."
     }
   ]
 }

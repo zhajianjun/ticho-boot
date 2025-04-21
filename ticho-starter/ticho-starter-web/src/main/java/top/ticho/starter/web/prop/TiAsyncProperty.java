@@ -10,7 +10,7 @@ import lombok.Data;
 public class TiAsyncProperty {
 
     /** 开启异步线程池 */
-    private boolean enableAsync = true;
+    private boolean enable = true;
     /** 核心线程数，线程池维护线程的最小数量. */
     private int corePoolSize = Runtime.getRuntime().availableProcessors();
     /** 最大线程数，线程池维护线程的最大数量 */
