@@ -2,6 +2,7 @@ package top.ticho.tool.generator.handler;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.core.config.Configurator;
 import org.slf4j.MDC;
 import top.ticho.tool.generator.config.GlobalConfig;
 import top.ticho.tool.generator.constant.CommConst;
@@ -29,6 +30,8 @@ import java.util.Optional;
 public class ContextHandler {
 
     public void handle() {
+        // 初始化日志
+        Configurator.initialize(CommConst.CONFIG_LOG_NAME, CommConst.CONFIG_LOG_XML);
         TraceUtil.trace();
         try {
             handle1();

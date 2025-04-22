@@ -247,7 +247,7 @@ public class ProjectHandler {
 
     public List<Table> getTables() {
         List<String> tableNames = projectConfig.getTables();
-        List<Table> tables = new ArrayList<>();
+        Map<String, Table> tableMap = new HashMap<>(tableNames.size());
         try (
             Connection connection = getSafeConnection();
             // 使用参数化查询
@@ -261,7 +261,7 @@ public class ProjectHandler {
                 }
                 String tableComment = tableResult.getString(dbQuery.tableCommentKey());
                 Table table = new Table();
-                tables.add(table);
+                tableMap.put(tableName, table);
                 table.setName(tableName);
                 table.setComment(tableComment);
                 table.setEntityName(getEntityName(projectConfig.getTablePrefixs(), tableName));
@@ -269,7 +269,11 @@ public class ProjectHandler {
                 // 填充 实体类字段属性
                 setTableField(table, connection);
             }
-            return tables;
+            return tableNames
+                .stream()
+                .map(tableMap::get)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
         } catch (Exception e) {
             throw new GenerateException("获取表信息失败！", e);
         }

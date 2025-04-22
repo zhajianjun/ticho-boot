@@ -1,6 +1,5 @@
 package top.ticho.tool.generator.constant;
 
-import ch.qos.logback.classic.util.ContextInitializer;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -18,8 +17,8 @@ public class CommConst {
     public static final String COMMA = ",";
 
 
-    public static final String CONFIG_FILE_PROPERTY = ContextInitializer.CONFIG_FILE_PROPERTY;
-    public static final String CONFIG_LOGBACK_XML = "config/logback.xml";
+    public static final String CONFIG_LOG_NAME = "Generator";
+    public static final String CONFIG_LOG_XML = "config/log4j2.xml";
     public static final String GLOBAL_YML = "global.yml";
     public static final String CONFIG_ENV_YML = "config-%s.yml";
     public static final String PROJECT_PATH = System.getProperty("user.dir");
