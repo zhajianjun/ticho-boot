@@ -1,5 +1,6 @@
 package top.ticho.tool.intranet.client;
 
+import org.apache.logging.log4j.core.config.Configurator;
 import top.ticho.tool.intranet.client.handler.ClientHander;
 import top.ticho.tool.intranet.prop.ClientProperty;
 
@@ -13,8 +14,7 @@ import top.ticho.tool.intranet.prop.ClientProperty;
 public class ClientStartTest {
 
     public static void main(String[] args) {
-        // logback.xml放在config文件夹里，其它地方调用不会生效config下的logback.xml配置了
-        // System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, "conf/logback.xml");
+        Configurator.initialize("Client", "conf/log4j2.xml");
         ClientProperty clientProperty = new ClientProperty();
         clientProperty.setAccessKey("68bfe8f0af124ecfa093350ab8d4b44f");
         clientProperty.setServerHost("127.0.0.1");

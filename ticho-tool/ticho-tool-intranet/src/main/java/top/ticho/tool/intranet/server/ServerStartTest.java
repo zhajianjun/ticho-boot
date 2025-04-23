@@ -1,5 +1,6 @@
 package top.ticho.tool.intranet.server;
 
+import org.apache.logging.log4j.core.config.Configurator;
 import top.ticho.tool.intranet.prop.ServerProperty;
 import top.ticho.tool.intranet.server.entity.ClientInfo;
 import top.ticho.tool.intranet.server.entity.PortInfo;
@@ -18,7 +19,7 @@ public class ServerStartTest {
 
     public static void main(String[] args) {
         // 测试
-        // System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, "conf/logback.xml");
+        Configurator.initialize("Server", "conf/log4j2.xml");
         ServerProperty serverProperty = new ServerProperty();
         serverProperty.setPort(5120);
         serverProperty.setSslEnable(false);
