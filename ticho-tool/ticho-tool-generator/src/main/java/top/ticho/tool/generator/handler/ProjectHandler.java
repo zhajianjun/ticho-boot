@@ -1,5 +1,6 @@
 package top.ticho.tool.generator.handler;
 
+import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.Template;
@@ -212,7 +213,7 @@ public class ProjectHandler {
         } catch (ClassNotFoundException e) {
             String message = "加载数据库驱动失败！未找到驱动类";
             log.error(message, e);
-            throw new GenerateException(message);
+            throw new GenerateException(message, e);
         }
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Connection connection;
@@ -226,12 +227,12 @@ public class ProjectHandler {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             String extracted = getErrorMessage(e, future);
-            throw new GenerateException(extracted);
+            throw new GenerateException(extracted, e);
         } catch (ExecutionException | TimeoutException e) {
             String errorMessage = getErrorMessage(e, future);
-            throw new GenerateException(errorMessage);
+            throw new GenerateException(errorMessage, e);
         } finally {
-            executor.shutdown();
+            executor.shutdownNow();
         }
         return connection;
     }
@@ -304,53 +305,51 @@ public class ProjectHandler {
         List<TableField> fields = new ArrayList<>();
         List<String> imports = new ArrayList<>();
         String tableFieldsSql = String.format(dbQuery.tableFieldsSql(), tableName);
-        try (
-            PreparedStatement tableFieldStatement = connection.prepareStatement(tableFieldsSql);
-            ResultSet tableFieldResult = tableFieldStatement.executeQuery()
-        ) {
-            while (tableFieldResult.next()) {
-                TableField tableField = new TableField();
-                String fieldName = tableFieldResult.getString(dbQuery.fieldNameKey());
-                String fieldType = tableFieldResult.getString(dbQuery.fieldTypeKey());
-                String propertyUpperName = StrUtil.toCamelUF(fieldName);
-                String propertyLowerName = StrUtil.toCamelLF(fieldName);
-                String fieldComment = tableFieldResult.getString(dbQuery.fieldCommentKey());
-                String index = tableFieldResult.getString(dbQuery.indexKey());
-                String defaultValue = tableFieldResult.getString(dbQuery.defaultValue());
-                String nullable = tableFieldResult.getString(dbQuery.nullable());
-                boolean isPriKey = dbQuery.priKeyName().equals(index);
-                boolean isNullable = dbQuery.nullableValue().equals(nullable);
-                JavaType javaType = typeConverter.typeConvert(projectConfig.getDateType(), fieldType);
-                if (isPriKey) {
-                    table.setKeyName(fieldName);
-                }
-                if (!ObjUtil.isEmpty(javaType.getPkg()) && !imports.contains(javaType.getPkg())) {
-                    imports.add(javaType.getPkg());
-                }
-                String simpleName = fieldName;
-                if (keyWordsHandler.isKeyWords(fieldName)) {
-                    log.debug("表[{}]存在字段[{}]为数据库关键字或保留字!", tableName, fieldName);
-                    fieldName = keyWordsHandler.formatColumn(fieldName);
-                }
-                tableField.setName(fieldName);
-                tableField.setSimpleName(simpleName);
-                tableField.setType(fieldType);
-                tableField.setPropertyLowerName(propertyLowerName);
-                tableField.setPropertyUpperName(propertyUpperName);
-                tableField.setPropertyType(javaType.getType());
-                tableField.setComment(fieldComment);
-                tableField.setIndex(index);
-                tableField.setPriKey(isPriKey);
-                tableField.setDefaultValue(defaultValue);
-                tableField.setNullable(isNullable);
-                tableField.setNullableValue(nullable);
-                // sql server中可能会重复
-                if (fieldNames.contains(fieldName)) {
-                    continue;
-                }
-                fieldNames.add(fieldName);
-                fields.add(tableField);
+        @Cleanup PreparedStatement tableFieldStatement = connection.prepareStatement(tableFieldsSql);
+        tableFieldStatement.setString(1, table.getName());
+        @Cleanup ResultSet tableFieldResult = tableFieldStatement.executeQuery();
+        while (tableFieldResult.next()) {
+            TableField tableField = new TableField();
+            String fieldName = tableFieldResult.getString(dbQuery.fieldNameKey());
+            String fieldType = tableFieldResult.getString(dbQuery.fieldTypeKey());
+            String propertyUpperName = StrUtil.toCamelUF(fieldName);
+            String propertyLowerName = StrUtil.toCamelLF(fieldName);
+            String fieldComment = tableFieldResult.getString(dbQuery.fieldCommentKey());
+            String index = tableFieldResult.getString(dbQuery.indexKey());
+            String defaultValue = tableFieldResult.getString(dbQuery.defaultValue());
+            String nullable = tableFieldResult.getString(dbQuery.nullable());
+            boolean isPriKey = dbQuery.priKeyName().equals(index);
+            boolean isNullable = dbQuery.nullableValue().equals(nullable);
+            JavaType javaType = typeConverter.typeConvert(projectConfig.getDateType(), fieldType);
+            if (isPriKey) {
+                table.setKeyName(fieldName);
             }
+            if (!ObjUtil.isEmpty(javaType.getPkg()) && !imports.contains(javaType.getPkg())) {
+                imports.add(javaType.getPkg());
+            }
+            String simpleName = fieldName;
+            if (keyWordsHandler.isKeyWords(fieldName)) {
+                log.debug("表[{}]存在字段[{}]为数据库关键字或保留字!", tableName, fieldName);
+                fieldName = keyWordsHandler.formatColumn(fieldName);
+            }
+            tableField.setName(fieldName);
+            tableField.setSimpleName(simpleName);
+            tableField.setType(fieldType);
+            tableField.setPropertyLowerName(propertyLowerName);
+            tableField.setPropertyUpperName(propertyUpperName);
+            tableField.setPropertyType(javaType.getType());
+            tableField.setComment(fieldComment);
+            tableField.setIndex(index);
+            tableField.setPriKey(isPriKey);
+            tableField.setDefaultValue(defaultValue);
+            tableField.setNullable(isNullable);
+            tableField.setNullableValue(nullable);
+            // sql server中可能会重复
+            if (fieldNames.contains(fieldName)) {
+                continue;
+            }
+            fieldNames.add(fieldName);
+            fields.add(tableField);
         }
         table.setImports(imports);
         table.setFields(fields);
@@ -410,7 +409,7 @@ public class ProjectHandler {
                         log.warn(message);
                         continue;
                     }
-                    throw new GenerateException(message);
+                    throw new GenerateException(message, e);
                 }
             }
             createParamJsonFile(templateParams);
@@ -432,7 +431,7 @@ public class ProjectHandler {
                 log.warn(message);
                 return;
             }
-            throw new GenerateException(message);
+            throw new GenerateException(message, e);
         }
     }
 

@@ -19,8 +19,10 @@ import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author zhajianjun
@@ -28,6 +30,8 @@ import java.util.Optional;
  */
 @Slf4j
 public class ContextHandler {
+    // 增加日期格式缓存
+    private static final Map<String, DateTimeFormatter> FORMATTER_CACHE = new ConcurrentHashMap<>();
 
     public void handle() {
         // 初始化日志
@@ -68,8 +72,11 @@ public class ContextHandler {
         if (StrUtil.isNotBlank(globalConfig.getDate())) {
             return;
         }
-        String dateFormat = Optional.ofNullable(globalConfig.getDateFormat()).orElse(TiDateFormatConst.YYYY_MM_DD_HH_MM_SS);
-        globalConfig.setDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateFormat)));
+        String dateFormat = Optional.ofNullable(globalConfig.getDateFormat())
+            .orElse(TiDateFormatConst.YYYY_MM_DD_HH_MM_SS);
+
+        DateTimeFormatter formatter = FORMATTER_CACHE.computeIfAbsent(dateFormat, DateTimeFormatter::ofPattern);
+        globalConfig.setDate(LocalDateTime.now().format(formatter));
     }
 
     private void handleProject(String env, GlobalConfig globalConfig) {
@@ -80,7 +87,13 @@ public class ContextHandler {
                 log.warn("项目配置加载失败，[{}]不存在", configYml);
                 return;
             }
-            ProjectHandler projectHandler = new ProjectHandler(globalConfig, projectYml.getProjectConfig(), projectYml.getDataSourceConfig(), projectYml.getFileTemplateConfig(), env);
+            ProjectHandler projectHandler = new ProjectHandler(
+                globalConfig,
+                projectYml.getProjectConfig(),
+                projectYml.getDataSourceConfig(),
+                projectYml.getFileTemplateConfig(),
+                env
+            );
             projectHandler.handle();
         } catch (Exception e) {
             if (Boolean.TRUE.equals(globalConfig.getIgnoreError())) {
@@ -95,15 +108,14 @@ public class ContextHandler {
         if (StrUtil.isBlank(configYml)) {
             return null;
         }
-        String projectConfigFilePath = String.format("%s%s%s", CommConst.PROJECT_PATH, File.separator, configYml);
-        File projectConfigFile = new File(projectConfigFilePath);
+        File projectConfigFile = new File(CommConst.PROJECT_PATH, configYml);
         if (!projectConfigFile.exists()) {
             return null;
         }
         // 获取项目配置
-        ProjectYml projectYml = TiJsonUtil.toJavaObjectFromYaml(projectConfigFile, new TypeReference<ProjectYml>() {
+        ProjectYml projectYml = TiJsonUtil.toJavaObjectFromYaml(projectConfigFile, new TypeReference<>() {
         });
-        log.warn("项目配置加载成功，配置根路径[{}]", projectConfigFilePath);
+        log.warn("项目配置加载成功，配置根路径[{}]", projectConfigFile.getAbsolutePath());
         if (Objects.isNull(projectYml)) {
             return null;
         }
@@ -111,8 +123,7 @@ public class ContextHandler {
     }
 
     private GlobalYml getGlobalYml() {
-        String globalConfigFilePath = String.format("%s%s%s", CommConst.PROJECT_PATH, File.separator, CommConst.GLOBAL_YML);
-        File globalConfigFile = new File(globalConfigFilePath);
+        File globalConfigFile = new File(CommConst.PROJECT_PATH, CommConst.GLOBAL_YML);
         if (!globalConfigFile.exists()) {
             return null;
         }
