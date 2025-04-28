@@ -13,6 +13,7 @@
         <module>ticho-starter</module>
         <module>ticho-tool</module>
         <module>ticho-trace</module>
+        <module>ticho-intranet</module>
     </modules>
 
     <properties>

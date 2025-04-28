@@ -189,6 +189,30 @@
             </dependency>
 
             <dependency>
+                <groupId>top.ticho.intranet</groupId>
+                <artifactId>ticho-intranet-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>top.ticho.intranet</groupId>
+                <artifactId>ticho-intranet-server</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>top.ticho.intranet</groupId>
+                <artifactId>ticho-intranet-client</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>top.ticho.intranet</groupId>
+                <artifactId>ticho-intranet</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>jakarta.annotation</groupId>
                 <artifactId>jakarta.annotation-api</artifactId>
                 <version>2.1.1</version>
