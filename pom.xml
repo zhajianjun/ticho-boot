@@ -14,6 +14,7 @@
         <module>ticho-tool</module>
         <module>ticho-trace</module>
         <module>ticho-intranet</module>
+        <module>ticho-generator</module>
     </modules>
 
     <properties>

@@ -189,6 +189,12 @@
             </dependency>
 
             <dependency>
+                <groupId>top.ticho.generator</groupId>
+                <artifactId>ticho-generator</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>top.ticho.intranet</groupId>
                 <artifactId>ticho-intranet-common</artifactId>
                 <version>${project.version}</version>
