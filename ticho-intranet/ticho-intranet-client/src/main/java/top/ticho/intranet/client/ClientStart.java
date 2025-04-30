@@ -1,11 +1,10 @@
 package top.ticho.intranet.client;
 
-import cn.hutool.json.JSONUtil;
-import cn.hutool.setting.yaml.YamlUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.core.config.Configurator;
 import top.ticho.intranet.client.handler.ClientHander;
 import top.ticho.intranet.common.prop.ClientProperty;
+import top.ticho.tool.json.util.TiJsonUtil;
 
 import java.io.File;
 import java.util.Objects;
@@ -26,7 +25,7 @@ public class ClientStart {
         String filePath = projectPath + File.separator + "/config/client.yaml";
         ClientProperty clientProperty;
         try {
-            clientProperty = YamlUtil.loadByPath(filePath, ClientProperty.class);
+            clientProperty = TiJsonUtil.toJavaObjectFromProperty(new File(filePath), ClientProperty.class);
         } catch (Exception e) {
             log.error("配置文件获取失败，{}", e.getMessage(), e);
             return;
@@ -35,7 +34,7 @@ public class ClientStart {
             log.error("配置文件不存在");
             return;
         }
-        log.info("配置信息：{}", JSONUtil.toJsonStr(clientProperty));
+        log.info("配置信息：{}", TiJsonUtil.toJsonString(clientProperty));
         ClientHander clientHander = new ClientHander(clientProperty);
         clientHander.start();
     }

@@ -30,6 +30,11 @@
             <artifactId>ticho-intranet-common</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>top.ticho.tool</groupId>
+            <artifactId>ticho-tool-json</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
