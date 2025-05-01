@@ -17,11 +17,18 @@ components and development toolchains, empowering developers to focus on core bu
 
 **Core Modules**
 
-1. [ticho-dependencies](ticho-dependencies) encapsulates global dependency version management, providing Maven parent
+1. **[ticho-dependencies](ticho-dependencies)**  
+   encapsulates global dependency version management, providing Maven parent
    POM configuration to simplify version control for submodules.
-2. [ticho-tool](ticho-tool) encapsulates commonly used utility classes such as code generation, JSON serialization, and
+2. **[ticho-generator](ticho-generator)**  
+   Code generator using Beetl templates to dynamically generate CRUD code.
+3. **[ticho-intranet](ticho-intranet)**  
+   Intranet penetration tool implementing NAT-based internal service exposure via Netty.
+4. **[ticho-tool](ticho-tool)**  
+   encapsulates commonly used utility classes such as code generation, JSON serialization, and
    intranet penetration implementation via Netty.
-3. [ticho-starter](ticho-starter) encapsulates Spring Boot-related functional components, utility classes, and
+5. **[ticho-starter](ticho-starter)**  
+   encapsulates Spring Boot-related functional components, utility classes, and
    standardized Starters, enabling developers to easily integrate these features into their applications.
 
 ---
@@ -80,10 +87,6 @@ Spring Boot Starter modules, ready to use out-of-the-box:
 
 **Core utility library**, framework-independent:
 
-- **[ticho-tool-generator](ticho-tool/ticho-tool-generator)**  
-  Code generator using Beetl templates to dynamically generate CRUD code.
-- **[ticho-tool-intranet](ticho-tool/ticho-tool-intranet)**  
-  Intranet penetration tool implementing NAT-based internal service exposure via Netty.
 - **[ticho-tool-json](ticho-tool/ticho-tool-json)**  
   Jackson-based implementation providing simplified utility classes.
 

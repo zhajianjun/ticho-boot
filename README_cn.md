@@ -15,9 +15,16 @@ Boot应用的快速构建能力。该框架基于前沿技术栈构建，提供�
 
 **主要模块**
 
-1. [ticho-dependencies](ticho-dependencies) 封装了全局依赖版本管理，提供Maven父级POM配置，简化子模块版本控制。
-2. [ticho-tool](ticho-tool) 封装了一些常用的工具类，如代码生成、json序列化、内网穿透Netty等。
-3. [ticho-starter](ticho-starter) 封装了Spring Boot相关功能组件、工具类及标准化Starter，使开发人员能够轻松地将这些特性集成到他们的应用程序。
+1. **[ticho-dependencies](ticho-dependencies)**  
+   封装了全局依赖版本管理，提供Maven父级POM配置，简化子模块版本控制。
+2. **[ticho-generator](ticho-generator)**  
+   代码生成器，基于 Beetl 模板动态生成 CRUD 代码。
+3. **[ticho-intranet](ticho-intranet)**  
+   内网穿透工具，基于 Netty 实现 NAT 内网服务暴露。
+4. **[ticho-tool](ticho-tool)**  
+   封装了一些常用的工具类，如代码生成、json序列化、内网穿透Netty等。
+5. **[ticho-starter](ticho-starter)**  
+   封装了Spring Boot相关功能组件、工具类及标准化Starter，使开发人员能够轻松地将这些特性集成到他们的应用程序。
 
 ---
 
@@ -54,15 +61,15 @@ Spring Boot Starter 系列模块，开箱即用：
   分布式日志追踪，集成 MDC 与日志染色功能。
 - **[ticho-starter-minio](ticho-starter/ticho-starter-minio)**  
   对象存储服务，支持 MinIO的S3协议的文件操作。
-- **[ticho-starter-rabbitmq](ticho-starter/ticho-starter-rabbitmq)**
+- **[ticho-starter-rabbitmq](ticho-starter/ticho-starter-rabbitmq)**  
   RabbitMQ 消息队列增强。
 - **[ticho-starter-redis](ticho-starter/ticho-starter-redis)**  
   Redis简化配置、工具封装等。
-- **[ticho-starter-redisson](ticho-starter/ticho-starter-redisson)**
+- **[ticho-starter-redisson](ticho-starter/ticho-starter-redisson)**  
   分布式锁与并发控制，基于 Redisson 实现。
 - **[ticho-starter-security](ticho-starter/ticho-starter-security)**  
   安全认证模块，支持 OAuth2/JWT 鉴权与动态权限管理。
-- **[ticho-starter-view](ticho-starter/ticho-starter-view)ticho-starter-view**
+- **[ticho-starter-view](ticho-starter/ticho-starter-view)ticho-starter-view**  
   统一视图渲染。
 - **[ticho-starter-web](ticho-starter/ticho-starter-web)**  
   Web 层增强，全局异常处理、参数校验与跨域配置。
@@ -73,11 +80,7 @@ Spring Boot Starter 系列模块，开箱即用：
 
 **通用工具库**，独立于框架的核心工具类：
 
-- **[ticho-tool-generator](ticho-tool/ticho-tool-generator)**  
-  代码生成器，基于 Beetl 模板动态生成 CRUD 代码。
-- **[ticho-tool-intranet](ticho-tool/ticho-tool-intranet)**  
-  内网穿透工具，基于 Netty 实现 NAT 内网服务暴露。
-- **[ticho-tool-json](ticho-tool/ticho-tool-json)**
+- **[ticho-tool-json](ticho-tool/ticho-tool-json)**  
   Jackson实现，提供简化工具类。
 
 ---
@@ -86,17 +89,17 @@ Spring Boot Starter 系列模块，开箱即用：
 
 **全链路追踪体系**
 
-- **[ticho-trace-common](ticho-trace/ticho-trace-common)**
+- **[ticho-trace-common](ticho-trace/ticho-trace-common)**  
   公共模型定义（Span、TraceID 等）。
-- **[ticho-trace-core](ticho-trace/ticho-trace-core)**    
+- **[ticho-trace-core](ticho-trace/ticho-trace-core)**  
   链路上下文管理，支持日志关联与透传。
-- **[ticho-trace-feign](ticho-trace/ticho-trace-feign)**
+- **[ticho-trace-feign](ticho-trace/ticho-trace-feign)**  
   Feign 客户端拦截器，自动注入追踪标识。
-- **[ticho-trace-gateway](ticho-trace/ticho-trace-gateway)**
+- **[ticho-trace-gateway](ticho-trace/ticho-trace-gateway)**  
   网关层流量标识生成与传播。
-- **[ticho-trace-okhttp](ticho-trace/ticho-trace-okhttp)**   
+- **[ticho-trace-okhttp](ticho-trace/ticho-trace-okhttp)**  
   OkHttp 调用链路透传支持。
-- **[ticho-trace-spring](ticho-trace/ticho-trace-spring)**   
+- **[ticho-trace-spring](ticho-trace/ticho-trace-spring)**  
   Spring MVC 拦截器，实现请求链路追踪。
 
 ---
