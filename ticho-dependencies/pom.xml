@@ -177,18 +177,6 @@
             </dependency>
 
             <dependency>
-                <groupId>top.ticho.tool</groupId>
-                <artifactId>ticho-tool-generator</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>top.ticho.tool</groupId>
-                <artifactId>ticho-tool-intranet</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>top.ticho.generator</groupId>
                 <artifactId>ticho-generator</artifactId>
                 <version>${project.version}</version>

@@ -13,8 +13,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>ticho-tool-generator</module>
-        <module>ticho-tool-intranet</module>
         <module>ticho-tool-json</module>
     </modules>
 
