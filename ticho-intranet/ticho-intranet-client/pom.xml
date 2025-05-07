@@ -49,7 +49,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib</classpathPrefix>
-                            <mainClass>top.ticho.tool.intranet.client.ClientStart</mainClass>
+                            <mainClass>top.ticho.intranet.client.ClientStart</mainClass>
                         </manifest>
                         <manifestEntries>
                             <Class-Path>conf/</Class-Path>
