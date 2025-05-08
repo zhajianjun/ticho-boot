@@ -31,13 +31,13 @@ set APP_LOG=!APP_HOME!\logs
 set APP_LINE=------------------------------------------
 
 @REM 设置应用程序的配置文件路径
-set APP_CONF=!APP_HOME!\conf\init.properties
+set APP_CONF=!APP_HOME!\config\client.yaml
 
 @REM 检查Java是否安装并设置正确
 "!JAVA_BIN!" -version 1>nul 2>nul
 if !errorlevel! neq 0 (
     @echo.
-    @echo 请安装Java 1.8或更高版本，并确保Java设置正确。
+    @echo 请安装Java 17或更高版本，并确保Java设置正确。
     @echo.
     @echo 您可以执行命令 [ !JAVA_BIN! -version ] 来检查Java是否安装并设置正确。
     @echo.

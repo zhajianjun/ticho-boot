@@ -15,7 +15,7 @@ APP_HOME=$(pwd)
 ## 拼接Java程序的绝对路径
 APP="$APP_HOME/ticho-intranet-client.jar"
 ## 拼接配置文件的绝对路径
-APP_CONF="$APP_HOME/conf/init.properties"
+APP_CONF="$APP_HOME/config/client.yaml"
 
 # 定义查询进程PID的函数
 pid() 
