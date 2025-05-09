@@ -144,7 +144,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>top.ticho.generator.Application</mainClass>
+                            <mainClass>top.ticho.generator.GeneratorApplication</mainClass>
                         </manifest>
                         <manifestEntries>
                             <Class-Path>.</Class-Path>
