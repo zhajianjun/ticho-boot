@@ -128,7 +128,7 @@ public class ContextHandler {
             return null;
         }
         // 获取全局配置
-        return TiJsonUtil.toJavaObjectFromYaml(globalConfigFile, new TypeReference<GlobalYml>() {
+        return TiJsonUtil.toJavaObjectFromYaml(globalConfigFile, new TypeReference<>() {
         });
     }
 

@@ -306,7 +306,6 @@ public class ProjectHandler {
         List<String> imports = new ArrayList<>();
         String tableFieldsSql = String.format(dbQuery.tableFieldsSql(), tableName);
         @Cleanup PreparedStatement tableFieldStatement = connection.prepareStatement(tableFieldsSql);
-        tableFieldStatement.setString(1, table.getName());
         @Cleanup ResultSet tableFieldResult = tableFieldStatement.executeQuery();
         while (tableFieldResult.next()) {
             TableField tableField = new TableField();
@@ -412,13 +411,16 @@ public class ProjectHandler {
                     throw new GenerateException(message, e);
                 }
             }
-            createParamJsonFile(templateParams);
+            createParamJsonFile(table, templateParams);
         }
     }
 
-    private void createParamJsonFile(Map<String, Object> templateParams) {
-        String paramJsonPath = CommConst.PROJECT_PATH + File.separator + CommConst.DATA_PATH
-            + File.separator + env + File.separator + CommConst.JSON_FILE_NAME;
+    private void createParamJsonFile(Table table, Map<String, Object> templateParams) {
+        String paramJsonPath = CommConst.PROJECT_PATH + File.separator + CommConst.DATA_PATH +
+            File.separator + env + File.separator +
+            CommConst.JSON_FILE_NAME + File.separator +
+            table.getEntityName() +
+            CommConst.DOT + CommConst.JSON_FILE_NAME;
         File file = new File(paramJsonPath);
         FileUtil.checkFile(file);
         try (FileOutputStream out = new FileOutputStream(file)) {

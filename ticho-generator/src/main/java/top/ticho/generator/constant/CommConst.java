@@ -23,7 +23,7 @@ public class CommConst {
     public static final String CONFIG_ENV_YML = "config-%s.yml";
     public static final String PROJECT_PATH = System.getProperty("user.dir");
     public static final String DATA_PATH = "data";
-    public static final String JSON_FILE_NAME = "param.json";
+    public static final String JSON_FILE_NAME = "json";
     public static final String TRACE_ID_KEY = "traceId";
     public static final String TRACE_KEY = "trace";
     public static final String TEMPLATE_PATH = PROJECT_PATH + File.separator + "templates";

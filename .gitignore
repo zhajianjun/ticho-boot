@@ -37,7 +37,7 @@ logs/
 ./git-flow-plus.config
 .fastRequest/
 .flattened-pom.xml
-/ticho-tool/ticho-tool-generator/data/
-/ticho-tool/ticho-tool-generator/templates/
-/ticho-tool/ticho-tool-generator/config*.yml
-/ticho-tool/ticho-tool-generator/global*.yml
+/ticho-generator/data/
+/ticho-generator/templates/
+/ticho-generator/config*.yml
+/ticho-generator/global*.yml
