@@ -11,7 +11,6 @@
     <artifactId>ticho-trace-core</artifactId>
 
     <dependencies>
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -53,7 +52,6 @@
             <groupId>com.lmax</groupId>
             <artifactId>disruptor</artifactId>
         </dependency>
-
     </dependencies>
 
 </project>

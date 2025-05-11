@@ -10,16 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ticho-starter-gateway</artifactId>
 
-    <properties>
-        <!-- 项目版本信息 -->
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <java.version>17</java.version>
-    </properties>
-
     <dependencies>
-
         <dependency>
             <groupId>top.ticho.starter</groupId>
             <artifactId>ticho-starter-view</artifactId>
@@ -72,7 +63,6 @@
             <groupId>top.ticho.trace</groupId>
             <artifactId>ticho-trace-gateway</artifactId>
         </dependency>
-
     </dependencies>
 
 </project>

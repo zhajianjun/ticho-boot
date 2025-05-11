@@ -11,16 +11,7 @@
     <artifactId>ticho-starter-log</artifactId>
     <name>ticho-starter-log</name>
 
-    <properties>
-        <!-- 项目版本信息 -->
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <java.version>17</java.version>
-    </properties>
-
     <dependencies>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -81,7 +72,6 @@
             <groupId>org.fusesource.jansi</groupId>
             <artifactId>jansi</artifactId>
         </dependency>
-
     </dependencies>
 
     <build>

@@ -11,16 +11,7 @@
     <groupId>top.ticho.generator</groupId>
     <artifactId>ticho-generator</artifactId>
 
-    <properties>
-        <!-- 项目版本信息 -->
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <java.version>17</java.version>
-    </properties>
-
     <dependencies>
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -77,11 +68,9 @@
             <groupId>org.fusesource.jansi</groupId>
             <artifactId>jansi</artifactId>
         </dependency>
-
     </dependencies>
 
     <dependencyManagement>
-
         <dependencies>
             <dependency>
                 <groupId>top.ticho.boot</groupId>
@@ -91,7 +80,6 @@
                 <scope>import</scope>
             </dependency>
         </dependencies>
-
     </dependencyManagement>
 
     <build>

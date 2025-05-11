@@ -10,9 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ticho-trace-common</artifactId>
 
-
     <dependencies>
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -23,7 +21,6 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
         </dependency>
-
     </dependencies>
 
 </project>

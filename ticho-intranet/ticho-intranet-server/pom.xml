@@ -10,14 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ticho-intranet-server</artifactId>
 
-    <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
     <dependencies>
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -28,7 +21,6 @@
             <groupId>top.ticho.intranet</groupId>
             <artifactId>ticho-intranet-common</artifactId>
         </dependency>
-
     </dependencies>
 
 </project>

@@ -11,7 +11,6 @@
     <artifactId>ticho-trace-okhttp</artifactId>
 
     <dependencies>
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -33,7 +32,6 @@
             <groupId>com.squareup.okhttp3</groupId>
             <optional>true</optional>
         </dependency>
-
     </dependencies>
 
 </project>

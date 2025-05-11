@@ -10,9 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ticho-trace-feign</artifactId>
 
-
     <dependencies>
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -31,7 +29,6 @@
             <artifactId>spring-cloud-starter-openfeign</artifactId>
             <optional>true</optional>
         </dependency>
-
     </dependencies>
 
 </project>

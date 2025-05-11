@@ -11,7 +11,6 @@
     <artifactId>ticho-trace-spring</artifactId>
 
     <dependencies>
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -87,7 +86,6 @@
             <artifactId>spring-rabbit</artifactId>
             <optional>true</optional>
         </dependency>
-
     </dependencies>
 
 </project>

@@ -10,16 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ticho-starter-es</artifactId>
 
-    <properties>
-        <!-- 项目版本信息 -->
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <java.version>17</java.version>
-    </properties>
-
     <dependencies>
-
         <dependency>
             <groupId>top.ticho.starter</groupId>
             <artifactId>ticho-starter-web</artifactId>
@@ -53,7 +44,6 @@
             <groupId>cn.easy-es</groupId>
             <artifactId>easy-es-boot-starter</artifactId>
         </dependency>
-
     </dependencies>
 
 </project>
