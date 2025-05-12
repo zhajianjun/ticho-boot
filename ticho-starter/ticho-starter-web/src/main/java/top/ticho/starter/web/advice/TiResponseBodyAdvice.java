@@ -43,7 +43,7 @@ import java.util.Map;
  * 基础全局异常处理
  *
  * @author zhajianjun
- * @date 2022-07-10 15:56:30
+ * @date 2022-07-10 15:56
  */
 @Slf4j
 @RequiredArgsConstructor

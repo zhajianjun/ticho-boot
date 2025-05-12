@@ -12,7 +12,7 @@ import java.io.Serializable;
  * 通用业务错误码
  *
  * @author zhajianjun
- * @date 2022-07-10 15:56:30
+ * @date 2022-07-10 15:56
  */
 @Getter
 @AllArgsConstructor

@@ -18,7 +18,7 @@ import top.ticho.starter.rabbitmq.event.TiMqSendToExchangeFailEvent;
  * rabbitmq 配置
  *
  * @author zhajianjun
- * @date 2022-09-13 16:39:23
+ * @date 2022-09-13 16:39
  */
 @SuppressWarnings("deprecation")
 @Configuration

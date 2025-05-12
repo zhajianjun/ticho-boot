@@ -26,7 +26,7 @@ import java.util.Properties;
  * 邮件工具
  *
  * @author zhajianjun
- * @date 2022-07-13 22:40:25
+ * @date 2022-07-13 22:40
  */
 @Slf4j
 public class TiMailTemplate {

@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
  * jwt解密
  *
  * @author zhajianjun
- * @date 2022-09-24 13:45:19
+ * @date 2022-09-24 13:45
  */
 @Slf4j
 public record JwtDecode(JwtSigner jwtSigner) {

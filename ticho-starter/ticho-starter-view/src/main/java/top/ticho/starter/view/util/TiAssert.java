@@ -16,7 +16,7 @@ import java.util.function.Supplier;
  * 断言工具类
  *
  * @author zhajianjun
- * @date 2022-07-10 15:56:30
+ * @date 2022-07-10 15:56
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TiAssert {

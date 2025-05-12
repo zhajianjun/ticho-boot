@@ -10,7 +10,7 @@ import top.ticho.tool.json.util.TiJsonUtil;
  * 接口权限实现
  *
  * @author zhajianjun
- * @date 2022-09-26 17:31:58
+ * @date 2022-09-26 17:31
  */
 @Slf4j
 public class TiPermissionServiceImpl implements TiPermissionService {

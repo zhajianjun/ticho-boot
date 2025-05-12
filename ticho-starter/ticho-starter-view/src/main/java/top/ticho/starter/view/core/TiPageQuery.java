@@ -10,7 +10,7 @@ import java.util.Objects;
  * 通用分页查询条件
  *
  * @author zhajianjun
- * @date 2022-07-10 15:56:30
+ * @date 2022-07-10 15:56
  */
 @Data
 public class TiPageQuery implements Serializable {

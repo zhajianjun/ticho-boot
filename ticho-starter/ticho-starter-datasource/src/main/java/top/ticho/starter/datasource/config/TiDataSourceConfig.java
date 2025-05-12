@@ -10,7 +10,7 @@ import top.ticho.starter.datasource.prop.TiDataSourceProperty;
  * 数据源配置
  *
  * @author zhajianjun
- * @date 2022-07-10 15:56:30
+ * @date 2022-07-10 15:56
  */
 @Configuration
 @PropertySource(value = "classpath:ticho-datasource.properties")

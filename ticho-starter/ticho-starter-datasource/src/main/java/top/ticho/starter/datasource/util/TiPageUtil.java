@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * 分页对象转换工具
  *
  * @author zhajianjun
- * @date 2022-07-10 15:56:30
+ * @date 2022-07-10 15:56
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TiPageUtil {

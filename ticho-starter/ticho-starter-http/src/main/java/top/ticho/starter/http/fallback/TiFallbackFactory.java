@@ -9,7 +9,7 @@ import org.springframework.cloud.openfeign.FallbackFactory;
  * 默认fallback
  *
  * @author zhajianjun
- * @date 2022-08-06 14:09:58
+ * @date 2022-08-06 14:09
  */
 @AllArgsConstructor
 public class TiFallbackFactory<T> implements FallbackFactory<T> {

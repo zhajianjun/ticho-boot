@@ -7,7 +7,7 @@ import top.ticho.starter.view.enums.TiErrCode;
  * 系统异常处理
  *
  * @author zhajianjun
- * @date 2022-07-10 15:56:30
+ * @date 2022-07-10 15:56
  */
 @Getter
 public class TiSysException extends TiBaseException {

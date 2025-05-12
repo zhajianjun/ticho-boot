@@ -19,7 +19,7 @@ import java.nio.charset.StandardCharsets;
  * 认证成功,权限不足返回视图
  *
  * @author zhajianjun
- * @date 2022-09-23 17:44:39
+ * @date 2022-09-23 17:44
  */
 @Slf4j
 public class TiAccessDeniedHandler implements AccessDeniedHandler {

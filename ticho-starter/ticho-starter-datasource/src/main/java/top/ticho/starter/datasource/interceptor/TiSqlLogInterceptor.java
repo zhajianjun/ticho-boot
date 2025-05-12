@@ -46,7 +46,7 @@ import java.util.regex.Matcher;
  * sql日志打印
  *
  * @author zhajianjun
- * @date 2022-09-19 14:17:16
+ * @date 2022-09-19 14:17
  */
 @Intercepts({
     @Signature(type = StatementHandler.class, method = "query", args = {Statement.class, ResultHandler.class}),

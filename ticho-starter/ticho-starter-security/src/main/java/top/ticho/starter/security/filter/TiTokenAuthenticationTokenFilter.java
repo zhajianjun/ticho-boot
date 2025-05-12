@@ -12,7 +12,7 @@ import java.util.Optional;
  * jwt token验证过滤器
  *
  * @author zhajianjun
- * @date 2022-09-24 14:14:06
+ * @date 2022-09-24 14:14
  */
 public class TiTokenAuthenticationTokenFilter extends AbstractAuthTokenFilter<TiSecurityUser> {
 

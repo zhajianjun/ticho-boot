@@ -23,7 +23,7 @@ import java.time.format.DateTimeFormatter;
  * RequestBody格式化
  *
  * @author zhajianjun
- * @date 2022-07-10 15:56:30
+ * @date 2022-07-10 15:56
  */
 @Configuration
 public class TiJacksonCustomizerConfig {

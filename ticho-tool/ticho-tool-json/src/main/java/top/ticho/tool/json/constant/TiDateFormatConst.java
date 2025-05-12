@@ -4,7 +4,7 @@ package top.ticho.tool.json.constant;
  * 日期相关常量
  *
  * @author zhajianjun
- * @date 2024-11-16 13:31:16
+ * @date 2024-11-16 13:31
  */
 public class TiDateFormatConst {
 

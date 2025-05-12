@@ -17,7 +17,7 @@ import java.util.Objects;
  * Minio文件下载测试
  *
  * @author zhajianjun
- * @date 2022-07-13 22:40:25
+ * @date 2022-07-13 22:40
  */
 @Data
 @Slf4j

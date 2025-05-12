@@ -17,7 +17,7 @@ import java.util.concurrent.Executor;
  * 自定义异步线程池
  *
  * @author zhajianjun
- * @date 2022-07-10 15:56:30
+ * @date 2022-07-10 15:56
  */
 @Data
 @Slf4j

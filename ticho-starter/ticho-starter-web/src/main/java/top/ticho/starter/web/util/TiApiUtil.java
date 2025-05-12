@@ -14,7 +14,7 @@ import java.util.function.Supplier;
  * api工具
  *
  * @author zhajianjun
- * @date 2022-07-10 15:56:30
+ * @date 2022-07-10 15:56
  */
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)

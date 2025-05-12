@@ -49,7 +49,7 @@ import java.util.concurrent.TimeUnit;
  * Minio文件下载,https://docs.minio.io/cn/java-client-api-reference.html#removeObject
  *
  * @author zhajianjun
- * @date 2022-07-13 22:40:25
+ * @date 2022-07-13 22:40
  */
 @SuppressWarnings("all")
 @Data

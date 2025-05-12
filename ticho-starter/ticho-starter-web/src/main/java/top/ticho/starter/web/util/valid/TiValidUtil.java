@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  * Validator 参数校验
  *
  * @author zhajianjun
- * @date 2022-07-10 15:56:30
+ * @date 2022-07-10 15:56
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TiValidUtil {

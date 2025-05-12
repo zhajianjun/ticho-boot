@@ -55,7 +55,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * es操作
  *
  * @author zhajianjun
- * @date 2023-04-15 12:26:56
+ * @date 2023-04-15 12:26
  */
 @Slf4j
 public class EsTemplateImpl implements EsTemplate {

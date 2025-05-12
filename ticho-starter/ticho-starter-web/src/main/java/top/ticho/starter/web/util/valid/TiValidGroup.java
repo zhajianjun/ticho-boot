@@ -7,7 +7,7 @@ import jakarta.validation.groups.Default;
  * 校验分组
  *
  * @author zhajianjun
- * @date 2022-07-10 15:56:30
+ * @date 2022-07-10 15:56
  */
 public class TiValidGroup {
 

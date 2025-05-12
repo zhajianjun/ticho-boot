@@ -8,7 +8,7 @@ import top.ticho.starter.view.enums.TiHttpErrCode;
  * 基础异常处理
  *
  * @author zhajianjun
- * @date 2022-07-10 15:56:30
+ * @date 2022-07-10 15:56
  */
 @Getter
 public class TiBaseException extends RuntimeException {

@@ -21,7 +21,7 @@ import java.nio.charset.StandardCharsets;
  * </p>
  *
  * @author zhajianjun
- * @date 2022-09-23 17:44:39
+ * @date 2022-09-23 17:44
  */
 public class TiAuthenticationEntryPoint implements AuthenticationEntryPoint {
 

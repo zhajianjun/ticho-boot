@@ -16,7 +16,7 @@ import top.ticho.starter.http.constant.TiHttpConst;
 
 /**
  * @author zhajianjun
- * @date 2022-09-26 16:20:40
+ * @date 2022-09-26 16:20
  */
 @Slf4j
 @Configuration

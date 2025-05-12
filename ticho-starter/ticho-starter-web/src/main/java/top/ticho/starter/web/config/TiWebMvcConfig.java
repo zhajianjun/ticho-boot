@@ -18,7 +18,7 @@ import java.util.List;
  * 基础视图配置
  *
  * @author zhajianjun
- * @date 2022-07-10 15:56:30
+ * @date 2022-07-10 15:56
  */
 @Configuration
 @Order(Ordered.LOWEST_PRECEDENCE - 10)

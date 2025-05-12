@@ -9,7 +9,7 @@ import java.util.List;
  * 邮件内容
  *
  * @author zhajianjun
- * @date 2022-07-13 22:40:25
+ * @date 2022-07-13 22:40
  */
 @Data
 public class TiMailContent {

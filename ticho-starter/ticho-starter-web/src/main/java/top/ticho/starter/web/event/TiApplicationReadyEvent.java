@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  * 程序启动成功实现
  *
  * @author zhajianjun
- * @date 2022-07-10 15:56:30
+ * @date 2022-07-10 15:56
  * @see ApplicationReadyEvent 应用程序已准备好执行的事件
  */
 @Slf4j

@@ -11,7 +11,7 @@ import java.io.Serializable;
  * 统一响应消息
  *
  * @author zhajianjun
- * @date 2022-07-10 15:56:30
+ * @date 2022-07-10 15:56
  */
 @Data
 public class TiResult<T> implements Serializable {

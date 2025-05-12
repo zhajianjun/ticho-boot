@@ -4,7 +4,7 @@ package top.ticho.starter.security.auth;
  * 接口权限
  *
  * @author zhajianjun
- * @date 2022-09-26 17:31:58
+ * @date 2022-09-26 17:31
  */
 public interface TiPermissionService {
 

@@ -8,7 +8,7 @@ import java.util.List;
  * es 查询条件
  *
  * @author zhajianjun
- * @date 2023-04-15 12:18:22
+ * @date 2023-04-15 12:18
  */
 @Data
 public class EsSimpleQuery {

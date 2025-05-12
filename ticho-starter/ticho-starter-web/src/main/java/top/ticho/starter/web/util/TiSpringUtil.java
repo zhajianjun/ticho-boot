@@ -26,7 +26,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * Spring 工具类，提供了一些常用的 Spring 相关的方法。
  *
  * @author zhajianjun
- * @date 2022-07-10 15:56:30
+ * @date 2022-07-10 15:56
  */
 @Component
 @Slf4j

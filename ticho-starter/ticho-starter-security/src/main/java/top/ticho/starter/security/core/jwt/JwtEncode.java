@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
  * jwt加密
  *
  * @author zhajianjun
- * @date 2022-09-24 13:45:19
+ * @date 2022-09-24 13:45
  */
 public record JwtEncode(TiSecurityProperty tiSecurityProperty, JwtSigner jwtSigner) {
 

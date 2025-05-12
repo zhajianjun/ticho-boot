@@ -13,7 +13,7 @@ import java.io.Serializable;
  * 当对象id不存在时才会生效，一般由开发进行生成，此处仅仅是为了兜底，防止开发忘记了
  *
  * @author zhajianjun
- * @date 2022-07-10 15:56:30
+ * @date 2022-07-10 15:56
  */
 @Component
 @ConditionalOnMissingBean(IdentifierGenerator.class)

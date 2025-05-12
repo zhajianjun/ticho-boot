@@ -40,7 +40,7 @@ import java.util.Optional;
  * Json工具
  *
  * @author zhajianjun
- * @date 2024-11-16 13:31:16
+ * @date 2024-11-16 13:31
  */
 public class TiJsonUtil {
     private static final Logger log = LoggerFactory.getLogger(TiJsonUtil.class);

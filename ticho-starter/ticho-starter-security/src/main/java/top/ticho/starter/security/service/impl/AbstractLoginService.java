@@ -37,7 +37,7 @@ import java.util.stream.Collectors;
  * <p> 抽取公共方法 </p>
  *
  * @author zhajianjun
- * @date 2022-09-24 16:29:51
+ * @date 2022-09-24 16:29
  */
 public abstract class AbstractLoginService implements TiLoginService {
 

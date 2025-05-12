@@ -13,7 +13,7 @@ import java.util.ListIterator;
  * 参数校验bean
  *
  * @author zhajianjun
- * @date 2022-07-10 15:56:30
+ * @date 2022-07-10 15:56
  */
 public class TiValidBean<E> implements List<E> {
 

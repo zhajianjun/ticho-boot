@@ -50,7 +50,7 @@ import top.ticho.starter.view.task.TiTaskDecortor;
  * springsecurity 配置
  *
  * @author zhajianjun
- * @date 2022-09-23 15:35:33
+ * @date 2022-09-23 15:35
  */
 @Configuration
 @EnableWebSecurity

@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
  * token验证过滤器抽象类
  *
  * @author zhajianjun
- * @date 2022-09-22 08:38:17
+ * @date 2022-09-22 08:38
  */
 @Slf4j
 public abstract class AbstractAuthTokenFilter<T extends TiSecurityUser> extends OncePerRequestFilter {

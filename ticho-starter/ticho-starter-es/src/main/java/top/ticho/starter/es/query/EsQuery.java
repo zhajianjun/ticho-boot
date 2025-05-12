@@ -6,7 +6,7 @@ import org.elasticsearch.index.query.QueryBuilder;
 
 /**
  * @author zhajianjun
- * @date 2023-04-15 12:21:05
+ * @date 2023-04-15 12:21
  */
 @EqualsAndHashCode(callSuper = true)
 @Data

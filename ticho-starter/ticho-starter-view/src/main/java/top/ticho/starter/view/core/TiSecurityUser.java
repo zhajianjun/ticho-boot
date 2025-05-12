@@ -13,7 +13,7 @@ import java.util.List;
  * 用户信息
  *
  * @author zhajianjun
- * @date 2022-09-26 10:17:35
+ * @date 2022-09-26 10:17
  */
 @Data
 @EqualsAndHashCode(callSuper = false)

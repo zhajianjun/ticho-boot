@@ -16,7 +16,7 @@ import top.ticho.starter.datasource.injector.TiSqlInjector;
  * mybatis plus config
  *
  * @author zhajianjun
- * @date 2022-07-10 15:56:30
+ * @date 2022-07-10 15:56
  */
 @Configuration
 @EnableTransactionManagement
