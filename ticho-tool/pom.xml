@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>ticho-tool-core</module>
         <module>ticho-tool-json</module>
     </modules>
 
