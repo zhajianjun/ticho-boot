@@ -34,9 +34,7 @@ public class ContextHandler {
     private static final Map<String, DateTimeFormatter> FORMATTER_CACHE = new ConcurrentHashMap<>();
 
     public void handle() {
-        // 初始化日志
-        Configurator.initialize(CommConst.CONFIG_LOG_NAME, CommConst.CONFIG_LOG_XML);
-        TraceUtil.trace();
+        initLogAndTrace();
         try {
             handle1();
         } catch (Exception e) {
@@ -44,6 +42,12 @@ public class ContextHandler {
         } finally {
             MDC.clear();
         }
+    }
+
+    private void initLogAndTrace() {
+        // 初始化日志和链路
+        Configurator.initialize(CommConst.CONFIG_LOG_NAME, CommConst.CONFIG_LOG_XML);
+        TraceUtil.trace();
     }
 
     public void handle1() {

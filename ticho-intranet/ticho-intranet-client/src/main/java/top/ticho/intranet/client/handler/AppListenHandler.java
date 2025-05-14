@@ -60,7 +60,6 @@ public class AppListenHandler extends SimpleChannelInboundHandler<ByteBuf> {
         super.channelWritabilityChanged(ctx);
     }
 
-
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         log.warn("客户端异常 {} {}", ctx.channel(), cause.getMessage(), cause);
