@@ -5,4 +5,4 @@ sslEnable: false
 sslPath:
 sslPassword:
 maxPoolSize: 100
-autoClose: false
+tryReconnect: true

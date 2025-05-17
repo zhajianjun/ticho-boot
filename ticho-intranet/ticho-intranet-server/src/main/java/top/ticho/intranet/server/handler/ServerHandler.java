@@ -354,7 +354,7 @@ public class ServerHandler {
         }
 
         protected void initChannel(SocketChannel sc) {
-            if (Boolean.TRUE.equals(this.sslEnabled)) {
+            if (this.sslEnabled) {
                 SslHandler sslHandler = new SslHandler(serverProperty.getSslPath(), serverProperty.getSslPassword());
                 SSLContext sslContext = sslHandler.getSslContext();
                 SSLEngine engine = sslContext.createSSLEngine();

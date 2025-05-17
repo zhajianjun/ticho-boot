@@ -28,9 +28,9 @@ public class ClientProperty {
     /** 处理客户端连接线程数量 */
     private int workerThreads = Runtime.getRuntime().availableProcessors() * 2;
     /**
-     * 自动关闭
-     * 如果无效的访问密钥，是否自动关闭客户端
+     * 是否尝试重连
+     * 如果无效的访问密钥，是否尝试重连，是则重连，否则则关闭
      */
-    private Boolean autoClose;
+    private Boolean tryReconnect;
 
 }

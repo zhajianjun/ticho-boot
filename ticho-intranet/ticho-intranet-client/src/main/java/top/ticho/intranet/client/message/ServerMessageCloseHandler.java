@@ -22,11 +22,14 @@ public class ServerMessageCloseHandler extends AbstractServerMessageHandler {
     public void channelRead0(ChannelHandlerContext ctx, Message msg) {
         Channel clientChannel = ctx.channel();
         log.info("服务端[{}]权限验证失败，{}", clientChannel.remoteAddress().toString(), StrUtil.str(msg.getData(), StandardCharsets.UTF_8));
-        if (Boolean.TRUE.equals(clientProperty.getAutoClose())) {
-            log.warn("客户端[{}]关闭连接", clientChannel.remoteAddress().toString());
-            IntranetUtil.close(clientChannel);
-            clientHander.stop(msg.getType());
+        if (Boolean.TRUE.equals(clientProperty.getTryReconnect())) {
+            log.warn("尝试重新连接[{}]", clientChannel.remoteAddress());
+            clientHander.restart();
+            return;
         }
+        log.warn("客户端[{}]关闭连接", clientChannel.remoteAddress().toString());
+        IntranetUtil.close(clientChannel);
+        clientHander.stop(msg.getType());
     }
 
 }
