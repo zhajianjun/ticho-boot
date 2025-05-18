@@ -1,20 +1,12 @@
-package top.ticho.intranet.server.handler;
+package top.ticho.intranet.server.repository;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioServerSocketChannel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.common.prop.ServerProperty;
 import top.ticho.intranet.common.util.IntranetUtil;
 import top.ticho.intranet.server.entity.PortInfo;
-import top.ticho.intranet.server.filter.AppListenFilter;
-import top.ticho.intranet.server.filter.AppListenRootFilter;
 
 import java.util.Map;
 import java.util.Objects;
@@ -24,30 +16,26 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author zhajianjun
- * @date 2024-02-01 12:30
+ * @date 2025-05-18 11:53
  */
 @Slf4j
-public class AppHandler {
-
-    private final ServerBootstrap serverBootstrap;
-
-    /** 请求id */
-    private final AtomicLong requestId = new AtomicLong(0L);
-
+public class AppReposipory {
     /** 与绑定端口的通道 */
-    @Getter
-    private final Map<Integer, Channel> bindPortChannelMap = new ConcurrentHashMap<>();
-
+    private final Map<Integer, Channel> bindPortChannelMap;
+    /** 请求id */
+    private final AtomicLong requestId;
+    /** 配置 */
     private final ServerProperty serverProperty;
+    private ServerBootstrap serverBootstrap;
 
-    public AppHandler(ServerProperty serverProperty, ServerHandler serverHandler, NioEventLoopGroup serverBoss, NioEventLoopGroup serverWorker, AppListenFilter appListenFilter) {
-        ServerBootstrap serverBootstrap = new ServerBootstrap();
-        ServerBootstrap group = serverBootstrap.group(serverBoss, serverWorker);
-        ServerBootstrap channel = group.channel(NioServerSocketChannel.class);
-        AppListenHandlerInit childHandler = new AppListenHandlerInit(this, serverProperty, serverHandler, appListenFilter);
-        channel.childHandler(childHandler);
-        this.serverBootstrap = serverBootstrap;
+    public AppReposipory(ServerProperty serverProperty) {
         this.serverProperty = serverProperty;
+        this.requestId = new AtomicLong(0L);
+        this.bindPortChannelMap = new ConcurrentHashMap<>();
+    }
+
+    public void addServerBootstrap(ServerBootstrap serverBootstrap) {
+        this.serverBootstrap = serverBootstrap;
     }
 
     public boolean exists(Integer portNum) {
@@ -69,7 +57,6 @@ public class AppHandler {
         Long maxBindPorts = serverProperty.getMaxBindPorts();
         if (bindPortChannelMap.size() >= maxBindPorts) {
             log.warn("创建应用失败，端口：{} 超出最大绑定端口数{}", port, maxBindPorts);
-            return;
         }
         try {
             ChannelFuture channelFuture = serverBootstrap.bind(port);
@@ -99,29 +86,8 @@ public class AppHandler {
         return String.valueOf(requestId.incrementAndGet());
     }
 
-    /**
-     * 应用总数
-     */
     public int size() {
         return bindPortChannelMap.size();
-    }
-
-    @AllArgsConstructor
-    public static class AppListenHandlerInit extends ChannelInitializer<SocketChannel> {
-
-        private final AppHandler appHandler;
-
-        private final ServerProperty serverProperty;
-
-        private final ServerHandler serverHandler;
-
-        private final AppListenFilter appListenFilter;
-
-        protected void initChannel(SocketChannel socketChannel) {
-            socketChannel.pipeline().addFirst(new AppListenRootFilter(appListenFilter));
-            socketChannel.pipeline().addLast(new AppListenHandler(serverProperty, serverHandler, appHandler));
-        }
-
     }
 
 }

@@ -47,5 +47,4 @@ public class DefaultAppListenFilter implements AppListenFilter {
         collector.getChannels().decrementAndGet();
     }
 
-
 }

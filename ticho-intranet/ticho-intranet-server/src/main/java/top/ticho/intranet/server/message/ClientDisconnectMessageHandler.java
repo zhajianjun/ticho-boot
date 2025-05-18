@@ -24,13 +24,13 @@ public class ClientDisconnectMessageHandler extends AbstractClientMessageHandler
         String accessKey = channel.attr(CommConst.KEY).get();
         Channel requestChannel;
         if (StrUtil.isEmpty(accessKey)) {
-            requestChannel = serverHandler.removeRequestChannel(channel, requestId);
+            requestChannel = clientRepository.removeRequestChannel(channel, requestId);
             if (IntranetUtil.isActive(requestChannel)) {
                 requestChannel.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
             }
             return;
         }
-        requestChannel = serverHandler.removeRequestChannel(accessKey, requestId);
+        requestChannel = clientRepository.removeRequestChannel(accessKey, requestId);
         if (!IntranetUtil.isActive(requestChannel)) {
             return;
         }

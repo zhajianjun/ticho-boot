@@ -5,7 +5,7 @@ import io.netty.channel.ChannelHandlerContext;
 import lombok.Setter;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.util.IntranetUtil;
-import top.ticho.intranet.server.handler.ServerHandler;
+import top.ticho.intranet.server.repository.ClientRepository;
 
 
 /**
@@ -17,7 +17,7 @@ import top.ticho.intranet.server.handler.ServerHandler;
 @Setter
 public abstract class AbstractClientMessageHandler {
 
-    protected ServerHandler serverHandler;
+    protected ClientRepository clientRepository;
 
     /**
      * 读取服务端信息进行不同的处理

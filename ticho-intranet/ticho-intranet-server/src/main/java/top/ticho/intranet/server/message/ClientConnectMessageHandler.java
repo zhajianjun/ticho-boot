@@ -10,7 +10,7 @@ import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.util.IntranetUtil;
 import top.ticho.intranet.server.entity.ClientInfo;
 
-import java.util.Objects;
+import java.util.Optional;
 
 /**
  * 客户端连接消息处理器
@@ -39,14 +39,15 @@ public class ClientConnectMessageHandler extends AbstractClientMessageHandler {
         }
         String requestId = tokens[0];
         String accessKey = tokens[1];
-        ClientInfo clientInfo = serverHandler.getClientByAccessKey(accessKey);
-        Channel clientChannel;
-        if (Objects.isNull(clientInfo) || Objects.isNull((clientChannel = clientInfo.getChannel()))) {
+        Optional<ClientInfo> clientInfoOpt = clientRepository.findByAccessKey(accessKey);
+        Optional<Channel> clientChannelOpt = clientInfoOpt.map(ClientInfo::getChannel);
+        if (clientChannelOpt.isEmpty()) {
             log.warn("该秘钥没有可用通道{}", accessKey);
             channel.close();
             return;
         }
-        Channel requestChannel = serverHandler.getRequestChannel(clientChannel, requestId);
+        Channel clientChannel = clientChannelOpt.get();
+        Channel requestChannel = clientRepository.getRequestChannel(clientChannel, requestId);
         if (!IntranetUtil.isActive(requestChannel)) {
             return;
         }
@@ -56,4 +57,5 @@ public class ClientConnectMessageHandler extends AbstractClientMessageHandler {
         requestChannel.attr(CommConst.CHANNEL).set(channel);
         requestChannel.config().setOption(ChannelOption.AUTO_READ, true);
     }
+
 }

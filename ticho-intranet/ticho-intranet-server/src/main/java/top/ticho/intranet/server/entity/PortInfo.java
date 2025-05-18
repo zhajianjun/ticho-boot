@@ -1,6 +1,7 @@
 package top.ticho.intranet.server.entity;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 import top.ticho.intranet.common.enums.ProtocolType;
 
 /**
@@ -9,7 +10,8 @@ import top.ticho.intranet.common.enums.ProtocolType;
  * @author zhajianjun
  * @date 2024-02-01 12:30
  */
-@Data
+@Getter
+@Builder
 public class PortInfo {
 
     /** 客户端秘钥 */

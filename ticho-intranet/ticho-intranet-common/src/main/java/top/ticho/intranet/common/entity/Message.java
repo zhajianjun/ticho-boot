@@ -28,13 +28,10 @@ public class Message {
 
     /** 类型 */
     private byte type;
-
     /** 序列号 */
     private long serial;
-
     /** uri */
     private String uri;
-
     /** 数据 */
     private byte[] data;
 

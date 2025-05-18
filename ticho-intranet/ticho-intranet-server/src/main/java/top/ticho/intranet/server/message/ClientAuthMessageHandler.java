@@ -12,10 +12,10 @@ import top.ticho.intranet.server.entity.ClientInfo;
 import top.ticho.intranet.server.entity.PortInfo;
 
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -31,12 +31,13 @@ public class ClientAuthMessageHandler extends AbstractClientMessageHandler {
     public void channelRead0(ChannelHandlerContext ctx, Message message) {
         Channel clientChannel = ctx.channel();
         String accessKey = message.getUri();
-        ClientInfo clientInfo = serverHandler.getClientByAccessKey(accessKey);
-        if (Objects.isNull(clientInfo)) {
+        Optional<ClientInfo> clientInfoOpt = clientRepository.findByAccessKey(accessKey);
+        if (clientInfoOpt.isEmpty()) {
             String errorMsg = StrUtil.format("秘钥={}的客户端不可用", accessKey);
             notifyError(clientChannel, errorMsg, message.getSerial());
             return;
         }
+        ClientInfo clientInfo = clientInfoOpt.get();
         Map<Integer, PortInfo> portMap = clientInfo.getPortMap();
         if (MapUtil.isEmpty(portMap)) {
             String errorMsg = StrUtil.format("秘钥={}的客户端未绑定主机端口,客户端通道{}", accessKey, clientChannel);
@@ -56,8 +57,7 @@ public class ClientAuthMessageHandler extends AbstractClientMessageHandler {
         // log.warn("[2]秘钥={}客户端成功连接，绑定端口{},客户端通道{}", accessKey, portStrs, clientChannel);
         log.warn("秘钥={}客户端成功连接，绑定端口{},客户端通道{}", accessKey, portStrs, clientChannel);
         clientChannel.attr(CommConst.REQUEST_ID_ATTR_MAP).set(new LinkedHashMap<>());
-        clientInfo.setConnectTime(LocalDateTime.now());
-        clientInfo.setChannel(clientChannel);
+        clientInfo.connect(clientChannel);
     }
 
     private void notifyError(Channel channel, String errorMsg, long serial) {

@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.util.IntranetUtil;
-import top.ticho.intranet.server.entity.ClientInfo;
 import top.ticho.intranet.server.message.AbstractClientMessageHandler;
 import top.ticho.intranet.server.message.ClientAuthMessageHandler;
 import top.ticho.intranet.server.message.ClientConnectMessageHandler;
@@ -18,10 +17,10 @@ import top.ticho.intranet.server.message.ClientDisconnectMessageHandler;
 import top.ticho.intranet.server.message.ClientHeartbeatMessageHandler;
 import top.ticho.intranet.server.message.ClientMessageUnknownHandler;
 import top.ticho.intranet.server.message.ClientTransferMessageHandler;
+import top.ticho.intranet.server.repository.ClientRepository;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * 客户端监听处理器
@@ -31,15 +30,12 @@ import java.util.Objects;
  */
 @Slf4j
 public class ClientListenHandler extends SimpleChannelInboundHandler<Message> {
-
-    private final ServerHandler serverHandler;
-
+    private final ClientRepository clientRepository;
     public final Map<Byte, AbstractClientMessageHandler> MAP = new HashMap<>();
-
     public final AbstractClientMessageHandler UNKNOWN = new ClientMessageUnknownHandler();
 
-    public ClientListenHandler(ServerHandler serverHandler) {
-        this.serverHandler = serverHandler;
+    public ClientListenHandler(ClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
         ClientAuthMessageHandler serverAuthHandle = new ClientAuthMessageHandler();
         ClientConnectMessageHandler serverConnectHandle = new ClientConnectMessageHandler();
         ClientDisconnectMessageHandler serverDisconnectHandle = new ClientDisconnectMessageHandler();
@@ -51,18 +47,13 @@ public class ClientListenHandler extends SimpleChannelInboundHandler<Message> {
         MAP.put(Message.DISCONNECT, serverDisconnectHandle);
         MAP.put(Message.TRANSFER, serverTransferHandle);
         MAP.put(Message.HEARTBEAT, serverHeartbeatHandle);
-        MAP.values().forEach(item -> item.setServerHandler(serverHandler));
+        MAP.values().forEach(item -> item.setClientRepository(clientRepository));
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         // 客户端异常时，把通道置为空
-        serverHandler.getClientMap()
-            .values()
-            .stream()
-            .filter(x -> Objects.equals(ctx.channel(), x.getChannel()))
-            .findFirst()
-            .ifPresent(serverHandler::closeClientAndRequestChannel);
+        clientRepository.closeRequestChannelByChannel(ctx.channel());
         log.error("客户端异常 {} {}", ctx.channel(), cause.getMessage());
         super.exceptionCaught(ctx, cause);
     }
@@ -91,13 +82,12 @@ public class ClientListenHandler extends SimpleChannelInboundHandler<Message> {
         if (IntranetUtil.isActive(extraChannel)) {
             String requestId = channel.attr(CommConst.URI).get();
             // 移除requestId的map信息
-            serverHandler.removeRequestChannel(accessKey, requestId);
+            clientRepository.removeRequestChannel(accessKey, requestId);
             extraChannel.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
             extraChannel.close();
         } else {
             // 关闭客户端通道、请求通道
-            ClientInfo clientInfo = serverHandler.getClientByAccessKey(accessKey);
-            serverHandler.closeClientAndRequestChannel(clientInfo);
+            clientRepository.closeRequestChannelByAccessKey(accessKey);
             IntranetUtil.close(channel);
         }
         super.channelInactive(ctx);
