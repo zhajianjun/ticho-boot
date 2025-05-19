@@ -7,14 +7,18 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import top.ticho.intranet.client.repository.AppReposipory;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
 
 @Slf4j
-@AllArgsConstructor
 public class AppListenHandler extends SimpleChannelInboundHandler<ByteBuf> {
 
-    private final AppHandler appHandler;
+    private final AppReposipory appReposipory;
+
+    public AppListenHandler(AppReposipory appReposipory) {
+        this.appReposipory = appReposipory;
+    }
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ByteBuf byteBuf) {
@@ -39,7 +43,7 @@ public class AppListenHandler extends SimpleChannelInboundHandler<ByteBuf> {
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         Channel requestCHannel = ctx.channel();
         String uri = requestCHannel.attr(CommConst.URI).get();
-        appHandler.removeRequestChannel(uri);
+        appReposipory.removeRequestChannel(uri);
         Channel clientChannel = requestCHannel.attr(CommConst.CHANNEL).get();
         if (null != clientChannel) {
             Message msg = new Message();

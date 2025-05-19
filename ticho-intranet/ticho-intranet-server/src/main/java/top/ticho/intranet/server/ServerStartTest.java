@@ -20,6 +20,7 @@ public class ServerStartTest {
         serverProperty.setPort(5120);
         serverProperty.setSslEnable(false);
         ServerContextHandler serverContextHandler = new ServerContextHandler(serverProperty);
+        serverContextHandler.start();
         String accessKey = "68bfe8f0af124ecfa093350ab8d4b44f";
         serverContextHandler.saveClient(accessKey, "test");
         PortInfo portInfo = PortInfo.builder()
