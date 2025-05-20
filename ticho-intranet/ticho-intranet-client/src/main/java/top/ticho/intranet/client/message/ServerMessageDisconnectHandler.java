@@ -23,7 +23,7 @@ public class ServerMessageDisconnectHandler extends AbstractServerMessageHandler
             return;
         }
         clientChannel.attr(CommConst.CHANNEL).set(null);
-        clientHander.saveReadyServerChannel(clientChannel);
+        serverRepository.saveReadyServerChannel(clientChannel);
         requestCHannel.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
     }
 

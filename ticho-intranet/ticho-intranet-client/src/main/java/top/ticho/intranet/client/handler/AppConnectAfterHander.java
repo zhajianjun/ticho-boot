@@ -6,6 +6,8 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelOption;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import top.ticho.intranet.client.repository.AppReposipory;
+import top.ticho.intranet.client.repository.ServerRepository;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.prop.ClientProperty;
@@ -24,9 +26,9 @@ import java.util.Optional;
 @AllArgsConstructor
 public class AppConnectAfterHander implements ChannelFutureListener {
 
-    private final ClientHander clientHander;
+    private final ServerRepository serverRepository;
 
-    private final AppHandler appHandler;
+    private final AppReposipory appReposipory;
 
     private final ClientProperty clientProperty;
 
@@ -46,12 +48,12 @@ public class AppConnectAfterHander implements ChannelFutureListener {
         // 访问的客户端通道
         Channel requestChannel = channelFuture.channel();
         requestChannel.config().setOption(ChannelOption.AUTO_READ, false);
-        Channel readyServerChannel = clientHander.getReadyServerChannel();
+        Channel readyServerChannel = serverRepository.getReadyServerChannel();
         if (readyServerChannel == null) {
             String host = clientProperty.getServerHost();
             int port = Optional.ofNullable(clientProperty.getServerPort()).orElse(CommConst.SERVER_PORT_DEFAULT);
-            ServerConnectAfterHander listener = new ServerConnectAfterHander(appHandler, clientProperty, serverChannel, requestChannel, requestId);
-            clientHander.connect(host, port, listener);
+            ServerConnectAfterHander listener = new ServerConnectAfterHander(appReposipory, clientProperty, serverChannel, requestChannel, requestId);
+            serverRepository.connect(host, port, listener);
             return;
         }
 
@@ -63,7 +65,7 @@ public class AppConnectAfterHander implements ChannelFutureListener {
         msg.setUri(requestId + "@" + clientProperty.getAccessKey());
         readyServerChannel.writeAndFlush(msg);
         requestChannel.config().setOption(ChannelOption.AUTO_READ, true);
-        appHandler.saveRequestChannel(requestId, requestChannel);
+        appReposipory.saveRequestChannel(requestId, requestChannel);
         requestChannel.attr(CommConst.URI).set(requestId);
         // log.warn("[5][客户端]连接信息回传服务端，回传通道{}，携带通道{}，消息{}", readyServerChannel, requestChannel, msg);
     }

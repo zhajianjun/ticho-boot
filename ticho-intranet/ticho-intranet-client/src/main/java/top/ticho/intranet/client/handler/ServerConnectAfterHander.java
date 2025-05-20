@@ -6,6 +6,7 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelOption;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import top.ticho.intranet.client.repository.AppReposipory;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.prop.ClientProperty;
@@ -20,7 +21,7 @@ import top.ticho.intranet.common.prop.ClientProperty;
 @AllArgsConstructor
 public class ServerConnectAfterHander implements ChannelFutureListener {
 
-    private final AppHandler appHandler;
+    private final AppReposipory appReposipory;
 
     private final ClientProperty clientProperty;
 
@@ -52,7 +53,7 @@ public class ServerConnectAfterHander implements ChannelFutureListener {
         clientChannel.writeAndFlush(msg);
 
         this.requestChannel.config().setOption(ChannelOption.AUTO_READ, true);
-        appHandler.saveRequestChannel(requestId, this.requestChannel);
+        appReposipory.saveRequestChannel(requestId, requestChannel);
         this.requestChannel.attr(CommConst.URI).set(requestId);
         // log.warn("[5][客户端]连接信息回传服务端，回传通道{}，携带通道{}，消息{}", clientChannel, requestChannel, msg);
     }
