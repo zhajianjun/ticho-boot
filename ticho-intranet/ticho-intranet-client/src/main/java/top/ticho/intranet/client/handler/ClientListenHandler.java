@@ -51,6 +51,7 @@ public class ClientListenHandler extends SimpleChannelInboundHandler<Message> {
             item.setServerRepository(serverRepository);
             item.setAppReposipory(appReposipory);
             item.setClientProperty(clientContext.clientProperty());
+            item.setClientContext(clientContext);
         });
     }
 

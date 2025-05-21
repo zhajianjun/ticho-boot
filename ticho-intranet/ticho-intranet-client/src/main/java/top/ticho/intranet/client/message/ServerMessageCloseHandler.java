@@ -29,7 +29,9 @@ public class ServerMessageCloseHandler extends AbstractServerMessageHandler {
         }
         log.warn("客户端[{}]关闭连接", clientChannel.remoteAddress().toString());
         IntranetUtil.close(clientChannel);
-        serverRepository.stop(msg.getType());
+        clientContext.workerGroup().shutdownGracefully();
+        appReposipory.clearRequestChannels();
+        System.exit(msg.getType());
     }
 
 }

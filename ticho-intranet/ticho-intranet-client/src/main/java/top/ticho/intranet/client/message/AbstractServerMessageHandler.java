@@ -2,6 +2,7 @@ package top.ticho.intranet.client.message;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.Setter;
+import top.ticho.intranet.client.handler.ClientContext;
 import top.ticho.intranet.client.repository.AppReposipory;
 import top.ticho.intranet.client.repository.ServerRepository;
 import top.ticho.intranet.common.entity.Message;
@@ -22,6 +23,8 @@ public abstract class AbstractServerMessageHandler {
     protected AppReposipory appReposipory;
 
     protected ClientProperty clientProperty;
+
+    protected ClientContext clientContext;
 
     /**
      * 读取服务端信息进行不同的处理
