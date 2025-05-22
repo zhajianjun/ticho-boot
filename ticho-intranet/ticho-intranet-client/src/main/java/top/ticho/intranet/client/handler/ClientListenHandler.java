@@ -12,7 +12,7 @@ import top.ticho.intranet.client.message.ServerMessageDisconnectHandler;
 import top.ticho.intranet.client.message.ServerMessageTransferHandler;
 import top.ticho.intranet.client.message.ServerMessageUnknownHandler;
 import top.ticho.intranet.client.repository.AppReposipory;
-import top.ticho.intranet.client.repository.ServerRepository;
+import top.ticho.intranet.client.repository.ClientRepository;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.util.IntranetUtil;
@@ -30,13 +30,13 @@ import java.util.Map;
 @Slf4j
 public class ClientListenHandler extends SimpleChannelInboundHandler<Message> {
 
-    private final ServerRepository serverRepository;
+    private final ClientRepository clientRepository;
     private final AppReposipory appReposipory;
     public final Map<Byte, AbstractServerMessageHandler> MAP = new HashMap<>();
     public final AbstractServerMessageHandler UNKNOWN = new ServerMessageUnknownHandler();
 
     public ClientListenHandler(ClientContext clientContext) {
-        this.serverRepository = clientContext.serverRepository();
+        this.clientRepository = clientContext.clientRepository();
         this.appReposipory = clientContext.appReposipory();
         ServerMessageConnectHandler clientConnectHandle = new ServerMessageConnectHandler();
         ServerMessageDisconnectHandler clientDisconnectHandle = new ServerMessageDisconnectHandler();
@@ -48,7 +48,7 @@ public class ClientListenHandler extends SimpleChannelInboundHandler<Message> {
         MAP.put(Message.DISCONNECT, clientDisconnectHandle);
         MAP.put(Message.TRANSFER, clientTransferHandle);
         MAP.values().forEach(item -> {
-            item.setServerRepository(serverRepository);
+            item.setClientRepository(clientRepository);
             item.setAppReposipory(appReposipory);
             item.setClientProperty(clientContext.clientProperty());
             item.setClientContext(clientContext);
@@ -75,15 +75,15 @@ public class ClientListenHandler extends SimpleChannelInboundHandler<Message> {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         Channel clientChannel = ctx.channel();
-        if (serverRepository.getServerChannel() == clientChannel) {
-            serverRepository.setServerChannel(null);
+        if (clientRepository.getServerChannel() == clientChannel) {
+            clientRepository.setServerChannel(null);
             appReposipory.clearRequestChannels();
-            serverRepository.restart();
+            clientRepository.restart();
         } else {
             Channel requestCHannel = clientChannel.attr(CommConst.CHANNEL).get();
             IntranetUtil.close(requestCHannel);
         }
-        serverRepository.removeReadyServerChannel(clientChannel);
+        clientRepository.removeReadyServerChannel(clientChannel);
         super.channelInactive(ctx);
     }
 

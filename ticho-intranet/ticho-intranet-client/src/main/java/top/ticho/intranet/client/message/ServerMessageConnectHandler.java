@@ -34,7 +34,7 @@ public class ServerMessageConnectHandler extends AbstractServerMessageHandler {
             return;
         }
         int port = Integer.parseInt(portStr);
-        AppConnectAfterHander listener = new AppConnectAfterHander(serverRepository, appReposipory, clientProperty, serverChannel, requestId);
+        AppConnectAfterHander listener = new AppConnectAfterHander(clientRepository, appReposipory, clientProperty, serverChannel, requestId);
         // log.debug("[客户端]连接{}:{}", host, port);
         // log.warn("[4][客户端]接收连接信息, 连接通道{}, 消息{}", serverChannel, message);
         appReposipory.connect(host, port, listener);

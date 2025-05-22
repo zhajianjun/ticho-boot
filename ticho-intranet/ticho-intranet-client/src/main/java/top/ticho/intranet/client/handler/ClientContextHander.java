@@ -1,6 +1,6 @@
 package top.ticho.intranet.client.handler;
 
-import top.ticho.intranet.client.repository.ServerRepository;
+import top.ticho.intranet.client.repository.ClientRepository;
 import top.ticho.intranet.common.prop.ClientProperty;
 
 /**
@@ -9,17 +9,17 @@ import top.ticho.intranet.common.prop.ClientProperty;
  */
 public class ClientContextHander {
 
-    private final ServerRepository serverRepository;
+    private final ClientRepository clientRepository;
 
     public ClientContextHander(ClientProperty clientProperty) {
         ClientContext clientContext = CreateHandler.buildClientContext(clientProperty);
-        this.serverRepository = clientContext.serverRepository();
+        this.clientRepository = clientContext.clientRepository();
         CreateHandler.createClientBootstrap(clientContext);
         CreateHandler.createAppBootstrap(clientContext);
     }
 
     public void start() {
-        serverRepository.start();
+        clientRepository.start();
     }
 
 }

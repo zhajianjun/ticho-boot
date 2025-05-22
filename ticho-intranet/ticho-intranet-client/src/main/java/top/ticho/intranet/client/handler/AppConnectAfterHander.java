@@ -7,7 +7,7 @@ import io.netty.channel.ChannelOption;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.client.repository.AppReposipory;
-import top.ticho.intranet.client.repository.ServerRepository;
+import top.ticho.intranet.client.repository.ClientRepository;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.prop.ClientProperty;
@@ -26,7 +26,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class AppConnectAfterHander implements ChannelFutureListener {
 
-    private final ServerRepository serverRepository;
+    private final ClientRepository clientRepository;
 
     private final AppReposipory appReposipory;
 
@@ -48,12 +48,12 @@ public class AppConnectAfterHander implements ChannelFutureListener {
         // 访问的客户端通道
         Channel requestChannel = channelFuture.channel();
         requestChannel.config().setOption(ChannelOption.AUTO_READ, false);
-        Channel readyServerChannel = serverRepository.getReadyServerChannel();
+        Channel readyServerChannel = clientRepository.getReadyServerChannel();
         if (readyServerChannel == null) {
             String host = clientProperty.getServerHost();
             int port = Optional.ofNullable(clientProperty.getServerPort()).orElse(CommConst.SERVER_PORT_DEFAULT);
             ServerConnectAfterHander listener = new ServerConnectAfterHander(appReposipory, clientProperty, serverChannel, requestChannel, requestId);
-            serverRepository.connect(host, port, listener);
+            clientRepository.connect(host, port, listener);
             return;
         }
 

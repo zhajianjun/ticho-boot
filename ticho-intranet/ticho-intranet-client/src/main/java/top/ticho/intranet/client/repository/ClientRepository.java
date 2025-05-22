@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * @author zhajianjun
  * @date 2025-05-20 22:51
  */
-public class ServerRepository {
+public class ClientRepository {
     /**
      * 就绪状态服务通道队列
      * 当和服务端交互不活跃的情况下会暂时把不活跃的通道放在队列里，重新交互时优先去队列的通道去进行交互，为空时讲重新连接服务端产生新通道进行交互
@@ -28,7 +28,7 @@ public class ServerRepository {
     private Bootstrap bootstrap;
     private long sleepTime;
 
-    public ServerRepository(ClientProperty clientProperty) {
+    public ClientRepository(ClientProperty clientProperty) {
         this.clientProperty = clientProperty;
         this.readyServerChannels = new ConcurrentLinkedQueue<>();
         initSleepTime();

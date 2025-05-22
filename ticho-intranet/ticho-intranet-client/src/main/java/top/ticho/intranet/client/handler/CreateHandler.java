@@ -4,7 +4,7 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import top.ticho.intranet.client.repository.AppReposipory;
-import top.ticho.intranet.client.repository.ServerRepository;
+import top.ticho.intranet.client.repository.ClientRepository;
 import top.ticho.intranet.common.prop.ClientProperty;
 
 /**
@@ -18,15 +18,15 @@ public class CreateHandler {
         return new ClientContext(
             workerGroup,
             clientProperty,
-            new ServerRepository(clientProperty),
+            new ClientRepository(clientProperty),
             new AppReposipory()
         );
     }
 
     public static void createClientBootstrap(ClientContext clientContext) {
-        ServerRepository serverRepository = clientContext.serverRepository();
+        ClientRepository clientRepository = clientContext.clientRepository();
         Bootstrap bootstrap = new Bootstrap();
-        serverRepository.addBootstrap(bootstrap);
+        clientRepository.addBootstrap(bootstrap);
         bootstrap.group(clientContext.workerGroup());
         bootstrap.channel(NioSocketChannel.class);
         bootstrap.handler(new ClientListenHandlerRegister(clientContext));

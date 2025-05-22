@@ -4,7 +4,7 @@ import io.netty.channel.ChannelHandlerContext;
 import lombok.Setter;
 import top.ticho.intranet.client.handler.ClientContext;
 import top.ticho.intranet.client.repository.AppReposipory;
-import top.ticho.intranet.client.repository.ServerRepository;
+import top.ticho.intranet.client.repository.ClientRepository;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.prop.ClientProperty;
 
@@ -18,7 +18,7 @@ import top.ticho.intranet.common.prop.ClientProperty;
 @Setter
 public abstract class AbstractServerMessageHandler {
 
-    protected ServerRepository serverRepository;
+    protected ClientRepository clientRepository;
 
     protected AppReposipory appReposipory;
 

@@ -2,7 +2,7 @@ package top.ticho.intranet.client.handler;
 
 import io.netty.channel.nio.NioEventLoopGroup;
 import top.ticho.intranet.client.repository.AppReposipory;
-import top.ticho.intranet.client.repository.ServerRepository;
+import top.ticho.intranet.client.repository.ClientRepository;
 import top.ticho.intranet.common.prop.ClientProperty;
 
 /**
@@ -12,7 +12,7 @@ import top.ticho.intranet.common.prop.ClientProperty;
 public record ClientContext(
     NioEventLoopGroup workerGroup,
     ClientProperty clientProperty,
-    ServerRepository serverRepository,
+    ClientRepository clientRepository,
     AppReposipory appReposipory
 ) {
 }
