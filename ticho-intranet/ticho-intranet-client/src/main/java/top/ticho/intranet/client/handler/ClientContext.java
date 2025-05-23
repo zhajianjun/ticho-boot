@@ -15,4 +15,8 @@ public record ClientContext(
     ClientRepository clientRepository,
     AppReposipory appReposipory
 ) {
+    public void start() {
+        clientRepository.start();
+    }
+
 }

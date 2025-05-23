@@ -2,7 +2,8 @@ package top.ticho.intranet.client;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.core.config.Configurator;
-import top.ticho.intranet.client.handler.ClientContextHander;
+import top.ticho.intranet.client.handler.ClientContext;
+import top.ticho.intranet.client.handler.ClientCreateHandler;
 import top.ticho.intranet.common.prop.ClientProperty;
 import top.ticho.tool.json.util.TiJsonUtil;
 
@@ -35,8 +36,8 @@ public class ClientStart {
             return;
         }
         log.info("配置信息：{}", TiJsonUtil.toJsonString(clientProperty));
-        ClientContextHander clientContextHander = new ClientContextHander(clientProperty);
-        clientContextHander.start();
+        ClientContext clientContext = ClientCreateHandler.init(clientProperty);
+        clientContext.start();
     }
 
 }

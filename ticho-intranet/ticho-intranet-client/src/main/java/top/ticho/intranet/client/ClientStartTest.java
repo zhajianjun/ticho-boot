@@ -1,7 +1,8 @@
 package top.ticho.intranet.client;
 
 import org.apache.logging.log4j.core.config.Configurator;
-import top.ticho.intranet.client.handler.ClientContextHander;
+import top.ticho.intranet.client.handler.ClientContext;
+import top.ticho.intranet.client.handler.ClientCreateHandler;
 import top.ticho.intranet.common.prop.ClientProperty;
 
 
@@ -21,8 +22,8 @@ public class ClientStartTest {
         clientProperty.setServerPort(5120);
         clientProperty.setSslEnable(false);
         clientProperty.setTryReconnect(true);
-        ClientContextHander clientContextHander = new ClientContextHander(clientProperty);
-        clientContextHander.start();
+        ClientContext clientContext = ClientCreateHandler.init(clientProperty);
+        clientContext.start();
     }
 
 }

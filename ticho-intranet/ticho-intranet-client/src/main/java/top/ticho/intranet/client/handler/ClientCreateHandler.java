@@ -11,7 +11,15 @@ import top.ticho.intranet.common.prop.ClientProperty;
  * @author zhajianjun
  * @date 2025-05-19 23:15
  */
-public class CreateHandler {
+public class ClientCreateHandler {
+
+
+    public static ClientContext init(ClientProperty clientProperty) {
+        ClientContext clientContext = buildClientContext(clientProperty);
+        ClientCreateHandler.createClientBootstrap(clientContext);
+        ClientCreateHandler.createAppBootstrap(clientContext);
+        return clientContext;
+    }
 
     public static ClientContext buildClientContext(ClientProperty clientProperty) {
         NioEventLoopGroup workerGroup = new NioEventLoopGroup(clientProperty.getWorkerThreads());
