@@ -1,18 +1,17 @@
-package top.ticho.intranet.client.handler;
+package top.ticho.intranet.client.listener;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
+import top.ticho.intranet.client.core.ClientHandler;
 import top.ticho.intranet.client.message.AbstractServerMessageHandler;
 import top.ticho.intranet.client.message.ServerMessageCloseHandler;
 import top.ticho.intranet.client.message.ServerMessageConnectHandler;
 import top.ticho.intranet.client.message.ServerMessageDisconnectHandler;
 import top.ticho.intranet.client.message.ServerMessageTransferHandler;
 import top.ticho.intranet.client.message.ServerMessageUnknownHandler;
-import top.ticho.intranet.client.repository.AppReposipory;
-import top.ticho.intranet.client.repository.ClientRepository;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.util.IntranetUtil;
@@ -22,37 +21,31 @@ import java.util.Map;
 
 
 /**
- * 服务端监听处理器
+ * 服务端消息监听器
  *
  * @author zhajianjun
  * @date 2024-02-01 12:30
  */
 @Slf4j
-public class ClientListenHandler extends SimpleChannelInboundHandler<Message> {
+public class ServerMessageListener extends SimpleChannelInboundHandler<Message> {
 
-    private final ClientRepository clientRepository;
-    private final AppReposipory appReposipory;
-    public final Map<Byte, AbstractServerMessageHandler> MAP = new HashMap<>();
-    public final AbstractServerMessageHandler UNKNOWN = new ServerMessageUnknownHandler();
+    private final ClientHandler clientHandler;
+    public final Map<Byte, AbstractServerMessageHandler> MAP;
+    public final AbstractServerMessageHandler UNKNOWN;
 
-    public ClientListenHandler(ClientContext clientContext) {
-        this.clientRepository = clientContext.clientRepository();
-        this.appReposipory = clientContext.appReposipory();
-        ServerMessageConnectHandler clientConnectHandle = new ServerMessageConnectHandler();
-        ServerMessageDisconnectHandler clientDisconnectHandle = new ServerMessageDisconnectHandler();
-        ServerMessageTransferHandler clientTransferHandle = new ServerMessageTransferHandler();
-        ServerMessageCloseHandler clientCloseHandle = new ServerMessageCloseHandler();
+    public ServerMessageListener(ClientHandler clientHandler) {
+        this.clientHandler = clientHandler;
+        this.UNKNOWN = new ServerMessageUnknownHandler(clientHandler);
+        this.MAP = new HashMap<>();
+        ServerMessageConnectHandler clientConnectHandle = new ServerMessageConnectHandler(clientHandler);
+        ServerMessageDisconnectHandler clientDisconnectHandle = new ServerMessageDisconnectHandler(clientHandler);
+        ServerMessageTransferHandler clientTransferHandle = new ServerMessageTransferHandler(clientHandler);
+        ServerMessageCloseHandler clientCloseHandle = new ServerMessageCloseHandler(clientHandler);
         // MAP.put(Message.AUTH, null);
         MAP.put(Message.DISABLED_ACCESS_KEY, clientCloseHandle);
         MAP.put(Message.CONNECT, clientConnectHandle);
         MAP.put(Message.DISCONNECT, clientDisconnectHandle);
         MAP.put(Message.TRANSFER, clientTransferHandle);
-        MAP.values().forEach(item -> {
-            item.setClientRepository(clientRepository);
-            item.setAppReposipory(appReposipory);
-            item.setClientProperty(clientContext.clientProperty());
-            item.setClientContext(clientContext);
-        });
     }
 
     @Override
@@ -75,15 +68,15 @@ public class ClientListenHandler extends SimpleChannelInboundHandler<Message> {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         Channel clientChannel = ctx.channel();
-        if (clientRepository.getServerChannel() == clientChannel) {
-            clientRepository.setServerChannel(null);
-            appReposipory.clearRequestChannels();
-            clientRepository.restart();
+        if (clientHandler.getServerChannel() == clientChannel) {
+            clientHandler.saveServerChannel(null);
+            clientHandler.clearRequestChannels();
+            clientHandler.restart();
         } else {
             Channel requestCHannel = clientChannel.attr(CommConst.CHANNEL).get();
             IntranetUtil.close(requestCHannel);
         }
-        clientRepository.removeReadyServerChannel(clientChannel);
+        clientHandler.removeServerChannel(clientChannel);
         super.channelInactive(ctx);
     }
 

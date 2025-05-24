@@ -3,6 +3,7 @@ package top.ticho.intranet.client.message;
 import cn.hutool.core.util.StrUtil;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
+import top.ticho.intranet.client.core.ClientHandler;
 import top.ticho.intranet.common.entity.Message;
 
 import java.nio.charset.StandardCharsets;
@@ -15,6 +16,10 @@ import java.nio.charset.StandardCharsets;
  */
 @Slf4j
 public class ServerMessageUnknownHandler extends AbstractServerMessageHandler {
+
+    public ServerMessageUnknownHandler(ClientHandler clientHandler) {
+        super(clientHandler);
+    }
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Message msg) {

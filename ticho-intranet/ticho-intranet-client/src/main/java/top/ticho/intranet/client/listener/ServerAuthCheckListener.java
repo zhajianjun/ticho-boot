@@ -1,29 +1,26 @@
-package top.ticho.intranet.client.handler;
+package top.ticho.intranet.client.listener;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.client.repository.ClientRepository;
-import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.prop.ClientProperty;
 
-import java.util.Optional;
-
 /**
- * 客户端身份验证
+ * 服务端权限校验监听器
  *
  * @author zhajianjun
  * @date 2024-02-01 12:30
  */
 @Slf4j
-public class ServerAuthAfterHander implements ChannelFutureListener {
+public class ServerAuthCheckListener implements ChannelFutureListener {
 
     private final ClientRepository clientRepository;
     private final ClientProperty clientProperty;
 
-    public ServerAuthAfterHander(ClientRepository clientRepository, ClientProperty clientProperty) {
+    public ServerAuthCheckListener(ClientRepository clientRepository, ClientProperty clientProperty) {
         this.clientRepository = clientRepository;
         this.clientProperty = clientProperty;
     }
@@ -31,7 +28,7 @@ public class ServerAuthAfterHander implements ChannelFutureListener {
     @Override
     public void operationComplete(ChannelFuture future) {
         String host = clientProperty.getServerHost();
-        int port = Optional.ofNullable(clientProperty.getServerPort()).orElse(CommConst.SERVER_PORT_DEFAULT);
+        int port = clientProperty.getServerPort();
         // future.isSuccess() = false则表示连接服务端失败，尝试重连
         if (!future.isSuccess()) {
             log.warn("连接服务端[{}:{}]失败, error：{}", host, port, future.cause().getMessage());

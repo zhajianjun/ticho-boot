@@ -17,16 +17,16 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AppReposipory {
     /** 监听app */
-    private static final Map<String, Channel> requestChannelMap = new ConcurrentHashMap<>();
+    private final Map<String, Channel> requestChannelMap = new ConcurrentHashMap<>();
     /** 监听客户端，用于监听服务器想要请求的应用地址 */
-    private Bootstrap bootstrap;
+    private final Bootstrap appBootstrap;
 
-    public void addBootstrap(Bootstrap bootstrap) {
-        this.bootstrap = bootstrap;
+    public AppReposipory(Bootstrap appBootstrap) {
+        this.appBootstrap = appBootstrap;
     }
 
     public void connect(String host, Integer port, GenericFutureListener<? extends Future<? super Void>> listener) {
-        bootstrap.connect(host, port).addListener(listener);
+        appBootstrap.connect(host, port).addListener(listener);
     }
 
     public void saveRequestChannel(String uri, Channel channel) {
@@ -49,6 +49,5 @@ public class AppReposipory {
         }
         requestChannelMap.clear();
     }
-
 
 }

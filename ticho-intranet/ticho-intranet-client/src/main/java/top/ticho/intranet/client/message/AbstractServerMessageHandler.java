@@ -1,12 +1,8 @@
 package top.ticho.intranet.client.message;
 
 import io.netty.channel.ChannelHandlerContext;
-import lombok.Setter;
-import top.ticho.intranet.client.handler.ClientContext;
-import top.ticho.intranet.client.repository.AppReposipory;
-import top.ticho.intranet.client.repository.ClientRepository;
+import top.ticho.intranet.client.core.ClientHandler;
 import top.ticho.intranet.common.entity.Message;
-import top.ticho.intranet.common.prop.ClientProperty;
 
 
 /**
@@ -15,16 +11,13 @@ import top.ticho.intranet.common.prop.ClientProperty;
  * @author zhajianjun
  * @date 2024-02-01 12:30
  */
-@Setter
 public abstract class AbstractServerMessageHandler {
 
-    protected ClientRepository clientRepository;
+    protected final ClientHandler clientHandler;
 
-    protected AppReposipory appReposipory;
-
-    protected ClientProperty clientProperty;
-
-    protected ClientContext clientContext;
+    protected AbstractServerMessageHandler(ClientHandler clientHandler) {
+        this.clientHandler = clientHandler;
+    }
 
     /**
      * 读取服务端信息进行不同的处理

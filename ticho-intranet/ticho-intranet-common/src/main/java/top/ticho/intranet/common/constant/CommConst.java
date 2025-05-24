@@ -40,8 +40,6 @@ public class CommConst {
 
     public static final int WRITE_IDLE_TIME = 40;
 
-    public static final int SERVER_PORT_DEFAULT = 5120;
-
     public static final long ONE_SECOND = 1000L;
 
     public static final long ONE_MINUTE = 60 * ONE_SECOND;
@@ -49,8 +47,6 @@ public class CommConst {
     public static final String TLS = "TLS";
 
     public static final String JKS = "JKS";
-
-    public static final String ACCESS_KEY = "ACCESS_KEY";
 
     /** 请求id key */
     public static final String REQUEST_ID_MAP_KEY = "REQUEST_ID";

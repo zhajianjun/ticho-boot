@@ -1,23 +1,28 @@
-package top.ticho.intranet.client.handler;
+package top.ticho.intranet.client.listener;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.SimpleChannelInboundHandler;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import top.ticho.intranet.client.repository.AppReposipory;
+import top.ticho.intranet.client.core.ClientHandler;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
 
+/**
+ * App请求监听器
+ *
+ * @author zhajianjun
+ * @date 2025-05-24 13:42
+ */
 @Slf4j
-public class AppListenHandler extends SimpleChannelInboundHandler<ByteBuf> {
+public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
 
-    private final AppReposipory appReposipory;
+    private final ClientHandler clientHandler;
 
-    public AppListenHandler(AppReposipory appReposipory) {
-        this.appReposipory = appReposipory;
+    public AppRequestListener(ClientHandler clientHandler) {
+        this.clientHandler = clientHandler;
     }
 
     @Override
@@ -43,7 +48,7 @@ public class AppListenHandler extends SimpleChannelInboundHandler<ByteBuf> {
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         Channel requestCHannel = ctx.channel();
         String uri = requestCHannel.attr(CommConst.URI).get();
-        appReposipory.removeRequestChannel(uri);
+        clientHandler.removeRequestChannel(uri);
         Channel clientChannel = requestCHannel.attr(CommConst.CHANNEL).get();
         if (null != clientChannel) {
             Message msg = new Message();

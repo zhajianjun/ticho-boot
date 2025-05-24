@@ -5,12 +5,11 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelOption;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
-import top.ticho.intranet.client.handler.ServerAuthAfterHander;
+import top.ticho.intranet.client.listener.ServerAuthCheckListener;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.prop.ClientProperty;
 import top.ticho.intranet.common.util.IntranetUtil;
 
-import java.util.Optional;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -25,17 +24,14 @@ public class ClientRepository {
     private final ConcurrentLinkedQueue<Channel> readyServerChannels;
     private final ClientProperty clientProperty;
     private volatile Channel serverChannel;
-    private Bootstrap bootstrap;
+    private final Bootstrap clientBootstrap;
     private long sleepTime;
 
-    public ClientRepository(ClientProperty clientProperty) {
+    public ClientRepository(ClientProperty clientProperty, Bootstrap clientBootstrap) {
         this.clientProperty = clientProperty;
+        this.clientBootstrap = clientBootstrap;
         this.readyServerChannels = new ConcurrentLinkedQueue<>();
         initSleepTime();
-    }
-
-    public void addBootstrap(Bootstrap bootstrap) {
-        this.bootstrap = bootstrap;
     }
 
     public Channel getServerChannel() {
@@ -67,19 +63,19 @@ public class ClientRepository {
         return readyServerChannels.poll();
     }
 
-    public void removeReadyServerChannel(Channel channel) {
+    public void removeServerChannel(Channel channel) {
         readyServerChannels.remove(channel);
     }
 
     public void connect(String host, Integer port, GenericFutureListener<? extends Future<? super Void>> listener) {
-        bootstrap.connect(host, port).addListener(listener);
+        clientBootstrap.connect(host, port).addListener(listener);
     }
 
     public void start() {
         String host = clientProperty.getServerHost();
-        int port = Optional.ofNullable(clientProperty.getServerPort()).orElse(CommConst.SERVER_PORT_DEFAULT);
+        int port = clientProperty.getServerPort();
         // 连接远程服务器，并添加监听器发送accessKey验证权限，服务端验证失败会关闭连接
-        connect(host, port, new ServerAuthAfterHander(this, clientProperty));
+        connect(host, port, new ServerAuthCheckListener(this, clientProperty));
     }
 
     public void restart() {

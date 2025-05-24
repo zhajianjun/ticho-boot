@@ -4,6 +4,7 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
+import top.ticho.intranet.client.core.ClientHandler;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
 
@@ -15,6 +16,10 @@ import top.ticho.intranet.common.entity.Message;
  */
 public class ServerMessageDisconnectHandler extends AbstractServerMessageHandler {
 
+    public ServerMessageDisconnectHandler(ClientHandler clientHandler) {
+        super(clientHandler);
+    }
+
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Message msg) {
         Channel clientChannel = ctx.channel();
@@ -23,7 +28,7 @@ public class ServerMessageDisconnectHandler extends AbstractServerMessageHandler
             return;
         }
         clientChannel.attr(CommConst.CHANNEL).set(null);
-        clientRepository.saveReadyServerChannel(clientChannel);
+        clientHandler.saveServerChannel(clientChannel);
         requestCHannel.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
     }
 

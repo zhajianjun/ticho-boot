@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
+import top.ticho.intranet.client.core.ClientHandler;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.util.IntranetUtil;
 
@@ -18,20 +19,16 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class ServerMessageCloseHandler extends AbstractServerMessageHandler {
 
+    public ServerMessageCloseHandler(ClientHandler clientHandler) {
+        super(clientHandler);
+    }
+
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Message msg) {
         Channel clientChannel = ctx.channel();
         log.info("服务端[{}]权限验证失败，{}", clientChannel.remoteAddress().toString(), StrUtil.str(msg.getData(), StandardCharsets.UTF_8));
-        if (Boolean.TRUE.equals(clientProperty.getTryReconnect())) {
-            log.warn("尝试重新连接[{}]", clientChannel.remoteAddress());
-            clientRepository.restart();
-            return;
-        }
-        log.warn("客户端[{}]关闭连接", clientChannel.remoteAddress().toString());
         IntranetUtil.close(clientChannel);
-        clientContext.workerGroup().shutdownGracefully();
-        appReposipory.clearRequestChannels();
-        System.exit(msg.getType());
+        clientHandler.stop(msg.getType());
     }
 
 }
