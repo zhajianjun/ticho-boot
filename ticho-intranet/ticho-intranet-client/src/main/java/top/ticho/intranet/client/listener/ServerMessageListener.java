@@ -7,9 +7,11 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.client.core.ClientHandler;
 import top.ticho.intranet.client.message.AbstractServerMessageHandler;
+import top.ticho.intranet.client.message.ServerMessageAuthResponseHandler;
 import top.ticho.intranet.client.message.ServerMessageCloseHandler;
 import top.ticho.intranet.client.message.ServerMessageConnectHandler;
 import top.ticho.intranet.client.message.ServerMessageDisconnectHandler;
+import top.ticho.intranet.client.message.ServerMessageHeartbeatHandler;
 import top.ticho.intranet.client.message.ServerMessageTransferHandler;
 import top.ticho.intranet.client.message.ServerMessageUnknownHandler;
 import top.ticho.intranet.common.constant.CommConst;
@@ -41,11 +43,15 @@ public class ServerMessageListener extends SimpleChannelInboundHandler<Message> 
         ServerMessageDisconnectHandler clientDisconnectHandle = new ServerMessageDisconnectHandler(clientHandler);
         ServerMessageTransferHandler clientTransferHandle = new ServerMessageTransferHandler(clientHandler);
         ServerMessageCloseHandler clientCloseHandle = new ServerMessageCloseHandler(clientHandler);
+        ServerMessageHeartbeatHandler heartbeatHandler = new ServerMessageHeartbeatHandler(clientHandler);
+        ServerMessageAuthResponseHandler authResponseHandler = new ServerMessageAuthResponseHandler(clientHandler);
         // MAP.put(Message.AUTH, null);
         MAP.put(Message.DISABLED_ACCESS_KEY, clientCloseHandle);
+        MAP.put(Message.AUTH, authResponseHandler);
         MAP.put(Message.CONNECT, clientConnectHandle);
         MAP.put(Message.DISCONNECT, clientDisconnectHandle);
         MAP.put(Message.TRANSFER, clientTransferHandle);
+        MAP.put(Message.HEARTBEAT, heartbeatHandler);
     }
 
     @Override

@@ -8,21 +8,21 @@ import top.ticho.intranet.common.entity.Message;
 import java.nio.charset.StandardCharsets;
 
 /**
- * 服务端未知信息消息处理器
+ * 服务端关闭消息处理器
  *
  * @author zhajianjun
- * @date 2024-02-01 12:30
+ * @date 2025-05-24 16:43
  */
 @Slf4j
-public class ServerMessageUnknownHandler extends AbstractServerMessageHandler {
+public class ServerMessageAuthResponseHandler extends AbstractServerMessageHandler {
 
-    public ServerMessageUnknownHandler(ClientHandler clientHandler) {
+    public ServerMessageAuthResponseHandler(ClientHandler clientHandler) {
         super(clientHandler);
     }
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Message msg) {
-        log.debug("接收到未知类型{}的消息，消息：{}，通道：{}", msg.getType(), new String(msg.getData(), StandardCharsets.UTF_8), ctx.channel());
+        log.info("服务端{}校验成功，消息：{}", ctx.channel(), new String(msg.getData(), StandardCharsets.UTF_8));
     }
 
 }

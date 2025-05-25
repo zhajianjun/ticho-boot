@@ -61,10 +61,10 @@ public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
 
     @Override
     public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
-        Channel requestCHannel = ctx.channel();
-        Channel channel = requestCHannel.attr(CommConst.CHANNEL).get();
-        if (null != channel) {
-            channel.config().setOption(ChannelOption.AUTO_READ, requestCHannel.isWritable());
+        Channel requestChannel = ctx.channel();
+        Channel serverChannel = requestChannel.attr(CommConst.CHANNEL).get();
+        if (null != serverChannel) {
+            serverChannel.config().setOption(ChannelOption.AUTO_READ, requestChannel.isWritable());
         }
         super.channelWritabilityChanged(ctx);
     }

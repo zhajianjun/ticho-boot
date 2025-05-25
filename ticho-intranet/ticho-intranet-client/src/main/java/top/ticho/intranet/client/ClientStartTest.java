@@ -1,8 +1,8 @@
 package top.ticho.intranet.client;
 
 import org.apache.logging.log4j.core.config.Configurator;
-import top.ticho.intranet.client.core.ClientHandler;
 import top.ticho.intranet.client.core.ClientBuilder;
+import top.ticho.intranet.client.core.ClientHandler;
 import top.ticho.intranet.common.prop.ClientProperty;
 
 

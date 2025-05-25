@@ -9,7 +9,7 @@ import top.ticho.intranet.client.repository.ClientRepository;
 import top.ticho.intranet.common.prop.ClientProperty;
 
 /**
- * 客户端上下文处理器
+ * 客户端处理器
  *
  * @author zhajianjun
  * @date 2025-05-20 22:48

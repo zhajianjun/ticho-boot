@@ -1,0 +1,28 @@
+package top.ticho.intranet.client.message;
+
+import io.netty.channel.ChannelHandlerContext;
+import lombok.extern.slf4j.Slf4j;
+import top.ticho.intranet.client.core.ClientHandler;
+import top.ticho.intranet.common.entity.Message;
+
+import java.nio.charset.StandardCharsets;
+
+/**
+ * 服务端关闭消息处理器
+ *
+ * @author zhajianjun
+ * @date 2025-05-24 16:43
+ */
+@Slf4j
+public class ServerMessageHeartbeatHandler extends AbstractServerMessageHandler {
+
+    public ServerMessageHeartbeatHandler(ClientHandler clientHandler) {
+        super(clientHandler);
+    }
+
+    @Override
+    public void channelRead0(ChannelHandlerContext ctx, Message message) {
+        log.debug("接收到服务端心跳检测回传，消息：{}，通道：{}", new String(message.getData(), StandardCharsets.UTF_8), ctx.channel());
+    }
+
+}

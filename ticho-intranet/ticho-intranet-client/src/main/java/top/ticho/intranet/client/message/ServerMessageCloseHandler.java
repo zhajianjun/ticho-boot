@@ -1,6 +1,5 @@
 package top.ticho.intranet.client.message;
 
-import cn.hutool.core.util.StrUtil;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +25,7 @@ public class ServerMessageCloseHandler extends AbstractServerMessageHandler {
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Message msg) {
         Channel clientChannel = ctx.channel();
-        log.info("服务端[{}]权限验证失败，{}", clientChannel.remoteAddress().toString(), StrUtil.str(msg.getData(), StandardCharsets.UTF_8));
+        log.info("服务端{}权限验证失败，消息：{}", clientChannel.remoteAddress(), new String(msg.getData(), StandardCharsets.UTF_8));
         IntranetUtil.close(clientChannel);
         clientHandler.stop(msg.getType());
     }

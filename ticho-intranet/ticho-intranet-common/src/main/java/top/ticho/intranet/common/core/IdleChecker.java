@@ -1,5 +1,6 @@
 package top.ticho.intranet.common.core;
 
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.handler.timeout.IdleStateHandler;
@@ -24,12 +25,14 @@ public class IdleChecker extends IdleStateHandler {
     protected void channelIdle(ChannelHandlerContext ctx, IdleStateEvent evt) throws Exception {
         // 检测到通道空闲事件时执行以下代码
         if (IdleStateEvent.FIRST_WRITER_IDLE_STATE_EVENT == evt) {
+            Channel channel = ctx.channel();
             // 创建一个心跳消息对象
             Message msg = new Message();
             msg.setType(Message.HEARTBEAT);
-            msg.setData("心跳检测".getBytes());
+            msg.setData("写空闲超时".getBytes());
             // 向通道写入心跳消息并刷新
-            ctx.channel().writeAndFlush(msg);
+            channel.writeAndFlush(msg);
+            log.debug("写空闲超时，心跳检测，通道：{}", channel.remoteAddress());
         } else if (IdleStateEvent.FIRST_READER_IDLE_STATE_EVENT == evt) {
             // 如果是读取超时，则关闭通道
             ctx.channel().close();

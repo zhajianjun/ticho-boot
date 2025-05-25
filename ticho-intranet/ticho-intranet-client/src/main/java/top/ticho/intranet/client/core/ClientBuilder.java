@@ -10,11 +10,12 @@ import top.ticho.intranet.client.repository.ClientRepository;
 import top.ticho.intranet.common.prop.ClientProperty;
 
 /**
+ * 客户端构建器
+ *
  * @author zhajianjun
  * @date 2025-05-19 23:15
  */
 public class ClientBuilder {
-
 
     /**
      * 初始化客户端上下文
