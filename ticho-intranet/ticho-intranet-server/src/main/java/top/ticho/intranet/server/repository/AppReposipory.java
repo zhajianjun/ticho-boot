@@ -4,9 +4,9 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import lombok.extern.slf4j.Slf4j;
+import top.ticho.intranet.common.exception.IntranetException;
 import top.ticho.intranet.common.prop.ServerProperty;
 import top.ticho.intranet.common.util.IntranetUtil;
-import top.ticho.intranet.server.entity.PortInfo;
 
 import java.util.Map;
 import java.util.Objects;
@@ -26,7 +26,7 @@ public class AppReposipory {
     private final AtomicLong requestId;
     /** 配置 */
     private final ServerProperty serverProperty;
-    private ServerBootstrap appServerBootstrap;
+    private final ServerBootstrap appServerBootstrap;
 
     public AppReposipory(ServerProperty serverProperty, ServerBootstrap appServerBootstrap) {
         this.serverProperty = serverProperty;
@@ -42,41 +42,43 @@ public class AppReposipory {
         return bindPortChannelMap.containsKey(portNum);
     }
 
-    public void createApp(PortInfo portInfo) {
-        Integer port;
-        if (Objects.isNull(portInfo) || Objects.isNull(port = portInfo.getPort())) {
-            return;
+    public boolean bind(Integer port) {
+        if (Objects.isNull(port)) {
+            return false;
         }
         if (bindPortChannelMap.containsKey(port)) {
-            log.warn("创建应用失败，端口：{}已被创建", port);
-            return;
+            log.warn("绑定应用失败，端口：{}已被绑定", port);
+            return false;
         }
         Long maxBindPorts = serverProperty.getMaxBindPorts();
         if (bindPortChannelMap.size() >= maxBindPorts) {
             log.warn("创建应用失败，端口：{} 超出最大绑定端口数{}", port, maxBindPorts);
+            return false;
         }
         try {
             ChannelFuture channelFuture = appServerBootstrap.bind(port);
             channelFuture.get();
             bindPortChannelMap.put(port, channelFuture.channel());
         } catch (InterruptedException | ExecutionException e) {
-            log.error("创建应用失败，端口：{}，错误信息：{}", port, e.getMessage(), e);
-            throw new RuntimeException(e.getMessage());
+            log.error("绑定应用失败，端口：{}，错误信息：{}", port, e.getMessage(), e);
+            throw new IntranetException(e.getMessage(), e);
         }
-        log.info("创建应用成功，端口：{}", port);
+        log.info("绑定应用成功，端口：{}", port);
+        return true;
     }
 
-    public void deleteApp(Integer port) {
+    public boolean unbind(Integer port) {
         if (null == port) {
-            return;
+            return false;
         }
         Channel channel = bindPortChannelMap.get(port);
         if (channel == null) {
-            return;
+            return false;
         }
         IntranetUtil.close(channel);
         bindPortChannelMap.remove(port);
-        log.info("删除应用成功，端口：{}", port);
+        log.info("解绑应用成功，端口：{}", port);
+        return true;
     }
 
     public String getRequestId() {

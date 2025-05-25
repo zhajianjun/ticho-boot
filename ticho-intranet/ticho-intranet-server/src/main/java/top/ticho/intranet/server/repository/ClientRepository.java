@@ -25,6 +25,9 @@ public class ClientRepository {
     private final Map<String, ClientInfo> clientMap = new ConcurrentHashMap<>();
 
     public Optional<ClientInfo> findByAccessKey(String accessKey) {
+        if (StrUtil.isBlank(accessKey)) {
+            return Optional.empty();
+        }
         return Optional.ofNullable(clientMap.get(accessKey));
     }
 
@@ -40,7 +43,7 @@ public class ClientRepository {
             .findFirst();
     }
 
-    public boolean saveClient(String accessKey, String name) {
+    public boolean create(String accessKey, String name) {
         if (StrUtil.isBlank(accessKey)) {
             return false;
         }

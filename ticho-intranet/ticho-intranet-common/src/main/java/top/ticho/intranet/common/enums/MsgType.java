@@ -25,6 +25,8 @@ public enum MsgType {
     TRANSFER((byte) 5, "数据传输"),
     /** 客户端心跳 */
     HEARTBEAT((byte) 6, "心跳检测"),
+    /** 服务启动中 */
+    STARTING((byte) 7, "服务启动中"),
     ;
 
     private final byte code;

@@ -25,6 +25,8 @@ public class Message {
     public static final byte TRANSFER = MsgType.TRANSFER.code();
     /** 6-客户端心跳 */
     public static final byte HEARTBEAT = MsgType.HEARTBEAT.code();
+    /** 7-服务启动中 */
+    public static final byte STARTING = MsgType.STARTING.code();
 
     /** 类型 */
     private byte type;

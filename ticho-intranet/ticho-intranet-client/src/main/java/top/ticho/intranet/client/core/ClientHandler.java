@@ -38,16 +38,25 @@ public record ClientHandler(
         clientRepository.connect(host, port, listener);
     }
 
+    public void setServerChannel(Channel channel) {
+        clientRepository.setServerChannel(channel);
+    }
+
     public Channel getServerChannel() {
         return clientRepository.getServerChannel();
     }
 
-    public void saveServerChannel(Channel channel) {
-        clientRepository.setServerChannel(channel);
+
+    public void saveReadyServerChannel(Channel channel) {
+        clientRepository.saveReadyServerChannel(channel);
     }
 
-    public void removeServerChannel(Channel channel) {
-        clientRepository.removeServerChannel(channel);
+    public void removeReadyServerChannel(Channel channel) {
+        clientRepository.removeReadyServerChannel(channel);
+    }
+
+    public Channel getReadyServerChannel() {
+        return clientRepository.getReadyServerChannel();
     }
 
     public void request(String host, Integer port, GenericFutureListener<? extends Future<? super Void>> listener) {

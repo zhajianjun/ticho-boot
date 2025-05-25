@@ -37,6 +37,7 @@ public class ServerAuthCheckListener implements ChannelFutureListener {
             return;
         }
         // 连接成功处理
+        clientRepository.initRetryIndex();
         Channel channel = future.channel();
         // 连接服务端的通道添加到 通道工厂中
         clientRepository.setServerChannel(channel);
@@ -45,8 +46,6 @@ public class ServerAuthCheckListener implements ChannelFutureListener {
         msg.setType(Message.AUTH);
         msg.setUri(clientProperty.getAccessKey());
         channel.writeAndFlush(msg);
-        // 重连后初始化sleepTime
-        clientRepository.initSleepTime();
         // log.warn("[1]连接服务端成功：{}", channel);
         log.info("连接服务端{}]成功，校验权限中", channel);
     }

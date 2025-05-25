@@ -21,7 +21,7 @@ public class SslClientMessageListenerRegister extends ClientMessageListenerRegis
     private final String sslPassword;
 
     public SslClientMessageListenerRegister(ServerHandler serverHandler) {
-        super(serverHandler.clientRepository());
+        super(serverHandler);
         ServerProperty serverProperty = serverHandler.serverProperty();
         this.sslPath = serverProperty.getSslPath();
         this.sslPassword = serverProperty.getSslPassword();

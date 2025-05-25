@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.util.IntranetUtil;
+import top.ticho.intranet.server.core.ServerHandler;
 import top.ticho.intranet.server.entity.ClientInfo;
 import top.ticho.intranet.server.repository.ClientRepository;
 
@@ -21,9 +22,11 @@ import java.util.Optional;
  */
 @Slf4j
 public class ClientConnectMessageHandler extends AbstractClientMessageHandler {
+    private final ClientRepository clientRepository;
 
-    public ClientConnectMessageHandler(ClientRepository clientRepository) {
-        super(clientRepository);
+    public ClientConnectMessageHandler(ServerHandler serverHandler) {
+        super(serverHandler);
+        this.clientRepository = serverHandler.clientRepository();
     }
 
     @Override

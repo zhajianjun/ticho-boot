@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.util.IntranetUtil;
-import top.ticho.intranet.server.repository.ClientRepository;
+import top.ticho.intranet.server.core.ServerHandler;
 
 /**
  * 客户端信息传输消息处理器
@@ -18,8 +18,8 @@ import top.ticho.intranet.server.repository.ClientRepository;
 @Slf4j
 public class ClientTransferMessageHandler extends AbstractClientMessageHandler {
 
-    public ClientTransferMessageHandler(ClientRepository clientRepository) {
-        super(clientRepository);
+    public ClientTransferMessageHandler(ServerHandler serverHandler) {
+        super(serverHandler);
     }
 
     @Override

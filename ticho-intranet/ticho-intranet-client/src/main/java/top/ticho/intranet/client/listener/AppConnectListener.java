@@ -43,7 +43,7 @@ public class AppConnectListener implements ChannelFutureListener {
         // 访问的客户端通道
         Channel requestChannel = channelFuture.channel();
         requestChannel.config().setOption(ChannelOption.AUTO_READ, false);
-        Channel readyServerChannel = clientHandler.getServerChannel();
+        Channel readyServerChannel = clientHandler.getReadyServerChannel();
         if (readyServerChannel == null) {
             String host = clientProperty.getServerHost();
             int port = clientProperty.getServerPort();

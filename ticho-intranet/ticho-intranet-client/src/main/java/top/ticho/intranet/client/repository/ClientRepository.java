@@ -25,13 +25,13 @@ public class ClientRepository {
     private final ClientProperty clientProperty;
     private volatile Channel serverChannel;
     private final Bootstrap clientBootstrap;
-    private long sleepTime;
+    private int retryIndex;
 
     public ClientRepository(ClientProperty clientProperty, Bootstrap clientBootstrap) {
         this.clientProperty = clientProperty;
         this.clientBootstrap = clientBootstrap;
         this.readyServerChannels = new ConcurrentLinkedQueue<>();
-        initSleepTime();
+        initRetryIndex();
     }
 
     public Channel getServerChannel() {
@@ -63,7 +63,7 @@ public class ClientRepository {
         return readyServerChannels.poll();
     }
 
-    public void removeServerChannel(Channel channel) {
+    public void removeReadyServerChannel(Channel channel) {
         readyServerChannels.remove(channel);
     }
 
@@ -84,18 +84,18 @@ public class ClientRepository {
     }
 
     public void waitMoment() {
-        // 超过一分钟则重置为一秒
-        if (this.sleepTime > CommConst.ONE_MINUTE) {
-            this.sleepTime = CommConst.ONE_SECOND;
+        // 获取当前等待时间
+        long waitTime = CommConst.WAIT_INTERVALS[retryIndex];
+        IntranetUtil.sleep(waitTime);
+        // 更新索引，若已到最后一个则重置并初始化
+        retryIndex = (retryIndex + 1) % CommConst.WAIT_INTERVALS.length;
+        if (this.retryIndex == 0) {
+            initRetryIndex();
         }
-        // 时间翻倍
-        this.sleepTime = this.sleepTime * 2;
-        // 线程睡眠
-        IntranetUtil.sleep(this.sleepTime);
     }
 
-    public void initSleepTime() {
-        this.sleepTime = CommConst.ONE_SECOND;
+    public void initRetryIndex() {
+        this.retryIndex = 0;
     }
 
 }

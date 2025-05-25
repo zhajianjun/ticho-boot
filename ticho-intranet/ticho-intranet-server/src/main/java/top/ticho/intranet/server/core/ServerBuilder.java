@@ -22,6 +22,19 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @date 2024-02-01 12:30
  */
 public class ServerBuilder {
+
+    public static ServerHandler init(ServerProperty serverProperty) {
+        ServerHandler serverHandler = build(serverProperty);
+        serverHandler.init();
+        return serverHandler;
+    }
+
+    public static ServerHandler init(ServerProperty serverProperty, AppListenFilter appListenFilter) {
+        ServerHandler serverHandler = build(serverProperty, appListenFilter);
+        serverHandler.init();
+        return serverHandler;
+    }
+
     public static ServerHandler build(ServerProperty serverProperty) {
         return build(serverProperty, new DefaultAppListenFilter());
     }
@@ -30,7 +43,7 @@ public class ServerBuilder {
         NioEventLoopGroup serverBoss = new NioEventLoopGroup(serverProperty.getBossThreads());
         NioEventLoopGroup serverWorker = new NioEventLoopGroup(serverProperty.getWorkerThreads());
         boolean sslEnable = Boolean.TRUE.equals(serverProperty.getSslEnable());
-        AtomicInteger serverStatus = new AtomicInteger(ServerStatus.STARTING.getCode());
+        AtomicInteger serverStatus = new AtomicInteger(ServerStatus.INITING.getCode());
         ServerBootstrap serverBootstrap = createBootstrap(serverBoss, serverWorker);
         ServerBootstrap sslServerBootstrap = null;
         if (sslEnable) {
@@ -62,6 +75,5 @@ public class ServerBuilder {
         serverBootstrap.channel(NioServerSocketChannel.class);
         return serverBootstrap;
     }
-
 
 }

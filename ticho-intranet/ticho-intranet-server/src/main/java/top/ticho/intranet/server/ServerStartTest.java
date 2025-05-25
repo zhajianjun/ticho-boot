@@ -4,7 +4,6 @@ import org.apache.logging.log4j.core.config.Configurator;
 import top.ticho.intranet.common.prop.ServerProperty;
 import top.ticho.intranet.server.core.ServerBuilder;
 import top.ticho.intranet.server.core.ServerHandler;
-import top.ticho.intranet.server.entity.PortInfo;
 
 /**
  * 服务端启动测试
@@ -20,16 +19,10 @@ public class ServerStartTest {
         ServerProperty serverProperty = new ServerProperty();
         serverProperty.setPort(5120);
         serverProperty.setSslEnable(false);
-        ServerHandler serverHandler = ServerBuilder.build(serverProperty);
-        serverHandler.start();
-        String accessKey = "68bfe8f0af124ecfa093350ab8d4b44f";
-        serverHandler.saveClient(accessKey, "test");
-        PortInfo portInfo = PortInfo.builder()
-            .accessKey(accessKey)
-            .port(80)
-            .endpoint("127.0.0.1:5122")
-            .build();
-        serverHandler.createApp(portInfo);
+        ServerHandler serverHandler = ServerBuilder.init(serverProperty);
+        serverHandler.create("68bfe8f0af124ecfa093350ab8d4b44f", "test");
+        serverHandler.bind("68bfe8f0af124ecfa093350ab8d4b44f", 80, "127.0.0.1:5212");
+        serverHandler.enable();
     }
 
 }

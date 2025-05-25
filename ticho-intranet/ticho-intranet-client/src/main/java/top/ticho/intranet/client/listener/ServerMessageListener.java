@@ -12,6 +12,7 @@ import top.ticho.intranet.client.message.ServerMessageCloseHandler;
 import top.ticho.intranet.client.message.ServerMessageConnectHandler;
 import top.ticho.intranet.client.message.ServerMessageDisconnectHandler;
 import top.ticho.intranet.client.message.ServerMessageHeartbeatHandler;
+import top.ticho.intranet.client.message.ServerMessageStartingHandler;
 import top.ticho.intranet.client.message.ServerMessageTransferHandler;
 import top.ticho.intranet.client.message.ServerMessageUnknownHandler;
 import top.ticho.intranet.common.constant.CommConst;
@@ -45,6 +46,7 @@ public class ServerMessageListener extends SimpleChannelInboundHandler<Message> 
         ServerMessageCloseHandler clientCloseHandle = new ServerMessageCloseHandler(clientHandler);
         ServerMessageHeartbeatHandler heartbeatHandler = new ServerMessageHeartbeatHandler(clientHandler);
         ServerMessageAuthResponseHandler authResponseHandler = new ServerMessageAuthResponseHandler(clientHandler);
+        ServerMessageStartingHandler startingHandler = new ServerMessageStartingHandler(clientHandler);
         // MAP.put(Message.AUTH, null);
         MAP.put(Message.DISABLED_ACCESS_KEY, clientCloseHandle);
         MAP.put(Message.AUTH, authResponseHandler);
@@ -52,6 +54,7 @@ public class ServerMessageListener extends SimpleChannelInboundHandler<Message> 
         MAP.put(Message.DISCONNECT, clientDisconnectHandle);
         MAP.put(Message.TRANSFER, clientTransferHandle);
         MAP.put(Message.HEARTBEAT, heartbeatHandler);
+        MAP.put(Message.STARTING, startingHandler);
     }
 
     @Override
@@ -75,14 +78,14 @@ public class ServerMessageListener extends SimpleChannelInboundHandler<Message> 
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         Channel clientChannel = ctx.channel();
         if (clientHandler.getServerChannel() == clientChannel) {
-            clientHandler.saveServerChannel(null);
+            clientHandler.setServerChannel(null);
             clientHandler.clearRequestChannels();
             clientHandler.restart();
         } else {
             Channel requestCHannel = clientChannel.attr(CommConst.CHANNEL).get();
             IntranetUtil.close(requestCHannel);
         }
-        clientHandler.removeServerChannel(clientChannel);
+        clientHandler.removeReadyServerChannel(clientChannel);
         super.channelInactive(ctx);
     }
 

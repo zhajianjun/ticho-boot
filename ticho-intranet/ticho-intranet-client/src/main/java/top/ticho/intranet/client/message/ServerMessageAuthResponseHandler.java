@@ -22,7 +22,7 @@ public class ServerMessageAuthResponseHandler extends AbstractServerMessageHandl
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Message msg) {
-        log.info("服务端{}校验成功，消息：{}", ctx.channel(), new String(msg.getData(), StandardCharsets.UTF_8));
+        log.info("服务端{}权限校验成功，消息：{}", ctx.channel(), new String(msg.getData(), StandardCharsets.UTF_8));
     }
 
 }

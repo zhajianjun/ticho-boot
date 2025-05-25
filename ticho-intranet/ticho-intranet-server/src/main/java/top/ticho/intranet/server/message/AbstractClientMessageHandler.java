@@ -2,10 +2,9 @@ package top.ticho.intranet.server.message;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
-import lombok.Setter;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.util.IntranetUtil;
-import top.ticho.intranet.server.repository.ClientRepository;
+import top.ticho.intranet.server.core.ServerHandler;
 
 
 /**
@@ -16,16 +15,16 @@ import top.ticho.intranet.server.repository.ClientRepository;
  */
 public abstract class AbstractClientMessageHandler {
 
-    protected final ClientRepository clientRepository;
+    protected final ServerHandler serverHandler;
 
-    public AbstractClientMessageHandler(ClientRepository clientRepository) {
-        this.clientRepository = clientRepository;
+    public AbstractClientMessageHandler(ServerHandler serverHandler) {
+        this.serverHandler = serverHandler;
     }
 
     /**
      * 读取服务端信息进行不同的处理
      *
-     * @param ctx 通道处理上线文
+     * @param ctx     通道处理上线文
      * @param message 服务端传输的信息
      */
     public abstract void channelRead0(ChannelHandlerContext ctx, Message message);

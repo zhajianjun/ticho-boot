@@ -8,6 +8,7 @@ import io.netty.channel.ChannelHandlerContext;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.util.IntranetUtil;
+import top.ticho.intranet.server.core.ServerHandler;
 import top.ticho.intranet.server.repository.ClientRepository;
 
 /**
@@ -17,9 +18,11 @@ import top.ticho.intranet.server.repository.ClientRepository;
  * @date 2024-02-01 12:30
  */
 public class ClientDisconnectMessageHandler extends AbstractClientMessageHandler {
+    private final ClientRepository clientRepository;
 
-    public ClientDisconnectMessageHandler(ClientRepository clientRepository) {
-        super(clientRepository);
+    public ClientDisconnectMessageHandler(ServerHandler serverHandler) {
+        super(serverHandler);
+        this.clientRepository = serverHandler.clientRepository();
     }
 
     @Override

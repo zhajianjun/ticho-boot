@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.util.IntranetUtil;
+import top.ticho.intranet.server.core.ServerHandler;
 import top.ticho.intranet.server.message.AbstractClientMessageHandler;
 import top.ticho.intranet.server.message.ClientAuthMessageHandler;
 import top.ticho.intranet.server.message.ClientConnectMessageHandler;
@@ -34,15 +35,15 @@ public class ClientMessageListener extends SimpleChannelInboundHandler<Message> 
     public final Map<Byte, AbstractClientMessageHandler> MAP;
     public final AbstractClientMessageHandler UNKNOWN;
 
-    public ClientMessageListener(ClientRepository clientRepository) {
-        this.clientRepository = clientRepository;
+    public ClientMessageListener(ServerHandler serverHandler) {
+        this.clientRepository = serverHandler.clientRepository();
         this.MAP = new HashMap<>();
-        this.UNKNOWN = new ClientMessageUnknownHandler(clientRepository);
-        ClientAuthMessageHandler serverAuthHandle = new ClientAuthMessageHandler(clientRepository);
-        ClientConnectMessageHandler serverConnectHandle = new ClientConnectMessageHandler(clientRepository);
-        ClientDisconnectMessageHandler serverDisconnectHandle = new ClientDisconnectMessageHandler(clientRepository);
-        ClientHeartbeatMessageHandler serverHeartbeatHandle = new ClientHeartbeatMessageHandler(clientRepository);
-        ClientTransferMessageHandler serverTransferHandle = new ClientTransferMessageHandler(clientRepository);
+        this.UNKNOWN = new ClientMessageUnknownHandler(serverHandler);
+        ClientAuthMessageHandler serverAuthHandle = new ClientAuthMessageHandler(serverHandler);
+        ClientConnectMessageHandler serverConnectHandle = new ClientConnectMessageHandler(serverHandler);
+        ClientDisconnectMessageHandler serverDisconnectHandle = new ClientDisconnectMessageHandler(serverHandler);
+        ClientHeartbeatMessageHandler serverHeartbeatHandle = new ClientHeartbeatMessageHandler(serverHandler);
+        ClientTransferMessageHandler serverTransferHandle = new ClientTransferMessageHandler(serverHandler);
         // MAP.put(MsgType.AUTH, null);
         this.MAP.put(Message.AUTH, serverAuthHandle);
         this.MAP.put(Message.CONNECT, serverConnectHandle);

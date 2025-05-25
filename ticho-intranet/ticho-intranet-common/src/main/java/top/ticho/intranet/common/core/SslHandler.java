@@ -3,6 +3,7 @@ package top.ticho.intranet.common.core;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.common.constant.CommConst;
+import top.ticho.intranet.common.exception.IntranetException;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
@@ -43,7 +44,7 @@ public class SslHandler {
             this.SslContext = sslCtx;
         } catch (Exception e) {
             log.error("加载证书失败;catch{}.", e.getMessage(), e);
-            throw new RuntimeException("加载证书失败");
+            throw new IntranetException("加载证书失败", e);
         }
     }
 

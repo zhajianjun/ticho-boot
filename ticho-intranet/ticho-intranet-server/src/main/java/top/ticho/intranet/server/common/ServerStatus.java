@@ -13,6 +13,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ServerStatus {
 
+    INITING(-1, "初始化中"),
     STARTING(0, "启动中"),
     ENABLED(1, "已启用"),
     DISABLED(2, "已禁用"),
