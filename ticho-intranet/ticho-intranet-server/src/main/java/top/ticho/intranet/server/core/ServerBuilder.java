@@ -1,9 +1,7 @@
 package top.ticho.intranet.server.core;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelInitializer;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import top.ticho.intranet.common.prop.ServerProperty;
 import top.ticho.intranet.server.common.ServerStatus;
@@ -50,11 +48,11 @@ public class ServerBuilder {
             new AppReposipory(serverProperty, appServerBootstrap),
             appListenFilter
         );
-        setListenHandlerGegister(serverBootstrap, new ClientMessageListenerRegister(serverHandler));
+        serverBootstrap.childHandler(new ClientMessageListenerRegister(serverHandler));
         if (sslEnable) {
-            setListenHandlerGegister(sslServerBootstrap, new SslClientMessageListenerRegister(serverHandler));
+            sslServerBootstrap.childHandler(new SslClientMessageListenerRegister(serverHandler));
         }
-        setListenHandlerGegister(appServerBootstrap, new AppRequestListenerRegister(serverHandler));
+        appServerBootstrap.childHandler(new AppRequestListenerRegister(serverHandler));
         return serverHandler;
     }
 
@@ -65,9 +63,5 @@ public class ServerBuilder {
         return serverBootstrap;
     }
 
-
-    private static <T extends ChannelInitializer<SocketChannel>> void setListenHandlerGegister(ServerBootstrap serverBootstrap, T serverListenHandlerRegister) {
-        serverBootstrap.childHandler(serverListenHandlerRegister);
-    }
 
 }
