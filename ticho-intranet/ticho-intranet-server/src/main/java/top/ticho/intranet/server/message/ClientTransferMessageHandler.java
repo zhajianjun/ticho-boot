@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.util.IntranetUtil;
+import top.ticho.intranet.server.repository.ClientRepository;
 
 /**
  * 客户端信息传输消息处理器
@@ -17,15 +18,19 @@ import top.ticho.intranet.common.util.IntranetUtil;
 @Slf4j
 public class ClientTransferMessageHandler extends AbstractClientMessageHandler {
 
+    public ClientTransferMessageHandler(ClientRepository clientRepository) {
+        super(clientRepository);
+    }
+
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, Message msg) {
+    public void channelRead0(ChannelHandlerContext ctx, Message message) {
         Channel channel = ctx.channel();
         Channel requestChannel = channel.attr(CommConst.CHANNEL).get();
         if (!IntranetUtil.isActive(requestChannel)) {
             return;
         }
-        ByteBuf data = ctx.alloc().buffer(msg.getData().length);
-        data.writeBytes(msg.getData());
+        ByteBuf data = ctx.alloc().buffer(message.getData().length);
+        data.writeBytes(message.getData());
         requestChannel.writeAndFlush(data);
         // log.warn("[10][服务端]响应信息接收，接收通道：{}；写入通道：{}, 消息{}", channel, requestChannel, msg);
     }

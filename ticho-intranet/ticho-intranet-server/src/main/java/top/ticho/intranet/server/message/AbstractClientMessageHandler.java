@@ -14,18 +14,21 @@ import top.ticho.intranet.server.repository.ClientRepository;
  * @author zhajianjun
  * @date 2024-02-01 12:30
  */
-@Setter
 public abstract class AbstractClientMessageHandler {
 
-    protected ClientRepository clientRepository;
+    protected final ClientRepository clientRepository;
+
+    public AbstractClientMessageHandler(ClientRepository clientRepository) {
+        this.clientRepository = clientRepository;
+    }
 
     /**
      * 读取服务端信息进行不同的处理
      *
      * @param ctx 通道处理上线文
-     * @param msg 服务端传输的信息
+     * @param message 服务端传输的信息
      */
-    public abstract void channelRead0(ChannelHandlerContext ctx, Message msg);
+    public abstract void channelRead0(ChannelHandlerContext ctx, Message message);
 
     /**
      * 通知
@@ -39,13 +42,13 @@ public abstract class AbstractClientMessageHandler {
         if (!IntranetUtil.isActive(channel)) {
             return;
         }
-        Message msg = new Message();
+        Message message = new Message();
         if (null != serial) {
-            msg.setSerial(serial);
+            message.setSerial(serial);
         }
-        msg.setType(msgType);
-        msg.setData(data);
-        channel.writeAndFlush(msg);
+        message.setType(msgType);
+        message.setData(data);
+        channel.writeAndFlush(message);
     }
 
 }

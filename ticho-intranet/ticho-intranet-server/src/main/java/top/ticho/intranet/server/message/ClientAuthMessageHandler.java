@@ -10,6 +10,7 @@ import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.util.IntranetUtil;
 import top.ticho.intranet.server.entity.ClientInfo;
 import top.ticho.intranet.server.entity.PortInfo;
+import top.ticho.intranet.server.repository.ClientRepository;
 
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
@@ -26,6 +27,10 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class ClientAuthMessageHandler extends AbstractClientMessageHandler {
+
+    public ClientAuthMessageHandler(ClientRepository clientRepository) {
+        super(clientRepository);
+    }
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Message message) {

@@ -9,6 +9,7 @@ import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.util.IntranetUtil;
 import top.ticho.intranet.server.entity.ClientInfo;
+import top.ticho.intranet.server.repository.ClientRepository;
 
 import java.util.Optional;
 
@@ -21,11 +22,15 @@ import java.util.Optional;
 @Slf4j
 public class ClientConnectMessageHandler extends AbstractClientMessageHandler {
 
+    public ClientConnectMessageHandler(ClientRepository clientRepository) {
+        super(clientRepository);
+    }
+
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, Message msg) {
+    public void channelRead0(ChannelHandlerContext ctx, Message message) {
         Channel clientChannel = ctx.channel();
         // log.warn("[6][服务端]接收客户端连接信息{}, 消息{}", channel, msg);
-        String uri = msg.getUri();
+        String uri = message.getUri();
         if (StrUtil.isBlank(uri)) {
             log.warn("链接地址为空");
             clientChannel.close();

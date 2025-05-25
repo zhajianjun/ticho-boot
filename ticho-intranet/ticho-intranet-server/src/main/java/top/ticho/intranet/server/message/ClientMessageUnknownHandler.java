@@ -3,6 +3,7 @@ package top.ticho.intranet.server.message;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.common.entity.Message;
+import top.ticho.intranet.server.repository.ClientRepository;
 
 import java.nio.charset.StandardCharsets;
 
@@ -15,9 +16,13 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class ClientMessageUnknownHandler extends AbstractClientMessageHandler {
 
+    public ClientMessageUnknownHandler(ClientRepository clientRepository) {
+        super(clientRepository);
+    }
+
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, Message msg) {
-        log.debug("接收到未知类型{}的消息,{}", msg.getType(), new String(msg.getData(), StandardCharsets.UTF_8));
+    public void channelRead0(ChannelHandlerContext ctx, Message message) {
+        log.debug("接收到未知类型{}的消息,{}", message.getType(), new String(message.getData(), StandardCharsets.UTF_8));
     }
 
 }

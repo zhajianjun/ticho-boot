@@ -31,23 +31,24 @@ import java.util.Map;
 @Slf4j
 public class ClientMessageListener extends SimpleChannelInboundHandler<Message> {
     private final ClientRepository clientRepository;
-    public final Map<Byte, AbstractClientMessageHandler> MAP = new HashMap<>();
-    public final AbstractClientMessageHandler UNKNOWN = new ClientMessageUnknownHandler();
+    public final Map<Byte, AbstractClientMessageHandler> MAP;
+    public final AbstractClientMessageHandler UNKNOWN;
 
     public ClientMessageListener(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
-        ClientAuthMessageHandler serverAuthHandle = new ClientAuthMessageHandler();
-        ClientConnectMessageHandler serverConnectHandle = new ClientConnectMessageHandler();
-        ClientDisconnectMessageHandler serverDisconnectHandle = new ClientDisconnectMessageHandler();
-        ClientHeartbeatMessageHandler serverHeartbeatHandle = new ClientHeartbeatMessageHandler();
-        ClientTransferMessageHandler serverTransferHandle = new ClientTransferMessageHandler();
+        this.MAP = new HashMap<>();
+        this.UNKNOWN = new ClientMessageUnknownHandler(clientRepository);
+        ClientAuthMessageHandler serverAuthHandle = new ClientAuthMessageHandler(clientRepository);
+        ClientConnectMessageHandler serverConnectHandle = new ClientConnectMessageHandler(clientRepository);
+        ClientDisconnectMessageHandler serverDisconnectHandle = new ClientDisconnectMessageHandler(clientRepository);
+        ClientHeartbeatMessageHandler serverHeartbeatHandle = new ClientHeartbeatMessageHandler(clientRepository);
+        ClientTransferMessageHandler serverTransferHandle = new ClientTransferMessageHandler(clientRepository);
         // MAP.put(MsgType.AUTH, null);
-        MAP.put(Message.AUTH, serverAuthHandle);
-        MAP.put(Message.CONNECT, serverConnectHandle);
-        MAP.put(Message.DISCONNECT, serverDisconnectHandle);
-        MAP.put(Message.TRANSFER, serverTransferHandle);
-        MAP.put(Message.HEARTBEAT, serverHeartbeatHandle);
-        MAP.values().forEach(item -> item.setClientRepository(clientRepository));
+        this.MAP.put(Message.AUTH, serverAuthHandle);
+        this.MAP.put(Message.CONNECT, serverConnectHandle);
+        this.MAP.put(Message.DISCONNECT, serverDisconnectHandle);
+        this.MAP.put(Message.TRANSFER, serverTransferHandle);
+        this.MAP.put(Message.HEARTBEAT, serverHeartbeatHandle);
     }
 
     @Override
@@ -59,9 +60,9 @@ public class ClientMessageListener extends SimpleChannelInboundHandler<Message> 
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, Message msg) {
-        AbstractClientMessageHandler serverHandle = MAP.getOrDefault(msg.getType(), UNKNOWN);
-        serverHandle.channelRead0(ctx, msg);
+    protected void channelRead0(ChannelHandlerContext ctx, Message message) {
+        AbstractClientMessageHandler serverHandle = MAP.getOrDefault(message.getType(), UNKNOWN);
+        serverHandle.channelRead0(ctx, message);
     }
 
     @Override

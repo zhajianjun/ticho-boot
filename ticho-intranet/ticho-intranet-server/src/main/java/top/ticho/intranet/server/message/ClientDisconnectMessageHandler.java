@@ -8,6 +8,7 @@ import io.netty.channel.ChannelHandlerContext;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.util.IntranetUtil;
+import top.ticho.intranet.server.repository.ClientRepository;
 
 /**
  * 客户端断开连接消息处理器
@@ -17,10 +18,14 @@ import top.ticho.intranet.common.util.IntranetUtil;
  */
 public class ClientDisconnectMessageHandler extends AbstractClientMessageHandler {
 
+    public ClientDisconnectMessageHandler(ClientRepository clientRepository) {
+        super(clientRepository);
+    }
+
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, Message msg) {
+    public void channelRead0(ChannelHandlerContext ctx, Message message) {
         Channel channel = ctx.channel();
-        String requestId = msg.getUri();
+        String requestId = message.getUri();
         String accessKey = channel.attr(CommConst.KEY).get();
         Channel requestChannel;
         if (StrUtil.isEmpty(accessKey)) {
