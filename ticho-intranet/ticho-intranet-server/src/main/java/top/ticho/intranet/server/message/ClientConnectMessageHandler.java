@@ -23,18 +23,18 @@ public class ClientConnectMessageHandler extends AbstractClientMessageHandler {
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Message msg) {
-        Channel channel = ctx.channel();
+        Channel clientChannel = ctx.channel();
         // log.warn("[6][服务端]接收客户端连接信息{}, 消息{}", channel, msg);
         String uri = msg.getUri();
         if (StrUtil.isBlank(uri)) {
             log.warn("链接地址为空");
-            channel.close();
+            clientChannel.close();
             return;
         }
         String[] tokens = uri.split("@");
         if (tokens.length != 2) {
             log.warn("链接地址不合法");
-            channel.close();
+            clientChannel.close();
             return;
         }
         String requestId = tokens[0];
@@ -43,18 +43,18 @@ public class ClientConnectMessageHandler extends AbstractClientMessageHandler {
         Optional<Channel> clientChannelOpt = clientInfoOpt.map(ClientInfo::getChannel);
         if (clientChannelOpt.isEmpty()) {
             log.warn("该秘钥没有可用通道{}", accessKey);
-            channel.close();
+            clientChannel.close();
             return;
         }
-        Channel clientChannel = clientChannelOpt.get();
-        Channel requestChannel = clientRepository.getRequestChannel(clientChannel, requestId);
+        Channel clientChannelGet = clientChannelOpt.get();
+        Channel requestChannel = clientRepository.getRequestChannel(clientChannelGet, requestId);
         if (!IntranetUtil.isActive(requestChannel)) {
             return;
         }
-        channel.attr(CommConst.URI).set(requestId);
-        channel.attr(CommConst.KEY).set(accessKey);
-        channel.attr(CommConst.CHANNEL).set(requestChannel);
-        requestChannel.attr(CommConst.CHANNEL).set(channel);
+        clientChannel.attr(CommConst.URI).set(requestId);
+        clientChannel.attr(CommConst.KEY).set(accessKey);
+        clientChannel.attr(CommConst.CHANNEL).set(requestChannel);
+        requestChannel.attr(CommConst.CHANNEL).set(clientChannel);
         requestChannel.config().setOption(ChannelOption.AUTO_READ, true);
     }
 

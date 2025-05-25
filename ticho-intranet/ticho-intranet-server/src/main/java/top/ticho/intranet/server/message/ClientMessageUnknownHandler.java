@@ -1,6 +1,5 @@
 package top.ticho.intranet.server.message;
 
-import cn.hutool.core.util.StrUtil;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.common.entity.Message;
@@ -18,7 +17,7 @@ public class ClientMessageUnknownHandler extends AbstractClientMessageHandler {
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Message msg) {
-        log.debug("接收到未知类型{}的消息,{}", msg.getType(), StrUtil.str(msg.getData(), StandardCharsets.UTF_8));
+        log.debug("接收到未知类型{}的消息,{}", msg.getType(), new String(msg.getData(), StandardCharsets.UTF_8));
     }
 
 }

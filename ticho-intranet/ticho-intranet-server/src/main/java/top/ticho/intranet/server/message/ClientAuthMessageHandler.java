@@ -33,35 +33,41 @@ public class ClientAuthMessageHandler extends AbstractClientMessageHandler {
         String accessKey = message.getUri();
         Optional<ClientInfo> clientInfoOpt = clientRepository.findByAccessKey(accessKey);
         if (clientInfoOpt.isEmpty()) {
-            String errorMsg = StrUtil.format("秘钥={}的客户端不可用", accessKey);
+            String errorMsg = StrUtil.format("秘钥[{}]的客户端不可用", accessKey);
+            log.info(errorMsg);
             notifyError(clientChannel, errorMsg, message.getSerial());
             return;
         }
         ClientInfo clientInfo = clientInfoOpt.get();
         Map<Integer, PortInfo> portMap = clientInfo.getPortMap();
         if (MapUtil.isEmpty(portMap)) {
-            String errorMsg = StrUtil.format("秘钥={}的客户端未绑定主机端口,客户端通道{}", accessKey, clientChannel);
+            String errorMsg = StrUtil.format("秘钥[{}]的客户端未绑定主机端口，客户端通道{}", accessKey, clientChannel);
+            log.info(errorMsg);
             notifyError(clientChannel, errorMsg, message.getSerial());
             return;
         }
         Channel clientChannelGet = clientInfo.getChannel();
         if (IntranetUtil.isActive(clientChannelGet)) {
-            String errorMsg = StrUtil.format("秘钥={}的客户端已经被其他客户端{}使用", accessKey, clientChannelGet);
-            notifyError(clientChannel, errorMsg, message.getSerial());
+            log.info("秘钥[{}]的客户端已经被其他客户端{}使用，客户端通道{}", accessKey, clientChannelGet, clientChannel);
+            notifyError(clientChannel, StrUtil.format("秘钥[{}]的客户端已经被其他客户端使用", accessKey), message.getSerial());
             return;
         }
+        notifySuccess(clientChannel, accessKey, message.getSerial());
         String portStrs = portMap.keySet()
             .stream()
             .map(Objects::toString)
             .collect(Collectors.joining(","));
-        // log.warn("[2]秘钥={}客户端成功连接，绑定端口{},客户端通道{}", accessKey, portStrs, clientChannel);
-        log.warn("秘钥={}客户端成功连接，绑定端口{},客户端通道{}", accessKey, portStrs, clientChannel);
+        // log.warn("[2]秘钥[{}]的客户端成功连接，绑定端口{},客户端通道{}", accessKey, portStrs, clientChannel);
+        log.info("秘钥[{}]的客户端成功连接，绑定端口{},客户端通道{}", accessKey, portStrs, clientChannel);
         clientChannel.attr(CommConst.REQUEST_ID_ATTR_MAP).set(new LinkedHashMap<>());
         clientInfo.connect(clientChannel);
     }
 
+    private void notifySuccess(Channel channel, String accessKey, long serial) {
+        notify(channel, Message.AUTH, serial, StrUtil.format("秘钥[{}]的客户端权限校验成功", accessKey, channel).getBytes(StandardCharsets.UTF_8));
+    }
+
     private void notifyError(Channel channel, String errorMsg, long serial) {
-        log.info(errorMsg);
         notify(channel, Message.DISABLED_ACCESS_KEY, serial, errorMsg.getBytes(StandardCharsets.UTF_8));
     }
 

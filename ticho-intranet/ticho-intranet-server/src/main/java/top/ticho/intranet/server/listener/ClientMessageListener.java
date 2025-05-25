@@ -1,4 +1,4 @@
-package top.ticho.intranet.server.handler;
+package top.ticho.intranet.server.listener;
 
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
@@ -23,18 +23,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 客户端监听处理器
+ * 客户端消息监听器
  *
  * @author zhajianjun
  * @date 2024-02-01 12:30
  */
 @Slf4j
-public class ClientListenHandler extends SimpleChannelInboundHandler<Message> {
+public class ClientMessageListener extends SimpleChannelInboundHandler<Message> {
     private final ClientRepository clientRepository;
     public final Map<Byte, AbstractClientMessageHandler> MAP = new HashMap<>();
     public final AbstractClientMessageHandler UNKNOWN = new ClientMessageUnknownHandler();
 
-    public ClientListenHandler(ClientRepository clientRepository) {
+    public ClientMessageListener(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
         ClientAuthMessageHandler serverAuthHandle = new ClientAuthMessageHandler();
         ClientConnectMessageHandler serverConnectHandle = new ClientConnectMessageHandler();

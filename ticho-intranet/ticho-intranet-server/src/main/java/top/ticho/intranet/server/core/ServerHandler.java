@@ -1,10 +1,10 @@
-package top.ticho.intranet.server.handler;
+package top.ticho.intranet.server.core;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
-import lombok.Getter;
+import io.netty.channel.nio.NioEventLoopGroup;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.prop.ServerProperty;
@@ -12,7 +12,6 @@ import top.ticho.intranet.server.common.ServerStatus;
 import top.ticho.intranet.server.entity.ClientInfo;
 import top.ticho.intranet.server.entity.PortInfo;
 import top.ticho.intranet.server.filter.AppListenFilter;
-import top.ticho.intranet.server.filter.DefaultAppListenFilter;
 import top.ticho.intranet.server.repository.AppReposipory;
 import top.ticho.intranet.server.repository.ClientRepository;
 
@@ -24,51 +23,41 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * 内网映射服务端处理器
+ * 服务端处理器
  *
  * @author zhajianjun
- * @date 2024-02-01 12:30
+ * @date 2025-05-18 11:21
  */
-@Getter
 @Slf4j
-public class ServerContextHandler {
-    private final ServerContext serverContext;
-    private final ClientRepository clientRepository;
-    private final AppReposipory appReposipory;
-
-    public ServerContextHandler(ServerProperty serverProperty) {
-        this(serverProperty, new DefaultAppListenFilter());
-    }
-
-    public ServerContextHandler(ServerProperty serverProperty, AppListenFilter appListenFilter) {
-        this.serverContext = ServerCreateHandler.buildServerContext(serverProperty, appListenFilter);
-        this.clientRepository = serverContext.clientRepository();
-        this.appReposipory = serverContext.appReposipory();
-    }
+public record ServerHandler(
+    AtomicInteger serverStatus,
+    NioEventLoopGroup serverBoss,
+    NioEventLoopGroup serverWorker,
+    ServerProperty serverProperty,
+    ServerBootstrap serverBootstrap,
+    ServerBootstrap sslServerBootstrap,
+    ClientRepository clientRepository,
+    AppReposipory appReposipory,
+    AppListenFilter appListenFilter
+) {
 
     public void start() {
         try {
-            ServerProperty serverProperty = serverContext.serverProperty();
             log.info("内网映射服务启动中，端口：{}，是否开启ssl：{}, ssl端口：{}", serverProperty.getPort(), serverProperty.getSslEnable(), serverProperty.getSslPort());
             int servPort = serverProperty.getPort();
             String host = CommConst.LOCALHOST;
-            // 创建netty服务端
-            ServerBootstrap server = ServerCreateHandler.createServerBootstrap(serverContext);
-            server.bind(host, servPort).get();
-            if (Boolean.TRUE.equals(serverProperty.getSslEnable())) {
+            serverBootstrap.bind(host, servPort).get();
+            if (Objects.nonNull(sslServerBootstrap)) {
                 // 创建ssl服务端
-                ServerBootstrap sslServer = ServerCreateHandler.createSslServerBootstrap(serverContext);
                 Integer sslServerPort = serverProperty.getSslPort();
-                ChannelFuture cf = sslServer.bind(host, sslServerPort);
+                ChannelFuture cf = sslServerBootstrap.bind(host, sslServerPort);
                 cf.sync();
             }
-            ServerCreateHandler.creteAppBootstrap(serverContext);
         } catch (InterruptedException | ExecutionException e) {
             log.error("内网映射服务启动失败");
             throw new RuntimeException(e);
         }
-        AtomicInteger atomicInteger = serverContext.serverStatus();
-        atomicInteger.set(ServerStatus.ENABLED.getCode());
+        serverStatus.set(ServerStatus.ENABLED.getCode());
         log.info("内网映射服务启动成功");
     }
 

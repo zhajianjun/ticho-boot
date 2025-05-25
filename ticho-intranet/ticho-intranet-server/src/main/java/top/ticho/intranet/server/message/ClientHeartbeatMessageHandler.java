@@ -17,9 +17,10 @@ import java.nio.charset.StandardCharsets;
 public class ClientHeartbeatMessageHandler extends AbstractClientMessageHandler {
 
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, Message msg) {
+    public void channelRead0(ChannelHandlerContext ctx, Message message) {
         Channel channel = ctx.channel();
-        notify(channel, Message.HEARTBEAT, msg.getSerial(), "心跳检测".getBytes(StandardCharsets.UTF_8));
+        log.debug("接收到客户端心跳检测，消息：{}，通道：{}", new String(message.getData(), StandardCharsets.UTF_8), channel);
+        notify(channel, Message.HEARTBEAT, message.getSerial(), "SERVER CALLBACK".getBytes(StandardCharsets.UTF_8));
     }
 
 }

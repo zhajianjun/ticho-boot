@@ -26,16 +26,13 @@ public class AppReposipory {
     private final AtomicLong requestId;
     /** 配置 */
     private final ServerProperty serverProperty;
-    private ServerBootstrap serverBootstrap;
+    private ServerBootstrap appServerBootstrap;
 
-    public AppReposipory(ServerProperty serverProperty) {
+    public AppReposipory(ServerProperty serverProperty, ServerBootstrap appServerBootstrap) {
         this.serverProperty = serverProperty;
+        this.appServerBootstrap = appServerBootstrap;
         this.requestId = new AtomicLong(0L);
         this.bindPortChannelMap = new ConcurrentHashMap<>();
-    }
-
-    public void addServerBootstrap(ServerBootstrap serverBootstrap) {
-        this.serverBootstrap = serverBootstrap;
     }
 
     public boolean exists(Integer portNum) {
@@ -59,7 +56,7 @@ public class AppReposipory {
             log.warn("创建应用失败，端口：{} 超出最大绑定端口数{}", port, maxBindPorts);
         }
         try {
-            ChannelFuture channelFuture = serverBootstrap.bind(port);
+            ChannelFuture channelFuture = appServerBootstrap.bind(port);
             channelFuture.get();
             bindPortChannelMap.put(port, channelFuture.channel());
         } catch (InterruptedException | ExecutionException e) {

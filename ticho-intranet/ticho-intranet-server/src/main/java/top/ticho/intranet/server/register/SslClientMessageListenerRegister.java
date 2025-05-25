@@ -1,9 +1,10 @@
-package top.ticho.intranet.server.handler;
+package top.ticho.intranet.server.register;
 
 import io.netty.channel.socket.SocketChannel;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.core.SslHandler;
 import top.ticho.intranet.common.prop.ServerProperty;
+import top.ticho.intranet.server.core.ServerHandler;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
@@ -12,16 +13,16 @@ import javax.net.ssl.SSLEngine;
  * @author zhajianjun
  * @date 2025-05-18 15:37
  */
-public class SslServerListenHandlerRegister extends ServerListenHandlerRegister {
+public class SslClientMessageListenerRegister extends ClientMessageListenerRegister {
 
     /** ssl证书路径 */
     private final String sslPath;
     /** ssl证书密码 */
     private final String sslPassword;
 
-    public SslServerListenHandlerRegister(ServerContext serverContext) {
-        super(serverContext.clientRepository());
-        ServerProperty serverProperty = serverContext.serverProperty();
+    public SslClientMessageListenerRegister(ServerHandler serverHandler) {
+        super(serverHandler.clientRepository());
+        ServerProperty serverProperty = serverHandler.serverProperty();
         this.sslPath = serverProperty.getSslPath();
         this.sslPassword = serverProperty.getSslPassword();
     }

@@ -1,4 +1,4 @@
-package top.ticho.intranet.server.handler;
+package top.ticho.intranet.server.listener;
 
 import cn.hutool.core.map.MapUtil;
 import io.netty.buffer.ByteBuf;
@@ -11,6 +11,7 @@ import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.prop.ServerProperty;
 import top.ticho.intranet.common.util.IntranetUtil;
+import top.ticho.intranet.server.core.ServerHandler;
 import top.ticho.intranet.server.entity.ClientInfo;
 import top.ticho.intranet.server.entity.PortInfo;
 import top.ticho.intranet.server.repository.AppReposipory;
@@ -21,22 +22,22 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * 客户端根处理器
+ * App请求监听器
  *
  * @author zhajianjun
  * @date 2024-02-01 12:30
  */
 @Slf4j
-public class AppListenHandler extends SimpleChannelInboundHandler<ByteBuf> {
+public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
 
     private final ServerProperty serverProperty;
     private final ClientRepository clientRepository;
     private final AppReposipory appReposipory;
 
-    public AppListenHandler(ServerContext serverContext) {
-        this.serverProperty = serverContext.serverProperty();
-        this.clientRepository = serverContext.clientRepository();
-        this.appReposipory = serverContext.appReposipory();
+    public AppRequestListener(ServerHandler serverHandler) {
+        this.serverProperty = serverHandler.serverProperty();
+        this.clientRepository = serverHandler.clientRepository();
+        this.appReposipory = serverHandler.appReposipory();
     }
 
     @Override
@@ -143,9 +144,9 @@ public class AppListenHandler extends SimpleChannelInboundHandler<ByteBuf> {
         if (!isActive) {
             requestChannel.close();
         } else {
-            Channel channel = requestChannel.attr(CommConst.CHANNEL).get();
-            if (Objects.nonNull(channel)) {
-                channel.config().setOption(ChannelOption.AUTO_READ, requestChannel.isWritable());
+            Channel serverChannel = requestChannel.attr(CommConst.CHANNEL).get();
+            if (Objects.nonNull(serverChannel)) {
+                serverChannel.config().setOption(ChannelOption.AUTO_READ, requestChannel.isWritable());
             }
         }
         super.channelWritabilityChanged(ctx);
