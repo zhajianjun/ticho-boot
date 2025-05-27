@@ -2,8 +2,8 @@
 <Configuration status="WARN">
     <!-- @formatter:off -->
     <Properties>
-        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} %t %-5level %logger{50}:%msg%n</Property>
-        <Property name="COLOR_PATTERN">%highlight{%d{yyyy-MM-dd HH:mm:ss.SSS}} %style{%t}{cyan} %style{%-5level}{blue} %style{%logger{50}}{magenta}:%msg%n</Property>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %pid --- [%10.10t] %-40.40c{1.}  : %m%n</Property>
+        <Property name="COLOR_PATTERN">%highlight{%d{yyyy-MM-dd HH:mm:ss.SSS}} %style{%-5level}{cyan} %style{%pid}{magenta} --- %style{[%10.10t]}{blue} %style{%-40.40c{1.}}{cyan} : %m%n</Property>
         <Property name="LOG_PATH">./logs</Property>
         <Property name="MAX_HISTORY">7</Property>
         <Property name="MAX_FILE_SIZE">20MB</Property>
