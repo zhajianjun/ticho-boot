@@ -10,7 +10,7 @@ import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.util.IntranetUtil;
 import top.ticho.intranet.server.core.ServerHandler;
 import top.ticho.intranet.server.entity.ClientInfo;
-import top.ticho.intranet.server.repository.ClientRepository;
+import top.ticho.intranet.server.support.ClientSupport;
 
 import java.util.Optional;
 
@@ -22,11 +22,11 @@ import java.util.Optional;
  */
 @Slf4j
 public class ClientConnectMessageHandler extends AbstractClientMessageHandler {
-    private final ClientRepository clientRepository;
+    private final ClientSupport clientSupport;
 
     public ClientConnectMessageHandler(ServerHandler serverHandler) {
         super(serverHandler);
-        this.clientRepository = serverHandler.clientRepository();
+        this.clientSupport = serverHandler.clientSupport();
     }
 
     @Override
@@ -47,7 +47,7 @@ public class ClientConnectMessageHandler extends AbstractClientMessageHandler {
         }
         String requestId = tokens[0];
         String accessKey = tokens[1];
-        Optional<ClientInfo> clientInfoOpt = clientRepository.findByAccessKey(accessKey);
+        Optional<ClientInfo> clientInfoOpt = clientSupport.findByAccessKey(accessKey);
         Optional<Channel> clientChannelOpt = clientInfoOpt.map(ClientInfo::getChannel);
         if (clientChannelOpt.isEmpty()) {
             log.warn("该秘钥没有可用通道{}", accessKey);
@@ -55,7 +55,7 @@ public class ClientConnectMessageHandler extends AbstractClientMessageHandler {
             return;
         }
         Channel clientChannelGet = clientChannelOpt.get();
-        Channel requestChannel = clientRepository.getRequestChannel(clientChannelGet, requestId);
+        Channel requestChannel = clientSupport.getRequestChannel(clientChannelGet, requestId);
         if (!IntranetUtil.isActive(requestChannel)) {
             return;
         }

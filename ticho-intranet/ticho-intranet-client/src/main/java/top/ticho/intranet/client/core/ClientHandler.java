@@ -4,8 +4,8 @@ import io.netty.channel.Channel;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
-import top.ticho.intranet.client.repository.AppReposipory;
-import top.ticho.intranet.client.repository.ClientRepository;
+import top.ticho.intranet.client.support.ApplicationSupport;
+import top.ticho.intranet.client.support.ClientSupport;
 import top.ticho.intranet.common.prop.ClientProperty;
 
 /**
@@ -17,62 +17,62 @@ import top.ticho.intranet.common.prop.ClientProperty;
 public record ClientHandler(
     NioEventLoopGroup workerGroup,
     ClientProperty clientProperty,
-    ClientRepository clientRepository,
-    AppReposipory appReposipory
+    ClientSupport clientSupport,
+    ApplicationSupport applicationSupport
 ) {
     public void start() {
-        clientRepository.start();
+        clientSupport.start();
     }
 
     public void restart() {
-        clientRepository.restart();
+        clientSupport.restart();
     }
 
     public void stop(int status) {
         workerGroup.shutdownGracefully();
-        appReposipory.clearRequestChannels();
+        applicationSupport.clearRequestChannels();
         System.exit(status);
     }
 
     public void connectServer(String host, Integer port, GenericFutureListener<? extends Future<? super Void>> listener) {
-        clientRepository.connect(host, port, listener);
+        clientSupport.connect(host, port, listener);
     }
 
     public void setServerChannel(Channel channel) {
-        clientRepository.setServerChannel(channel);
+        clientSupport.setServerChannel(channel);
     }
 
     public Channel getServerChannel() {
-        return clientRepository.getServerChannel();
+        return clientSupport.getServerChannel();
     }
 
 
     public void saveReadyServerChannel(Channel channel) {
-        clientRepository.saveReadyServerChannel(channel);
+        clientSupport.saveReadyServerChannel(channel);
     }
 
     public void removeReadyServerChannel(Channel channel) {
-        clientRepository.removeReadyServerChannel(channel);
+        clientSupport.removeReadyServerChannel(channel);
     }
 
     public Channel getReadyServerChannel() {
-        return clientRepository.getReadyServerChannel();
+        return clientSupport.getReadyServerChannel();
     }
 
     public void request(String host, Integer port, GenericFutureListener<? extends Future<? super Void>> listener) {
-        appReposipory.connect(host, port, listener);
+        applicationSupport.connect(host, port, listener);
     }
 
     public void saveRequestChannel(String requestId, Channel channel) {
-        appReposipory.saveRequestChannel(requestId, channel);
+        applicationSupport.saveRequestChannel(requestId, channel);
     }
 
     public void clearRequestChannels() {
-        appReposipory.clearRequestChannels();
+        applicationSupport.clearRequestChannels();
     }
 
     public void removeRequestChannel(String requestId) {
-        appReposipory.removeRequestChannel(requestId);
+        applicationSupport.removeRequestChannel(requestId);
     }
 
 

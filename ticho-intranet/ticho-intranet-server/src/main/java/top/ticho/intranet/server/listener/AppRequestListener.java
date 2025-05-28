@@ -14,8 +14,8 @@ import top.ticho.intranet.common.util.IntranetUtil;
 import top.ticho.intranet.server.core.ServerHandler;
 import top.ticho.intranet.server.entity.ClientInfo;
 import top.ticho.intranet.server.entity.PortInfo;
-import top.ticho.intranet.server.repository.AppReposipory;
-import top.ticho.intranet.server.repository.ClientRepository;
+import top.ticho.intranet.server.support.ApplicationSupport;
+import top.ticho.intranet.server.support.ClientSupport;
 
 import java.util.Map;
 import java.util.Objects;
@@ -31,13 +31,13 @@ import java.util.Optional;
 public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
 
     private final ServerProperty serverProperty;
-    private final ClientRepository clientRepository;
-    private final AppReposipory appReposipory;
+    private final ClientSupport clientSupport;
+    private final ApplicationSupport applicationSupport;
 
     public AppRequestListener(ServerHandler serverHandler) {
         this.serverProperty = serverHandler.serverProperty();
-        this.clientRepository = serverHandler.clientRepository();
-        this.appReposipory = serverHandler.appReposipory();
+        this.clientSupport = serverHandler.clientSupport();
+        this.applicationSupport = serverHandler.applicationSupport();
     }
 
     @Override
@@ -47,7 +47,7 @@ public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
         // 查询请求通道的端口号
         Integer portNum = IntranetUtil.getPortByChannel(requestChannel);
         // 查询客户端信息
-        Optional<ClientInfo> clientInfoOpt = clientRepository.findByPort(portNum);
+        Optional<ClientInfo> clientInfoOpt = clientSupport.findByPort(portNum);
         boolean isActive = clientInfoOpt.map(ClientInfo::getChannel).map(IntranetUtil::isActive).orElse(false);
         // 如果客户端连接异常，则关闭请求通道
         if (!isActive) {
@@ -66,7 +66,7 @@ public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
             log.warn("超过最大连接数，关闭请求通道 {}", oldRequestChannel);
             IntranetUtil.close(oldRequestChannel);
         }
-        String requestId = appReposipory.getRequestId();
+        String requestId = applicationSupport.getRequestId();
         // 请求通道自动读设置为false
         requestChannel.config().setOption(ChannelOption.AUTO_READ, false);
         // 请求通道添加请求连接id
@@ -106,7 +106,7 @@ public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         Channel requestChannel = ctx.channel();
         Integer portNum = IntranetUtil.getPortByChannel(requestChannel);
-        Optional<ClientInfo> clientInfoOpt = clientRepository.findByPort(portNum);
+        Optional<ClientInfo> clientInfoOpt = clientSupport.findByPort(portNum);
         boolean isActive = clientInfoOpt.map(ClientInfo::getChannel).map(IntranetUtil::isActive).orElse(false);
         if (!isActive) {
             requestChannel.close();
@@ -116,7 +116,7 @@ public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
         ClientInfo clientInfo = clientInfoOpt.get();
         Channel clientChannelGet = clientInfo.getChannel();
         String requestId = requestChannel.attr(CommConst.URI).get();
-        clientRepository.removeRequestChannel(clientChannelGet, requestId);
+        clientSupport.removeRequestChannel(clientChannelGet, requestId);
         Channel clientChannel = requestChannel.attr(CommConst.CHANNEL).get();
         if (!IntranetUtil.isActive(clientChannel)) {
             requestChannel.close();
@@ -139,7 +139,7 @@ public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
     public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
         Channel requestChannel = ctx.channel();
         Integer portNum = IntranetUtil.getPortByChannel(requestChannel);
-        Optional<ClientInfo> clientInfoOpt = clientRepository.findByPort(portNum);
+        Optional<ClientInfo> clientInfoOpt = clientSupport.findByPort(portNum);
         boolean isActive = clientInfoOpt.map(ClientInfo::getChannel).map(IntranetUtil::isActive).orElse(false);
         if (!isActive) {
             requestChannel.close();

@@ -1,4 +1,4 @@
-package top.ticho.intranet.client.repository;
+package top.ticho.intranet.client.support;
 
 import cn.hutool.core.util.StrUtil;
 import io.netty.bootstrap.Bootstrap;
@@ -15,13 +15,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author zhajianjun
  * @date 2025-05-19 23:12
  */
-public class AppReposipory {
+public class ApplicationSupport {
     /** 监听app */
     private final Map<String, Channel> requestChannelMap = new ConcurrentHashMap<>();
     /** 监听客户端，用于监听服务器想要请求的应用地址 */
     private final Bootstrap appBootstrap;
 
-    public AppReposipory(Bootstrap appBootstrap) {
+    public ApplicationSupport(Bootstrap appBootstrap) {
         this.appBootstrap = appBootstrap;
     }
 

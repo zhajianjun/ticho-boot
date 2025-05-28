@@ -12,7 +12,7 @@ import top.ticho.intranet.server.common.ServerStatus;
 import top.ticho.intranet.server.core.ServerHandler;
 import top.ticho.intranet.server.entity.ClientInfo;
 import top.ticho.intranet.server.entity.PortInfo;
-import top.ticho.intranet.server.repository.ClientRepository;
+import top.ticho.intranet.server.support.ClientSupport;
 
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
@@ -30,12 +30,12 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class ClientAuthMessageHandler extends AbstractClientMessageHandler {
-    private final ClientRepository clientRepository;
+    private final ClientSupport clientSupport;
     private final AtomicInteger serverStatus;
 
     public ClientAuthMessageHandler(ServerHandler serverHandler) {
         super(serverHandler);
-        this.clientRepository = serverHandler.clientRepository();
+        this.clientSupport = serverHandler.clientSupport();
         this.serverStatus = serverHandler.serverStatus();
     }
 
@@ -48,9 +48,9 @@ public class ClientAuthMessageHandler extends AbstractClientMessageHandler {
             return;
         }
         String accessKey = message.getUri();
-        Optional<ClientInfo> clientInfoOpt = clientRepository.findByAccessKey(accessKey);
+        Optional<ClientInfo> clientInfoOpt = clientSupport.findByAccessKey(accessKey);
         if (clientInfoOpt.isEmpty()) {
-            String errorMsg = StrUtil.format("秘钥[{}]的客户端不可用", accessKey);
+            String errorMsg = StrUtil.format("客户端[{}]不可用", accessKey);
             log.info(errorMsg);
             notifyError(clientChannel, errorMsg, message.getSerial());
             return;
@@ -58,14 +58,14 @@ public class ClientAuthMessageHandler extends AbstractClientMessageHandler {
         ClientInfo clientInfo = clientInfoOpt.get();
         Map<Integer, PortInfo> portMap = clientInfo.getPortMap();
         if (MapUtil.isEmpty(portMap)) {
-            log.info("秘钥[{}]的客户端未绑定主机端口，通道：{}", accessKey, clientChannel);
-            notifyError(clientChannel, StrUtil.format("秘钥[{}]的客户端未绑定主机端口", accessKey), message.getSerial());
+            log.info("客户端[{}]未绑定主机端口，通道：{}", accessKey, clientChannel);
+            notifyError(clientChannel, StrUtil.format("客户端[{}]未绑定主机端口", accessKey), message.getSerial());
             return;
         }
         Channel clientChannelGet = clientInfo.getChannel();
         if (IntranetUtil.isActive(clientChannelGet)) {
-            log.info("秘钥[{}]的客户端已经被其他客户端{}使用，通道：{}", accessKey, clientChannelGet, clientChannel);
-            notifyError(clientChannel, StrUtil.format("秘钥[{}]的客户端已经被其他客户端使用", accessKey), message.getSerial());
+            log.info("客户端[{}]已经被其他客户端{}使用，通道：{}", accessKey, clientChannelGet, clientChannel);
+            notifyError(clientChannel, StrUtil.format("客户端[{}]已经被其他客户端使用", accessKey), message.getSerial());
             return;
         }
         notifySuccess(clientChannel, accessKey, message.getSerial());
@@ -73,14 +73,14 @@ public class ClientAuthMessageHandler extends AbstractClientMessageHandler {
             .stream()
             .map(Objects::toString)
             .collect(Collectors.joining(","));
-        // log.warn("[2]秘钥[{}]的客户端成功连接，绑定端口{},客户端通道{}", accessKey, portStrs, clientChannel);
-        log.info("秘钥[{}]的客户端成功连接，绑定端口{}，通道：{}", accessKey, portStrs, clientChannel);
+        // log.warn("[2]客户端[{}]成功连接，绑定端口{},客户端通道{}", accessKey, portStrs, clientChannel);
+        log.info("客户端[{}]成功连接，绑定端口{}，通道：{}", accessKey, portStrs, clientChannel);
         clientChannel.attr(CommConst.REQUEST_ID_ATTR_MAP).set(new LinkedHashMap<>());
         clientInfo.connect(clientChannel);
     }
 
     private void notifySuccess(Channel channel, String accessKey, long serial) {
-        notify(channel, Message.AUTH, serial, StrUtil.format("秘钥[{}]的客户端权限校验成功", accessKey, channel).getBytes(StandardCharsets.UTF_8));
+        notify(channel, Message.AUTH, serial, StrUtil.format("客户端[{}]权限校验成功", accessKey, channel).getBytes(StandardCharsets.UTF_8));
     }
 
     private void notifyError(Channel channel, String errorMsg, long serial) {

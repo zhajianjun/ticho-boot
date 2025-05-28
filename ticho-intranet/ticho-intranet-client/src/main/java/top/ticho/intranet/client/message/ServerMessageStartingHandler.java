@@ -4,7 +4,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.client.core.ClientHandler;
-import top.ticho.intranet.client.repository.ClientRepository;
+import top.ticho.intranet.client.support.ClientSupport;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.prop.ClientProperty;
 
@@ -18,12 +18,12 @@ import java.nio.charset.StandardCharsets;
  */
 @Slf4j
 public class ServerMessageStartingHandler extends AbstractServerMessageHandler {
-    private final ClientRepository clientRepository;
+    private final ClientSupport clientSupport;
     private final ClientProperty clientProperty;
 
     public ServerMessageStartingHandler(ClientHandler clientHandler) {
         super(clientHandler);
-        clientRepository = clientHandler.clientRepository();
+        clientSupport = clientHandler.clientSupport();
         clientProperty = clientHandler.clientProperty();
     }
 
@@ -33,9 +33,9 @@ public class ServerMessageStartingHandler extends AbstractServerMessageHandler {
         log.info("服务端[{}]正在启动中，消息：{}", clientChannel.remoteAddress(), new String(msg.getData(), StandardCharsets.UTF_8));
         // 权限校验
         Channel channel = ctx.channel();
-        clientRepository.waitMoment();
+        clientSupport.waitMoment();
         // 连接服务端的通道添加到 通道工厂中
-        clientRepository.setServerChannel(channel);
+        clientSupport.setServerChannel(channel);
         // 通道传输权限信息给服务端进行校验，由服务端校验是否关闭还是正常连接
         Message message = new Message();
         message.setType(Message.AUTH);

@@ -1,4 +1,4 @@
-package top.ticho.intranet.server.repository;
+package top.ticho.intranet.server.support;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author zhajianjun
  * @date 2025-05-18 11:44
  */
-public class ClientRepository {
+public class ClientSupport {
     /**
      * 客户端与服务端的通道
      */

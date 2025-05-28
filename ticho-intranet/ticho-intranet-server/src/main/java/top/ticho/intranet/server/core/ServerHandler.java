@@ -12,8 +12,8 @@ import top.ticho.intranet.server.common.ServerStatus;
 import top.ticho.intranet.server.entity.ClientInfo;
 import top.ticho.intranet.server.entity.PortInfo;
 import top.ticho.intranet.server.filter.AppListenFilter;
-import top.ticho.intranet.server.repository.AppReposipory;
-import top.ticho.intranet.server.repository.ClientRepository;
+import top.ticho.intranet.server.support.ApplicationSupport;
+import top.ticho.intranet.server.support.ClientSupport;
 
 import java.util.List;
 import java.util.Map;
@@ -36,8 +36,8 @@ public record ServerHandler(
     ServerProperty serverProperty,
     ServerBootstrap serverBootstrap,
     ServerBootstrap sslServerBootstrap,
-    ClientRepository clientRepository,
-    AppReposipory appReposipory,
+    ClientSupport clientSupport,
+    ApplicationSupport applicationSupport,
     AppListenFilter appListenFilter
 ) {
 
@@ -81,7 +81,7 @@ public record ServerHandler(
 
     public boolean create(String accessKey, String name) {
         checkStatus();
-        return clientRepository.create(accessKey, name);
+        return clientSupport.create(accessKey, name);
     }
 
     /**
@@ -113,12 +113,12 @@ public record ServerHandler(
             .filter(MapUtil::isNotEmpty)
             .map(Map::keySet)
             .ifPresent(ports -> {
-                ports.forEach(appReposipory::unbind);
+                ports.forEach(applicationSupport::unbind);
                 portMap.clear();
             });
         // 关闭请求通道
-        clientRepository.closeRequestChannel(clientInfo);
-        clientRepository.deleteClient(clientInfo.getAccessKey());
+        clientSupport.closeRequestChannel(clientInfo);
+        clientSupport.deleteClient(clientInfo.getAccessKey());
     }
 
     /**
@@ -132,7 +132,7 @@ public record ServerHandler(
         }
         ClientInfo clientInfo = clientInfoOpt.get();
         Map<Integer, PortInfo> portMap = clientInfo.getPortMap();
-        boolean bind = appReposipory.bind(port);
+        boolean bind = applicationSupport.bind(port);
         if (bind) {
             portMap.put(port, new PortInfo(accessKey, port, endpoint));
         }
@@ -176,7 +176,7 @@ public record ServerHandler(
         Map<Integer, PortInfo> portMap = clientInfo.getPortMap();
         boolean allUnbind = portMap.keySet()
             .stream()
-            .allMatch(appReposipory::unbind);
+            .allMatch(applicationSupport::unbind);
         portMap.clear();
         return allUnbind;
     }
@@ -195,24 +195,24 @@ public record ServerHandler(
             return;
         }
         PortInfo portInfo = clientInfo.getPortMap().get(portNum);
-        if (appReposipory.unbind(portInfo.getPort())) {
+        if (applicationSupport.unbind(portInfo.getPort())) {
             clientInfo.getPortMap().remove(portNum);
         }
     }
 
     public boolean exists(Integer portNum) {
         checkStatus();
-        return appReposipory.exists(portNum);
+        return applicationSupport.exists(portNum);
     }
 
     public Optional<ClientInfo> findByAccessKey(String accessKey) {
         checkStatus();
-        return clientRepository.findByAccessKey(accessKey);
+        return clientSupport.findByAccessKey(accessKey);
     }
 
     public List<ClientInfo> findAll() {
         checkStatus();
-        return clientRepository.findAll();
+        return clientSupport.findAll();
     }
 
 }

@@ -40,10 +40,6 @@ public class CommConst {
 
     public static final int WRITE_IDLE_TIME = 40;
 
-    public static final long[] WAIT_INTERVALS = {
-        1_000, 15_000, 15_000, 30_000, 180_000, 1_800_000, 1_800_000, 1_800_000, 1_800_000, 3_600_000
-    };
-
     public static final String TLS = "TLS";
 
     public static final String JKS = "JKS";

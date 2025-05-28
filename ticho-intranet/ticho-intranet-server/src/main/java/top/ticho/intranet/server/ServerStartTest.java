@@ -15,7 +15,7 @@ public class ServerStartTest {
 
     public static void main(String[] args) {
         // 测试
-        Configurator.initialize("Server", "log4j2.xml");
+        Configurator.initialize("Server", "config/log4j2.xml");
         ServerProperty serverProperty = new ServerProperty();
         serverProperty.setPort(5120);
         serverProperty.setSslEnable(false);

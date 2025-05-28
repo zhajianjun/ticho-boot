@@ -10,8 +10,8 @@ import top.ticho.intranet.server.filter.DefaultAppListenFilter;
 import top.ticho.intranet.server.register.AppRequestListenerRegister;
 import top.ticho.intranet.server.register.ClientMessageListenerRegister;
 import top.ticho.intranet.server.register.SslClientMessageListenerRegister;
-import top.ticho.intranet.server.repository.AppReposipory;
-import top.ticho.intranet.server.repository.ClientRepository;
+import top.ticho.intranet.server.support.ApplicationSupport;
+import top.ticho.intranet.server.support.ClientSupport;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -57,8 +57,8 @@ public class ServerBuilder {
             serverProperty,
             serverBootstrap,
             sslServerBootstrap,
-            new ClientRepository(),
-            new AppReposipory(serverProperty, appServerBootstrap),
+            new ClientSupport(),
+            new ApplicationSupport(serverProperty, appServerBootstrap),
             appListenFilter
         );
         serverBootstrap.childHandler(new ClientMessageListenerRegister(serverHandler));

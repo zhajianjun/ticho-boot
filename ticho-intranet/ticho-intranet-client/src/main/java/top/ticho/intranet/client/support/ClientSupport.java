@@ -1,4 +1,4 @@
-package top.ticho.intranet.client.repository;
+package top.ticho.intranet.client.support;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -13,10 +13,16 @@ import top.ticho.intranet.common.util.IntranetUtil;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
+ * 客户端
+ *
  * @author zhajianjun
  * @date 2025-05-20 22:51
  */
-public class ClientRepository {
+public class ClientSupport {
+    /** 等待间隔 */
+    public static final long[] WAIT_INTERVALS = {
+        5_000, 10_000, 30_000, 60_000, 120_000, 180_000, 600_000, 1_800_000, 1_800_000, 1_800_000, 3_600_000
+    };
     /**
      * 就绪状态服务通道队列
      * 当和服务端交互不活跃的情况下会暂时把不活跃的通道放在队列里，重新交互时优先去队列的通道去进行交互，为空时讲重新连接服务端产生新通道进行交互
@@ -27,7 +33,7 @@ public class ClientRepository {
     private final Bootstrap clientBootstrap;
     private int retryIndex;
 
-    public ClientRepository(ClientProperty clientProperty, Bootstrap clientBootstrap) {
+    public ClientSupport(ClientProperty clientProperty, Bootstrap clientBootstrap) {
         this.clientProperty = clientProperty;
         this.clientBootstrap = clientBootstrap;
         this.readyServerChannels = new ConcurrentLinkedQueue<>();
@@ -85,10 +91,10 @@ public class ClientRepository {
 
     public void waitMoment() {
         // 获取当前等待时间
-        long waitTime = CommConst.WAIT_INTERVALS[retryIndex];
+        long waitTime = WAIT_INTERVALS[retryIndex];
         IntranetUtil.sleep(waitTime);
         // 更新索引，若已到最后一个则重置并初始化
-        retryIndex = (retryIndex + 1) % CommConst.WAIT_INTERVALS.length;
+        retryIndex = (retryIndex + 1) % WAIT_INTERVALS.length;
         if (this.retryIndex == 0) {
             initRetryIndex();
         }

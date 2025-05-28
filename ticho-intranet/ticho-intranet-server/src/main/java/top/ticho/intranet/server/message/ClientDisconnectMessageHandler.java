@@ -9,7 +9,7 @@ import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.util.IntranetUtil;
 import top.ticho.intranet.server.core.ServerHandler;
-import top.ticho.intranet.server.repository.ClientRepository;
+import top.ticho.intranet.server.support.ClientSupport;
 
 /**
  * 客户端断开连接消息处理器
@@ -18,11 +18,11 @@ import top.ticho.intranet.server.repository.ClientRepository;
  * @date 2024-02-01 12:30
  */
 public class ClientDisconnectMessageHandler extends AbstractClientMessageHandler {
-    private final ClientRepository clientRepository;
+    private final ClientSupport clientSupport;
 
     public ClientDisconnectMessageHandler(ServerHandler serverHandler) {
         super(serverHandler);
-        this.clientRepository = serverHandler.clientRepository();
+        this.clientSupport = serverHandler.clientSupport();
     }
 
     @Override
@@ -32,13 +32,13 @@ public class ClientDisconnectMessageHandler extends AbstractClientMessageHandler
         String accessKey = channel.attr(CommConst.KEY).get();
         Channel requestChannel;
         if (StrUtil.isEmpty(accessKey)) {
-            requestChannel = clientRepository.removeRequestChannel(channel, requestId);
+            requestChannel = clientSupport.removeRequestChannel(channel, requestId);
             if (IntranetUtil.isActive(requestChannel)) {
                 requestChannel.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
             }
             return;
         }
-        requestChannel = clientRepository.removeRequestChannel(accessKey, requestId);
+        requestChannel = clientSupport.removeRequestChannel(accessKey, requestId);
         if (!IntranetUtil.isActive(requestChannel)) {
             return;
         }

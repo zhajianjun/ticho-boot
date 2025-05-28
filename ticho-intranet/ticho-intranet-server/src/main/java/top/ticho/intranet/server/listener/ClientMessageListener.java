@@ -18,7 +18,7 @@ import top.ticho.intranet.server.message.ClientDisconnectMessageHandler;
 import top.ticho.intranet.server.message.ClientHeartbeatMessageHandler;
 import top.ticho.intranet.server.message.ClientMessageUnknownHandler;
 import top.ticho.intranet.server.message.ClientTransferMessageHandler;
-import top.ticho.intranet.server.repository.ClientRepository;
+import top.ticho.intranet.server.support.ClientSupport;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,12 +31,12 @@ import java.util.Map;
  */
 @Slf4j
 public class ClientMessageListener extends SimpleChannelInboundHandler<Message> {
-    private final ClientRepository clientRepository;
+    private final ClientSupport clientSupport;
     public final Map<Byte, AbstractClientMessageHandler> MAP;
     public final AbstractClientMessageHandler UNKNOWN;
 
     public ClientMessageListener(ServerHandler serverHandler) {
-        this.clientRepository = serverHandler.clientRepository();
+        this.clientSupport = serverHandler.clientSupport();
         this.MAP = new HashMap<>();
         this.UNKNOWN = new ClientMessageUnknownHandler(serverHandler);
         ClientAuthMessageHandler serverAuthHandle = new ClientAuthMessageHandler(serverHandler);
@@ -55,7 +55,7 @@ public class ClientMessageListener extends SimpleChannelInboundHandler<Message> 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
         // 客户端异常时，把通道置为空
-        clientRepository.closeRequestChannelByChannel(ctx.channel());
+        clientSupport.closeRequestChannelByChannel(ctx.channel());
         log.error("客户端异常 {} {}", ctx.channel(), cause.getMessage());
         super.exceptionCaught(ctx, cause);
     }
@@ -84,12 +84,12 @@ public class ClientMessageListener extends SimpleChannelInboundHandler<Message> 
         if (IntranetUtil.isActive(extraChannel)) {
             String requestId = channel.attr(CommConst.URI).get();
             // 移除requestId的map信息
-            clientRepository.removeRequestChannel(accessKey, requestId);
+            clientSupport.removeRequestChannel(accessKey, requestId);
             extraChannel.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
             extraChannel.close();
         } else {
             // 关闭客户端通道、请求通道
-            clientRepository.closeRequestChannelByAccessKey(accessKey);
+            clientSupport.closeRequestChannelByAccessKey(accessKey);
             IntranetUtil.close(channel);
         }
         super.channelInactive(ctx);

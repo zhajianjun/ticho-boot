@@ -7,7 +7,7 @@ import io.netty.channel.ChannelOption;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.client.core.ClientHandler;
-import top.ticho.intranet.client.repository.AppReposipory;
+import top.ticho.intranet.client.support.ApplicationSupport;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.prop.ClientProperty;
@@ -38,7 +38,7 @@ public class AppConnectListener implements ChannelFutureListener {
             return;
         }
         ClientProperty clientProperty = clientHandler.clientProperty();
-        AppReposipory appReposipory = clientHandler.appReposipory();
+        ApplicationSupport applicationSupport = clientHandler.applicationSupport();
         String accessKey = clientProperty.getAccessKey();
         // 访问的客户端通道
         Channel requestChannel = channelFuture.channel();
@@ -47,7 +47,7 @@ public class AppConnectListener implements ChannelFutureListener {
         if (readyServerChannel == null) {
             String host = clientProperty.getServerHost();
             int port = clientProperty.getServerPort();
-            ServerConnectListener listener = new ServerConnectListener(appReposipory, accessKey, serverChannel, requestChannel, requestId);
+            ServerConnectListener listener = new ServerConnectListener(applicationSupport, accessKey, serverChannel, requestChannel, requestId);
             clientHandler.connectServer(host, port, listener);
             return;
         }
