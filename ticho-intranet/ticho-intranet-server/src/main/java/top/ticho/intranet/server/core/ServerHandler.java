@@ -153,13 +153,21 @@ public record ServerHandler(
         }
         ClientInfo clientInfo = clientInfoOpt.get();
         Map<Integer, PortInfo> portMapFromMem = clientInfo.getPortMap();
-        // 如果客户端的端口MAP不为空，则删除内存中不应存在的端口
+        // 解绑portInfoMap中不存在，而portMapFromMem存在的端口
         portMapFromMem.values()
             .forEach(x -> {
                 if (portInfoMap.containsKey(x.getPort())) {
                     return;
                 }
                 unbind(accessKey, x.getPort());
+            });
+        // 绑定portInfoMap中存在，而portMapFromMem不存在的端口
+        portInfoMap.values()
+            .forEach(x -> {
+                if (!portMapFromMem.containsKey(x.getPort())) {
+                    return;
+                }
+                bind(accessKey, x.getPort(), x.getEndpoint());
             });
     }
 

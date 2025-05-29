@@ -43,7 +43,7 @@
                             <mainClass>top.ticho.intranet.client.ClientStart</mainClass>
                         </manifest>
                         <manifestEntries>
-                            <Class-Path>conf/</Class-Path>
+                            <Class-Path>config/</Class-Path>
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -88,6 +88,7 @@
                                     <includes>
                                         <include>**/*.properties</include>
                                         <include>**/*.yaml</include>
+                                        <include>**/*.yml</include>
                                         <include>**/*.sh</include>
                                         <include>**/*.bat</include>
                                         <include>**/*.xml</include>

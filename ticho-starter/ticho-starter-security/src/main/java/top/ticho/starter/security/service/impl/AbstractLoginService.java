@@ -52,7 +52,6 @@ public abstract class AbstractLoginService implements TiLoginService {
     @Resource
     private Map<String, JwtExtra> jwtExtInfoMap;
 
-
     public TiToken token(LoginRequest loginRequest) {
         String account = loginRequest.getUsername();
         String credentials = loginRequest.getPassword();
