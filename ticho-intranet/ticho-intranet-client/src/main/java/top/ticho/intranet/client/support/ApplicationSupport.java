@@ -29,8 +29,8 @@ public class ApplicationSupport {
         appBootstrap.connect(host, port).addListener(listener);
     }
 
-    public void saveRequestChannel(String uri, Channel channel) {
-        requestChannelMap.put(uri, channel);
+    public void saveRequestChannel(String requestId, Channel channel) {
+        requestChannelMap.put(requestId, channel);
     }
 
     public void removeRequestChannel(String requestId) {

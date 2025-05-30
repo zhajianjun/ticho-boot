@@ -35,15 +35,15 @@ public class AppListenProxyFilter extends ChannelDuplexHandler {
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        appDataListens.forEach(appDataListen -> appDataListen.channelRead(ctx, (ByteBuf) msg));
-        ctx.fireChannelRead(msg);
+    public void channelRead(ChannelHandlerContext ctx, Object byteBuf) {
+        appDataListens.forEach(appDataListen -> appDataListen.channelRead(ctx, (ByteBuf) byteBuf));
+        ctx.fireChannelRead(byteBuf);
     }
 
     @Override
-    public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
-        appDataListens.forEach(appDataListen -> appDataListen.write(ctx, (ByteBuf) msg, promise));
-        super.write(ctx, msg, promise);
+    public void write(ChannelHandlerContext ctx, Object byteBuf, ChannelPromise promise) throws Exception {
+        appDataListens.forEach(appDataListen -> appDataListen.write(ctx, (ByteBuf) byteBuf, promise));
+        super.write(ctx, byteBuf, promise);
     }
 
     @Override

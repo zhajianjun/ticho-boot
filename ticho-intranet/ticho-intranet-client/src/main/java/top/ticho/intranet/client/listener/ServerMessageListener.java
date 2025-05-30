@@ -58,10 +58,10 @@ public class ServerMessageListener extends SimpleChannelInboundHandler<Message> 
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, Message msg) {
-        byte type = msg.getType();
+    protected void channelRead0(ChannelHandlerContext ctx, Message message) {
+        byte type = message.type();
         AbstractServerMessageHandler clientHandle = MAP.getOrDefault(type, UNKNOWN);
-        clientHandle.channelRead0(ctx, msg);
+        clientHandle.channelRead0(ctx, message);
     }
 
     @Override

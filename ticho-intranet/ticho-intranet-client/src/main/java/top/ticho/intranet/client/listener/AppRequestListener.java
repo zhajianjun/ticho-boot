@@ -29,32 +29,27 @@ public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
     protected void channelRead0(ChannelHandlerContext ctx, ByteBuf byteBuf) {
         Channel responseChannel = ctx.channel();
         Channel serverChannel = responseChannel.attr(CommConst.CHANNEL).get();
-        String uri = responseChannel.attr(CommConst.URI).get();
+        String requestId = responseChannel.attr(CommConst.REQUEST_ID).get();
         if (serverChannel == null) {
             responseChannel.close();
             return;
         }
         byte[] data = new byte[byteBuf.readableBytes()];
         byteBuf.readBytes(data);
-        Message msg = new Message();
-        msg.setType(Message.TRANSFER);
-        msg.setUri(uri);
-        msg.setData(data);
-        serverChannel.writeAndFlush(msg);
-        // log.warn("[9][客户端]响应信息回传，响应通道{}，回传通道{}，消息{}", responseChannel, serverChannel, msg);
+        Message message = new Message(Message.TRANSFER, requestId, data);
+        serverChannel.writeAndFlush(message);
+        // log.warn("[9][客户端]响应信息回传，响应通道{}，回传通道{}，消息{}", responseChannel, serverChannel, message);
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         Channel requestCHannel = ctx.channel();
-        String uri = requestCHannel.attr(CommConst.URI).get();
-        clientHandler.removeRequestChannel(uri);
+        String requestId = requestCHannel.attr(CommConst.REQUEST_ID).get();
+        clientHandler.removeRequestChannel(requestId);
         Channel clientChannel = requestCHannel.attr(CommConst.CHANNEL).get();
         if (null != clientChannel) {
-            Message msg = new Message();
-            msg.setType(Message.DISCONNECT);
-            msg.setUri(uri);
-            clientChannel.writeAndFlush(msg);
+            Message message = new Message(Message.DISCONNECT, requestId, null);
+            clientChannel.writeAndFlush(message);
         }
         super.channelInactive(ctx);
     }

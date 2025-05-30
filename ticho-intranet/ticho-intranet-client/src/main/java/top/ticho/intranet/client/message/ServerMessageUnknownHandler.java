@@ -21,8 +21,8 @@ public class ServerMessageUnknownHandler extends AbstractServerMessageHandler {
     }
 
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, Message msg) {
-        log.debug("接收到未知类型{}的消息，消息：{}，通道：{}", msg.getType(), new String(msg.getData(), StandardCharsets.UTF_8), ctx.channel());
+    public void channelRead0(ChannelHandlerContext ctx, Message message) {
+        log.debug("接收到未知类型{}的消息，消息：{}，通道：{}", message.type(), new String(message.data()), ctx.channel());
     }
 
 }

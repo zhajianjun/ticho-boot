@@ -21,14 +21,14 @@ public class ServerMessageDisconnectHandler extends AbstractServerMessageHandler
     }
 
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, Message msg) {
-        Channel clientChannel = ctx.channel();
-        Channel requestCHannel = clientChannel.attr(CommConst.CHANNEL).get();
+    public void channelRead0(ChannelHandlerContext ctx, Message message) {
+        Channel serverChannel = ctx.channel();
+        Channel requestCHannel = serverChannel.attr(CommConst.CHANNEL).get();
         if (null == requestCHannel) {
             return;
         }
-        clientChannel.attr(CommConst.CHANNEL).set(null);
-        clientHandler.saveReadyServerChannel(clientChannel);
+        serverChannel.attr(CommConst.CHANNEL).set(null);
+        clientHandler.saveReadyServerChannel(serverChannel);
         requestCHannel.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
     }
 

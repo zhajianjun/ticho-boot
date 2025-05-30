@@ -29,10 +29,10 @@ public class ClientTransferMessageHandler extends AbstractClientMessageHandler {
         if (!IntranetUtil.isActive(requestChannel)) {
             return;
         }
-        ByteBuf data = ctx.alloc().buffer(message.getData().length);
-        data.writeBytes(message.getData());
+        ByteBuf data = ctx.alloc().buffer(message.data().length);
+        data.writeBytes(message.data());
         requestChannel.writeAndFlush(data);
-        // log.warn("[10][服务端]响应信息接收，接收通道：{}；写入通道：{}, 消息{}", channel, requestChannel, msg);
+        // log.warn("[10][服务端]响应信息接收，接收通道：{}；写入通道：{}, 消息{}", channel, requestChannel, message);
     }
 
 }

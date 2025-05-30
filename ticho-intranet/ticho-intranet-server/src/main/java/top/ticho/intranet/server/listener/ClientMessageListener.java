@@ -62,7 +62,7 @@ public class ClientMessageListener extends SimpleChannelInboundHandler<Message> 
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Message message) {
-        AbstractClientMessageHandler serverHandle = MAP.getOrDefault(message.getType(), UNKNOWN);
+        AbstractClientMessageHandler serverHandle = MAP.getOrDefault(message.type(), UNKNOWN);
         serverHandle.channelRead0(ctx, message);
     }
 
@@ -80,9 +80,9 @@ public class ClientMessageListener extends SimpleChannelInboundHandler<Message> 
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         Channel channel = ctx.channel();
         Channel extraChannel = channel.attr(CommConst.CHANNEL).get();
-        String accessKey = channel.attr(CommConst.KEY).get();
+        String accessKey = channel.attr(CommConst.ACCESS_KEY).get();
         if (IntranetUtil.isActive(extraChannel)) {
-            String requestId = channel.attr(CommConst.URI).get();
+            String requestId = channel.attr(CommConst.REQUEST_ID).get();
             // 移除requestId的map信息
             clientSupport.removeRequestChannel(accessKey, requestId);
             extraChannel.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);

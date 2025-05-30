@@ -47,7 +47,7 @@ public class ClientAuthMessageHandler extends AbstractClientMessageHandler {
             notifyStarting(clientChannel);
             return;
         }
-        String accessKey = message.getUri();
+        String accessKey = new String(message.data());
         Optional<ClientInfo> clientInfoOpt = clientSupport.findByAccessKey(accessKey);
         if (clientInfoOpt.isEmpty()) {
             String errorMsg = StrUtil.format("客户端[{}]不可用", accessKey);

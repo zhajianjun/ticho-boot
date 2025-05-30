@@ -28,8 +28,8 @@ public class ClientDisconnectMessageHandler extends AbstractClientMessageHandler
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Message message) {
         Channel channel = ctx.channel();
-        String requestId = message.getUri();
-        String accessKey = channel.attr(CommConst.KEY).get();
+        String requestId = message.requestId();
+        String accessKey = channel.attr(CommConst.ACCESS_KEY).get();
         Channel requestChannel;
         if (StrUtil.isEmpty(accessKey)) {
             requestChannel = clientSupport.removeRequestChannel(channel, requestId);
@@ -44,8 +44,8 @@ public class ClientDisconnectMessageHandler extends AbstractClientMessageHandler
         }
         requestChannel.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
         IntranetUtil.close(channel.attr(CommConst.CHANNEL).get());
-        channel.attr(CommConst.URI).set(null);
-        channel.attr(CommConst.KEY).set(null);
+        channel.attr(CommConst.REQUEST_ID).set(null);
+        channel.attr(CommConst.ACCESS_KEY).set(null);
         channel.attr(CommConst.CHANNEL).set(null);
     }
 

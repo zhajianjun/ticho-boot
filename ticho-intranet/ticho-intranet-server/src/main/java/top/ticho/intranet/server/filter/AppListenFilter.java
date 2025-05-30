@@ -14,9 +14,9 @@ public interface AppListenFilter {
 
     void channelActive(ChannelHandlerContext ctx);
 
-    void channelRead(ChannelHandlerContext ctx, ByteBuf msg);
+    void channelRead(ChannelHandlerContext ctx, ByteBuf byteBuf);
 
-    void write(ChannelHandlerContext ctx, ByteBuf msg, ChannelPromise promise);
+    void write(ChannelHandlerContext ctx, ByteBuf byteBuf, ChannelPromise promise);
 
     void channelInactive(ChannelHandlerContext ctx);
 

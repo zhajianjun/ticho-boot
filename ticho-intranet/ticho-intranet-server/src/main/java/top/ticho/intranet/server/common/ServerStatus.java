@@ -19,6 +19,6 @@ public enum ServerStatus {
     DISABLED(2, "已禁用"),
     ;
     private final int code;
-    private final String msg;
+    private final String message;
 
 }

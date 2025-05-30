@@ -1,11 +1,11 @@
 package top.ticho.intranet.client.message;
 
-import cn.hutool.core.util.StrUtil;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.client.core.ClientHandler;
 import top.ticho.intranet.client.listener.AppConnectListener;
+import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
 
 import java.nio.charset.StandardCharsets;
@@ -26,10 +26,10 @@ public class ServerMessageConnectHandler extends AbstractServerMessageHandler {
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Message message) {
         Channel serverChannel = ctx.channel();
-        String data = new String(message.getData(), StandardCharsets.UTF_8);
-        String requestId = message.getUri();
-        String host = StrUtil.subBefore(data, ":", false);
-        int port = Integer.parseInt(StrUtil.subAfter(data, ":", false));
+        String requestId = message.requestId();
+        String[] endpoint = new String(message.data()).split(CommConst.COLON);
+        String host = endpoint[0];
+        int port = Integer.parseInt(endpoint[1]);
         AppConnectListener listener = new AppConnectListener(clientHandler, serverChannel, requestId);
         // log.debug("[客户端]连接{}:{}", host, port);
         // log.warn("[4][客户端]接收连接信息, 连接通道{}, 消息{}", serverChannel, message);

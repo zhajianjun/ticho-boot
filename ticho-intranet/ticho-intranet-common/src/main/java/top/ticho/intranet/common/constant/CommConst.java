@@ -16,14 +16,12 @@ public class CommConst {
     private CommConst() {
     }
 
-    /** 消息头部固定长度 */
-    public static final byte HEADER_SIZE = 4;
+    /** int占用字节数 */
+    public static final byte INT_BYTES = 4;
 
     public static final int TYPE_SIZE = 1;
 
-    public static final int SERIAL_SIZE = 8;
-
-    public static final int URI_LEN_SIZE = 1;
+    public static final int REQUEST_ID_LEN_SIZE = 1;
 
     /* 包的最大长度 2M */
     public static final int MAX_FRAME_LEN = 2 * 1024 * 1024;
@@ -44,16 +42,16 @@ public class CommConst {
 
     public static final String JKS = "JKS";
 
-    /** 请求id key */
-    public static final String REQUEST_ID_MAP_KEY = "REQUEST_ID";
+    public static final String COLON = ":";
+
     /** 请求id attr key */
-    public static final AttributeKey<Map<String, Channel>> REQUEST_ID_ATTR_MAP = AttributeKey.newInstance(REQUEST_ID_MAP_KEY);
+    public static final AttributeKey<Map<String, Channel>> REQUEST_ID_ATTR_MAP = AttributeKey.newInstance("REQUEST_ID_MAP");
 
     public static final AttributeKey<Channel> CHANNEL = AttributeKey.newInstance("CHANNEL");
 
-    public static final AttributeKey<String> URI = AttributeKey.newInstance("URI");
+    public static final AttributeKey<String> REQUEST_ID = AttributeKey.newInstance("REQUEST_ID");
 
-    public static final AttributeKey<String> KEY = AttributeKey.newInstance("KEY");
+    public static final AttributeKey<String> ACCESS_KEY = AttributeKey.newInstance("ACCESS_KEY");
 
     /** 本地地址 */
     public static final String LOCALHOST = "0.0.0.0";
@@ -62,9 +60,9 @@ public class CommConst {
     public static final String OS_TYPE = System.getProperty("os.name").toLowerCase();
     /** ssl */
     public static final String SSL = "ssl";
-
+    /** 最小端口号 */
+    public static final int MIN_PORT = 1;
+    /** 最大端口号 */
     public static final int MAX_PORT = 65535;
-
-    public static final long ONE_KB = 1024L;
 
 }

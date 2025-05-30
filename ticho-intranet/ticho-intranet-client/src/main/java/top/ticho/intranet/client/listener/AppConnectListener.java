@@ -31,9 +31,7 @@ public class AppConnectListener implements ChannelFutureListener {
     @Override
     public void operationComplete(ChannelFuture channelFuture) {
         if (!channelFuture.isSuccess()) {
-            Message message = new Message();
-            message.setType(Message.DISCONNECT);
-            message.setUri(requestId);
+            Message message = new Message(Message.DISCONNECT, requestId, null);
             this.serverChannel.writeAndFlush(message);
             return;
         }
@@ -53,15 +51,12 @@ public class AppConnectListener implements ChannelFutureListener {
         }
         readyServerChannel.attr(CommConst.CHANNEL).set(requestChannel);
         requestChannel.attr(CommConst.CHANNEL).set(readyServerChannel);
-        Message msg = new Message();
-        msg.setType(Message.CONNECT);
-        // requestId @ accessKey
-        msg.setUri(requestId + "@" + accessKey);
-        readyServerChannel.writeAndFlush(msg);
+        Message message = new Message(Message.CONNECT, requestId, accessKey.getBytes());
+        readyServerChannel.writeAndFlush(message);
         requestChannel.config().setOption(ChannelOption.AUTO_READ, true);
         clientHandler.saveRequestChannel(requestId, requestChannel);
-        requestChannel.attr(CommConst.URI).set(requestId);
-        // log.warn("[5][客户端]连接信息回传服务端，回传通道{}，携带通道{}，消息{}", readyServerChannel, requestChannel, msg);
+        requestChannel.attr(CommConst.REQUEST_ID).set(requestId);
+        // log.warn("[5][客户端]连接信息回传服务端，回传通道{}，携带通道{}，消息{}", readyServerChannel, requestChannel, message);
     }
 
 }

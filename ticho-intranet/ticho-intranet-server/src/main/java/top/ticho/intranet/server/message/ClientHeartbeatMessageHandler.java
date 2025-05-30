@@ -24,7 +24,7 @@ public class ClientHeartbeatMessageHandler extends AbstractClientMessageHandler 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Message message) {
         Channel channel = ctx.channel();
-        log.debug("接收到客户端心跳检测，消息：{}，通道：{}", new String(message.getData(), StandardCharsets.UTF_8), channel);
+        log.debug("接收到客户端心跳检测，消息：{}，通道：{}", new String(message.data()), channel);
         notify(channel, Message.HEARTBEAT, "SERVER CALLBACK".getBytes(StandardCharsets.UTF_8));
     }
 

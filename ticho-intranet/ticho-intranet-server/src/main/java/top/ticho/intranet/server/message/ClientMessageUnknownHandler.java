@@ -22,7 +22,7 @@ public class ClientMessageUnknownHandler extends AbstractClientMessageHandler {
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Message message) {
-        log.debug("接收到未知类型{}的消息,{}", message.getType(), new String(message.getData(), StandardCharsets.UTF_8));
+        log.debug("接收到未知类型{}的消息,{}", message.type(), new String(message.data()));
     }
 
 }

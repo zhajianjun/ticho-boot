@@ -70,14 +70,11 @@ public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
         // 请求通道自动读设置为false
         requestChannel.config().setOption(ChannelOption.AUTO_READ, false);
         // 请求通道添加请求连接id
-        requestChannel.attr(CommConst.URI).set(requestId);
+        requestChannel.attr(CommConst.REQUEST_ID).set(requestId);
         requestChannels.put(requestId, requestChannel);
         // 获取端口信息
         PortInfo port = clientInfo.getPortMap().get(portNum);
-        Message message = new Message();
-        message.setType(Message.CONNECT);
-        message.setUri(requestId);
-        message.setData(port.getEndpoint().getBytes());
+        Message message = new Message(Message.CONNECT, requestId, port.getEndpoint().getBytes());
         clientChannel.writeAndFlush(message);
         super.channelActive(ctx);
         // log.warn("[3][服务端]通道激活, 连接客户端{}, 消息{}", clientChannel, message);
@@ -94,10 +91,7 @@ public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
         }
         byte[] data = new byte[buf.readableBytes()];
         buf.readBytes(data);
-        Message message = new Message();
-        message.setType(Message.TRANSFER);
-        message.setUri(requestChannel.attr(CommConst.URI).get());
-        message.setData(data);
+        Message message = new Message(Message.TRANSFER, requestChannel.attr(CommConst.REQUEST_ID).get(), data);
         // log.warn("[7][服务端]请求传输到客户端，请求通道{}；客户端通道{}, 消息{}", requestChannel, clientChannel, message);
         clientChannel.writeAndFlush(message);
     }
@@ -115,7 +109,7 @@ public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
         }
         ClientInfo clientInfo = clientInfoOpt.get();
         Channel clientChannelGet = clientInfo.getChannel();
-        String requestId = requestChannel.attr(CommConst.URI).get();
+        String requestId = requestChannel.attr(CommConst.REQUEST_ID).get();
         clientSupport.removeRequestChannel(clientChannelGet, requestId);
         Channel clientChannel = requestChannel.attr(CommConst.CHANNEL).get();
         if (!IntranetUtil.isActive(clientChannel)) {
@@ -124,13 +118,11 @@ public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
             return;
         }
         IntranetUtil.close(clientChannel.attr(CommConst.CHANNEL).get());
-        clientChannel.attr(CommConst.URI).set(null);
-        clientChannel.attr(CommConst.KEY).set(null);
+        clientChannel.attr(CommConst.REQUEST_ID).set(null);
+        clientChannel.attr(CommConst.ACCESS_KEY).set(null);
         clientChannel.attr(CommConst.CHANNEL).set(null);
         clientChannel.config().setOption(ChannelOption.AUTO_READ, true);
-        Message message = new Message();
-        message.setType(Message.DISCONNECT);
-        message.setUri(requestId);
+        Message message = new Message(Message.DISCONNECT, requestId, null);
         clientChannel.writeAndFlush(message);
         super.channelInactive(ctx);
     }
@@ -144,9 +136,9 @@ public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
         if (!isActive) {
             requestChannel.close();
         } else {
-            Channel serverChannel = requestChannel.attr(CommConst.CHANNEL).get();
-            if (Objects.nonNull(serverChannel)) {
-                serverChannel.config().setOption(ChannelOption.AUTO_READ, requestChannel.isWritable());
+            Channel clientChannel = requestChannel.attr(CommConst.CHANNEL).get();
+            if (Objects.nonNull(clientChannel)) {
+                clientChannel.config().setOption(ChannelOption.AUTO_READ, requestChannel.isWritable());
             }
         }
         super.channelWritabilityChanged(ctx);

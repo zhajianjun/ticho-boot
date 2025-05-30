@@ -1,43 +1,33 @@
 package top.ticho.intranet.common.entity;
 
-import lombok.Data;
-import top.ticho.intranet.common.enums.MsgType;
-
-
 /**
  * 消息体
  *
  * @author zhajianjun
  * @date 2024-02-01 12:30
  */
-@Data
-public class Message {
+public record Message(
+    /* 类型 */
+    byte type,
+    /* requestId */
+    String requestId,
+    /* 数据 */
+    byte[] data
+) {
 
     /** 1-验证消息以检查accessKey是否正确 */
-    public static final byte AUTH = MsgType.AUTH.code();
+    public static final byte AUTH = 1;
     /** 2-无效的访问密钥 */
-    public static final byte DISABLED_ACCESS_KEY = MsgType.DISABLED_ACCESS_KEY.code();
+    public static final byte DISABLED_ACCESS_KEY = 2;
     /** 3-客户端通道连接 */
-    public static final byte CONNECT = MsgType.CONNECT.code();
+    public static final byte CONNECT = 3;
     /** 4-客户端断开通道连接 */
-    public static final byte DISCONNECT = MsgType.DISCONNECT.code();
+    public static final byte DISCONNECT = 4;
     /** 5-数据传输 */
-    public static final byte TRANSFER = MsgType.TRANSFER.code();
+    public static final byte TRANSFER = 5;
     /** 6-客户端心跳 */
-    public static final byte HEARTBEAT = MsgType.HEARTBEAT.code();
+    public static final byte HEARTBEAT = 6;
     /** 7-服务启动中 */
-    public static final byte STARTING = MsgType.STARTING.code();
-
-    /** 类型 */
-    private byte type;
-    /** uri */
-    private String uri;
-    /** 数据 */
-    private byte[] data;
-
-    @Override
-    public String toString() {
-        return "{" + "type=" + type + ", uri=" + uri + "}";
-    }
+    public static final byte STARTING = 7;
 
 }

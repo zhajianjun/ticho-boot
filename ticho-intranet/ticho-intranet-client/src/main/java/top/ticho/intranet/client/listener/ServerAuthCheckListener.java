@@ -42,10 +42,8 @@ public class ServerAuthCheckListener implements ChannelFutureListener {
         // 连接服务端的通道添加到 通道工厂中
         clientSupport.setServerChannel(channel);
         // 通道传输权限信息给服务端进行校验，由服务端校验是否关闭还是正常连接
-        Message msg = new Message();
-        msg.setType(Message.AUTH);
-        msg.setUri(clientProperty.getAccessKey());
-        channel.writeAndFlush(msg);
+        Message message = new Message(Message.AUTH, null, clientProperty.getAccessKey().getBytes());
+        channel.writeAndFlush(message);
         // log.warn("[1]连接服务端成功：{}", channel);
         log.info("连接服务端{}]成功，校验权限中", channel);
     }

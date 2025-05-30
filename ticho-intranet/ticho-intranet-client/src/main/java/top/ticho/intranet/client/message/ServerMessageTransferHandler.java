@@ -23,17 +23,17 @@ public class ServerMessageTransferHandler extends AbstractServerMessageHandler {
     }
 
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, Message msg) {
-        Channel clientChannel = ctx.channel();
+    public void channelRead0(ChannelHandlerContext ctx, Message message) {
+        Channel serverChannel = ctx.channel();
         ByteBufAllocator alloc = ctx.alloc();
-        Channel requestChannel = clientChannel.attr(CommConst.CHANNEL).get();
+        Channel requestChannel = serverChannel.attr(CommConst.CHANNEL).get();
         if (requestChannel == null) {
             return;
         }
-        ByteBuf buf = alloc.buffer(msg.getData().length);
-        buf.writeBytes(msg.getData());
+        ByteBuf buf = alloc.buffer(message.data().length);
+        buf.writeBytes(message.data());
         requestChannel.writeAndFlush(buf);
-        // log.warn("[8][客户端]接收到到客户端请求信息，接收通道{}，写入通道{}，消息{}", clientChannel, requestChannel, msg);
+        // log.warn("[8][客户端]接收到到客户端请求信息，接收通道{}，写入通道{}，消息{}", serverChannel, requestChannel, message);
     }
 
 }

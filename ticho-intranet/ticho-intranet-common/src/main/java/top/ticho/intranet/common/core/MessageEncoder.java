@@ -34,21 +34,21 @@ public class MessageEncoder extends MessageToByteEncoder<Message> {
     @Override
     protected void encode(ChannelHandlerContext ctx, Message message, ByteBuf bufOut) {
         // 计算消息体的长度
-        int messageLength = CommConst.TYPE_SIZE + CommConst.URI_LEN_SIZE;
+        int messageLength = CommConst.TYPE_SIZE + CommConst.REQUEST_ID_LEN_SIZE;
         byte[] uriBytes = null;
-        if (message.getUri() != null) {
+        if (message.requestId() != null) {
             // 如果URI不为null，则将URI转换为字节数组，并计算URI的长度
-            uriBytes = message.getUri().getBytes();
+            uriBytes = message.requestId().getBytes();
             messageLength += uriBytes.length;
         }
-        if (message.getData() != null) {
+        if (message.data() != null) {
             // 如果数据不为null，则计算数据的长度
-            messageLength += message.getData().length;
+            messageLength += message.data().length;
         }
         // [HEADER]写入消息体的长度数据，占用4字节[int字节数为4]
         bufOut.writeInt(messageLength);
         // 2-写入消息类型 [byte字节数为1] 5
-        bufOut.writeByte(message.getType());
+        bufOut.writeByte(message.type());
         // 4-写入URL长度 和 数据
         if (uriBytes != null) {
             // 4.1 写入URL长度 [byte字节数为1]
@@ -59,9 +59,9 @@ public class MessageEncoder extends MessageToByteEncoder<Message> {
             // 如果URI为null，则写入0x00表示长度为0 [byte字节数为1]
             bufOut.writeByte((byte) 0x00);
         }
-        if (message.getData() != null) {
+        if (message.data() != null) {
             // 如果数据不为null，则写入数据
-            bufOut.writeBytes(message.getData());
+            bufOut.writeBytes(message.data());
         }
     }
 

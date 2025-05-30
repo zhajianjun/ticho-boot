@@ -40,9 +40,7 @@ public abstract class AbstractClientMessageHandler {
         if (!IntranetUtil.isActive(channel)) {
             return;
         }
-        Message message = new Message();
-        message.setType(msgType);
-        message.setData(data);
+        Message message = new Message(msgType, null, data);
         channel.writeAndFlush(message);
     }
 

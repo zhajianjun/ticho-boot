@@ -23,11 +23,11 @@ public class ServerMessageCloseHandler extends AbstractServerMessageHandler {
     }
 
     @Override
-    public void channelRead0(ChannelHandlerContext ctx, Message msg) {
-        Channel clientChannel = ctx.channel();
-        log.info("服务端{}权限验证失败，消息：{}", clientChannel.remoteAddress(), new String(msg.getData(), StandardCharsets.UTF_8));
-        IntranetUtil.close(clientChannel);
-        clientHandler.stop(msg.getType());
+    public void channelRead0(ChannelHandlerContext ctx, Message message) {
+        Channel serverChannel = ctx.channel();
+        log.info("服务端{}权限验证失败，消息：{}", serverChannel.remoteAddress(), new String(message.data()));
+        IntranetUtil.close(serverChannel);
+        clientHandler.stop(message.type());
     }
 
 }

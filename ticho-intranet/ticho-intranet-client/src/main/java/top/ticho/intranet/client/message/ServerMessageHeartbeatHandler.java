@@ -22,7 +22,7 @@ public class ServerMessageHeartbeatHandler extends AbstractServerMessageHandler 
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Message message) {
-        log.debug("接收到服务端心跳检测回传，消息：{}，通道：{}", new String(message.getData(), StandardCharsets.UTF_8), ctx.channel());
+        log.debug("接收到服务端心跳检测回传，消息：{}，通道：{}", new String(message.data()), ctx.channel());
     }
 
 }
