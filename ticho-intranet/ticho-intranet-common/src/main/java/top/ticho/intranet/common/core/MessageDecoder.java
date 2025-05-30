@@ -44,22 +44,20 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
         if (null == in) {
             return null;
         }
-        // 如果可读字节数小于消息头部固定长度，则返回null
+        // 读取的字节数小于4，则表明数据异常，因为长度数据为int，至少需要4字节数
         if (in.readableBytes() < CommConst.HEADER_SIZE) {
             return null;
         }
-        // 1-读取消息体的长度
-        int messageLength = in.readInt();
-        // 如果可读字节数小于消息体长度，则返回null
-        if (in.readableBytes() < messageLength) {
+        // [HEADER]读取消息体的总字节数
+        int messageBytes = in.readInt();
+        // 如果可读字节数不等于消息体总字节数，数据异常，返回null
+        if (in.readableBytes() != messageBytes) {
             return null;
         }
         // 创建Message对象
         Message message = new Message();
         // 2-读取消息类型
         message.setType(in.readByte());
-        // 3-读取消息序列号
-        message.setSerial(in.readLong());
         // 4-读取URI长度 和 数据
         byte uriLength = in.readByte();
         // 读取URI字节数组
@@ -68,7 +66,7 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
         // 将URI字节数组转换为字符串
         message.setUri(new String(uriBytes));
         // 计算数据部分的长度
-        int dateLength = messageLength - CommConst.TYPE_SIZE - CommConst.SERIAL_SIZE - CommConst.URI_LEN_SIZE - uriLength;
+        int dateLength = messageBytes - CommConst.TYPE_SIZE - CommConst.URI_LEN_SIZE - uriLength;
         // 读取数据部分字节数组
         byte[] data = new byte[dateLength];
         in.readBytes(data);

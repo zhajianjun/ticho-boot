@@ -34,17 +34,13 @@ public abstract class AbstractClientMessageHandler {
      *
      * @param channel 通道
      * @param msgType msg类型
-     * @param serial  序列号
      * @param data    传输数据
      */
-    protected void notify(Channel channel, byte msgType, Long serial, byte[] data) {
+    protected void notify(Channel channel, byte msgType, byte[] data) {
         if (!IntranetUtil.isActive(channel)) {
             return;
         }
         Message message = new Message();
-        if (null != serial) {
-            message.setSerial(serial);
-        }
         message.setType(msgType);
         message.setData(data);
         channel.writeAndFlush(message);

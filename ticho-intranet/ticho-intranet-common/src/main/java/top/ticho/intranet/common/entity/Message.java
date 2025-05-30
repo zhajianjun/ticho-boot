@@ -30,8 +30,6 @@ public class Message {
 
     /** 类型 */
     private byte type;
-    /** 序列号 */
-    private long serial;
     /** uri */
     private String uri;
     /** 数据 */
@@ -39,7 +37,7 @@ public class Message {
 
     @Override
     public String toString() {
-        return "{" + "type=" + type + ", serial=" + serial + ", uri=" + uri + "}";
+        return "{" + "type=" + type + ", uri=" + uri + "}";
     }
 
 }

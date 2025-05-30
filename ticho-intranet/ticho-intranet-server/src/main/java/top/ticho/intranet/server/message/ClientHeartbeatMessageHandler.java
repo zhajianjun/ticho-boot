@@ -25,7 +25,7 @@ public class ClientHeartbeatMessageHandler extends AbstractClientMessageHandler 
     public void channelRead0(ChannelHandlerContext ctx, Message message) {
         Channel channel = ctx.channel();
         log.debug("接收到客户端心跳检测，消息：{}，通道：{}", new String(message.getData(), StandardCharsets.UTF_8), channel);
-        notify(channel, Message.HEARTBEAT, message.getSerial(), "SERVER CALLBACK".getBytes(StandardCharsets.UTF_8));
+        notify(channel, Message.HEARTBEAT, "SERVER CALLBACK".getBytes(StandardCharsets.UTF_8));
     }
 
 }

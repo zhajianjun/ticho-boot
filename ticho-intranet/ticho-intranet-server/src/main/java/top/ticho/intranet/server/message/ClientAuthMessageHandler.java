@@ -44,7 +44,7 @@ public class ClientAuthMessageHandler extends AbstractClientMessageHandler {
         Channel clientChannel = ctx.channel();
         if (ServerStatus.STARTING.getCode() == serverStatus.get()) {
             log.info("服务未启用，请稍后再试，通道：{}", clientChannel);
-            notifyStarting(clientChannel, message.getSerial());
+            notifyStarting(clientChannel);
             return;
         }
         String accessKey = message.getUri();
@@ -52,23 +52,23 @@ public class ClientAuthMessageHandler extends AbstractClientMessageHandler {
         if (clientInfoOpt.isEmpty()) {
             String errorMsg = StrUtil.format("客户端[{}]不可用", accessKey);
             log.info(errorMsg);
-            notifyError(clientChannel, errorMsg, message.getSerial());
+            notifyError(clientChannel, errorMsg);
             return;
         }
         ClientInfo clientInfo = clientInfoOpt.get();
         Map<Integer, PortInfo> portMap = clientInfo.getPortMap();
         if (MapUtil.isEmpty(portMap)) {
             log.info("客户端[{}]未绑定主机端口，通道：{}", accessKey, clientChannel);
-            notifyError(clientChannel, StrUtil.format("客户端[{}]未绑定主机端口", accessKey), message.getSerial());
+            notifyError(clientChannel, StrUtil.format("客户端[{}]未绑定主机端口", accessKey));
             return;
         }
         Channel clientChannelGet = clientInfo.getChannel();
         if (IntranetUtil.isActive(clientChannelGet)) {
             log.info("客户端[{}]已经被其他客户端{}使用，通道：{}", accessKey, clientChannelGet, clientChannel);
-            notifyError(clientChannel, StrUtil.format("客户端[{}]已经被其他客户端使用", accessKey), message.getSerial());
+            notifyError(clientChannel, StrUtil.format("客户端[{}]已经被其他客户端使用", accessKey));
             return;
         }
-        notifySuccess(clientChannel, accessKey, message.getSerial());
+        notifySuccess(clientChannel, accessKey);
         String portStrs = portMap.keySet()
             .stream()
             .map(Objects::toString)
@@ -79,16 +79,16 @@ public class ClientAuthMessageHandler extends AbstractClientMessageHandler {
         clientInfo.connect(clientChannel);
     }
 
-    private void notifySuccess(Channel channel, String accessKey, long serial) {
-        notify(channel, Message.AUTH, serial, StrUtil.format("客户端[{}]权限校验成功", accessKey, channel).getBytes(StandardCharsets.UTF_8));
+    private void notifySuccess(Channel channel, String accessKey) {
+        notify(channel, Message.AUTH, StrUtil.format("客户端[{}]权限校验成功", accessKey, channel).getBytes(StandardCharsets.UTF_8));
     }
 
-    private void notifyError(Channel channel, String errorMsg, long serial) {
-        notify(channel, Message.DISABLED_ACCESS_KEY, serial, errorMsg.getBytes(StandardCharsets.UTF_8));
+    private void notifyError(Channel channel, String errorMsg) {
+        notify(channel, Message.DISABLED_ACCESS_KEY, errorMsg.getBytes(StandardCharsets.UTF_8));
     }
 
-    private void notifyStarting(Channel channel, long serial) {
-        notify(channel, Message.STARTING, serial, "服务未启用，请稍后再试".getBytes(StandardCharsets.UTF_8));
+    private void notifyStarting(Channel channel) {
+        notify(channel, Message.STARTING, "服务未启用，请稍后再试".getBytes(StandardCharsets.UTF_8));
     }
 
 }

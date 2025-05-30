@@ -34,7 +34,7 @@ public class MessageEncoder extends MessageToByteEncoder<Message> {
     @Override
     protected void encode(ChannelHandlerContext ctx, Message message, ByteBuf bufOut) {
         // 计算消息体的长度
-        int messageLength = CommConst.TYPE_SIZE + CommConst.SERIAL_SIZE + CommConst.URI_LEN_SIZE;
+        int messageLength = CommConst.TYPE_SIZE + CommConst.URI_LEN_SIZE;
         byte[] uriBytes = null;
         if (message.getUri() != null) {
             // 如果URI不为null，则将URI转换为字节数组，并计算URI的长度
@@ -45,12 +45,10 @@ public class MessageEncoder extends MessageToByteEncoder<Message> {
             // 如果数据不为null，则计算数据的长度
             messageLength += message.getData().length;
         }
-        // 1-写入消息体的总长度（不包含长度字段的长度） [int字节数为4] 4
+        // [HEADER]写入消息体的长度数据，占用4字节[int字节数为4]
         bufOut.writeInt(messageLength);
         // 2-写入消息类型 [byte字节数为1] 5
         bufOut.writeByte(message.getType());
-        // 3-写入消息序列号 [long字节数为8] 13
-        bufOut.writeLong(message.getSerial());
         // 4-写入URL长度 和 数据
         if (uriBytes != null) {
             // 4.1 写入URL长度 [byte字节数为1]

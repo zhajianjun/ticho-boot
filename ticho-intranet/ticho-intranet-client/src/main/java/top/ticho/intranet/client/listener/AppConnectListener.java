@@ -31,10 +31,10 @@ public class AppConnectListener implements ChannelFutureListener {
     @Override
     public void operationComplete(ChannelFuture channelFuture) {
         if (!channelFuture.isSuccess()) {
-            Message msg = new Message();
-            msg.setType(Message.DISCONNECT);
-            msg.setUri(requestId);
-            this.serverChannel.writeAndFlush(msg);
+            Message message = new Message();
+            message.setType(Message.DISCONNECT);
+            message.setUri(requestId);
+            this.serverChannel.writeAndFlush(message);
             return;
         }
         ClientProperty clientProperty = clientHandler.clientProperty();
