@@ -21,7 +21,6 @@ public class ClientStartTest {
         clientProperty.setServerHost("127.0.0.1");
         clientProperty.setServerPort(5120);
         clientProperty.setSslEnable(false);
-        clientProperty.setTryReconnect(true);
         ClientHandler clientHandler = ClientBuilder.build(clientProperty);
         clientHandler.start();
     }
