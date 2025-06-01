@@ -24,6 +24,7 @@ public class TiSqlInjector extends DefaultSqlInjector {
             methodList.add(new TiInsertOrUpdateBatch());
             methodList.add(new TiInsertOrUpdate());
         } else {
+            methodList.add(new TiInsertBatch());
             logger.warn(String.format("%s ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.",
                 tableInfo.getEntityType()));
         }
