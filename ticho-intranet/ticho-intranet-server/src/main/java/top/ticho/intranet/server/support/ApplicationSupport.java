@@ -78,6 +78,7 @@ public class ApplicationSupport {
         }
         Channel channel = bindPortChannelMap.get(port);
         if (channel == null) {
+            log.warn("解绑应用失败，端口：{}不存在", port);
             return false;
         }
         IntranetUtil.close(channel);

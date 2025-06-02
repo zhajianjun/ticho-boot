@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
+import top.ticho.intranet.common.exception.IntranetException;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -77,30 +78,22 @@ public class IntranetUtil {
         return addr.getPort();
     }
 
-    /**
-     * 除
-     *
-     * @param a a
-     * @param b b
-     * @return long
-     */
-    public static long divide(long a, long b) {
-        BigDecimal divide = BigDecimal.valueOf(a).divide(BigDecimal.valueOf(b), 0, RoundingMode.UP);
-        return divide.longValue();
+    public static void isNotNull(Object obj, String message) {
+        if (null == obj) {
+            throw new IntranetException(message);
+        }
     }
 
-    /**
-     * 转换路径
-     *
-     * @param str str
-     * @return {@link String}
-     */
-    public static String convertPath(String str) {
-        if (Objects.isNull(str)) {
-            return null;
+    public static void isNotEmpty(String obj, String message) {
+        if (null == obj || obj.isEmpty()) {
+            throw new IntranetException(message);
         }
-        str = str.replace('\\', '/');
-        return str;
+    }
+
+    public static void isTrue(boolean condition, String message) {
+        if (!condition) {
+            throw new IntranetException(message);
+        }
     }
 
 }

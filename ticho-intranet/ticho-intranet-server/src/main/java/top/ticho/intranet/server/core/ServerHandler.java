@@ -1,6 +1,5 @@
 package top.ticho.intranet.server.core;
 
-import cn.hutool.core.map.MapUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -8,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.exception.IntranetException;
 import top.ticho.intranet.common.prop.ServerProperty;
+import top.ticho.intranet.common.util.IntranetUtil;
 import top.ticho.intranet.server.common.ServerStatus;
 import top.ticho.intranet.server.entity.ClientInfo;
 import top.ticho.intranet.server.entity.PortInfo;
@@ -81,6 +81,7 @@ public record ServerHandler(
 
     public boolean create(String accessKey, String name) {
         checkStatus();
+        IntranetUtil.isNotEmpty(accessKey, "accessKey不能为空");
         return clientSupport.create(accessKey, name);
     }
 
@@ -89,6 +90,7 @@ public record ServerHandler(
      */
     public void remove(String accessKey) {
         checkStatus();
+        IntranetUtil.isNotEmpty(accessKey, "accessKey不能为空");
         Optional<ClientInfo> clientInfoOpt = findByAccessKey(accessKey);
         if (clientInfoOpt.isEmpty()) {
             return;
@@ -105,12 +107,11 @@ public record ServerHandler(
         findAll().forEach(this::remove);
     }
 
-    public void remove(ClientInfo clientInfo) {
+    private void remove(ClientInfo clientInfo) {
         checkStatus();
         // 删除应用
         Map<Integer, PortInfo> portMap = clientInfo.getPortMap();
         Optional.ofNullable(portMap)
-            .filter(MapUtil::isNotEmpty)
             .map(Map::keySet)
             .ifPresent(ports -> {
                 ports.forEach(applicationSupport::unbind);
@@ -126,6 +127,11 @@ public record ServerHandler(
      */
     public boolean bind(String accessKey, Integer port, String endpoint) {
         checkStatus();
+        IntranetUtil.isNotEmpty(accessKey, "accessKey不能为空");
+        IntranetUtil.isNotNull(port, "port不能为空");
+        IntranetUtil.isNotEmpty(endpoint, "endpoint不能为空");
+        boolean matches = endpoint.matches("\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?):([1-9]|[1-9][0-9]{1,3}|[1-5][0-9]{4}|6[0-5][0-5][0-3][0-5])\\b");
+        IntranetUtil.isTrue(matches, "endpoint格式错误，格式[ip:port]");
         Optional<ClientInfo> clientInfoOpt = findByAccessKey(accessKey);
         if (clientInfoOpt.isEmpty()) {
             return false;
@@ -144,7 +150,8 @@ public record ServerHandler(
      */
     public void flush(String accessKey, Map<Integer, PortInfo> portInfoMap) {
         checkStatus();
-        if (MapUtil.isEmpty(portInfoMap)) {
+        IntranetUtil.isNotEmpty(accessKey, "accessKey不能为空");
+        if (Objects.isNull(portInfoMap)) {
             return;
         }
         Optional<ClientInfo> clientInfoOpt = findByAccessKey(accessKey);
@@ -176,6 +183,7 @@ public record ServerHandler(
      */
     public boolean unbind(String accessKey) {
         checkStatus();
+        IntranetUtil.isNotEmpty(accessKey, "accessKey不能为空");
         Optional<ClientInfo> clientInfoOpt = findByAccessKey(accessKey);
         if (clientInfoOpt.isEmpty()) {
             return false;
@@ -192,19 +200,22 @@ public record ServerHandler(
     /**
      * 根据accessKey和端口号删除应用
      */
-    public void unbind(String accessKey, Integer portNum) {
+    public void unbind(String accessKey, Integer port) {
         checkStatus();
+        IntranetUtil.isNotEmpty(accessKey, "accessKey不能为空");
+        IntranetUtil.isNotNull(port, "port不能为空");
         Optional<ClientInfo> clientInfoOpt = findByAccessKey(accessKey);
-        if (clientInfoOpt.isEmpty() || MapUtil.isEmpty(clientInfoOpt.get().getPortMap())) {
+        if (clientInfoOpt.isEmpty()) {
             return;
         }
         ClientInfo clientInfo = clientInfoOpt.get();
-        if (!clientInfo.getPortMap().containsKey(portNum)) {
+        Map<Integer, PortInfo> portMap = clientInfo.getPortMap();
+        if (Objects.isNull(portMap) || !portMap.containsKey(port)) {
             return;
         }
-        PortInfo portInfo = clientInfo.getPortMap().get(portNum);
+        PortInfo portInfo = portMap.get(port);
         if (applicationSupport.unbind(portInfo.getPort())) {
-            clientInfo.getPortMap().remove(portNum);
+            portMap.remove(port);
         }
     }
 

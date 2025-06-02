@@ -1,8 +1,7 @@
 package top.ticho.intranet.server.support;
 
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
 import io.netty.channel.Channel;
+import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.util.IntranetUtil;
 import top.ticho.intranet.server.entity.ClientInfo;
@@ -18,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author zhajianjun
  * @date 2025-05-18 11:44
  */
+@Slf4j
 public class ClientSupport {
     /**
      * 客户端与服务端的通道
@@ -25,7 +25,7 @@ public class ClientSupport {
     private final Map<String, ClientInfo> clientMap = new ConcurrentHashMap<>();
 
     public Optional<ClientInfo> findByAccessKey(String accessKey) {
-        if (StrUtil.isBlank(accessKey)) {
+        if (Objects.isNull(accessKey)) {
             return Optional.empty();
         }
         return Optional.ofNullable(clientMap.get(accessKey));
@@ -44,13 +44,15 @@ public class ClientSupport {
     }
 
     public boolean create(String accessKey, String name) {
-        if (StrUtil.isBlank(accessKey)) {
+        if (Objects.isNull(accessKey)) {
             return false;
         }
         if (clientMap.containsKey(accessKey)) {
+            log.warn("创建客户端失败，密钥：{}已存在", accessKey);
             return false;
         }
         clientMap.put(accessKey, new ClientInfo(accessKey, name));
+        log.info("创建客户端成功，密钥：{}", accessKey);
         return true;
     }
 
@@ -58,19 +60,21 @@ public class ClientSupport {
      * 根据accessKey删除客户端
      */
     public boolean deleteClient(String accessKey) {
-        if (StrUtil.isBlank(accessKey)) {
+        if (Objects.isNull(accessKey)) {
             return false;
         }
         ClientInfo clientInfoGet = clientMap.get(accessKey);
         if (Objects.isNull(clientInfoGet)) {
+            log.warn("移除客户端失败，密钥：{}不存在", accessKey);
             return false;
         }
         clientMap.remove(accessKey);
+        log.info("移除客户端成功，密钥：{}", accessKey);
         return true;
     }
 
     public boolean deleteAllClient() {
-        if (MapUtil.isEmpty(clientMap)) {
+        if (clientMap.isEmpty()) {
             return false;
         }
         Set<String> accessKeys = clientMap.keySet();
@@ -79,11 +83,11 @@ public class ClientSupport {
     }
 
     public Channel getRequestChannel(Channel channel, String requestId) {
-        if (null == channel || StrUtil.isBlank(requestId)) {
+        if (null == channel || Objects.isNull(requestId)) {
             return null;
         }
         Map<String, Channel> requestChannelMap = channel.attr(CommConst.REQUEST_ID_ATTR_MAP).get();
-        if (MapUtil.isEmpty(requestChannelMap) && !requestChannelMap.containsKey(requestId)) {
+        if (Objects.nonNull(requestChannelMap) && !requestChannelMap.isEmpty() && !requestChannelMap.containsKey(requestId)) {
             return null;
         }
         return requestChannelMap.get(requestId);
@@ -102,7 +106,7 @@ public class ClientSupport {
             return null;
         }
         Map<String, Channel> requestChannelMap = channel.attr(CommConst.REQUEST_ID_ATTR_MAP).get();
-        if (MapUtil.isNotEmpty(requestChannelMap) && requestChannelMap.containsKey(requestId)) {
+        if (Objects.nonNull(requestChannelMap) && requestChannelMap.containsKey(requestId)) {
             synchronized (channel) {
                 return requestChannelMap.remove(requestId);
             }
@@ -131,7 +135,7 @@ public class ClientSupport {
             return;
         }
         Map<String, Channel> requestChannelMap = channel.attr(CommConst.REQUEST_ID_ATTR_MAP).get();
-        if (MapUtil.isNotEmpty(requestChannelMap)) {
+        if (Objects.nonNull(requestChannelMap)) {
             requestChannelMap.values().forEach(IntranetUtil::close);
             requestChannelMap.clear();
         }
