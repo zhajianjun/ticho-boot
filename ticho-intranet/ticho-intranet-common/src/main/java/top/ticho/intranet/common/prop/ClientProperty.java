@@ -27,10 +27,5 @@ public class ClientProperty {
     private Integer maxPoolSize = 100;
     /** 处理客户端连接线程数量 */
     private int workerThreads = Runtime.getRuntime().availableProcessors() * 2;
-    /**
-     * 是否尝试重连
-     * 如果无效的访问密钥，是否尝试重连，是则重连，否则则关闭
-     */
-    private Boolean tryReconnect;
 
 }

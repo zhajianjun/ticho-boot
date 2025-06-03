@@ -57,7 +57,7 @@ public class ApplicationSupport {
         }
         Long maxBindPorts = serverProperty.getMaxBindPorts();
         if (bindPortChannelMap.size() >= maxBindPorts) {
-            log.warn("创建应用失败，端口：{} 超出最大绑定端口数{}", port, maxBindPorts);
+            log.warn("绑定应用失败，端口：{} 超出最大绑定端口数{}", port, maxBindPorts);
             return false;
         }
         try {

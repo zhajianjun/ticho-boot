@@ -134,6 +134,7 @@ public record ServerHandler(
         IntranetUtil.isTrue(matches, "endpoint格式错误，格式[ip:port]");
         Optional<ClientInfo> clientInfoOpt = findByAccessKey(accessKey);
         if (clientInfoOpt.isEmpty()) {
+            log.warn("绑定应用[{}]失败，客户端：{}不存在", port, accessKey);
             return false;
         }
         ClientInfo clientInfo = clientInfoOpt.get();
@@ -186,6 +187,7 @@ public record ServerHandler(
         IntranetUtil.isNotEmpty(accessKey, "accessKey不能为空");
         Optional<ClientInfo> clientInfoOpt = findByAccessKey(accessKey);
         if (clientInfoOpt.isEmpty()) {
+            log.warn("解绑客户端[{}]下所有应用失败，客户端不存在", accessKey);
             return false;
         }
         ClientInfo clientInfo = clientInfoOpt.get();
@@ -206,17 +208,13 @@ public record ServerHandler(
         IntranetUtil.isNotNull(port, "port不能为空");
         Optional<ClientInfo> clientInfoOpt = findByAccessKey(accessKey);
         if (clientInfoOpt.isEmpty()) {
+            log.warn("解绑应用[{}]失败，客户端：{}不存在", port, accessKey);
             return;
         }
-        ClientInfo clientInfo = clientInfoOpt.get();
-        Map<Integer, PortInfo> portMap = clientInfo.getPortMap();
-        if (Objects.isNull(portMap) || !portMap.containsKey(port)) {
-            return;
+        if (applicationSupport.unbind(port)) {
+            clientInfoOpt.get().getPortMap().remove(port);
         }
-        PortInfo portInfo = portMap.get(port);
-        if (applicationSupport.unbind(portInfo.getPort())) {
-            portMap.remove(port);
-        }
+         log.warn("解绑应用[{}]失败，客户端：{}不存在", port, accessKey);
     }
 
     public boolean exists(Integer portNum) {
