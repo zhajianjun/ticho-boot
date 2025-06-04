@@ -26,6 +26,7 @@ import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
@@ -58,6 +59,7 @@ public class TiResponseBodyAdvice implements ResponseBodyAdvice<Object> {
             Map.entry(BindException.class, TiHttpErrCode.BAD_REQUEST),
             Map.entry(TypeMismatchException.class, TiHttpErrCode.BAD_REQUEST),
             Map.entry(NoHandlerFoundException.class, TiHttpErrCode.BAD_REQUEST),
+            Map.entry(HandlerMethodValidationException.class, TiHttpErrCode.BAD_REQUEST),
             Map.entry(ServletRequestBindingException.class, TiHttpErrCode.BAD_REQUEST),
             Map.entry(HttpMessageNotReadableException.class, TiHttpErrCode.BAD_REQUEST),
             Map.entry(MissingServletRequestPartException.class, TiHttpErrCode.BAD_REQUEST),
