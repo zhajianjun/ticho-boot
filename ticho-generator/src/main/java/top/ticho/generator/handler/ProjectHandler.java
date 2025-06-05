@@ -155,9 +155,11 @@ public class ProjectHandler {
         fileTemplate.setPrefix(StrUtil.emptyDefault(fileTemplateConfig.getPrefix(), CommConst.EMPTY));
         fileTemplate.setSuffix(StrUtil.emptyDefault(fileTemplateConfig.getSuffix(), CommConst.EMPTY));
         fileTemplate.setContent(FileUtil.readString(file));
-        fileTemplate.setLowerFirstFileName(Boolean.TRUE.equals(fileTemplateConfig.getLowerFirstFileName()));
+        fileTemplate.setLowerFirstFileName(fileTemplateConfig.getLowerFirstFileName());
         fileTemplate.setExtName(split[1]);
-        fileTemplate.setFileAppend(Boolean.TRUE.equals(projectConfig.getFileAppend()));
+        // 输出文件夹路径为空或者模板文件创建为false或者空时，默认创建
+        boolean createFile = StrUtil.isBlank(projectConfig.getOutPutDir()) || fileTemplateConfig.getCreateFile();
+        fileTemplate.setCreateFile(createFile);
         setFilePath(fileTemplateConfig, fileTemplate);
         log.debug("模板文件[{}]解析完成，根路径[{}]", templateFileName, file.getAbsolutePath());
         return fileTemplate;
@@ -167,19 +169,25 @@ public class ProjectHandler {
         String relativePath = fileTemplateConfig.getRelativePath();
         String outPutDir = projectConfig.getOutPutDir();
         StringJoiner joiner = new StringJoiner(File.separator);
-        boolean fileAppend = fileTemplate.getFileAppend();
+        boolean fileAppend = projectConfig.getFileAppend();
         if (StrUtil.isBlank(outPutDir)) {
             joiner.add(CommConst.PROJECT_PATH + File.separator + "data");
             joiner.add(env);
-            joiner.add(fileTemplate.getKey());
-            if (Boolean.TRUE.equals(fileTemplate.getAddToJavaDir())) {
+            if (!fileAppend) {
+                joiner.add(fileTemplate.getKey());
+            }
+            if (fileTemplate.getAddToJavaDir()) {
                 fileTemplate.setPackagePath(projectConfig.getParentPackage() + CommConst.DOT + relativePath);
             }
-            fileTemplate.setRenderFilePath(joiner + File.separator + fileTemplate.getPrefix() + "%s" + fileTemplate.getSuffix() + CommConst.DOT + fileTemplate.getExtName());
+            if (fileAppend) {
+                fileTemplate.setRenderFilePath(joiner + File.separator + fileTemplate.getKey() + CommConst.DOT + fileTemplate.getExtName());
+            } else {
+                fileTemplate.setRenderFilePath(joiner + File.separator + fileTemplate.getPrefix() + "%s" + fileTemplate.getSuffix() + CommConst.DOT + fileTemplate.getExtName());
+            }
         } else if (fileAppend) {
-            joiner.add(CommConst.PROJECT_PATH + File.separator + "data");
+            joiner.add(projectConfig.getOutPutDir());
             joiner.add(env);
-            if (Boolean.TRUE.equals(fileTemplate.getAddToJavaDir())) {
+            if (fileTemplate.getAddToJavaDir()) {
                 fileTemplate.setPackagePath(projectConfig.getParentPackage() + CommConst.DOT + relativePath);
             }
             fileTemplate.setRenderFilePath(joiner + File.separator + fileTemplate.getKey() + CommConst.DOT + fileTemplate.getExtName());
@@ -187,7 +195,7 @@ public class ProjectHandler {
             joiner.add(outPutDir.replace("\\", File.separator));
             joiner.add("src");
             joiner.add("main");
-            if (Boolean.TRUE.equals(fileTemplate.getAddToJavaDir())) {
+            if (fileTemplate.getAddToJavaDir()) {
                 joiner.add("java");
                 relativePath = projectConfig.getParentPackage() + CommConst.DOT + relativePath;
                 fileTemplate.setPackagePath(relativePath);
@@ -361,14 +369,17 @@ public class ProjectHandler {
             return;
         }
         List<Table> tables = getTables();
-        boolean fileOverride = Boolean.TRUE.equals(projectConfig.getFileOverride());
+        boolean fileOverride = projectConfig.getFileOverride();
+        boolean fileAppend = projectConfig.getFileAppend();
+        int size = fileTemplates.size();
+        int appendFirst = fileAppend ? 1 : Integer.MAX_VALUE;
         for (Table table : tables) {
             // 模板参数
             Map<String, Object> templateParams = new HashMap<>(globalConfig.getGlobalParams());
             // 自定义参数，会覆盖模板参数
             templateParams.putAll(projectConfig.getCustomParams());
-            Map<String, Object> classNameMap = new HashMap<>(fileTemplates.size());
-            Map<String, Object> pkgMap = new HashMap<>(fileTemplates.size());
+            Map<String, Object> classNameMap = new HashMap<>(size);
+            Map<String, Object> pkgMap = new HashMap<>(size);
             for (FileTemplate fileTemplate : fileTemplates) {
                 if (fileTemplate.getAddToJavaDir()) {
                     String className = fileTemplate.getPrefix() + table.getEntityName() + fileTemplate.getSuffix();
@@ -383,13 +394,22 @@ public class ProjectHandler {
             setDefaultKeyName(table.getKeyName(), templateParams);
             for (FileTemplate fileTemplate : fileTemplates) {
                 String filePath = String.format(fileTemplate.getRenderFilePath(), table.getEntityName());
-                boolean fileAppend = fileTemplate.getFileAppend();
+                Boolean createFile = fileTemplate.getCreateFile();
+                if (!createFile) {
+                    log.info("文件不生成：{}", filePath);
+                    continue;
+                }
                 File file = new File(filePath);
                 if (file.exists() && !fileOverride && !fileAppend) {
                     log.info("文件已存在，跳过生成：{}", filePath);
                     continue;
                 }
                 FileUtil.checkFile(file);
+                // append模式，第一次生成文件前，先删除文件
+                if (fileAppend && appendFirst <= size) {
+                    appendFirst++;
+                    file.delete();
+                }
                 Template template = groupTemplate.getTemplate(fileTemplate.getContent());
                 template.binding(templateParams);
                 // 验证模板是否存在
@@ -401,7 +421,7 @@ public class ProjectHandler {
                 }
                 try (FileOutputStream out = new FileOutputStream(file, fileAppend)) {
                     template.renderTo(out);
-                    log.debug("文件生成成功[{}]", file.getAbsolutePath());
+                    log.debug("文件生成成功[{}]，是否覆盖：{}，是否追加{}", file.getAbsolutePath(), fileOverride, fileAppend);
                 } catch (Exception e) {
                     String message = String.format("模板[%s]渲染异常。%s", fileTemplate.getTemplateFileName(), e.getMessage());
                     if (globalConfig.getIgnoreError()) {
@@ -421,6 +441,11 @@ public class ProjectHandler {
             CommConst.JSON_FILE_NAME + File.separator +
             table.getEntityName() +
             CommConst.DOT + CommConst.JSON_FILE_NAME;
+        if (projectConfig.getFileAppend()) {
+            paramJsonPath = projectConfig.getOutPutDir() + File.separator + env + File.separator + CommConst.JSON_FILE_NAME + File.separator +
+                table.getEntityName() +
+                CommConst.DOT + CommConst.JSON_FILE_NAME;
+        }
         File file = new File(paramJsonPath);
         FileUtil.checkFile(file);
         try (FileOutputStream out = new FileOutputStream(file)) {

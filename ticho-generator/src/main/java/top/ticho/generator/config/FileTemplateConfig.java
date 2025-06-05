@@ -18,6 +18,8 @@ public class FileTemplateConfig {
     /** 文件名后缀 */
     private String suffix;
     /** 文件首字母是否小写 */
-    private Boolean lowerFirstFileName;
+    private Boolean lowerFirstFileName = false;
+    /** 文件是否创建 */
+    private Boolean createFile = true;
 
 }

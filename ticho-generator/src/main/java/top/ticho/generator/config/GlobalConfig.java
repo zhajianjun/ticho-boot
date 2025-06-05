@@ -17,7 +17,7 @@ public class GlobalConfig {
     /** 环境 */
     private List<String> envs;
     /** 忽略项目错误执行 */
-    private Boolean ignoreError;
+    private Boolean ignoreError = true;
     /** 日期时间 */
     private String date;
     /** 日期格式，缺省默认为yyyy-MM-dd HH:mm:ss */

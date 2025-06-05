@@ -17,6 +17,13 @@ import java.nio.charset.StandardCharsets;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FileUtil {
 
+    public static void delete(File file) {
+        if (file.exists()) {
+            // 能创建多级目录
+            boolean delete = file.delete();
+        }
+    }
+
 
     public static void checkFile(File file) {
         try {

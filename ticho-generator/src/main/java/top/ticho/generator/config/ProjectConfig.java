@@ -22,18 +22,18 @@ import java.util.Map;
 public class ProjectConfig {
 
     /** 是否弹出文件夹 */
-    private Boolean open;
+    private Boolean open = false;
     /** 是否文件追加模式 */
-    private Boolean fileAppend;
+    private Boolean fileAppend = false;
     /** 是否覆盖文件 */
-    private Boolean fileOverride;
+    private Boolean fileOverride = false;
     /** 模板路径 */
     private String templatePath;
     /** 根包位置 */
     private String parentPackage;
     /** Java时间类型 */
     private DateType dateType;
-    /** 输出文件路径 */
+    /** 输出文件目录 */
     private String outPutDir;
     /** 主键名称，如id,如果实际表中有主键id，这个属性会被替换 */
     private String keyName;

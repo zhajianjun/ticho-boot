@@ -30,7 +30,7 @@ public class FileTemplate {
     private String renderFilePath;
     /** 文件首字母是否小写 */
     private Boolean lowerFirstFileName;
-    /** 是否文件追加模式 */
-    private Boolean fileAppend;
+    /** 文件是否创建 */
+    private Boolean createFile;
 
 }
