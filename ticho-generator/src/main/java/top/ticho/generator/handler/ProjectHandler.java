@@ -441,11 +441,6 @@ public class ProjectHandler {
             CommConst.JSON_FILE_NAME + File.separator +
             table.getEntityName() +
             CommConst.DOT + CommConst.JSON_FILE_NAME;
-        if (projectConfig.getFileAppend()) {
-            paramJsonPath = projectConfig.getOutPutDir() + File.separator + env + File.separator + CommConst.JSON_FILE_NAME + File.separator +
-                table.getEntityName() +
-                CommConst.DOT + CommConst.JSON_FILE_NAME;
-        }
         File file = new File(paramJsonPath);
         FileUtil.checkFile(file);
         try (FileOutputStream out = new FileOutputStream(file)) {
