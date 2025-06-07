@@ -371,15 +371,15 @@ public class ProjectHandler {
         List<Table> tables = getTables();
         boolean fileOverride = projectConfig.getFileOverride();
         boolean fileAppend = projectConfig.getFileAppend();
-        int size = fileTemplates.size();
+        int createFileSize = (int) fileTemplates.stream().filter(FileTemplate::getCreateFile).count();
         int appendFirst = fileAppend ? 1 : Integer.MAX_VALUE;
         for (Table table : tables) {
             // 模板参数
             Map<String, Object> templateParams = new HashMap<>(globalConfig.getGlobalParams());
             // 自定义参数，会覆盖模板参数
             templateParams.putAll(projectConfig.getCustomParams());
-            Map<String, Object> classNameMap = new HashMap<>(size);
-            Map<String, Object> pkgMap = new HashMap<>(size);
+            Map<String, Object> classNameMap = new HashMap<>(fileTemplates.size());
+            Map<String, Object> pkgMap = new HashMap<>(fileTemplates.size());
             for (FileTemplate fileTemplate : fileTemplates) {
                 if (fileTemplate.getAddToJavaDir()) {
                     String className = fileTemplate.getPrefix() + table.getEntityName() + fileTemplate.getSuffix();
@@ -406,9 +406,13 @@ public class ProjectHandler {
                 }
                 FileUtil.checkFile(file);
                 // append模式，第一次生成文件前，先删除文件
-                if (fileAppend && appendFirst <= size) {
+                if (fileAppend && appendFirst <= createFileSize) {
                     appendFirst++;
-                    file.delete();
+                    boolean delete = file.delete();
+                    if (!delete) {
+                        log.warn("文件删除失败：{}", filePath);
+                        continue;
+                    }
                 }
                 Template template = groupTemplate.getTemplate(fileTemplate.getContent());
                 template.binding(templateParams);
