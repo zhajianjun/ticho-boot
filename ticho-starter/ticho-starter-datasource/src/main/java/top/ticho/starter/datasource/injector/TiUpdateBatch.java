@@ -48,12 +48,19 @@ public class TiUpdateBatch extends AbstractMethod {
         sqlSb.append(valuesScript);
         sqlSb.append(") as t2 set ");
         for (TableFieldInfo fieldInfo : fieldList) {
-            sqlSb.append(" t1.").append(fieldInfo.getColumn()).append(" = t2.").append(fieldInfo.getColumn()).append(",");
+            if (fieldInfo.isVersion()) {
+                sqlSb.append(" t1.").append(fieldInfo.getColumn()).append(" = t1.").append(fieldInfo.getColumn()).append(" + 1,");
+            } else {
+                sqlSb.append(" t1.").append(fieldInfo.getColumn()).append(" = t2.").append(fieldInfo.getColumn()).append(",");
+            }
         }
         sqlSb.deleteCharAt(sqlSb.length() - 1);
         sqlSb.append(" where ").append(" t1.").append(tableInfo.getKeyColumn()).append(" = t2.").append(tableInfo.getKeyColumn());
         if (tableInfo.isWithLogicDelete()) {
             sqlSb.append(" and t1.").append(tableInfo.getLogicDeleteFieldInfo().getColumn()).append(" = ").append(tableInfo.getLogicDeleteFieldInfo().getLogicNotDeleteValue());
+        }
+        if (tableInfo.isWithVersion()) {
+            sqlSb.append(" and t1.").append(tableInfo.getVersionFieldInfo().getColumn()).append(" = t2.").append(tableInfo.getVersionFieldInfo().getColumn());
         }
         sqlSb.append("</script>");
         SqlSource sqlSource = languageDriver.createSqlSource(configuration, sqlSb.toString(), modelClass);
