@@ -3,8 +3,6 @@ package top.ticho.trace.spring.interceptor;
 import cn.hutool.core.date.SystemClock;
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -15,12 +13,14 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import top.ticho.trace.common.bean.TraceInfo;
 import top.ticho.trace.common.constant.LogConst;
-import top.ticho.trace.common.prop.TraceProperty;
+import top.ticho.trace.common.prop.TiTraceProperty;
 import top.ticho.trace.core.handle.TracePushContext;
-import top.ticho.trace.core.util.TraceUtil;
+import top.ticho.trace.core.util.TiTraceUtil;
 import top.ticho.trace.spring.event.TraceEvent;
 import top.ticho.trace.spring.util.IpUtil;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,15 +37,15 @@ public class TraceInterceptor implements HandlerInterceptor, Ordered {
     /** 接口开始时间 */
     private final TransmittableThreadLocal<Long> startLocal;
     /** 链路配置 */
-    private final TraceProperty traceProperty;
+    private final TiTraceProperty tiTraceProperty;
     /** 环境变量 */
     private final Environment environment;
 
     /** url地址匹配 */
 
-    public TraceInterceptor(TraceProperty traceProperty, Environment environment) {
+    public TraceInterceptor(TiTraceProperty tiTraceProperty, Environment environment) {
         this.startLocal = new TransmittableThreadLocal<>();
-        this.traceProperty = traceProperty;
+        this.tiTraceProperty = tiTraceProperty;
         this.environment = environment;
     }
 
@@ -56,7 +56,7 @@ public class TraceInterceptor implements HandlerInterceptor, Ordered {
         }
         startLocal.set(SystemClock.now());
         Map<String, String> headersMap = getHeaders(request);
-        String trace = traceProperty.getTrace();
+        String trace = tiTraceProperty.getTrace();
         String appName = environment.getProperty("spring.application.name");
         String traceId = headersMap.get(LogConst.TRACE_ID_KEY);
         String spanId = headersMap.get(LogConst.SPAN_ID_KEY);
@@ -66,7 +66,7 @@ public class TraceInterceptor implements HandlerInterceptor, Ordered {
         if (preIp == null) {
             preIp = IpUtil.getIp(request);
         }
-        TraceUtil.prepare(traceId, spanId, appName, ip, preAppName, preIp, trace);
+        TiTraceUtil.prepare(traceId, spanId, appName, ip, preAppName, preIp, trace);
         return true;
     }
 
@@ -100,10 +100,10 @@ public class TraceInterceptor implements HandlerInterceptor, Ordered {
             .end(end)
             .consume(consume)
             .build();
-        TracePushContext.asyncPushTrace(traceProperty, traceInfo);
+        TracePushContext.asyncPushTrace(tiTraceProperty, traceInfo);
         ApplicationContext applicationContext = SpringUtil.getApplicationContext();
         applicationContext.publishEvent(new TraceEvent(applicationContext, traceInfo));
-        TraceUtil.complete();
+        TiTraceUtil.complete();
         startLocal.remove();
     }
 
@@ -124,7 +124,7 @@ public class TraceInterceptor implements HandlerInterceptor, Ordered {
 
     @Override
     public int getOrder() {
-        return traceProperty.getOrder();
+        return tiTraceProperty.getOrder();
     }
 
 }

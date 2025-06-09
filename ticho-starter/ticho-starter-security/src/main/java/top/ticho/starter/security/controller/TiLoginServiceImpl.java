@@ -18,7 +18,6 @@ import java.util.Objects;
  * @date 2025-04-20 13:40
  */
 @Slf4j
-
 public class TiLoginServiceImpl extends AbstractLoginService {
     private final TiSecurityProperty tiSecurityProperty;
 

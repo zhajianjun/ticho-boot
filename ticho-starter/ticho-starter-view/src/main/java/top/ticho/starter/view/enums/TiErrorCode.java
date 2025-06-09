@@ -6,7 +6,7 @@ package top.ticho.starter.view.enums;
  * @author zhajianjun
  * @date 2022-07-10 15:56
  */
-public interface TiErrCode {
+public interface TiErrorCode {
 
     /**
      * 错误码
@@ -21,6 +21,6 @@ public interface TiErrCode {
      *
      * @return {@link String }
      */
-    String getMsg();
+    String getMessage();
 
 }

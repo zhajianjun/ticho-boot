@@ -13,7 +13,7 @@ import java.util.List;
  * @date 2024-02-01 12:30
  */
 @Data
-public class TraceProperty {
+public class TiTraceProperty {
 
     /** 是否开启链路拦截器 */
     private Boolean enable = true;

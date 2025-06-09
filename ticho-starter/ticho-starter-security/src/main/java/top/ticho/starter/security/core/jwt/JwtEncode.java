@@ -7,7 +7,7 @@ import top.ticho.starter.security.constant.TiSecurityConst;
 import top.ticho.starter.security.dto.TiToken;
 import top.ticho.starter.security.prop.TiSecurityProperty;
 import top.ticho.starter.view.core.TiSecurityUser;
-import top.ticho.starter.view.enums.TiBizErrCode;
+import top.ticho.starter.view.enums.TiBizErrorCode;
 import top.ticho.starter.view.util.TiAssert;
 import top.ticho.tool.json.util.TiJsonUtil;
 
@@ -27,12 +27,12 @@ import java.util.concurrent.TimeUnit;
 public record JwtEncode(TiSecurityProperty tiSecurityProperty, JwtSigner jwtSigner) {
 
     public JwtEncode {
-        TiAssert.isNotNull(jwtSigner, TiBizErrCode.FAIL, "signer is null");
+        TiAssert.isNotNull(jwtSigner, TiBizErrorCode.FAIL, "signer is null");
     }
 
     public void encode(TiToken oAuth2AccessToken, TiSecurityUser tiSecurityUser) {
         Signer signer = jwtSigner.getSigner();
-        TiAssert.isNotNull(signer, TiBizErrCode.FAIL, "signer is null");
+        TiAssert.isNotNull(signer, TiBizErrorCode.FAIL, "signer is null");
         long iat = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
         long accessTokenValidity = tiSecurityProperty.getAccessTokenValidity();
         long refreshTokenValidity = tiSecurityProperty.getRefreshTokenValidity();

@@ -1,6 +1,5 @@
 package top.ticho.starter.security.advice;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -11,7 +10,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import top.ticho.starter.view.core.TiResult;
-import top.ticho.starter.view.enums.TiHttpErrCode;
+import top.ticho.starter.view.enums.TiHttpErrorCode;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * 全局异常处理
@@ -35,7 +36,7 @@ public class TiSecurityControllerAdvice {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public TiResult<String> accessDeniedException(AccessDeniedException e, HttpServletRequest request) {
         log.warn("权限不足 e={}", e.getMessage());
-        return TiResult.of(TiHttpErrCode.ACCESS_DENIED, e.getMessage(), request.getRequestURI());
+        return TiResult.of(TiHttpErrorCode.ACCESS_DENIED, e.getMessage(), request.getRequestURI());
     }
 
     /**
@@ -48,7 +49,7 @@ public class TiSecurityControllerAdvice {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public TiResult<String> authenticationException(AuthenticationException e, HttpServletRequest request) {
         log.warn("登录异常 e={}", e.getMessage());
-        return TiResult.of(TiHttpErrCode.NOT_LOGIN, e.getMessage(), request.getRequestURI());
+        return TiResult.of(TiHttpErrorCode.NOT_LOGIN, e.getMessage(), request.getRequestURI());
     }
 
 }

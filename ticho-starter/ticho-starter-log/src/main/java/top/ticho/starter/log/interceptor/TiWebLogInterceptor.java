@@ -6,8 +6,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -30,6 +28,8 @@ import top.ticho.starter.view.log.TiLogProperty;
 import top.ticho.tool.json.util.TiJsonUtil;
 import top.ticho.trace.spring.util.IpUtil;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collection;
@@ -137,8 +137,8 @@ public class TiWebLogInterceptor implements HandlerInterceptor, Ordered {
 
     @Override
     public void afterCompletion(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, Exception ex) {
-        TiHttpLog TIHttpLog = logTheadLocal.get();
-        if (TIHttpLog == null) {
+        TiHttpLog tiHttpLog = logTheadLocal.get();
+        if (tiHttpLog == null) {
             return;
         }
         String type = request.getMethod();
@@ -148,22 +148,22 @@ public class TiWebLogInterceptor implements HandlerInterceptor, Ordered {
         String resHeaders = toJson(resHeaderMap);
         long end = SystemClock.now();
         int status = response.getStatus();
-        Long consume = TIHttpLog.getConsume();
-        TIHttpLog.setResBody(resBody);
-        TIHttpLog.setResHeaders(resHeaders);
+        Long consume = tiHttpLog.getConsume();
+        tiHttpLog.setResBody(resBody);
+        tiHttpLog.setResHeaders(resHeaders);
         if (ex != null) {
-            TIHttpLog.setErrMessage(ex.getMessage());
+            tiHttpLog.setErrMessage(ex.getMessage());
         }
-        TIHttpLog.setEnd(end);
-        TIHttpLog.setStatus(status);
-        TIHttpLog.setMdcMap(MDC.getCopyOfContextMap());
+        tiHttpLog.setEnd(end);
+        tiHttpLog.setStatus(status);
+        tiHttpLog.setMdcMap(MDC.getCopyOfContextMap());
         boolean print = Boolean.TRUE.equals(tiLogProperty.getPrint());
         Boolean anyMatch = antPathMatchLocal.get();
         if (print && !anyMatch) {
             log.info("[REQ] {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}, 响应头={}", type, url, status, consume, nullOfDefault(resBody), nullOfDefault(resHeaders));
         }
         ApplicationContext applicationContext = SpringUtil.getApplicationContext();
-        applicationContext.publishEvent(new TiWebLogEvent(applicationContext, TIHttpLog));
+        applicationContext.publishEvent(new TiWebLogEvent(applicationContext, tiHttpLog, handler));
         logTheadLocal.remove();
         antPathMatchLocal.remove();
     }

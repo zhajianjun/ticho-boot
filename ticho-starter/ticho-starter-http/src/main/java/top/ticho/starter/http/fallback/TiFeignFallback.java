@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
 import top.ticho.starter.view.core.TiResult;
-import top.ticho.starter.view.enums.TiBizErrCode;
+import top.ticho.starter.view.enums.TiBizErrorCode;
 
 import java.lang.reflect.Method;
 import java.util.Objects;
@@ -37,12 +37,12 @@ public class TiFeignFallback<T> implements MethodInterceptor {
         }
         // 非 FeignException
         if (!(cause instanceof FeignException exception)) {
-            return TiResult.of(TiBizErrCode.APP_SERVICE_ERR, errorMessage);
+            return TiResult.of(TiBizErrorCode.APP_SERVICE_ERR, errorMessage);
         }
         String content = exception.contentUTF8();
         // 如果返回的数据为空
         if (StrUtil.isBlank(content)) {
-            return TiResult.of(TiBizErrCode.APP_SERVICE_ERR, errorMessage);
+            return TiResult.of(TiBizErrorCode.APP_SERVICE_ERR, errorMessage);
         }
         return TiResult.fail(content);
     }

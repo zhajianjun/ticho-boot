@@ -1,8 +1,8 @@
 package top.ticho.starter.view.core;
 
 import lombok.Data;
-import top.ticho.starter.view.enums.TiBizErrCode;
-import top.ticho.starter.view.enums.TiErrCode;
+import top.ticho.starter.view.enums.TiBizErrorCode;
+import top.ticho.starter.view.enums.TiErrorCode;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -21,56 +21,56 @@ public class TiResult<T> implements Serializable {
     /** 业务码 */
     private int code;
     /** 业务信息 */
-    private String msg;
+    private String message;
     /** 业务数据 */
     private T data;
     /** 时间戳 */
     private long time;
 
     public TiResult() {
-        TiBizErrCode success = TiBizErrCode.SUCCESS;
+        TiBizErrorCode success = TiBizErrorCode.SUCCESS;
         this.code = success.getCode();
-        this.msg = success.getMsg();
+        this.message = success.getMessage();
         this.time = System.currentTimeMillis();
     }
 
-    public TiResult(TiErrCode resultCode) {
+    public TiResult(TiErrorCode resultCode) {
         this.code = resultCode.getCode();
-        this.msg = resultCode.getMsg();
+        this.message = resultCode.getMessage();
         this.time = System.currentTimeMillis();
     }
 
-    public TiResult(int code, String msg) {
+    public TiResult(int code, String message) {
         this.code = code;
-        this.msg = msg;
+        this.message = message;
         this.time = System.currentTimeMillis();
     }
 
-    public TiResult(int code, String msg, T data) {
+    public TiResult(int code, String message, T data) {
         this.code = code;
-        this.msg = msg;
+        this.message = message;
         this.data = data;
         this.time = System.currentTimeMillis();
     }
 
-    public static <T> TiResult<T> of(int code, String msg) {
-        return new TiResult<>(code, msg);
+    public static <T> TiResult<T> of(int code, String message) {
+        return new TiResult<>(code, message);
     }
 
-    public static <T> TiResult<T> of(int code, String msg, T data) {
-        return new TiResult<>(code, msg, data);
+    public static <T> TiResult<T> of(int code, String message, T data) {
+        return new TiResult<>(code, message, data);
     }
 
-    public static <T> TiResult<T> of(TiErrCode resultCode) {
-        return new TiResult<>(resultCode.getCode(), resultCode.getMsg());
+    public static <T> TiResult<T> of(TiErrorCode resultCode) {
+        return new TiResult<>(resultCode.getCode(), resultCode.getMessage());
     }
 
-    public static <T> TiResult<T> of(TiErrCode resultCode, T data) {
-        return new TiResult<>(resultCode.getCode(), resultCode.getMsg(), data);
+    public static <T> TiResult<T> of(TiErrorCode resultCode, T data) {
+        return new TiResult<>(resultCode.getCode(), resultCode.getMessage(), data);
     }
 
-    public static <T> TiResult<T> of(TiErrCode resultCode, String msg, T data) {
-        return new TiResult<>(resultCode.getCode(), msg, data);
+    public static <T> TiResult<T> of(TiErrorCode resultCode, String message, T data) {
+        return new TiResult<>(resultCode.getCode(), message, data);
     }
 
     public static <T> TiResult<T> ok() {
@@ -78,23 +78,23 @@ public class TiResult<T> implements Serializable {
     }
 
     public static <T> TiResult<T> ok(T data) {
-        return new TiResult<>(TiBizErrCode.SUCCESS.getCode(), TiBizErrCode.SUCCESS.getMsg(), data);
+        return new TiResult<>(TiBizErrorCode.SUCCESS.getCode(), TiBizErrorCode.SUCCESS.getMessage(), data);
     }
 
-    public static <T> TiResult<T> ok(String msg, T data) {
-        return new TiResult<>(TiBizErrCode.SUCCESS.getCode(), msg, data);
+    public static <T> TiResult<T> ok(String message, T data) {
+        return new TiResult<>(TiBizErrorCode.SUCCESS.getCode(), message, data);
     }
 
     public static <T> TiResult<T> fail() {
-        return of(TiBizErrCode.FAIL);
+        return of(TiBizErrorCode.FAIL);
     }
 
-    public static <T> TiResult<T> fail(String msg) {
-        return of(TiBizErrCode.FAIL.getCode(), msg, null);
+    public static <T> TiResult<T> fail(String message) {
+        return of(TiBizErrorCode.FAIL.getCode(), message, null);
     }
 
-    public static <T> TiResult<T> fail(TiErrCode errCode, String msg) {
-        return of(errCode, msg, null);
+    public static <T> TiResult<T> fail(TiErrorCode errCode, String message) {
+        return of(errCode, message, null);
     }
 
     public static <T> TiResult<T> condition(boolean flag) {
@@ -106,8 +106,8 @@ public class TiResult<T> implements Serializable {
         return this;
     }
 
-    public TiResult<T> msg(String msg) {
-        this.msg = msg;
+    public TiResult<T> message(String message) {
+        this.message = message;
         return this;
     }
 

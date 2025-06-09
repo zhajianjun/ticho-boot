@@ -17,7 +17,7 @@ import java.io.Serializable;
 @Getter
 @AllArgsConstructor
 @ToString
-public enum TiHttpErrCode implements Serializable, TiErrCode {
+public enum TiHttpErrorCode implements Serializable, TiErrorCode {
 
     SUCCESS(200, "操作成功"),
     BAD_REQUEST(400, "错误的请求"),
@@ -41,6 +41,6 @@ public enum TiHttpErrCode implements Serializable, TiErrCode {
     private final int code;
 
     /** 状态信息 */
-    private final String msg;
+    private final String message;
 
 }

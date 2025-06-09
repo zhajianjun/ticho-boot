@@ -8,7 +8,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.slf4j.MDC;
 import top.ticho.trace.common.constant.LogConst;
-import top.ticho.trace.core.util.TraceUtil;
+import top.ticho.trace.core.util.TiTraceUtil;
 
 import java.io.IOException;
 
@@ -34,7 +34,7 @@ public class OkHttpLogInterceptor implements Interceptor {
         }
         Request.Builder builder = req.newBuilder();
         builder.addHeader(LogConst.TRACE_ID_KEY, traceId);
-        builder.addHeader(LogConst.SPAN_ID_KEY, TraceUtil.nextSpanId());
+        builder.addHeader(LogConst.SPAN_ID_KEY, TiTraceUtil.nextSpanId());
         builder.addHeader(LogConst.PRE_APP_NAME_KEY, MDC.get(LogConst.APP_NAME_KEY));
         builder.addHeader(LogConst.PRE_IP_KEY, MDC.get(LogConst.IP_KEY));
         req = builder.build();

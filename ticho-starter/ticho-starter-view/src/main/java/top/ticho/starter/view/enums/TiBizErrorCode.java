@@ -17,7 +17,7 @@ import java.io.Serializable;
 @Getter
 @AllArgsConstructor
 @ToString
-public enum TiBizErrCode implements Serializable, TiErrCode {
+public enum TiBizErrorCode implements Serializable, TiErrorCode {
 
     SUCCESS(0, "操作成功"),
     FAIL(-1, "执行失败"),
@@ -32,6 +32,6 @@ public enum TiBizErrCode implements Serializable, TiErrCode {
     private final int code;
 
     /** 状态信息 */
-    private final String msg;
+    private final String message;
 
 }

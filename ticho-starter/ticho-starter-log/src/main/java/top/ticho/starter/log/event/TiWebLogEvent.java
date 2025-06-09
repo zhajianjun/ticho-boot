@@ -17,10 +17,12 @@ import top.ticho.starter.view.log.TiHttpLog;
 public class TiWebLogEvent extends ApplicationContextEvent {
 
     private final TiHttpLog tiHttpLog;
+    private final Object handler;
 
-    public TiWebLogEvent(ApplicationContext source, TiHttpLog tiHttpLog) {
+    public TiWebLogEvent(ApplicationContext source, TiHttpLog tiHttpLog, Object handler) {
         super(source);
         this.tiHttpLog = tiHttpLog;
+        this.handler = handler;
     }
 
 }

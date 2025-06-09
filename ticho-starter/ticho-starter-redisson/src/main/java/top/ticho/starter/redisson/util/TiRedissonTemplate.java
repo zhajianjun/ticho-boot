@@ -7,7 +7,7 @@ import org.redisson.api.RLock;
 import org.slf4j.MDC;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import top.ticho.starter.redisson.thread.TiRedisDelayRunnable;
-import top.ticho.starter.view.enums.TiBizErrCode;
+import top.ticho.starter.view.enums.TiBizErrorCode;
 import top.ticho.starter.view.exception.TiBizException;
 
 import java.util.Map;
@@ -59,7 +59,7 @@ public class TiRedissonTemplate {
                 obj = supplier.get();
             } else {
                 log.info("获取锁:{}失败", key);
-                throw new TiBizException(TiBizErrCode.FAIL, String.format("获取锁:%s失败", key));
+                throw new TiBizException(TiBizErrorCode.FAIL, String.format("获取锁:%s失败", key));
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -108,7 +108,7 @@ public class TiRedissonTemplate {
                 obj = supplier.get();
             } else {
                 log.info("获取锁:{}失败", key);
-                throw new TiBizException(TiBizErrCode.FAIL, String.format("获取锁:%s失败", key));
+                throw new TiBizException(TiBizErrorCode.FAIL, String.format("获取锁:%s失败", key));
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);

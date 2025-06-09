@@ -2,7 +2,6 @@ package top.ticho.trace.gateway.filter;
 
 import cn.hutool.core.date.SystemClock;
 import cn.hutool.core.util.StrUtil;
-import jakarta.annotation.Nonnull;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.reactivestreams.Publisher;
@@ -28,11 +27,12 @@ import reactor.core.publisher.Mono;
 import top.ticho.trace.common.bean.HttpLogInfo;
 import top.ticho.trace.common.bean.TraceInfo;
 import top.ticho.trace.common.constant.LogConst;
-import top.ticho.trace.common.prop.TraceProperty;
+import top.ticho.trace.common.prop.TiTraceProperty;
 import top.ticho.trace.core.handle.TracePushContext;
 import top.ticho.trace.core.util.JsonUtil;
-import top.ticho.trace.core.util.TraceUtil;
+import top.ticho.trace.core.util.TiTraceUtil;
 
+import jakarta.annotation.Nonnull;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
@@ -56,11 +56,11 @@ public class TraceGlobalFilter implements GlobalFilter, Ordered {
     /** 环境变量 */
     private final Environment environment;
     /** 链路配置 */
-    private final TraceProperty traceProperty;
+    private final TiTraceProperty tiTraceProperty;
 
-    public TraceGlobalFilter(TraceProperty traceProperty, Environment environment) {
+    public TraceGlobalFilter(TiTraceProperty tiTraceProperty, Environment environment) {
         this.environment = environment;
-        this.traceProperty = traceProperty;
+        this.tiTraceProperty = tiTraceProperty;
     }
 
     @Override
@@ -84,7 +84,7 @@ public class TraceGlobalFilter implements GlobalFilter, Ordered {
         String params = JsonUtil.toJsonString(queryParams);
         String ip = localIp();
         String appName = environment.getProperty("spring.application.name");
-        String trace = traceProperty.getTrace();
+        String trace = tiTraceProperty.getTrace();
         String type = serverHttpRequest.getMethod().name();
         String url = serverHttpRequest.getPath().toString();
         httpLogInfo.setUrl(url);
@@ -92,12 +92,12 @@ public class TraceGlobalFilter implements GlobalFilter, Ordered {
         httpLogInfo.setStart(SystemClock.now());
         httpLogInfo.setType(type);
         httpLogInfo.setReqParams(params);
-        TraceUtil.prepare(traceId, spanId, appName, ip, preAppName, preIp, trace);
+        TiTraceUtil.prepare(traceId, spanId, appName, ip, preAppName, preIp, trace);
         traceId = MDC.get(LogConst.TRACE_ID_KEY);
         String finalTraceId = traceId;
         Consumer<HttpHeaders> httpHeaders = httpHeader -> {
             httpHeader.set(LogConst.TRACE_ID_KEY, finalTraceId);
-            httpHeader.set(LogConst.SPAN_ID_KEY, TraceUtil.nextSpanId());
+            httpHeader.set(LogConst.SPAN_ID_KEY, TiTraceUtil.nextSpanId());
             httpHeader.set(LogConst.PRE_APP_NAME_KEY, appName);
             httpHeader.set(LogConst.PRE_IP_KEY, ip);
         };
@@ -123,8 +123,8 @@ public class TraceGlobalFilter implements GlobalFilter, Ordered {
             .end(httpLogInfo.getEnd())
             .consume(httpLogInfo.getConsume())
             .build();
-        TraceUtil.complete();
-        TracePushContext.asyncPushTrace(traceProperty, traceInfo);
+        TiTraceUtil.complete();
+        TracePushContext.asyncPushTrace(tiTraceProperty, traceInfo);
     }
 
     public ServerHttpResponse getResponse(ServerWebExchange exchange, HttpLogInfo httpLogInfo) {
@@ -206,7 +206,7 @@ public class TraceGlobalFilter implements GlobalFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return traceProperty.getOrder();
+        return tiTraceProperty.getOrder();
     }
 
 }

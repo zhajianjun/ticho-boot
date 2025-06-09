@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import top.ticho.trace.common.prop.TraceProperty;
+import top.ticho.trace.common.prop.TiTraceProperty;
 import top.ticho.trace.gateway.filter.TraceGlobalFilter;
 
 /**
@@ -20,13 +20,13 @@ public class TraceBeanConfig {
 
     @Bean
     @ConfigurationProperties(prefix = "ticho.trace")
-    public TraceProperty traceLogProperty() {
-        return new TraceProperty();
+    public TiTraceProperty traceLogProperty() {
+        return new TiTraceProperty();
     }
 
     @Bean
-    public TraceGlobalFilter traceGlobalFilter(TraceProperty traceProperty, Environment environment) {
-        return new TraceGlobalFilter(traceProperty, environment);
+    public TraceGlobalFilter traceGlobalFilter(TiTraceProperty tiTraceProperty, Environment environment) {
+        return new TraceGlobalFilter(tiTraceProperty, environment);
     }
 
 }

@@ -1,7 +1,7 @@
 package top.ticho.starter.view.exception;
 
 import lombok.Getter;
-import top.ticho.starter.view.enums.TiErrCode;
+import top.ticho.starter.view.enums.TiErrorCode;
 
 /**
  * 系统异常处理
@@ -12,20 +12,20 @@ import top.ticho.starter.view.enums.TiErrCode;
 @Getter
 public class TiSysException extends TiBaseException {
 
-    public TiSysException(int code, String msg) {
-        super(code, msg);
+    public TiSysException(int code, String message) {
+        super(code, message);
     }
 
-    public TiSysException(String msg) {
-        super(msg);
+    public TiSysException(String message) {
+        super(message);
     }
 
-    public TiSysException(TiErrCode resultCode) {
+    public TiSysException(TiErrorCode resultCode) {
         super(resultCode);
     }
 
-    public TiSysException(TiErrCode resultCode, String msg) {
-        super(resultCode, msg);
+    public TiSysException(TiErrorCode resultCode, String message) {
+        super(resultCode, message);
     }
 
 }

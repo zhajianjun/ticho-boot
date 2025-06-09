@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.starter.view.core.TiResult;
-import top.ticho.starter.view.enums.TiBizErrCode;
+import top.ticho.starter.view.enums.TiBizErrorCode;
 import top.ticho.starter.view.exception.TiBizException;
 import top.ticho.starter.view.exception.TiSysException;
 
@@ -33,17 +33,17 @@ public class TiApiUtil {
             tiResult = supplier.get();
         } catch (Exception e) {
             log.error("{},{}", errorMsg, e.getMessage(), e);
-            throw new TiSysException(TiBizErrCode.APP_SERVICE_ERR, errorMsg);
+            throw new TiSysException(TiBizErrorCode.APP_SERVICE_ERR, errorMsg);
         }
         if (tiResult == null) {
             log.error("{},{}", errorMsg, "返回结果为空");
-            throw new TiSysException(TiBizErrCode.APP_SERVICE_ERR, errorMsg);
+            throw new TiSysException(TiBizErrorCode.APP_SERVICE_ERR, errorMsg);
         }
         int code = tiResult.getCode();
-        String message = tiResult.getMsg();
-        boolean isSuccess = code == TiBizErrCode.SUCCESS.getCode();
+        String message = tiResult.getMessage();
+        boolean isSuccess = code == TiBizErrorCode.SUCCESS.getCode();
         if (!isSuccess) {
-            log.error("{},code={},msg={}", errorMsg, code, message);
+            log.error("{},code={},message={}", errorMsg, code, message);
             throw new TiBizException(code, message);
         }
     }
@@ -57,17 +57,17 @@ public class TiApiUtil {
             tiResult = supplier.get();
         } catch (Exception e) {
             log.error("{},{}", errorMsg, e.getMessage(), e);
-            throw new TiSysException(TiBizErrCode.APP_SERVICE_ERR, errorMsg);
+            throw new TiSysException(TiBizErrorCode.APP_SERVICE_ERR, errorMsg);
         }
         if (tiResult == null) {
             log.error("{},{}", errorMsg, "返回结果为空");
-            throw new TiSysException(TiBizErrCode.APP_SERVICE_ERR, errorMsg);
+            throw new TiSysException(TiBizErrorCode.APP_SERVICE_ERR, errorMsg);
         }
         int code = tiResult.getCode();
-        String message = tiResult.getMsg();
-        boolean isSuccess = code == TiBizErrCode.SUCCESS.getCode();
+        String message = tiResult.getMessage();
+        boolean isSuccess = code == TiBizErrorCode.SUCCESS.getCode();
         if (!isSuccess) {
-            log.error("{},code={},msg={}", errorMsg, code, message);
+            log.error("{},code={},message={}", errorMsg, code, message);
             throw new TiBizException(code, message);
         }
         return tiResult;

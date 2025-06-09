@@ -13,7 +13,7 @@ import org.springframework.security.jwt.crypto.sign.RsaSigner;
 import org.springframework.security.jwt.crypto.sign.RsaVerifier;
 import org.springframework.security.jwt.crypto.sign.SignatureVerifier;
 import org.springframework.security.jwt.crypto.sign.Signer;
-import top.ticho.starter.view.enums.TiBizErrCode;
+import top.ticho.starter.view.enums.TiBizErrorCode;
 import top.ticho.starter.view.util.TiAssert;
 
 import java.security.KeyPair;
@@ -59,7 +59,7 @@ public class JwtSigner implements InitializingBean {
                 log.error("Signing and verification RSA keys do not match");
             }
         } else if (verifier instanceof MacSigner) {
-            TiAssert.isTrue(Objects.equals(this.signingKey, this.verifierKey), TiBizErrCode.FAIL, "For MAC signing you do not need to specify the verifier key separately, and if you do it must match the signing key");
+            TiAssert.isTrue(Objects.equals(this.signingKey, this.verifierKey), TiBizErrorCode.FAIL, "For MAC signing you do not need to specify the verifier key separately, and if you do it must match the signing key");
         }
         this.verifier = verifier;
     }
@@ -77,7 +77,7 @@ public class JwtSigner implements InitializingBean {
         KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(resource, password.toCharArray());
         KeyPair keyPair = keyStoreKeyFactory.getKeyPair(alias);
         PrivateKey privateKey = keyPair.getPrivate();
-        TiAssert.isTrue(privateKey instanceof RSAPrivateKey, TiBizErrCode.FAIL, "KeyPair must be an RSA ");
+        TiAssert.isTrue(privateKey instanceof RSAPrivateKey, TiBizErrorCode.FAIL, "KeyPair must be an RSA ");
         signer = new RsaSigner((RSAPrivateKey) privateKey);
         RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
         verifier = new RsaVerifier(publicKey);

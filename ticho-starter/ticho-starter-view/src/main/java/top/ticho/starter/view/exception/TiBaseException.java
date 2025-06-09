@@ -1,8 +1,8 @@
 package top.ticho.starter.view.exception;
 
 import lombok.Getter;
-import top.ticho.starter.view.enums.TiErrCode;
-import top.ticho.starter.view.enums.TiHttpErrCode;
+import top.ticho.starter.view.enums.TiErrorCode;
+import top.ticho.starter.view.enums.TiHttpErrorCode;
 
 /**
  * 基础异常处理
@@ -15,34 +15,34 @@ public class TiBaseException extends RuntimeException {
     /** 状态码 */
     private final int code;
     /** 状态信息 */
-    private final String msg;
+    private final String message;
 
-    public TiBaseException(int code, String msg) {
-        super(getMessage(code, msg));
+    public TiBaseException(int code, String message) {
+        super(getMessage(code, message));
         this.code = code;
-        this.msg = msg;
+        this.message = message;
     }
 
-    public TiBaseException(String msg) {
-        super(getMessage(TiHttpErrCode.INTERNAL_SERVER_ERROR.getCode(), msg));
-        this.code = TiHttpErrCode.INTERNAL_SERVER_ERROR.getCode();
-        this.msg = msg;
+    public TiBaseException(String message) {
+        super(getMessage(TiHttpErrorCode.INTERNAL_SERVER_ERROR.getCode(), message));
+        this.code = TiHttpErrorCode.INTERNAL_SERVER_ERROR.getCode();
+        this.message = message;
     }
 
-    public TiBaseException(TiErrCode errorCode) {
-        super(getMessage(errorCode.getCode(), errorCode.getMsg()));
+    public TiBaseException(TiErrorCode errorCode) {
+        super(getMessage(errorCode.getCode(), errorCode.getMessage()));
         this.code = errorCode.getCode();
-        this.msg = errorCode.getMsg();
+        this.message = errorCode.getMessage();
     }
 
-    public TiBaseException(TiErrCode errCode, String msg) {
-        super(getMessage(errCode.getCode(), msg));
+    public TiBaseException(TiErrorCode errCode, String message) {
+        super(getMessage(errCode.getCode(), message));
         this.code = errCode.getCode();
-        this.msg = msg;
+        this.message = message;
     }
 
-    private static String getMessage(int code, String msg) {
-        return String.format("异常代码:%s,异常信息:%s", code, msg);
+    private static String getMessage(int code, String message) {
+        return String.format("异常代码:%s,异常信息:%s", code, message);
     }
 
 }

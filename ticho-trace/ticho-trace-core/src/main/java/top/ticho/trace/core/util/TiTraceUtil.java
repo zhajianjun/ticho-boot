@@ -20,7 +20,7 @@ import java.util.function.Supplier;
  * @date 2024-02-01 12:30
  */
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-public class TraceUtil {
+public class TiTraceUtil {
 
     /** 下个跨度id的索引 */
     private static final TransmittableThreadLocal<AtomicInteger> NEXT_SPAN_INDEX_TL = new TransmittableThreadLocal<>();
@@ -143,7 +143,7 @@ public class TraceUtil {
      */
     public static void render() {
         String traceKey = MDC.get(LogConst.TRACE_KEY);
-        String trace = BeetlUtil.render(traceKey, MDC.getCopyOfContextMap());
+        String trace = TiBeetlUtil.render(traceKey, MDC.getCopyOfContextMap());
         MDC.put(LogConst.TRACE_KEY, trace);
     }
 

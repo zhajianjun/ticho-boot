@@ -1,6 +1,5 @@
 package top.ticho.starter.web.advice;
 
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,12 +30,13 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 import top.ticho.starter.view.core.TiResult;
-import top.ticho.starter.view.enums.TiErrCode;
-import top.ticho.starter.view.enums.TiHttpErrCode;
+import top.ticho.starter.view.enums.TiErrorCode;
+import top.ticho.starter.view.enums.TiHttpErrorCode;
 import top.ticho.starter.view.exception.TiBizException;
 import top.ticho.starter.view.exception.TiSysException;
 import top.ticho.starter.web.annotation.TiView;
 
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 
@@ -51,26 +51,26 @@ import java.util.Map;
 @RestControllerAdvice
 @Order(Ordered.LOWEST_PRECEDENCE - 10)
 public class TiResponseBodyAdvice implements ResponseBodyAdvice<Object> {
-    public static Map<Class<? extends Throwable>, TiHttpErrCode> errCodeMap = null;
+    public static Map<Class<? extends Throwable>, TiHttpErrorCode> errCodeMap = null;
     private final HttpServletResponse response;
 
     static {
         TiResponseBodyAdvice.errCodeMap = Map.ofEntries(
-            Map.entry(BindException.class, TiHttpErrCode.BAD_REQUEST),
-            Map.entry(TypeMismatchException.class, TiHttpErrCode.BAD_REQUEST),
-            Map.entry(NoHandlerFoundException.class, TiHttpErrCode.BAD_REQUEST),
-            Map.entry(HandlerMethodValidationException.class, TiHttpErrCode.BAD_REQUEST),
-            Map.entry(ServletRequestBindingException.class, TiHttpErrCode.BAD_REQUEST),
-            Map.entry(HttpMessageNotReadableException.class, TiHttpErrCode.BAD_REQUEST),
-            Map.entry(MissingServletRequestPartException.class, TiHttpErrCode.BAD_REQUEST),
-            Map.entry(MissingServletRequestParameterException.class, TiHttpErrCode.BAD_REQUEST),
-            Map.entry(MissingPathVariableException.class, TiHttpErrCode.INTERNAL_SERVER_ERROR),
-            Map.entry(ConversionNotSupportedException.class, TiHttpErrCode.INTERNAL_SERVER_ERROR),
-            Map.entry(HttpMessageNotWritableException.class, TiHttpErrCode.INTERNAL_SERVER_ERROR),
-            Map.entry(HttpRequestMethodNotSupportedException.class, TiHttpErrCode.METHOD_NOT_ALLOWED),
-            Map.entry(HttpMediaTypeNotSupportedException.class, TiHttpErrCode.UNSUPPORTED_MEDIA_TYPE),
-            Map.entry(HttpMediaTypeNotAcceptableException.class, TiHttpErrCode.NOT_ACCEPTABLE),
-            Map.entry(AsyncRequestTimeoutException.class, TiHttpErrCode.SERVICE_UNAVAILABLE)
+            Map.entry(BindException.class, TiHttpErrorCode.BAD_REQUEST),
+            Map.entry(TypeMismatchException.class, TiHttpErrorCode.BAD_REQUEST),
+            Map.entry(NoHandlerFoundException.class, TiHttpErrorCode.BAD_REQUEST),
+            Map.entry(HandlerMethodValidationException.class, TiHttpErrorCode.BAD_REQUEST),
+            Map.entry(ServletRequestBindingException.class, TiHttpErrorCode.BAD_REQUEST),
+            Map.entry(HttpMessageNotReadableException.class, TiHttpErrorCode.BAD_REQUEST),
+            Map.entry(MissingServletRequestPartException.class, TiHttpErrorCode.BAD_REQUEST),
+            Map.entry(MissingServletRequestParameterException.class, TiHttpErrorCode.BAD_REQUEST),
+            Map.entry(MissingPathVariableException.class, TiHttpErrorCode.INTERNAL_SERVER_ERROR),
+            Map.entry(ConversionNotSupportedException.class, TiHttpErrorCode.INTERNAL_SERVER_ERROR),
+            Map.entry(HttpMessageNotWritableException.class, TiHttpErrorCode.INTERNAL_SERVER_ERROR),
+            Map.entry(HttpRequestMethodNotSupportedException.class, TiHttpErrorCode.METHOD_NOT_ALLOWED),
+            Map.entry(HttpMediaTypeNotSupportedException.class, TiHttpErrorCode.UNSUPPORTED_MEDIA_TYPE),
+            Map.entry(HttpMediaTypeNotAcceptableException.class, TiHttpErrorCode.NOT_ACCEPTABLE),
+            Map.entry(AsyncRequestTimeoutException.class, TiHttpErrorCode.SERVICE_UNAVAILABLE)
         );
     }
 
@@ -83,21 +83,21 @@ public class TiResponseBodyAdvice implements ResponseBodyAdvice<Object> {
             // 业务异常
             response.setStatus(HttpStatus.OK.value());
             log.warn("catch error\t{}", ex.getMessage());
-            return TiResult.of(tiBizException.getCode(), tiBizException.getMsg());
+            return TiResult.of(tiBizException.getCode(), tiBizException.getMessage());
         }
-        TiErrCode errCode = errCodeMap.get(ex.getClass());
+        TiErrorCode errCode = errCodeMap.get(ex.getClass());
         TiResult<String> tiResult;
         if (errCode != null) {
             tiResult = TiResult.of(errCode);
             response.setStatus(tiResult.getCode());
         } else if (ex instanceof TiSysException systemException) {
             // 系统异常
-            tiResult = TiResult.of(systemException.getCode(), systemException.getMsg());
+            tiResult = TiResult.of(systemException.getCode(), systemException.getMessage());
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         } else {
             // 未知异常
-            tiResult = TiResult.of(TiHttpErrCode.FAIL);
-            tiResult.setMsg(ex.getMessage());
+            tiResult = TiResult.of(TiHttpErrorCode.FAIL);
+            tiResult.setMessage(ex.getMessage());
             response.setStatus(tiResult.getCode());
         }
         log.error("catch error\t{}", ex.getMessage(), ex);

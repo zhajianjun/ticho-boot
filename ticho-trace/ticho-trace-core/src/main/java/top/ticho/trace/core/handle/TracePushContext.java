@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import top.ticho.trace.common.bean.LogInfo;
 import top.ticho.trace.common.bean.TraceInfo;
 import top.ticho.trace.common.constant.LogConst;
-import top.ticho.trace.common.prop.TraceProperty;
+import top.ticho.trace.common.prop.TiTraceProperty;
 import top.ticho.trace.core.util.OkHttpUtil;
 
 import java.util.List;
@@ -57,8 +57,8 @@ public class TracePushContext {
      *
      * @param traceInfo 跟踪信息
      */
-    public static void asyncPushTrace(TraceProperty traceProperty, TraceInfo traceInfo) {
-        executor.execute(() -> pushTrace(traceProperty, traceInfo));
+    public static void asyncPushTrace(TiTraceProperty tiTraceProperty, TraceInfo traceInfo) {
+        executor.execute(() -> pushTrace(tiTraceProperty, traceInfo));
     }
 
     /**
@@ -66,15 +66,15 @@ public class TracePushContext {
      *
      * @param traceInfo 跟踪信息
      */
-    public static void pushTrace(TraceProperty traceProperty, TraceInfo traceInfo) {
-        String traceUrl = traceProperty.getUrl();
-        String secret = traceProperty.getSecret();
+    public static void pushTrace(TiTraceProperty tiTraceProperty, TraceInfo traceInfo) {
+        String traceUrl = tiTraceProperty.getUrl();
+        String secret = tiTraceProperty.getSecret();
         // 配置不推送链路信息
-        if (!traceProperty.getPushTrace()) {
+        if (!tiTraceProperty.getPushTrace()) {
             return;
         }
         // 不推送链路信息的url匹配
-        List<String> antPatterns = traceProperty.getAntPatterns();
+        List<String> antPatterns = tiTraceProperty.getAntPatterns();
         if (CollUtil.isEmpty(antPatterns)) {
             OkHttpUtil.push(traceUrl, secret, traceInfo);
         }

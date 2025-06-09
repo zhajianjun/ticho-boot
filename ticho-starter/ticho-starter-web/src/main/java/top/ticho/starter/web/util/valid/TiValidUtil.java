@@ -1,20 +1,20 @@
 package top.ticho.starter.web.util.valid;
 
 import cn.hutool.core.util.ObjUtil;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
-import jakarta.validation.groups.Default;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.BaseHibernateValidatorConfiguration;
 import org.hibernate.validator.HibernateValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.ticho.starter.view.enums.TiBizErrCode;
+import top.ticho.starter.view.enums.TiBizErrorCode;
 import top.ticho.starter.view.exception.TiBizException;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
+import jakarta.validation.groups.Default;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -241,7 +241,7 @@ public class TiValidUtil {
             String propertyPath = next.getPropertyPath().toString();
             joiner.add(propertyPath + ":" + message);
             log.warn("参数校验异常，{}", joiner);
-            throw new TiBizException(TiBizErrCode.PARAM_ERROR, message);
+            throw new TiBizException(TiBizErrorCode.PARAM_ERROR, message);
         }
         List<ConstraintViolation<T>> validated = validate
             .stream()
@@ -250,7 +250,7 @@ public class TiValidUtil {
             .collect(Collectors.toList());
         log.warn("参数校验异常，{}", joiner);
         ConstraintViolation<T> violation = validated.get(0);
-        throw new TiBizException(TiBizErrCode.PARAM_ERROR, violation.getMessage());
+        throw new TiBizException(TiBizErrorCode.PARAM_ERROR, violation.getMessage());
     }
 
     /**
@@ -289,11 +289,11 @@ public class TiValidUtil {
     @SuppressWarnings("all")
     private static <T> T preCheck(T obj) {
         if (ObjUtil.isEmpty(obj)) {
-            throw new TiBizException(TiBizErrCode.PARAM_ERROR);
+            throw new TiBizException(TiBizErrorCode.PARAM_ERROR);
         }
         if (obj instanceof Collection<?> collection) {
             if (collection.isEmpty()) {
-                throw new TiBizException(TiBizErrCode.PARAM_ERROR);
+                throw new TiBizException(TiBizErrorCode.PARAM_ERROR);
             }
             TiValidBean<?> tiValidBean = new TiValidBean<>(collection);
             return (T) tiValidBean;
@@ -314,11 +314,11 @@ public class TiValidUtil {
     @SuppressWarnings("all")
     private static <T> T preCheck(T obj, String customMessage) {
         if (ObjUtil.isEmpty(obj)) {
-            throw new TiBizException(TiBizErrCode.PARAM_ERROR, customMessage);
+            throw new TiBizException(TiBizErrorCode.PARAM_ERROR, customMessage);
         }
         if (obj instanceof Collection<?> collection) {
             if (collection.isEmpty()) {
-                throw new TiBizException(TiBizErrCode.PARAM_ERROR, customMessage);
+                throw new TiBizException(TiBizErrorCode.PARAM_ERROR, customMessage);
             }
             TiValidBean<?> tiValidBean = new TiValidBean<>(collection);
             return (T) tiValidBean;

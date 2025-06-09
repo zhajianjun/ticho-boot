@@ -12,7 +12,7 @@ import top.ticho.starter.log.filter.TiWapperRequestFilter;
 import top.ticho.starter.log.interceptor.TiWebLogInterceptor;
 import top.ticho.starter.view.log.TiLogProperty;
 import top.ticho.starter.view.task.TiTaskDecortor;
-import top.ticho.trace.core.util.TraceUtil;
+import top.ticho.trace.core.util.TiTraceUtil;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -53,9 +53,9 @@ public class TiWebBeanConfig {
     @Bean
     public TiTaskDecortor<AtomicInteger> nextSpanIndex() {
         TiTaskDecortor<AtomicInteger> decortor = new TiTaskDecortor<>();
-        decortor.setSupplier(TraceUtil::getNextSpanIndex);
-        decortor.setExecute(TraceUtil::setNextSpanIndex);
-        decortor.setComplete(x -> TraceUtil.clearNextSpanIndex());
+        decortor.setSupplier(TiTraceUtil::getNextSpanIndex);
+        decortor.setExecute(TiTraceUtil::setNextSpanIndex);
+        decortor.setComplete(x -> TiTraceUtil.clearNextSpanIndex());
         return decortor;
     }
 

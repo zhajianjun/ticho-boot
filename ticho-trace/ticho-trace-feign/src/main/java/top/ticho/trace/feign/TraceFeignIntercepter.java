@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import top.ticho.trace.common.constant.LogConst;
-import top.ticho.trace.core.util.TraceUtil;
+import top.ticho.trace.core.util.TiTraceUtil;
 
 /**
  * 链路feign拦截器
@@ -27,7 +27,7 @@ public class TraceFeignIntercepter implements RequestInterceptor {
             return;
         }
         requestTemplate.header(LogConst.TRACE_ID_KEY, traceId);
-        requestTemplate.header(LogConst.SPAN_ID_KEY, TraceUtil.nextSpanId());
+        requestTemplate.header(LogConst.SPAN_ID_KEY, TiTraceUtil.nextSpanId());
         requestTemplate.header(LogConst.PRE_APP_NAME_KEY, MDC.get(LogConst.APP_NAME_KEY));
         requestTemplate.header(LogConst.PRE_IP_KEY, MDC.get(LogConst.IP_KEY));
     }

@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import top.ticho.trace.common.prop.TraceProperty;
+import top.ticho.trace.common.prop.TiTraceProperty;
 import top.ticho.trace.spring.interceptor.TraceInterceptor;
 
 /**
@@ -23,13 +23,13 @@ public class TraceBeanConfig {
 
     @Bean
     @ConfigurationProperties(prefix = "ticho.trace")
-    public TraceProperty traceLogProperty() {
-        return new TraceProperty();
+    public TiTraceProperty traceLogProperty() {
+        return new TiTraceProperty();
     }
 
     @Bean
-    public TraceInterceptor traceInterceptor(TraceProperty traceProperty, Environment environment) {
-        return new TraceInterceptor(traceProperty, environment);
+    public TraceInterceptor traceInterceptor(TiTraceProperty tiTraceProperty, Environment environment) {
+        return new TraceInterceptor(tiTraceProperty, environment);
     }
 
 }

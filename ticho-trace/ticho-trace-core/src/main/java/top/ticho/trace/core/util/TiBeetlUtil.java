@@ -17,7 +17,7 @@ import java.util.Map;
  * @date 2024-02-01 12:30
  */
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-public class BeetlUtil {
+public class TiBeetlUtil {
 
     public static GroupTemplate gt;
 
