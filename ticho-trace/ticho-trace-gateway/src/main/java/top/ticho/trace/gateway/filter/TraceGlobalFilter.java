@@ -24,12 +24,12 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import top.ticho.tool.json.util.TiJsonUtil;
 import top.ticho.trace.common.bean.HttpLogInfo;
 import top.ticho.trace.common.bean.TraceInfo;
 import top.ticho.trace.common.constant.LogConst;
 import top.ticho.trace.common.prop.TiTraceProperty;
 import top.ticho.trace.core.handle.TracePushContext;
-import top.ticho.trace.core.util.JsonUtil;
 import top.ticho.trace.core.util.TiTraceUtil;
 
 import jakarta.annotation.Nonnull;
@@ -81,7 +81,7 @@ public class TraceGlobalFilter implements GlobalFilter, Ordered {
             preIp = preIp(serverHttpRequest);
         }
         MultiValueMap<String, String> queryParams = serverHttpRequest.getQueryParams();
-        String params = JsonUtil.toJsonString(queryParams);
+        String params = TiJsonUtil.toJsonString(queryParams);
         String ip = localIp();
         String appName = environment.getProperty("spring.application.name");
         String trace = tiTraceProperty.getTrace();

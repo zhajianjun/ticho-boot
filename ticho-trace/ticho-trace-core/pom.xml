@@ -52,6 +52,12 @@
             <groupId>com.lmax</groupId>
             <artifactId>disruptor</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>top.ticho.tool</groupId>
+            <artifactId>ticho-tool-json</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>
