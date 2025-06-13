@@ -1,6 +1,5 @@
 package top.ticho.starter.rabbitmq.config;
 
-import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.ReturnedMessage;
@@ -14,13 +13,15 @@ import org.springframework.context.annotation.PropertySource;
 import top.ticho.starter.rabbitmq.event.MqSendSuccessEvent;
 import top.ticho.starter.rabbitmq.event.TiMqSendToExchangeFailEvent;
 
+import jakarta.annotation.PostConstruct;
+import java.util.Optional;
+
 /**
  * rabbitmq 配置
  *
  * @author zhajianjun
  * @date 2022-09-13 16:39
  */
-@SuppressWarnings("deprecation")
 @Configuration
 @PropertySource(value = "classpath:ticho-rabbitmq.properties")
 @Slf4j
@@ -52,9 +53,13 @@ public class TiRabbitmqConfig implements RabbitTemplate.ConfirmCallback, RabbitT
     public void confirm(CorrelationData correlationData, boolean ack, String cause) {
         Message returnedMessage = null;
         String id = null;
-        if (correlationData != null) {
+        Optional<CorrelationData> correlationDataOpt = Optional.ofNullable(correlationData);
+        if (correlationDataOpt.isPresent()) {
             id = correlationData.getId();
-            returnedMessage = correlationData.getReturned().getMessage();
+            returnedMessage = correlationDataOpt
+                .map(CorrelationData::getReturned)
+                .map(ReturnedMessage::getMessage)
+                .orElse(null);
         }
         if (ack) {
             log.debug("消息发送到交换机成功,correlationDataId={}", id);

@@ -1,12 +1,13 @@
 package top.ticho.starter.log.config;
 
-import jakarta.annotation.Resource;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import top.ticho.starter.log.interceptor.TiWebLogInterceptor;
+
+import jakarta.annotation.Resource;
 
 /**
  * 日志MVC配置

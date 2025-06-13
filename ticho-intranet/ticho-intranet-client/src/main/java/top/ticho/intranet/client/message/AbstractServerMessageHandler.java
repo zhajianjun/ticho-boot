@@ -22,7 +22,7 @@ public abstract class AbstractServerMessageHandler {
     /**
      * 读取服务端信息进行不同的处理
      *
-     * @param ctx 通道处理上线文
+     * @param ctx     通道处理上线文
      * @param message 服务端传输的信息
      */
     public abstract void channelRead0(ChannelHandlerContext ctx, Message message);

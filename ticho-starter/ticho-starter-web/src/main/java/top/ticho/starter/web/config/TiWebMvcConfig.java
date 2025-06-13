@@ -1,6 +1,5 @@
 package top.ticho.starter.web.config;
 
-import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.Ordered;
@@ -12,6 +11,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import top.ticho.starter.web.advice.TiResponseBodyAdvice;
 import top.ticho.starter.web.factory.TiYamlPropertySourceFactory;
 
+import jakarta.annotation.Resource;
 import java.util.List;
 
 /**

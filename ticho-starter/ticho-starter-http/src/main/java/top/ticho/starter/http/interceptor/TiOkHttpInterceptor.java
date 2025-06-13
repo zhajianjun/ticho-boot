@@ -4,7 +4,6 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +24,7 @@ import top.ticho.starter.http.prop.TiHttpProperty;
 import top.ticho.starter.view.log.TiHttpLog;
 import top.ticho.tool.json.util.TiJsonUtil;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.URI;
 import java.security.Principal;

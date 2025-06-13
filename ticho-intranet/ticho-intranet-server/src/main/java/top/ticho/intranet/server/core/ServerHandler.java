@@ -214,7 +214,7 @@ public record ServerHandler(
         if (applicationSupport.unbind(port)) {
             clientInfoOpt.get().getPortMap().remove(port);
         }
-         log.warn("解绑应用[{}]失败，客户端：{}不存在", port, accessKey);
+        log.warn("解绑应用[{}]失败，客户端：{}不存在", port, accessKey);
     }
 
     public boolean exists(Integer portNum) {

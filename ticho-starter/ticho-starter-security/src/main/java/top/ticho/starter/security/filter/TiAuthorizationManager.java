@@ -1,6 +1,5 @@
 package top.ticho.starter.security.filter;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
@@ -12,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import top.ticho.starter.security.auth.TiAntPatternsAuthHandle;
 
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.function.Supplier;
 
 /**

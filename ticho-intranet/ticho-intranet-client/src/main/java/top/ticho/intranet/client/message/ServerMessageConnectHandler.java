@@ -8,8 +8,6 @@ import top.ticho.intranet.client.listener.AppConnectListener;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
 
-import java.nio.charset.StandardCharsets;
-
 /**
  * 服务端通道连接消息处理器
  *

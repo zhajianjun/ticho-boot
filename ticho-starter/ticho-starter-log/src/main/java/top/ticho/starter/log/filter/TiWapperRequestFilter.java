@@ -1,5 +1,8 @@
 package top.ticho.starter.log.filter;
 
+import top.ticho.starter.log.wrapper.TiRequestWrapper;
+import top.ticho.starter.log.wrapper.TiResponseWrapper;
+
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.FilterConfig;
@@ -9,9 +12,6 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import top.ticho.starter.log.wrapper.TiRequestWrapper;
-import top.ticho.starter.log.wrapper.TiResponseWrapper;
-
 import java.io.IOException;
 
 /**

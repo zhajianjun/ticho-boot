@@ -7,8 +7,6 @@ import top.ticho.intranet.client.core.ClientHandler;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.util.IntranetUtil;
 
-import java.nio.charset.StandardCharsets;
-
 /**
  * 服务端关闭消息处理器
  *

@@ -5,8 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.server.core.ServerHandler;
 
-import java.nio.charset.StandardCharsets;
-
 /**
  * 客户端未知消息处理器
  *

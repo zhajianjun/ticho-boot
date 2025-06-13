@@ -4,13 +4,13 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import top.ticho.starter.datasource.mapper.TiMapper;
 import top.ticho.starter.datasource.prop.TiDataSourceProperty;
 import top.ticho.starter.datasource.service.TiRepository;
 
+import jakarta.annotation.Resource;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
