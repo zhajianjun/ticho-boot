@@ -11,7 +11,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -43,12 +42,7 @@ public class TiResponseWrapper extends HttpServletResponseWrapper {
     }
 
     public String getBody() {
-        try {
-            return outputStream.toString(StandardCharsets.UTF_8.name());
-        } catch (UnsupportedEncodingException e) {
-            log.error("{}", e.getMessage(), e);
-            throw new RuntimeException(e);
-        }
+        return outputStream.toString(StandardCharsets.UTF_8);
     }
 
     static class WrapperWriter extends PrintWriter {

@@ -38,7 +38,6 @@ public class TiInsertBatch extends AbstractMethod {
         super(INSERT_BATCH);
     }
 
-    @SuppressWarnings("Duplicates")
     @Override
     public MappedStatement injectMappedStatement(Class<?> mapperClass, Class<?> modelClass, TableInfo tableInfo) {
         KeyGenerator keyGenerator = NoKeyGenerator.INSTANCE;

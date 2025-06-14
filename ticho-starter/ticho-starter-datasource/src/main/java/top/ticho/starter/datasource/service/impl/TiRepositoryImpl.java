@@ -97,10 +97,10 @@ public class TiRepositoryImpl<M extends TiMapper<T>, T> extends ServiceImpl<M, T
         }
         int size = ids.size();
         if (size <= batchSize) {
-            return size == baseMapper.deleteBatchIds(ids);
+            return size == baseMapper.deleteByIds(ids);
         }
         List<? extends List<?>> split = CollUtil.split(ids, batchSize);
-        Integer total = split.stream().map(baseMapper::deleteBatchIds).reduce(0, Integer::sum);
+        Integer total = split.stream().map(baseMapper::deleteByIds).reduce(0, Integer::sum);
         return total == size;
     }
 

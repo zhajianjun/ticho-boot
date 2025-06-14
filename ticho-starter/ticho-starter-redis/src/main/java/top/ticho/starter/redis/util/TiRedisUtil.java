@@ -55,8 +55,7 @@ public class TiRedisUtil<K, V> {
      */
     public boolean expire(K key, long timeout, TimeUnit timeUnit) {
         try {
-            Boolean expire = redisTemplate.expire(key, timeout, timeUnit);
-            return Boolean.TRUE.equals(expire);
+            return redisTemplate.expire(key, timeout, timeUnit);
         } catch (Exception e) {
             log.error("{}键设置过期时间失败,异常：{}", key, e.getMessage(), e);
             return false;
@@ -97,8 +96,7 @@ public class TiRedisUtil<K, V> {
      */
     public boolean delete(K key) {
         try {
-            Boolean delete = redisTemplate.delete(key);
-            return Boolean.TRUE.equals(delete);
+            return redisTemplate.delete(key);
         } catch (Exception e) {
             log.error("{}键删除失败,异常：{}", key, e.getMessage(), e);
             return false;
@@ -129,8 +127,7 @@ public class TiRedisUtil<K, V> {
      */
     public boolean exists(K key) {
         try {
-            Boolean hasKey = redisTemplate.hasKey(key);
-            return Boolean.TRUE.equals(hasKey);
+            return redisTemplate.hasKey(key);
         } catch (Exception e) {
             log.error("查询{}键是否存在,异常：{}", key, e.getMessage(), e);
             return false;

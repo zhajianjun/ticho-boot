@@ -172,7 +172,7 @@ public class StringUtil extends org.beetl.ext.fn.StringUtil {
     }
 
     public boolean isEmpty(CharSequence cs) {
-        return cs == null || cs.length() == 0;
+        return cs == null || cs.isEmpty();
     }
 
     public boolean isNotEmpty(CharSequence cs) {

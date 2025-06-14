@@ -10,7 +10,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -24,7 +23,7 @@ public class IpUtil {
 
     public static final String USER_AGENT = "User-Agent";
 
-    private static final List<String> localhosts = Stream.of("127.0.0.1", "0:0:0:0:0:0:0:1").collect(Collectors.toList());
+    private static final List<String> localhosts = Stream.of("127.0.0.1", "0:0:0:0:0:0:0:1").toList();
 
 
     public static String getIp(HttpServletRequest request) {
