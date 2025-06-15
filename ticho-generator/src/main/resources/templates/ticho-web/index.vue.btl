@@ -1,0 +1,179 @@
+<% var lowEntity = strutil.toLowerCase(strutil.subStringTo(table.entityName,0,1))+strutil.subString(table.entityName,1); %>
+<template>
+  <div>
+    <BasicTable @register="registerTable">
+      <template #toolbar>
+        <a-button
+          type="primary"
+          v-auth="'${table.entityName}Add'"
+          preIcon="ant-design:plus-outlined"
+          @click="handleCreate"
+        >
+          新增
+        </a-button>
+        <a-button
+          type="primary"
+          ghost
+          v-auth="'${table.entityName}Export'"
+          preIcon="ant-design:download-outlined"
+          :loading="exportLoding"
+          @click="handleExport"
+          style="color: #2a7dc9"
+        >
+          导出
+        </a-button>
+      </template>
+      <template #action="{ record }">
+        <TableAction
+          :actions="[
+            {
+              icon: 'clarity:note-edit-line',
+              onClick: handleEdit.bind(null, record),
+              tooltip: '修改',
+              auth: '${table.entityName}Edit',
+            },
+            {
+              icon: 'ant-design:delete-outlined',
+              color: 'error',
+              popConfirm: {
+                title: '是否确认删除',
+                confirm: handleDelete.bind(null, record),
+              },
+              tooltip: '删除',
+              auth: '${table.entityName}Del',
+            },
+          ]"
+        />
+      </template>
+    </BasicTable>
+    <${table.entityName}Modal @register="registerModal" @success="handleSuccess" />
+  </div>
+</template>
+<script lang="ts">
+  import { defineComponent, ref } from 'vue';
+  import { BasicTable, TableAction, useTable } from '@/components/Table';
+  import { useModal } from '@/components/Modal';
+  import ${table.entityName}Modal from './${table.entityName}Modal.vue';
+  import { getSearchColumns, getTableColumns } from './${lowEntity}.data';
+  import { useMessage } from '@/hooks/web/useMessage';
+  import { usePermission } from '@/hooks/web/usePermission';
+  import { downloadByData } from '@/utils/file/download';
+  import { VersionModifyCommand } from '@/api/system/model/baseModel';
+  import { ${table.entityName}Query } from '@/api/system/model/${lowEntity}Model';
+  import { del${table.entityName}, export${table.entityName}, ${lowEntity}Page } from '@/api/system/${lowEntity}';
+
+  export default defineComponent({
+    name: '${table.entityName}',
+    components: { BasicTable, ${table.entityName}Modal, TableAction },
+    setup() {
+      const { hasPermission } = usePermission();
+      let showSelect = hasPermission('${table.entityName}Select');
+      const [registerModal, { openModal }] = useModal();
+      const [registerTable, { reload, getSelectRowKeys, getForm }] = useTable({
+        title: '${table.comment!}列表',
+        api: ${lowEntity}Page,
+        rowKey: 'id',
+        columns: getTableColumns(),
+        useSearchForm: true,
+        formConfig: {
+          labelWidth: 120,
+          schemas: getSearchColumns(),
+          showActionButtonGroup: showSelect,
+          showSubmitButton: showSelect,
+          showResetButton: showSelect,
+          autoSubmitOnEnter: showSelect,
+          submitButtonOptions: {
+            preIcon: 'ant-design:search-outlined',
+          },
+          resetButtonOptions: {
+            preIcon: 'ant-design:sync-outlined',
+          },
+        },
+        table${table.entityName}: {
+          redo: showSelect,
+        },
+        immediate: showSelect,
+        showTable${table.entityName}: true,
+        bordered: true,
+        showIndexColumn: false,
+        actionColumn: {
+          width: 80,
+          title: '操作',
+          dataIndex: 'action',
+          slots: { customRender: 'action' },
+          fixed: undefined,
+        },
+        pagination: {
+          simple: false,
+          position: ['bottomCenter'],
+        },
+        showSelectionBar: true,
+        rowSelection: {
+          type: 'checkbox',
+        },
+      });
+
+      function handleCreate() {
+        openModal(true, {
+          modalType: 1,
+        });
+      }
+
+      function handleEdit(record: Recordable) {
+        openModal(true, {
+          record,
+          modalType: 2,
+        });
+      }
+
+      function handleDelete(record: Recordable) {
+        const params = { ...record } as VersionModifyCommand;
+        del${table.entityName}(params).then(() => {
+          reload();
+        });
+      }
+
+      function handleSuccess() {
+        reload();
+      }
+
+      const exportLoding = ref<Boolean>(false);
+      const { createMessage } = useMessage();
+
+      function handleExport() {
+        exportLoding.value = true;
+        // 是否有选中，优先下载选中数据
+        const selectRowKeys = getSelectRowKeys();
+        let params: ${table.entityName}Query;
+        if (selectRowKeys && selectRowKeys.length > 0) {
+          params = { ids: selectRowKeys } as ${table.entityName}Query;
+        } else {
+          // 获取查询参数
+          const { getFieldsValue } = getForm();
+          params = getFieldsValue() as ${table.entityName}Query;
+        }
+        export${table.entityName}(params)
+          .then((res) => {
+            // 提取文件名
+            let fileName = decodeURI(res.headers['content-disposition'].split('filename=')[1]);
+            downloadByData(res.data, fileName);
+            createMessage.info(`导出成功, \${fileName}已下载`);
+          })
+          .finally(() => {
+            exportLoding.value = false;
+          });
+      }
+
+      return {
+        registerTable,
+        registerModal,
+        handleCreate,
+        handleEdit,
+        handleDelete,
+        handleSuccess,
+        exportLoding,
+        handleExport,
+      };
+    },
+  });
+</script>

@@ -1,0 +1,30 @@
+package ${package.converter};
+
+import org.mapstruct.Mapper;
+import ${package.entity}.${className.entity};
+import ${package.po}.${className.po};
+import ${package.dto}.${className.dto};
+
+import java.util.List;
+
+/**
+ * ${table.comment!} 转换
+ *
+ * @author ${author!}
+ * @date ${date!}
+ */
+<% var lowEntity = strutil.toLowerCase(strutil.subStringTo(table.entityName,0,1))+strutil.subString(table.entityName,1); %>
+@Mapper(componentModel = "spring")
+public interface ${className.converter} {
+
+    ${className.entity} toEntity(${className.po} ${lowEntity}PO);
+
+    ${className.dto} toDTO(${className.po} ${lowEntity}PO);
+
+    List<${className.entity}> toEntity(List<${className.po}> ${lowEntity}POs);
+
+    ${className.po} toPO(${className.entity} ${lowEntity});
+
+    List<${className.po}> toPO(List<${className.entity}> ${lowEntity}s);
+
+}

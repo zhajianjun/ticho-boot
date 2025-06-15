@@ -183,4 +183,9 @@ public class StringUtil extends org.beetl.ext.fn.StringUtil {
         return isEmpty(suffix) ? defaultValue : suffix;
     }
 
+    // 字符串中提取出数字
+    public String extractNumber(String str) {
+        return str.replaceAll("[^0-9]", "");
+    }
+
 }

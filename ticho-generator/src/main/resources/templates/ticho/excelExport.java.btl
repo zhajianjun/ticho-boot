@@ -1,0 +1,50 @@
+package ${package.excelExport};
+
+import cn.idev.excel.annotation.ExcelProperty;
+<% for(field in table.fields){ %>
+    <% if(array.contain(excelExportIgnore, field.propertyLowerName)){ %>
+    <% continue; %>
+    <% } else if (field.propertyType == "Date" || field.propertyType == "LocalDate" || field.propertyType == "LocalDateTime") { %>
+import cn.idev.excel.annotation.format.DateTimeFormat;
+    <% break; %>
+    <% } %>
+<% } %>
+import cn.idev.excel.annotation.write.style.ColumnWidth;
+import cn.idev.excel.annotation.write.style.ContentFontStyle;
+import cn.idev.excel.annotation.write.style.HeadFontStyle;
+import cn.idev.excel.annotation.write.style.HeadStyle;
+import lombok.Data;
+
+    <% for(pkg in table.imports){ %>
+import ${pkg};
+    <% } %>
+
+/**
+ * ${table.comment!}Excel导出
+ *
+ * @author ${author!}
+ * @date ${date!}
+ */
+@Data
+@HeadFontStyle(fontHeightInPoints = 12)
+@HeadStyle(fillForegroundColor = 1, leftBorderColor = 22, rightBorderColor = 22, bottomBorderColor = 57)
+@ContentFontStyle(fontHeightInPoints = 10)
+public class ${className.excelExport} {
+
+<% for(field in table.fields){ %>
+    <% if(array.contain(excelExportIgnore, field.propertyLowerName)){ %>
+    <% continue; %>
+    <% } else { %>
+    /** ${field.comment} */
+    @ColumnWidth(20)
+    @ExcelProperty(value = "${field.comment}")
+        <% if(field.propertyType == "Date" || field.propertyType == "LocalDateTime"){ %>
+    @DateTimeFormat(value = "yyyy-MM-dd HH:mm:ss")
+        <% } else if(field.propertyType == "LocalDate") { %>
+    @DateTimeFormat(value = "yyyy-MM-dd")
+        <% } %>
+    private ${field.propertyType} ${field.propertyLowerName};
+    <% } %>
+<% } %>
+
+}

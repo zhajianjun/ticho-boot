@@ -1,86 +1,83 @@
 package ${package.service};
 
-<% if(enableMybatisPlus){ %>
-import top.ticho.starter.datasource.service.TiRepository;
-import top.ticho.starter.view.core.TiPageResult;
-import ${package.dto}.${className.dto};
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import ${package.assembler}.${className.assembler};
+import ${package.excelExport}.${className.excelExport};
+import ${package.appRepository}.${className.appRepository};
 import ${package.entity}.${className.entity};
-import ${package.query}.${className.query};
-
-import java.util.Collection;
-<% } %>
-<% /** --------------------------------- **/ %>
-<% if(!enableMybatisPlus){ %>
-import top.ticho.starter.view.core.TiPageResult;
+import ${package.modifyVo}.${className.modifyVo};
+import ${package.repository}.${className.repository};
+import top.ticho.rainbow.infrastructure.common.component.excel.ExcelHandle;
+import ${package.modifyCommand}.${className.modifyCommand};
+import ${package.saveCommand}.${className.saveCommand};
+import top.ticho.rainbow.interfaces.command.VersionModifyCommand;
 import ${package.dto}.${className.dto};
 import ${package.query}.${className.query};
+import top.ticho.starter.view.core.TiPageResult;
+import top.ticho.starter.view.util.TiAssert;
 
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
-<% } %>
+import java.util.stream.Collectors;
 
 /**
- * ${table.comment!} 服务接口
+ * ${table.comment!} 服务
  *
  * @author ${author!}
  * @date ${date!}
  */
+@RequiredArgsConstructor
+@Service
 <% var lowEntity = strutil.toLowerCase(strutil.subStringTo(table.entityName,0,1))+strutil.subString(table.entityName,1); %>
-<% if(enableMybatisPlus){ %>
-public interface ${className.service} extends TiRepository<${table.entityName}> {
-<% }else{ %>
-public interface ${className.service} {
-<% } %>
+public class ${className.service} {
+    private final ${className.assembler} ${lowEntity}Assembler;
+    private final ${className.repository} ${lowEntity}Repository;
+    private final ${className.appRepository} ${lowEntity}AppRepository;
+    private final HttpServletResponse response;
 
-    /**
-     * 保存${table.comment!}
-     *
-     * @param ${lowEntity}DTO ${table.comment!}DTO 对象
-     */
-    void save${className.entity}(${className.dto} ${lowEntity}DTO);
+    public void save(${className.saveCommand} ${lowEntity}SaveCommand) {
+        ${className.entity} ${lowEntity} = ${lowEntity}Assembler.toEntity(${lowEntity}SaveCommand);
+        TiAssert.isTrue(${lowEntity}Repository.save(${lowEntity}), "保存失败");
+    }
 
-    /**
-     * 批量保存${table.comment!}
-     *
-     * @param ${lowEntity}DTO ${table.comment!}DTO 对象集合
-     */
-    void save${className.entity}Batch(Collection<${className.dto}> ${lowEntity}DTO);
+    public void remove(VersionModifyCommand command) {
+        ${className.entity} ${lowEntity} = ${lowEntity}Repository.find(command.getId());
+        TiAssert.isNotNull(${lowEntity}, "删除失败，数据不存在");
+        ${lowEntity}.checkVersion(command.getVersion(), "数据已被修改，请刷新后重试");
+        TiAssert.isTrue(${lowEntity}Repository.remove(command.getId()), "删除失败，请刷新后重试");
+    }
 
-    /**
-     * 删除${table.comment!}
-     *
-     * @param ${keyNameLF} 主键
-     */
-    void remove${className.entity}By${keyNameUF}(Long ${keyNameLF});
+    public void modify(${className.modifyCommand} ${lowEntity}ModifyfCommand) {
+        ${className.entity} ${lowEntity} = ${lowEntity}Repository.find(${lowEntity}ModifyfCommand.getId());
+        TiAssert.isNotNull(${lowEntity}, "修改失败，数据不存在");
+        ${lowEntity}.checkVersion(${lowEntity}ModifyfCommand.getVersion(), "数据已被修改，请刷新后重试");
+        ${className.modifyVo} ${lowEntity}ModifyfVO = ${lowEntity}Assembler.toModifyfVO(${lowEntity}ModifyfCommand);
+        ${lowEntity}.modify(${lowEntity}ModifyfVO);
+        TiAssert.isTrue(${lowEntity}Repository.modify(${lowEntity}), "修改失败，请刷新后重试");
+    }
 
-    /**
-     * 批量删除${table.comment!}
-     *
-     * @param ${keyNameLF}s 主键
-     */
-    void remove${className.entity}By${keyNameUF}s(Collection<? extends Long> ${keyNameLF}s);
+    public TiPageResult<${className.dto}> page(${className.query} ${lowEntity}Query) {
+        return ${lowEntity}AppRepository.page(${lowEntity}Query);
+    }
 
-    /**
-     * 修改${table.comment!}
-     *
-     * @param ${lowEntity}DTO ${table.comment!}DTO 对象
-     */
-    void update${className.entity}By${keyNameUF}(${className.dto} ${lowEntity}DTO);
+    public void exportExcel(${className.query} ${lowEntity}Query) throws IOException {
+        String sheetName = "${table.comment!}";
+        String fileName = "${table.comment!}导出-" + LocalDateTime.now().format(DateTimeFormatter.ofPattern(DatePattern.PURE_DATETIME_PATTERN));
+        ${lowEntity}Query.setCount(false);
+        ExcelHandle.writeToResponseBatch(this::excelExpHandle, ${lowEntity}Query, fileName, sheetName, ${className.excelExport}.class, response);
+    }
 
-    /**
-     * 根据${keyNameLF}查询${table.comment!}
-     *
-     * @param ${keyNameLF} 主键
-     * @return {@link ${className.dto}}
-     */
-    ${className.dto} get${className.entity}By${keyNameUF}(Long ${keyNameLF});
-
-    /**
-     * 分页查询${table.comment!}列表
-     *
-     * @param query 查询
-     * @return {@link PageResult}<{@link ${className.dto}}>
-     */
-    PageResult<${className.dto}> page(${className.query} query);
+    private Collection<${className.excelExport}> excelExpHandle(${className.query} ${lowEntity}Query) {
+        TiPageResult<${className.dto}> page =  ${lowEntity}AppRepository.page(${lowEntity}Query);
+        return page.getRows()
+            .stream()
+            .map(${lowEntity}Assembler::toExcelExport)
+            .collect(Collectors.toList());
+    }
 
 }
 

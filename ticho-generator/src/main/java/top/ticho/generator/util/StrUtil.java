@@ -93,4 +93,8 @@ public class StrUtil {
         return stringUtil.splitLine(str, split, maxLength);
     }
 
+    public static String extractNumber(String str) {
+        return stringUtil.extractNumber(str);
+    }
+
 }

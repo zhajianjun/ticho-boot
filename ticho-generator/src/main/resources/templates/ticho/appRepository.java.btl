@@ -1,0 +1,19 @@
+package ${package.appRepository};
+
+import ${package.query}.${className.query};
+import ${package.dto}.${className.dto};
+import top.ticho.starter.view.core.TiPageResult;
+
+/**
+ * ${table.comment!} appRepository接口
+ *
+ * @author ${author!}
+ * @date ${date!}
+ */
+<% var lowEntity = strutil.toLowerCase(strutil.subStringTo(table.entityName,0,1))+strutil.subString(table.entityName,1); %>
+public interface ${className.appRepository} {
+
+    TiPageResult<${className.dto}> page(${className.query} ${lowEntity}Query);
+
+}
+

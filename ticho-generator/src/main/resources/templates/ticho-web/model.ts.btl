@@ -1,0 +1,57 @@
+export interface ${table.entityName}DTO {
+    <% for(field in table.fields){ %>
+    <% if(array.contain(dtoIgnore, field.propertyLowerName)){ %>
+    <% continue; %>
+    <% } %>
+  /** ${field.comment} */
+        <% if(field.propertyType == "Long" || field.propertyType == "Integer" || field.propertyType == "Short"){ %>
+  ${field.propertyLowerName}: number;
+        <% } else { %>
+  ${field.propertyLowerName}: string;
+        <% } %>
+    <% } %>
+}
+
+export interface ${table.entityName}Query {
+  ${keyNameLF}s: number[];
+    <% for(field in table.fields){ %>
+    <% if(array.contain(queryIgnore, field.propertyLowerName)){ %>
+    <% continue; %>
+    <% } %>
+  /** ${field.comment} */
+        <% if(field.propertyType == "Long" || field.propertyType == "Integer" || field.propertyType == "Short"){ %>
+  ${field.propertyLowerName}: number;
+        <% } else { %>
+  ${field.propertyLowerName}: string;
+        <% } %>
+    <% } %>
+}
+
+export interface ${table.entityName}SaveCommand {
+    <% for(field in table.fields){ %>
+    <% if(array.contain(saveCommandIgnore, field.propertyLowerName)){ %>
+    <% continue; %>
+    <% } %>
+  /** ${field.comment} */
+        <% if(field.propertyType == "Long" || field.propertyType == "Integer" || field.propertyType == "Short"){ %>
+  ${field.propertyLowerName}: number;
+        <% } else { %>
+  ${field.propertyLowerName}: string;
+        <% } %>
+    <% } %>
+}
+
+export interface ${table.entityName}ModifyCommand {
+    <% for(field in table.fields){ %>
+    <% if(array.contain(modifyCommandIgnore, field.propertyLowerName)){ %>
+    <% continue; %>
+    <% } %>
+  /** ${field.comment} */
+        <% if(field.propertyType == "Long" || field.propertyType == "Integer" || field.propertyType == "Short"){ %>
+  ${field.propertyLowerName}: number;
+        <% } else { %>
+  ${field.propertyLowerName}: string;
+        <% } %>
+    <% } %>
+}
+

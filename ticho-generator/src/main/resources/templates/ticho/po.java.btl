@@ -1,0 +1,46 @@
+package ${package.po};
+
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+    <% for(pkg in table.imports){ %>
+import ${pkg};
+    <% } %>
+
+/**
+ * ${table.comment!}PO
+ *
+ * @author ${author!}
+ * @date ${date!}
+ */
+@Data
+@EqualsAndHashCode(callSuper = false)
+@TableName("${table.name!}")
+public class ${className.po} extends Model<${className.po}> {
+
+<% for(field in table.fields){ %>
+    /** ${field.comment} */
+        <% if(field.propertyLowerName==keyNameLF){ %>
+    @TableId(value = "${field.name}", type = IdType.ASSIGN_ID)
+        <% } else if(array.contain(insertFieldFill, field.propertyLowerName)){ %>
+    @TableField(fill = FieldFill.INSERT)
+        <% } else if(array.contain(insertUpdateFieldFill, field.propertyLowerName)){ %>
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+        <% } else if(array.contain(versionFieldFill, field.propertyLowerName)){ %>
+    @Version
+    @TableField(fill = FieldFill.INSERT)
+        <% } else if (array.contain(deleteFieldFill, field.propertyLowerName)) { %>
+    @TableLogic
+    @TableField(fill = FieldFill.INSERT)
+        <% } %>
+    private ${field.propertyType} ${field.propertyLowerName};
+<% } %>
+
+}

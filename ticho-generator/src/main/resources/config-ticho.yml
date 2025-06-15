@@ -1,60 +1,89 @@
 projectConfig:
   # 执行完是否打开文件
   open: true
-  # 是否文件追加模式
   fileAppend: false
   # 输出文件目录 注意：windows文件路径复制时斜杠要么"/"或者是"\\",直接复制过来是"\",这样是有问题的，请主动改成"/"或者是"\\"
-  #  outPutDir: D:\cache\temp
+  outPutDir: D:\
   # 是否覆盖文件
   fileOverride: true
   # 根包位置
-  parentPackage: top.ticho.module
-  # tables: table_name1,table_name2
-  tables: sys_dict
+  parentPackage: top.ticho.rainbow
+  # tables: [ table_name1, table_name2 ]
+  tables: [ sys_setting ]
   # 表前缀去除。可批量，逗号隔开
   tablePrefixs: sys
   # 主键名称，如id,如果实际表中有主键id，这个属性会被替代
   keyName: id
   # 模板
-  templatePath: default
-  # 时间类型  ONLY_DATE - java.util.Date || SQL_PACK - java.sql.Date、java.sql.Time、java.sql.Timestamp || TIME_PACK - java.time.LocalDate、java.time.LocalTime
+  templatePath: ticho
+  # 时间类型 ONLY_DATE - java.util.Date || SQL_PACK - java.sql.Date、java.sql.Time、java.sql.Timestamp || TIME_PACK - java.time.LocalDate、java.time.LocalTime
   dateType: TIME_PACK
+  # 自定义参数
   customParams:
-    test: test
-    1: 1
+    insertFieldFill: [ "createBy", "createTime" ]
+    insertUpdateFieldFill: [ "updateBy", "updateTime" ]
+    deleteFieldFill: [ "isDelete" ]
+    versionFieldFill: [ "version" ]
+    queryIgnore: [ "createBy", "createTime", "updateBy", "updateTime", "isDelete", "version", "id",  "sort" ]
+    dtoIgnore: [ "isDelete" ]
+    modifyVoIgnore: [ "createBy", "createTime", "updateBy", "updateTime", "isDelete", "version", "id" ]
+    saveCommandIgnore: [ "createBy", "createTime", "updateBy", "updateTime", "isDelete", "version", "id" ]
+    modifyCommandIgnore: [ "createBy", "createTime", "updateBy", "updateTime", "isDelete" ]
+    excelExportIgnore: [ "id", "isDelete" ]
 
 # 数据源配置 dataConfig 目前仅支持myql
 dataSourceConfig:
-  url: jdbc:mysql://127.0.0.1:3306/user?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2B8&rewriteBatchedStatements=true
+  url: jdbc:mysql://127.0.0.1:3306/ticho_rainbow?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2B8&rewriteBatchedStatements=true
   driverName: com.mysql.cj.jdbc.Driver
   username: root
   password: 123456
 
 fileTemplateConfig:
+  po.java.btl:
+    relativePath: infrastructure.persistence.po
+    suffix: PO
   entity.java.btl:
     relativePath: domain.entity
     suffix:
+  converter.java.btl:
+    relativePath: infrastructure.persistence.converter
+    suffix: Converter
+  mapper.java.btl:
+    relativePath: infrastructure.persistence.mapper
+    suffix: Mapper
+  repository.java.btl:
+    relativePath: domain.repository
+    suffix: Repository
+  repositoryImpl.java.btl:
+    relativePath: infrastructure.persistence.repository
+    suffix: RepositoryImpl
   dto.java.btl:
-    relativePath: domain.dto
+    relativePath: interfaces.dto
     suffix: DTO
   query.java.btl:
-    relativePath: domain.query
+    relativePath: interfaces.query
     suffix: Query
-  assembler.java.btl:
-    relativePath: assembler
-    suffix: Assembler
-  mapper.java.btl:
-    relativePath: mapper
-    suffix: Mapper
-  mapper.xml.btl:
-    relativePath: resources/mapper/
-    suffix: Mapper
+  appRepository.java.btl:
+    relativePath: application.repository
+    suffix: AppRepository
+  modifyVo.java.btl:
+    relativePath: domain.entity.vo
+    suffix: ModifyVO
+  saveCommand.java.btl:
+    relativePath: interfaces.command
+    suffix: SaveCommand
+  modifyCommand.java.btl:
+    relativePath: interfaces.command
+    suffix: ModifyCommand
   service.java.btl:
-    relativePath: service
+    relativePath: application.service
     suffix: Service
-  serviceImpl.java.btl:
-    relativePath: service.impl
-    suffix: ServiceImpl
+  assembler.java.btl:
+    relativePath: application.assembler
+    suffix: Assembler
+  excelExport.java.btl:
+    relativePath: application.dto.excel
+    suffix: ExcelExport
   controller.java.btl:
-    relativePath: controller
+    relativePath: interfaces.facade
     suffix: Controller

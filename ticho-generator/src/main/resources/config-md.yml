@@ -3,12 +3,12 @@ projectConfig:
   open: true
   fileAppend: true
   # 输出文件目录 注意：windows文件路径复制时斜杠要么"/"或者是"\\",直接复制过来是"\",这样是有问题的，请主动改成"/"或者是"\\"
-  #outPutDir: D:\cache\temp
+  # outPutDir: D:\cache\temp
   # 是否覆盖文件
   fileOverride: true
   # 根包位置
   parentPackage: top.ticho.test
-  # tables: table_name1,table_name2
+  # tables: [ table_name1, table_name2 ]
   tables: [ sys_dict,sys_user,sys_role ]
   # 表前缀去除。可批量，逗号隔开
   tablePrefixs: sys
@@ -16,8 +16,9 @@ projectConfig:
   keyName: id
   # 模板
   templatePath: md
-  # 时间类型  ONLY_DATE - java.util.Date || SQL_PACK - java.sql.Date、java.sql.Time、java.sql.Timestamp || TIME_PACK - java.time.LocalDate、java.time.LocalTime
+  # 时间类型 ONLY_DATE - java.util.Date || SQL_PACK - java.sql.Date、java.sql.Time、java.sql.Timestamp || TIME_PACK - java.time.LocalDate、java.time.LocalTime
   dateType: TIME_PACK
+  # 自定义参数
   customParams:
     enableMybatisPlus: false
 

@@ -1,0 +1,82 @@
+package ${package.repositoryImpl};
+
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Repository;
+import ${package.appRepository}.${className.appRepository};
+import ${package.entity}.${className.entity};
+import ${package.repository}.${className.repository};
+import ${package.converter}.${className.converter};
+import ${package.mapper}.${className.mapper};
+import ${package.po}.${className.po};
+import ${package.dto}.${className.dto};
+import ${package.query}.${className.query};
+import top.ticho.starter.datasource.service.impl.TiRepositoryImpl;
+
+import java.util.List;
+
+/**
+ * ${table.comment!} repository实现
+ *
+ * @author ${author!}
+ * @date ${date!}
+ */
+<% var lowEntity = strutil.toLowerCase(strutil.subStringTo(table.entityName,0,1))+strutil.subString(table.entityName,1); %>
+@RequiredArgsConstructor
+@Repository
+public class ${className.repositoryImpl} extends TiRepositoryImpl<${className.mapper}, ${className.po}> implements ${className.repository}, ${className.appRepository} {
+    private final ${className.converter} ${lowEntity}Converter;
+
+    @Override
+    public boolean save(${className.entity} ${lowEntity}) {
+        return super.save(${lowEntity}Converter.toPO(${lowEntity}));
+    }
+
+    @Override
+    public boolean remove(Long id) {
+        return super.removeById(id);
+    }
+
+    @Override
+    public boolean modify(${className.entity} ${lowEntity}) {
+        return super.updateById(${lowEntity}Converter.toPO(${lowEntity}));
+    }
+
+    @Override
+    public boolean modifyBatch(List<${className.entity}> ${lowEntity}s) {
+        return super.updateBatchById(${lowEntity}Converter.toPO(${lowEntity}s));
+    }
+
+    @Override
+    public ${className.entity} find(Long id) {
+        return ${lowEntity}Converter.toEntity(super.getById(id));
+    }
+
+    @Override
+    public List<${className.entity}> list(List<Long> ids) {
+        return ${lowEntity}Converter.toEntity(super.listByIds(ids));
+    }
+
+    @Override
+    public TiPageResult<${className.dto}> page(${className.query} ${lowEntity}Query) {
+        LambdaQueryWrapper<${className.po}> wrapper = Wrappers.lambdaQuery();
+        wrapper.in(CollUtil.isNotEmpty(${lowEntity}Query.getIds()), ${className.po}::get${keyNameUF}, ${lowEntity}Query.get${keyNameUF}s());
+    <% for(field in table.fields){ %>
+        <% if(array.contain(queryIgnore, field.propertyLowerName)){ %>
+        <% continue; %>
+        <% } else { %>
+            <% if(field.propertyType == "String"){ %>
+        wrapper.eq(StrUtil.isNotBlank(${lowEntity}Query.get${field.propertyUpperName}()), ${className.po}::get${field.propertyUpperName}, ${lowEntity}Query.get${field.propertyUpperName}());
+            <% } else { %>
+        wrapper.eq(Objects.nonNull(${lowEntity}Query.get${field.propertyUpperName}()), ${className.po}::get${field.propertyUpperName}, ${lowEntity}Query.get${field.propertyUpperName}());
+            <% } %>
+        <% } %>
+    <% } %>
+        wrapper.orderByDesc(${className.po}::get${keyNameUF});
+        return TiPageUtil.page(() -> list(wrapper), ${lowEntity}Query, ${lowEntity}Converter::toDTO);
+    }
+
+}

@@ -1,0 +1,67 @@
+import { BasicColumn, FormSchema } from '@/components/Table';
+
+export function getTableColumns(): BasicColumn[] {
+  return [
+<% for(field in table.fields){ %>
+    <% if(array.contain(tableColumnIgnore, field.propertyLowerName)){ %>
+    <% continue; %>
+    <% } %>
+    {
+      title: '${field.comment}',
+      dataIndex: '${field.propertyLowerName}',
+      resizable: true,
+      width: 80,
+    },
+<% } %>
+  ];
+}
+
+export function getSearchColumns(): FormSchema[] {
+  return [
+<% for(field in table.fields){ %>
+    <% if(array.contain(queryIgnore, field.propertyLowerName)){ %>
+    <% continue; %>
+    <% } %>
+    {
+      label: `${field.comment}`,
+      field: `${field.propertyLowerName}`,
+      component: 'Input',
+      colProps: { span: 8 },
+      componentProps: {
+        placeholder: '请输入${field.comment}',
+      },
+    },
+<% } %>
+  ];
+}
+
+export function getModalFormColumns(): FormSchema[] {
+  return [
+    {
+      label: `主键标识`,
+      field: `id`,
+      component: 'Input',
+      show: false,
+    },
+<% for(field in table.fields){ %>
+    <% if(array.contain(queryIgnore, field.propertyLowerName)){ %>
+    <% continue; %>
+    <% } %>
+    {
+      label: `${field.comment}`,
+      field: `${field.propertyLowerName}`,
+      component: 'Input',
+      colProps: { span: 24 },
+      componentProps: {
+        placeholder: '请输入${field.propertyLowerName}',
+      },
+    },
+<% } %>
+    {
+      label: `版本号`,
+      field: `version`,
+      component: 'Input',
+      show: false,
+    },
+  ];
+}

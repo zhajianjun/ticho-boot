@@ -9,7 +9,7 @@ projectConfig:
   fileOverride: true
   # 根包位置
   parentPackage: top.ticho.test
-  # tables: table_name1,table_name2
+  # tables: [ table_name1, table_name2 ]
   tables: sys_dict
   # 表前缀去除。可批量，逗号隔开
   tablePrefixs: sys
@@ -19,6 +19,7 @@ projectConfig:
   templatePath: ticho
   # 时间类型  ONLY_DATE - java.util.Date || SQL_PACK - java.sql.Date、java.sql.Time、java.sql.Timestamp || TIME_PACK - java.time.LocalDate、java.time.LocalTime
   dateType: TIME_PACK
+  # 自定义参数
   customParams:
     enableMybatisPlus: false
 

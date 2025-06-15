@@ -1,0 +1,29 @@
+package ${package.repository};
+
+import ${package.entity}.${className.entity};
+
+import java.util.List;
+
+/**
+ * ${table.comment!} repository接口
+ *
+ * @author ${author!}
+ * @date ${date!}
+ */
+<% var lowEntity = strutil.toLowerCase(strutil.subStringTo(table.entityName,0,1))+strutil.subString(table.entityName,1); %>
+public interface ${className.repository} {
+
+    boolean save(${className.entity} ${lowEntity});
+
+    boolean remove(Long id);
+
+    boolean modify(${className.entity} ${lowEntity});
+
+    boolean modifyBatch(List<${className.entity}> ${lowEntity}s);
+
+    ${className.entity} find(Long id);
+
+    List<${className.entity}> list(List<Long> ids);
+
+}
+

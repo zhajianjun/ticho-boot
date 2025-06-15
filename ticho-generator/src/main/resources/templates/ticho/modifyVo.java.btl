@@ -1,0 +1,33 @@
+package ${package.modifyVo};
+
+<% for(field in table.fields){ %>
+    <% if(array.contain(modifyVoIgnore, field.propertyLowerName)){ %>
+    <% continue; %>
+    <% } %>
+<% } %>
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+    <% for(pkg in table.imports){ %>
+import ${pkg};
+    <% } %>
+
+/**
+ * ${table.comment!}VO
+ *
+ * @author ${author!}
+ * @date ${date!}
+ */
+@Getter
+@AllArgsConstructor
+public class ${className.modifyVo} {
+
+<% for(field in table.fields){ %>
+    <% if(array.contain(modifyVoIgnore, field.propertyLowerName)){ %>
+    <% continue; %>
+    <% } %>
+    /** ${field.comment} */
+    private ${field.propertyType} ${field.propertyLowerName};
+<% } %>
+
+}

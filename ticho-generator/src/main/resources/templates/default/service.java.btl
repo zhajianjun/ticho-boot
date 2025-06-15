@@ -30,7 +30,7 @@ public interface ${className.service} extends IService<${table.entityName}> {
 <% }else{ %>
 public interface ${className.service} {
 <% } %>
-   <% var lowEntity = strutil.toLowerCase(strutil.subStringTo(table.entityName,0,1))+strutil.subString(table.entityName,1); %>
+  <% var lowEntity = strutil.toLowerCase(strutil.subStringTo(table.entityName,0,1))+strutil.subString(table.entityName,1); %>
     /**
      * 保存${table.comment!}
      *

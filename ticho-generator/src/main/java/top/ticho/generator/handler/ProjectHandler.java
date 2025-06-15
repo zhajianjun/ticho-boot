@@ -274,7 +274,7 @@ public class ProjectHandler {
                 table.setName(tableName);
                 table.setComment(tableComment);
                 table.setEntityName(getEntityName(projectConfig.getTablePrefixs(), tableName));
-                table.setEntityLowerName(StrUtil.toUpperFirst(table.getEntityName()));
+                table.setEntityLowerName(StrUtil.toLowerFirst(table.getEntityName()));
                 // 填充 实体类字段属性
                 setTableField(table, connection);
             }
@@ -393,7 +393,8 @@ public class ProjectHandler {
             templateParams.put(CommConst.DATE, globalConfig.getDate());
             setDefaultKeyName(table.getKeyName(), templateParams);
             for (FileTemplate fileTemplate : fileTemplates) {
-                String filePath = String.format(fileTemplate.getRenderFilePath(), table.getEntityName());
+                String fileName = fileTemplate.getLowerFirstFileName() ? table.getEntityLowerName() : table.getEntityName();
+                String filePath = String.format(fileTemplate.getRenderFilePath(), fileName);
                 Boolean createFile = fileTemplate.getCreateFile();
                 if (!createFile) {
                     log.info("文件不生成：{}", filePath);

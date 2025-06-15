@@ -1,9 +1,15 @@
 package ${package.assembler};
 
-import ${package.entity}.${className.entity};
-import ${package.dto}.${className.dto};
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
+import org.mapstruct.Mapping;
+import ${package.excelExport}.${className.excelExport};
+import ${package.entity}.${className.entity};
+import ${package.modifyVo}.${className.modifyVo};
+import ${package.modifyCommand}.${className.modifyCommand};
+import ${package.saveCommand}.${className.saveCommand};
+import ${package.dto}.${className.dto};
+import top.ticho.starter.web.util.TiIdUtil;
+
 
 /**
  * ${table.comment!} 转换
@@ -11,24 +17,15 @@ import org.mapstruct.factory.Mappers;
  * @author ${author!}
  * @date ${date!}
  */
-@Mapper
+<% var lowEntity = strutil.toLowerCase(strutil.subStringTo(table.entityName,0,1))+strutil.subString(table.entityName,1); %>
+@Mapper(componentModel = "spring", imports = {TiIdUtil.class})
 public interface ${className.assembler} {
-    ${className.assembler} INSTANCE = Mappers.getMapper(${className.assembler}.class);
 
-    /**
-     * ${table.comment!}
-     *
-     * @param dto ${table.comment!}DTO
-     * @return {@link ${className.entity}}
-     */
-    ${className.entity} dtoToEntity(${className.dto} dto);
+    @Mapping(target = "${keyNameLF}", expression = "java(TiIdUtil.getId())")
+    ${className.entity} toEntity(${className.saveCommand} ${lowEntity}SaveCommand);
 
-    /**
-     * ${table.comment!}DTO
-     *
-     * @param entity ${table.comment!}
-     * @return {@link ${className.dto}}
-     */
-    ${className.dto} entityToDto(${className.entity} entity);
+    ${className.modifyVo} toModifyfVO(${className.modifyCommand} ${lowEntity}ModifyCommand);
+
+    ${className.excelExport} toExcelExport(${className.dto} ${lowEntity}DTO);
 
 }

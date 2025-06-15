@@ -1,0 +1,71 @@
+<% var lowEntity = strutil.toLowerCase(strutil.subStringTo(table.entityName,0,1))+strutil.subString(table.entityName,1); %>
+<template>
+  <BasicModal
+    v-bind="$attrs"
+    @register="registerModal"
+    :title="getTitle"
+    :maskClosable="false"
+    @ok="handleSubmit"
+  >
+    <BasicForm @register="registerForm" />
+  </BasicModal>
+</template>
+<script lang="ts">
+  import { computed, defineComponent, ref, unref } from 'vue';
+  import { BasicModal, useModalInner } from '@/components/Modal';
+  import { BasicForm, useForm } from '@/components/Form';
+  import { getModalFormColumns } from './${lowEntity}.data';
+  import { modify${table.entityName}, save${table.entityName} } from '@/api/system/${lowEntity}';
+  import { ${table.entityName}ModifyCommand, ${table.entityName}SaveCommand } from '@/api/system/model/${lowEntity}Model';
+
+  export default defineComponent({
+    name: '${table.entityName}Modal',
+    components: { BasicModal, BasicForm },
+    emits: ['success', 'register'],
+    setup(_, { emit }) {
+      const modalType = ref(1);
+      const [registerForm, { setFieldsValue, resetFields, validate }] = useForm({
+        labelWidth: 120,
+        baseColProps: { span: 24 },
+        schemas: getModalFormColumns(),
+        showActionButtonGroup: false,
+        actionColOptions: {
+          span: 23,
+        },
+      });
+
+      const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
+        await resetFields();
+        setModalProps({ confirmLoading: false });
+        modalType.value = data?.modalType;
+        if (unref(modalType) !== 1) {
+          await setFieldsValue({
+            ...data.record,
+          });
+        }
+      });
+
+      const getTitle = computed(() => (unref(modalType) !== 2 ? '新增配置信息' : '编辑配置信息'));
+
+      async function handleSubmit() {
+        try {
+          setModalProps({ confirmLoading: true });
+          if (unref(modalType) === 2) {
+            const values = (await validate()) as ${table.entityName}ModifyCommand;
+            await modify${table.entityName}(values);
+          } else {
+            const values = (await validate()) as ${table.entityName}SaveCommand;
+            await save${table.entityName}(values);
+          }
+          closeModal();
+          // 触发父组件方法
+          emit('success');
+        } finally {
+          setModalProps({ confirmLoading: false });
+        }
+      }
+
+      return { registerModal, registerForm, getTitle, handleSubmit };
+    },
+  });
+</script>

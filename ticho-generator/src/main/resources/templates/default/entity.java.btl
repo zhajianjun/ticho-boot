@@ -82,7 +82,7 @@ public class ${table.entityName} implements Serializable {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
         <% }else{ %>
         <% } %>
-    <% }else if(field.propertyType == "LocalDate"){ %>
+    <% } else if(field.propertyType == "LocalDate") { %>
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     <% }else{ %>
         <% if(field.propertyLowerName == "password"){ %>

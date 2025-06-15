@@ -1,0 +1,48 @@
+projectConfig:
+  # 执行完是否打开文件
+  open: true
+  fileAppend: false
+  # 输出文件目录 注意：windows文件路径复制时斜杠要么"/"或者是"\\",直接复制过来是"\",这样是有问题的，请主动改成"/"或者是"\\"
+  # outPutDir: D:\
+  # 是否覆盖文件
+  fileOverride: true
+  # 根包位置
+  parentPackage: top.ticho.rainbow
+  # tables: [ table_name1, table_name2 ]
+  tables: [ sys_setting ]
+  # 表前缀去除。可批量，逗号隔开
+  tablePrefixs: sys
+  # 主键名称，如id,如果实际表中有主键id，这个属性会被替代
+  keyName: id
+  # 模板
+  templatePath: ticho-web
+  # 时间类型 ONLY_DATE - java.util.Date || SQL_PACK - java.sql.Date、java.sql.Time、java.sql.Timestamp || TIME_PACK - java.time.LocalDate、java.time.LocalTime
+  dateType: TIME_PACK
+  # 自定义参数
+  customParams:
+    queryIgnore: [ "createBy", "createTime", "updateBy", "updateTime", "isDelete", "version", "id",  "sort" ]
+    dtoIgnore: [ "isDelete" ]
+    saveCommandIgnore: [ "createBy", "createTime", "updateBy", "updateTime", "isDelete", "version", "id" ]
+    modifyCommandIgnore: [ "createBy", "createTime", "updateBy", "updateTime", "isDelete" ]
+    tableColumnIgnore: [ "id", "version", "isDelete" ]
+
+# 数据源配置 dataConfig 目前仅支持myql
+dataSourceConfig:
+  url: jdbc:mysql://127.0.0.1:3306/ticho_rainbow?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=GMT%2B8&rewriteBatchedStatements=true
+  driverName: com.mysql.cj.jdbc.Driver
+  username: root
+  password: 123456
+
+fileTemplateConfig:
+  model.ts.btl:
+    suffix: Model
+    lowerFirstFileName: true
+  api.ts.btl:
+    lowerFirstFileName: true
+  index.vue.btl:
+    lowerFirstFileName: true
+  data.ts.btl:
+    suffix: .data
+    lowerFirstFileName: true
+  modal.vue.btl:
+    suffix: Modal

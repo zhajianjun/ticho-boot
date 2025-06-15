@@ -1,0 +1,52 @@
+<% var lowEntity = strutil.toLowerCase(strutil.subStringTo(table.entityName,0,1))+strutil.subString(table.entityName,1); %>
+import { defHttp } from '@/utils/http/axios';
+import { RetryRequest } from '#/axios';
+import { VersionModifyCommand } from '@/api/system/model/baseModel';
+import {
+  ${table.entityName}DTO,
+  ${table.entityName}ModifyCommand,
+  ${table.entityName}Query,
+  ${table.entityName}SaveCommand,
+} from '@/api/system/model/${lowEntity}Model';
+
+enum Api {
+  ${table.entityName} = '/${lowEntity}',
+  ${table.entityName}Page = '/${lowEntity}/page',
+  ${table.entityName}Export = '/${lowEntity}/excel/export',
+}
+
+export function ${lowEntity}Page(params?: ${table.entityName}Query) {
+  return defHttp.get<${table.entityName}DTO>({ url: Api.${table.entityName}Page, params }, { errorMessageMode: 'none' });
+}
+
+export function save${table.entityName}(params: ${table.entityName}SaveCommand) {
+  return defHttp.post<any>(
+    { url: Api.${table.entityName}, params },
+    { successMessageMode: 'message', errorMessageMode: 'message' },
+  );
+}
+
+export function modify${table.entityName}(params: ${table.entityName}ModifyCommand) {
+  return defHttp.put<any>(
+    { url: Api.${table.entityName}, params },
+    { successMessageMode: 'message', errorMessageMode: 'message' },
+  );
+}
+
+export function del${table.entityName}(params: VersionModifyCommand) {
+  return defHttp.delete<any>(
+    { url: Api.${table.entityName}, params },
+    { successMessageMode: 'message', errorMessageMode: 'message' },
+  );
+}
+
+export function exp${table.entityName}(params?: ${table.entityName}Query) {
+  return defHttp.get<any>(
+    { url: Api.${table.entityName}Export, params, responseType: 'blob' },
+    {
+      errorMessageMode: 'message',
+      isReturnNativeResponse: true,
+      retryRequest: { isOpenRetry: false } as RetryRequest,
+    },
+  );
+}
