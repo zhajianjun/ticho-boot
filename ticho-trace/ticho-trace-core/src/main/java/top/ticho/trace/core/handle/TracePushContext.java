@@ -5,11 +5,11 @@ import cn.hutool.core.text.AntPathMatcher;
 import cn.hutool.core.thread.ExecutorBuilder;
 import cn.hutool.core.thread.ThreadUtil;
 import lombok.NoArgsConstructor;
+import top.ticho.tool.json.util.TiJsonUtil;
 import top.ticho.trace.common.bean.LogInfo;
 import top.ticho.trace.common.bean.TraceInfo;
 import top.ticho.trace.common.constant.LogConst;
 import top.ticho.trace.common.prop.TiTraceProperty;
-import top.ticho.trace.core.util.OkHttpUtil;
 
 import java.util.List;
 import java.util.Objects;
@@ -30,6 +30,8 @@ public class TracePushContext {
     /** 线程池 */
     private static final ThreadPoolExecutor executor;
 
+    private static final TracePushHandler pushHandler = data -> System.out.println(TiJsonUtil.toJsonString(data));
+
     static {
         float blockingCoefficient = 0.8F;
         int poolSize = (int) (Runtime.getRuntime().availableProcessors() / (1 - blockingCoefficient));
@@ -49,7 +51,7 @@ public class TracePushContext {
      * @param logInfos 日志信息
      */
     public static void pushLogInfo(String url, String secret, List<LogInfo> logInfos) {
-        OkHttpUtil.push(url, secret, logInfos);
+        pushHandler.push(logInfos);
     }
 
     /**
@@ -76,7 +78,7 @@ public class TracePushContext {
         // 不推送链路信息的url匹配
         List<String> antPatterns = tiTraceProperty.getAntPatterns();
         if (CollUtil.isEmpty(antPatterns)) {
-            OkHttpUtil.push(traceUrl, secret, traceInfo);
+            pushHandler.push(traceInfo);
         }
         String url = traceInfo.getUrl();
         boolean anyMatch = antPatterns.stream().anyMatch(x -> antPathMatcher.match(x, url));
@@ -85,7 +87,7 @@ public class TracePushContext {
         if (anyMatch && isFirstSpanId) {
             return;
         }
-        OkHttpUtil.push(traceUrl, secret, traceInfo);
+        pushHandler.push(traceInfo);
     }
 
 }
