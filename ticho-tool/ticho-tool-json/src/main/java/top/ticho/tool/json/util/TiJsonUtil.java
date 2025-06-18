@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.node.NullNode;
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsFactory;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -353,7 +354,7 @@ public class TiJsonUtil {
             return MAPPER.valueToTree(obj);
         } catch (Exception e) {
             log.error("Object toJsonNode exception {}", obj, e);
-            return null;
+            return NullNode.getInstance();
         }
     }
 
@@ -367,7 +368,8 @@ public class TiJsonUtil {
         if (isEmpty(jsonStr)) {
             return false;
         }
-        return Objects.nonNull(toJsonNode(jsonStr));
+        JsonNode jsonNode = toJsonNode(jsonStr);
+        return Objects.nonNull(jsonNode) && !jsonNode.isNull();
     }
 
     /**
