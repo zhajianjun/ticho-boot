@@ -217,8 +217,7 @@ public class TiJsonUtil {
      * @return T
      */
     public static <T> T toJavaObject(Object obj, Class<?> parametrized, Class<?>... parameterClasses) {
-        String jsonString;
-        jsonString = objToString(obj);
+        String jsonString = objToString(obj);
         try {
             JavaType javaType = MAPPER.getTypeFactory().constructParametricType(parametrized, parameterClasses);
             return isEmpty(jsonString) ? null : MAPPER.readValue(jsonString, javaType);
