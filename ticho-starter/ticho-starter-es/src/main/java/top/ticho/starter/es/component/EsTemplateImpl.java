@@ -533,7 +533,7 @@ public class EsTemplateImpl implements EsTemplate {
         }).map(SearchHits::getHits).ifPresent(hits -> {
             for (SearchHit searchHit : hits) {
                 indexs.add(searchHit.getIndex());
-                rows.add(TiJsonUtil.toJavaObject(searchHit.getSourceAsString(), clazz));
+                rows.add(TiJsonUtil.toObject(searchHit.getSourceAsString(), clazz));
             }
         });
         return new TiEsPageResult<>(esQuery.getPageNum(), esQuery.getPageSize(), total, indexs, rows);

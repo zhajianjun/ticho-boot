@@ -26,7 +26,7 @@ public class ClientStart {
         String filePath = projectPath + File.separator + "/config/client.yaml";
         ClientProperty clientProperty;
         try {
-            clientProperty = TiJsonUtil.toJavaObjectFromProperty(new File(filePath), ClientProperty.class);
+            clientProperty = TiJsonUtil.toObjectFromProperty(new File(filePath), ClientProperty.class);
         } catch (Exception e) {
             log.error("配置文件获取失败，{}", e.getMessage(), e);
             return;

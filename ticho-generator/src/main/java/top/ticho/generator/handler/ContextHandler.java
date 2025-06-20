@@ -117,7 +117,7 @@ public class ContextHandler {
             return null;
         }
         // 获取项目配置
-        ProjectYml projectYml = TiJsonUtil.toJavaObjectFromYaml(projectConfigFile, new TypeReference<>() {
+        ProjectYml projectYml = TiJsonUtil.toObjectFromYaml(projectConfigFile, new TypeReference<>() {
         });
         log.warn("项目配置加载成功，配置根路径[{}]", projectConfigFile.getAbsolutePath());
         if (Objects.isNull(projectYml)) {
@@ -132,7 +132,7 @@ public class ContextHandler {
             return null;
         }
         // 获取全局配置
-        return TiJsonUtil.toJavaObjectFromYaml(globalConfigFile, new TypeReference<>() {
+        return TiJsonUtil.toObjectFromYaml(globalConfigFile, new TypeReference<>() {
         });
     }
 

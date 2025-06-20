@@ -30,12 +30,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
  * Json工具
@@ -48,7 +47,6 @@ public class TiJsonUtil {
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private static final ObjectMapper MAPPER_YAML = new ObjectMapper(new YAMLFactory());
     private static final ObjectMapper MAPPER_PROPERTY = new ObjectMapper(new JavaPropsFactory());
-    private static final String EMPTY = "";
 
     private TiJsonUtil() {
     }
@@ -104,264 +102,278 @@ public class TiJsonUtil {
     }
 
     /**
-     * Object转Json字符串
-     *
-     * @param obj Object
-     * @return String
+     * 对象转Json字符串
      */
-    public static String toJsonString(Object obj) {
-        try {
-            if (obj instanceof String string) {
-                return string;
-            }
-            return Objects.nonNull(obj) ? MAPPER.writeValueAsString(obj) : EMPTY;
-        } catch (Exception e) {
-            log.error("Object toJsonString error, param={}, catch error {}", obj, e.getMessage(), e);
-            return EMPTY;
-        }
-    }
-
-    /**
-     * Object转Json字符串（pretty）
-     *
-     * @param obj Object
-     * @return String
-     */
-    public static String toJsonStringPretty(Object obj) {
-        try {
-            if (obj instanceof String string) {
-                return string;
-            }
-            return Objects.nonNull(obj) ? MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(obj) : EMPTY;
-        } catch (Exception e) {
-            log.error("Object toJsonString error, param={}, catch error {}", obj, e.getMessage(), e);
-            return EMPTY;
-        }
-    }
-
-    /**
-     * json格式的String 转换成对象
-     *
-     * @param obj   Object
-     * @param clazz 该对象的类
-     * @return T
-     */
-    public static <T> T toJavaObject(Object obj, Class<T> clazz) {
-        checkNotNull(clazz);
-        String jsonString;
-        jsonString = objToString(obj);
-        try {
-            return isEmpty(jsonString) ? null : MAPPER.readValue(jsonString, clazz);
-        } catch (Exception e) {
-            log.error("Object toJavaObject error, param={}, catch error {}", obj, e.getMessage(), e);
+    public static String toJsonString(Object object) {
+        if (Objects.isNull(object)) {
             return null;
         }
-    }
-
-    /**
-     * json格式的String 转换成对象
-     *
-     * @param jsonString jsonString
-     * @param clazz      该对象的类
-     * @return T
-     */
-    public static <T> T toJavaObject(String jsonString, Class<T> clazz) {
-        checkNotNull(clazz);
-        try {
-            return isEmpty(jsonString) ? null : MAPPER.readValue(jsonString, clazz);
-        } catch (Exception e) {
-            log.error("JsonString toJavaObject error, param={}, catch error {}", jsonString, e.getMessage(), e);
-            return null;
-        }
-    }
-
-    /**
-     * json格式的String 转换成对象
-     *
-     * @param jsonString    jsonStr
-     * @param typeReference 泛型类
-     * @return T
-     */
-    public static <T> T toJavaObject(String jsonString, TypeReference<T> typeReference) {
-        checkNotNull(typeReference);
-        try {
-            return isEmpty(jsonString) ? null : MAPPER.readValue(jsonString, typeReference);
-        } catch (Exception e) {
-            log.error("JsonString toJavaObject error, param={}, catch error {}", jsonString, e.getMessage(), e);
-            return null;
-        }
-    }
-
-    /**
-     * json格式的String 转换成对象
-     *
-     * @param obj           Object
-     * @param typeReference 泛型类
-     * @return T
-     */
-    public static <T> T toJavaObject(Object obj, TypeReference<T> typeReference) {
-        checkNotNull(typeReference);
-        String jsonStr = objToString(obj);
-        try {
-            return isEmpty(jsonStr) ? null : MAPPER.readValue(jsonStr, typeReference);
-        } catch (Exception e) {
-            log.error("Object toJavaObject error, param={}, catch error {}", obj, e.getMessage(), e);
-            return null;
-        }
-    }
-
-    /**
-     * json格式的String 转换成对象
-     *
-     * @param obj Object
-     * @return T
-     */
-    public static <T> T toJavaObject(Object obj, Class<?> parametrized, Class<?>... parameterClasses) {
-        String jsonString = objToString(obj);
-        try {
-            JavaType javaType = MAPPER.getTypeFactory().constructParametricType(parametrized, parameterClasses);
-            return isEmpty(jsonString) ? null : MAPPER.readValue(jsonString, javaType);
-        } catch (Exception e) {
-            log.error("Object toJavaObject error, param={}, catch error {}", obj, e.getMessage(), e);
-            return null;
-        }
-    }
-
-    /**
-     * json格式的String 转换成对象
-     *
-     * @param jsonString jsonString
-     * @return T
-     */
-    public static <T> T toJavaObject(String jsonString) {
-        try {
-            return isEmpty(jsonString) ? null : MAPPER.readValue(jsonString, new TypeReference<T>() {
-            });
-        } catch (Exception e) {
-            log.error("JsonString toJavaObject error, param={}, catch error {}", jsonString, e.getMessage(), e);
-            return null;
-        }
-    }
-
-    public static String objToString(Object obj) {
-        if (obj instanceof String string) {
+        if (object instanceof String string) {
             return string;
         }
-        return toJsonString(obj);
+        try {
+            return MAPPER.writeValueAsString(object);
+        } catch (Exception e) {
+            log.error("Object to JsonString error, param={}, catch error {}", object, e.getMessage(), e);
+            return null;
+        }
     }
 
     /**
-     * json格式的String 转换成集合
+     * 对象转Json字符串（格式化输出）
+     */
+    public static String toJsonStringPretty(Object object) {
+        if (Objects.isNull(object)) {
+            return null;
+        }
+        if (object instanceof String string) {
+            return string;
+        }
+        try {
+            return MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(object);
+        } catch (Exception e) {
+            log.error("Object to JsonStringPretty error, param={}, catch error {}", object, e.getMessage(), e);
+            return null;
+        }
+    }
+
+    /**
+     * Json字符串转对象
+     */
+    public static <T> T toObject(String jsonString) {
+        if (isEmpty(jsonString)) {
+            return null;
+        }
+        try {
+            return MAPPER.readValue(jsonString, new TypeReference<>() {
+            });
+        } catch (Exception e) {
+            log.error("JsonString to Object error, param={}, catch error {}", jsonString, e.getMessage(), e);
+            return null;
+        }
+    }
+
+    /**
+     * Json字符串转对象
+     */
+    public static <T> T toObject(String jsonString, Class<T> clazz) {
+        checkNotNull(clazz);
+        if (isEmpty(jsonString)) {
+            return null;
+        }
+        try {
+            return isEmpty(jsonString) ? null : MAPPER.readValue(jsonString, clazz);
+        } catch (Exception e) {
+            log.error("JsonString to JavaObject error, param={}, catch error {}", jsonString, e.getMessage(), e);
+            return null;
+        }
+    }
+
+    /**
+     * Json字符串转对象
+     */
+    public static <T> T toObject(String jsonString, TypeReference<T> typeReference) {
+        checkNotNull(typeReference);
+        if (isEmpty(jsonString)) {
+            return null;
+        }
+        try {
+            return MAPPER.readValue(jsonString, typeReference);
+        } catch (Exception e) {
+            log.error("JsonString to Object error, param={}, catch error {}", jsonString, e.getMessage(), e);
+            return null;
+        }
+    }
+
+    /**
+     * Json字符串转对象
+     */
+    public static <T> T toObject(String jsonString, Class<?> parametrized, Class<?>... parameterClasses) {
+        checkNotNull(parametrized);
+        if (isEmpty(jsonString)) {
+            return null;
+        }
+        try {
+            JavaType javaType = MAPPER.getTypeFactory().constructParametricType(parametrized, parameterClasses);
+            return MAPPER.readValue(jsonString, javaType);
+        } catch (Exception e) {
+            log.error("JsonString to Object error, param={}, catch error {}", jsonString, e.getMessage(), e);
+            return null;
+        }
+    }
+
+    /**
+     * Json字符串转对象
+     */
+    public static <T> T toObject(Object object) {
+        String jsonString = toJsonString(object);
+        if (isEmpty(jsonString)) {
+            return null;
+        }
+        try {
+            return MAPPER.readValue(jsonString, new TypeReference<>() {
+            });
+        } catch (Exception e) {
+            log.error("Object to Object error, object={}, catch error {}", object, e.getMessage(), e);
+            return null;
+        }
+    }
+
+    /**
+     * Json字符串转对象
+     */
+    public static <T> T toObject(Object object, Class<T> clazz) {
+        checkNotNull(clazz);
+        String jsonString = toJsonString(object);
+        if (isEmpty(jsonString)) {
+            return null;
+        }
+        try {
+            return MAPPER.readValue(jsonString, clazz);
+        } catch (Exception e) {
+            log.error("Object to Object error, object={}, catch error {}", object, e.getMessage(), e);
+            return null;
+        }
+    }
+
+    /**
+     * Json字符串转对象
      *
-     * @param jsonString String
+     * @param object        Object
+     * @param typeReference 泛型类
      * @return T
      */
+    public static <T> T toObject(Object object, TypeReference<T> typeReference) {
+        checkNotNull(typeReference);
+        String jsonString = toJsonString(object);
+        if (isEmpty(jsonString)) {
+            return null;
+        }
+        try {
+            return MAPPER.readValue(jsonString, typeReference);
+        } catch (Exception e) {
+            log.error("Object to Object error, param={}, catch error {}", object, e.getMessage(), e);
+            return null;
+        }
+    }
+
+    /**
+     * Json字符串转对象
+     */
+    public static <T> T toObject(Object object, Class<?> parametrized, Class<?>... parameterClasses) {
+        checkNotNull(parametrized);
+        String jsonString = toJsonString(object);
+        if (isEmpty(jsonString)) {
+            return null;
+        }
+        try {
+            JavaType javaType = MAPPER.getTypeFactory().constructParametricType(parametrized, parameterClasses);
+            return MAPPER.readValue(jsonString, javaType);
+        } catch (Exception e) {
+            log.error("Object to Object error, param={}, catch error {}", object, e.getMessage(), e);
+            return null;
+        }
+    }
+
+
+    /**
+     * Json字符串转集合
+     */
     public static List<Object> toList(String jsonString) {
+        if (isEmpty(jsonString)) {
+            return new ArrayList<>();
+        }
         try {
             JavaType javaType = MAPPER.getTypeFactory().constructParametricType(List.class, Object.class);
-            return isEmpty(jsonString) ? Collections.emptyList() : MAPPER.readValue(jsonString, javaType);
+            return MAPPER.readValue(jsonString, javaType);
         } catch (Exception e) {
-            log.error("JsonString toList error, param={}, catch error {}", jsonString, e.getMessage(), e);
-            return Collections.emptyList();
+            log.error("JsonString to List error, param={}, catch error {}", jsonString, e.getMessage(), e);
+            return new ArrayList<>();
         }
     }
 
     /**
-     * json格式的String 转换成集合,带泛型
-     *
-     * @param jsonString String
-     * @param clazz      集合的泛型对象类
-     * @return List<T>
+     * Json字符串转集合,带泛型
      */
     public static <T> List<T> toList(String jsonString, Class<T> clazz) {
-        clazz = Optional.ofNullable(clazz).orElseThrow(NullPointerException::new);
+        checkNotNull(clazz);
+        if (isEmpty(jsonString)) {
+            return new ArrayList<>();
+        }
         try {
-
             JavaType javaType = MAPPER.getTypeFactory().constructParametricType(List.class, clazz);
-            return isEmpty(jsonString) ? Collections.emptyList() : MAPPER.readValue(jsonString, javaType);
+            return MAPPER.readValue(jsonString, javaType);
         } catch (Exception e) {
-            log.error("JsonString toList error, param={}, catch error {}", jsonString, e.getMessage(), e);
-            return Collections.emptyList();
+            log.error("JsonString to List error, param={}, catch error {}", jsonString, e.getMessage(), e);
+            return new ArrayList<>();
         }
     }
 
     /**
-     * json格式的String 转换成集合
-     *
-     * @param jsonString Object
-     * @return Map<Object, Object>
+     * Json字符串转Map集合
      */
     public static Map<Object, Object> toMap(String jsonString) {
+        if (isEmpty(jsonString)) {
+            return new LinkedHashMap<>();
+        }
         try {
             JavaType javaType = MAPPER.getTypeFactory().constructParametricType(Map.class, Object.class, Object.class);
             return isEmpty(jsonString) ? new LinkedHashMap<>() : MAPPER.readValue(jsonString, javaType);
         } catch (Exception e) {
-            log.error("JsonString toMap error, param={}, catch error {}", jsonString, e.getMessage(), e);
+            log.error("JsonString to Map error, param={}, catch error {}", jsonString, e.getMessage(), e);
             return new LinkedHashMap<>();
         }
     }
 
     /**
-     * json格式的String 转换成集合,带泛型
-     *
-     * @param jsonString Object
-     * @param kClass     Map K 的泛型对象类
-     * @param vClass     Map V 的泛型对象类
-     * @return Map<K, V>
+     * Json字符串转集合,带泛型
      */
     public static <K, V> Map<K, V> toMap(String jsonString, Class<K> kClass, Class<V> vClass) {
-        kClass = Optional.ofNullable(kClass).orElseThrow(NullPointerException::new);
-        vClass = Optional.ofNullable(vClass).orElseThrow(NullPointerException::new);
+        checkNotNull(kClass);
+        checkNotNull(vClass);
+        if (isEmpty(jsonString)) {
+            return new LinkedHashMap<>();
+        }
         try {
             JavaType javaType = MAPPER.getTypeFactory().constructParametricType(Map.class, kClass, vClass);
-            return isEmpty(jsonString) ? new LinkedHashMap<>() : MAPPER.readValue(jsonString, javaType);
+            return MAPPER.readValue(jsonString, javaType);
         } catch (Exception e) {
-            log.error("JsonString toMap error, param={}, catch error {}", jsonString, e.getMessage(), e);
+            log.error("JsonString to Map error, param={}, catch error {}", jsonString, e.getMessage(), e);
             return new LinkedHashMap<>();
         }
     }
 
     /**
      * 对象转Map
-     *
-     * @param obj Object
-     * @return Map<String, Object>
      */
-    @SuppressWarnings("unchecked")
-    public static Map<String, Object> toMap(Object obj) {
+    public static Map<String, Object> toMap(Object object) {
+        String jsonString = toJsonString(object);
+        if (isEmpty(jsonString)) {
+            return new LinkedHashMap<>();
+        }
         try {
-            if (obj instanceof Map) {
-                return (Map<String, Object>) obj;
-            }
-            String jsonString = toJsonString(obj);
             JavaType javaType = MAPPER.getTypeFactory().constructParametricType(Map.class, String.class, Object.class);
             return isEmpty(jsonString) ? new LinkedHashMap<>() : MAPPER.readValue(jsonString, javaType);
         } catch (Exception e) {
-            log.error("Object toMap exception {}", obj, e);
+            log.error("Object to Map exception {}", object, e);
             return new LinkedHashMap<>();
         }
     }
 
     /**
-     * 转换成JsonNode
-     *
-     * @param obj Object
-     * @return {@link JsonNode}
+     * 转JsonNode
      */
-    public static JsonNode toJsonNode(Object obj) {
+    public static JsonNode toJsonNode(Object object) {
         try {
-            return MAPPER.valueToTree(obj);
+            return MAPPER.valueToTree(object);
         } catch (Exception e) {
-            log.error("Object toJsonNode exception {}", obj, e);
+            log.error("Object to JsonNode exception {}", object, e);
             return NullNode.getInstance();
         }
     }
 
     /**
-     * 判断字符串是否为json格式
-     *
-     * @param jsonStr json字符串
-     * @return boolean
+     * 判断字符串是否为json
      */
     public static boolean isJson(String jsonStr) {
         if (isEmpty(jsonStr)) {
@@ -373,73 +385,110 @@ public class TiJsonUtil {
 
     /**
      * 深拷贝
-     *
-     * @param obj   对象
-     * @param clazz 对象类
-     * @return {@link T}
      */
-    public static <T> T copy(Object obj, Class<T> clazz) {
-        return obj != null ? toJavaObject(toJsonString(obj), clazz) : null;
+    public static <T> T copy(Object object) {
+        return toObject(object);
     }
 
-    public static <T> T toJavaObjectFromYaml(File file, Class<T> clazz) {
+    /**
+     * 深拷贝
+     */
+    public static <T> T copy(Object object, Class<T> clazz) {
+        return toObject(object, clazz);
+    }
+
+    /**
+     * 深拷贝
+     */
+    public static <T> T copy(Object object, TypeReference<T> typeReference) {
+        return toObject(object, typeReference);
+    }
+
+    /**
+     * 深拷贝
+     */
+    public static <T> T copy(Object object, Class<?> parametrized, Class<?>... parameterClasses) {
+        return toObject(object, parametrized, parameterClasses);
+    }
+
+    public static <T> T toObjectFromYaml(File file, Class<T> clazz) {
+        checkNotNull(clazz);
         try {
             if (!file.exists()) {
                 return null;
             }
             return MAPPER_YAML.readValue(file, clazz);
         } catch (Exception e) {
-            log.error("File toJavaObjectFromYaml exception {}", file, e);
+            log.error("File to Object From Yaml exception {}", file, e);
             return null;
         }
     }
 
-    public static <T> T toJavaObjectFromYaml(File file, TypeReference<T> typeReference) {
+    public static <T> T toObjectFromYaml(File file, TypeReference<T> typeReference) {
+        checkNotNull(typeReference);
         try {
             if (!file.exists()) {
                 return null;
             }
             return MAPPER_YAML.readValue(file, typeReference);
         } catch (Exception e) {
-            log.error("File toJavaObjectFromYaml exception {}", file, e);
+            log.error("File to Object From Yaml exception {}", file, e);
             return null;
         }
     }
 
-    public static <T> T toJavaObjectFromProperty(File file, Class<T> clazz) {
+    public static <T> T toObjectFromYaml(File file, Class<?> parametrized, Class<?>... parameterClasses) {
+        checkNotNull(parametrized);
+        try {
+            if (!file.exists()) {
+                return null;
+            }
+            JavaType javaType = MAPPER.getTypeFactory().constructParametricType(parametrized, parameterClasses);
+            return MAPPER_YAML.readValue(file, javaType);
+        } catch (Exception e) {
+            log.error("File to Object From Yaml exception {}", file, e);
+            return null;
+        }
+    }
+
+    public static <T> T toObjectFromProperty(File file, Class<T> clazz) {
+        checkNotNull(clazz);
         try {
             if (!file.exists()) {
                 return null;
             }
             return MAPPER_PROPERTY.readValue(file, clazz);
         } catch (Exception e) {
-            log.error("File toJavaObjectFromProperty exception {}", file, e);
+            log.error("File to Object From Property exception {}", file, e);
             return null;
         }
     }
 
-    public static <T> T toJavaObjectFromProperty(File file, TypeReference<T> typeReference) {
+    public static <T> T toObjectFromProperty(File file, TypeReference<T> typeReference) {
+        checkNotNull(typeReference);
         try {
             if (!file.exists()) {
                 return null;
             }
             return MAPPER_PROPERTY.readValue(file, typeReference);
         } catch (Exception e) {
-            log.error("File toJavaObjectFromProperty exception {}", file, e);
+            log.error("File to Object From Property exception {}", file, e);
             return null;
         }
     }
 
-    /**
-     * 深拷贝
-     *
-     * @param obj              对象
-     * @param parametrized     对象类
-     * @param parameterClasses 对象泛型类
-     * @return {@link T}
-     */
-    public static <T> T copy(Object obj, Class<?> parametrized, Class<?>... parameterClasses) {
-        return obj != null ? toJavaObject(toJsonString(obj), parametrized, parameterClasses) : null;
+    public static <T> T toObjectFromProperty(File file, Class<?> parametrized, Class<?>... parameterClasses) {
+        checkNotNull(parametrized);
+        try {
+            if (!file.exists()) {
+                return null;
+            }
+            JavaType javaType = MAPPER.getTypeFactory().constructParametricType(parametrized, parameterClasses);
+            return MAPPER_PROPERTY.readValue(file, javaType);
+        } catch (Exception e) {
+            log.error("File to Object From Property exception {}", file, e);
+            return null;
+        }
     }
 
     public static boolean isEmpty(CharSequence str) {
@@ -450,8 +499,8 @@ public class TiJsonUtil {
         return !isEmpty(str);
     }
 
-    public static void checkNotNull(Object obj) {
-        if (obj == null) {
+    public static void checkNotNull(Object object) {
+        if (object == null) {
             throw new IllegalArgumentException("param is not empty");
         }
     }
