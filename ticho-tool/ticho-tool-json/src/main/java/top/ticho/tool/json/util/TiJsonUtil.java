@@ -164,7 +164,7 @@ public class TiJsonUtil {
         try {
             return isEmpty(jsonString) ? null : MAPPER.readValue(jsonString, clazz);
         } catch (Exception e) {
-            log.error("JsonString to JavaObject error, param={}, catch error {}", jsonString, e.getMessage(), e);
+            log.error("JsonString to Object error, param={}, catch error {}", jsonString, e.getMessage(), e);
             return null;
         }
     }
@@ -502,6 +502,12 @@ public class TiJsonUtil {
     public static void checkNotNull(Object object) {
         if (object == null) {
             throw new IllegalArgumentException("param is not empty");
+        }
+    }
+
+    public static void checkNotNull(Object object, String message) {
+        if (object == null) {
+            throw new IllegalArgumentException(message);
         }
     }
 
