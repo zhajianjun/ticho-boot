@@ -18,14 +18,11 @@ import org.springframework.context.annotation.Primary;
 import top.ticho.starter.cache.component.TiCacheTemplate;
 import top.ticho.starter.cache.prop.TiCacheProperty;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 缓存配置
@@ -58,46 +55,39 @@ public class TiCacheConfig {
      */
     @Bean
     public TiCache<String, Object> tiCache(TiCacheProperty tiCacheProperty) {
-        return new DefaultTiCache(tiCacheProperty);
-    }
-
-    /**
-     * 创建批量缓存操作模板
-     *
-     * @param tiCacheProperty 缓存属性
-     * @return 批量缓存操作模板对象
-     */
-    @Bean
-    public TiCacheBatch tiChcheBatch(TiCacheProperty tiCacheProperty) {
-        return new DefaultTiCacheBatch(tiCacheProperty);
+        return new DefaultTiCacheRegistry(tiCacheProperty);
     }
 
     /**
      * 创建缓存管理器
      *
-     * @param tiCaches       缓存操作模板列表
-     * @param tiCacheBatches 批量缓存操作模板列表
-     * @return 缓存管理器对象
+     * @return 缓存注册器列表
      */
     @Bean
     @Primary
-    public CacheManager cacheManager(List<TiCache<?, ?>> tiCaches, List<TiCacheBatch> tiCacheBatches) {
-        List<TiCache<?, ?>> tiCachesCollect = tiCacheBatches
+    public CacheManager cacheManager(List<TiCacheRegistry> tiCacheRegistries) {
+        List<TiCache<?, ?>> tiCaches = new ArrayList<>();
+        for (TiCacheRegistry tiCacheRegistry : tiCacheRegistries) {
+            tiCacheRegistry.register(tiCaches);
+        }
+        List<String> names = new ArrayList<>();
+        List<CaffeineCache> caches = tiCaches
             .stream()
-            .map(TiCacheBatch::getTiCaches)
-            .flatMap(Collection::stream)
-            .collect(Collectors.toList());
-        List<CaffeineCache> caches = Stream
-            .concat(tiCaches.stream(), tiCachesCollect.stream())
-            .filter(Objects::nonNull)
-            .collect(Collectors.toMap(TiCache::getName, Function.identity(), (o, n) -> n))
-            .values()
-            .stream()
+            .filter(item -> validRepeat(item, names))
             .map(this::buildCaffeineCache)
             .collect(Collectors.toList());
         SimpleCacheManager cacheManager = new SimpleCacheManager();
         cacheManager.setCaches(caches);
         return cacheManager;
+    }
+
+    private boolean validRepeat(TiCache<?, ?> item, List<String> names) {
+        if (names.contains(item.getName())) {
+            log.warn("缓存名称重复：{}", item.getName());
+            return false;
+        }
+        names.add(item.getName());
+        return true;
     }
 
     /**

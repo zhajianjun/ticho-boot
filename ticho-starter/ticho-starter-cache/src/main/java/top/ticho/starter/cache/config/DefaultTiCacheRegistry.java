@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.starter.cache.prop.TiCacheProperty;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,7 +15,7 @@ import java.util.Set;
  */
 @Slf4j
 @AllArgsConstructor
-public class DefaultTiCache implements TiCache<String, Object> {
+public class DefaultTiCacheRegistry implements TiCache<String, Object>, TiCacheRegistry {
 
     private final TiCacheProperty tiCacheProperty;
 
@@ -41,6 +42,11 @@ public class DefaultTiCache implements TiCache<String, Object> {
     @Override
     public void onRemoval(String key, Object value, RemovalCause cause) {
         log.info("缓存移除监听, 移除的key = {}, cause = {}", key, cause);
+    }
+
+    @Override
+    public void register(List<TiCache<?, ?>> tiCaches) {
+        tiCaches.add(this);
     }
 
 }
