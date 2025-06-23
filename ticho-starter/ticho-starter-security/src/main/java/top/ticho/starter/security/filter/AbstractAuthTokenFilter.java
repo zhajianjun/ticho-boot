@@ -85,7 +85,7 @@ public abstract class AbstractAuthTokenFilter<T extends TiSecurityUser> extends 
             support(request, response);
             String token = request.getHeader(HttpHeaders.AUTHORIZATION);
             if (tiAntPatternsAuthHandle.ignoreAuth(request)) {
-                if (Objects.nonNull(token)) {
+                if (StrUtil.isNotBlank(token)) {
                     token = StrUtil.removePrefixIgnoreCase(token, TiSecurityConst.BEARER);
                     token = StrUtil.trimStart(token);
                     Map<String, Object> map = jwtDecode.decode(token);
