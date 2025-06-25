@@ -446,10 +446,13 @@ public class ProjectHandler {
             CommConst.JSON_FILE_NAME + File.separator +
             table.getEntityName() +
             CommConst.DOT + CommConst.JSON_FILE_NAME;
+        String json = TiJsonUtil.toJsonStringPretty(templateParams);
+        if (Objects.isNull(json)) {
+            return;
+        }
         File file = new File(paramJsonPath);
         FileUtil.checkFile(file);
         try (FileOutputStream out = new FileOutputStream(file)) {
-            String json = TiJsonUtil.toJsonStringPretty(templateParams);
             out.write(json.getBytes());
             log.debug("参数文件生成成功[{}]", file.getAbsolutePath());
         } catch (Exception e) {

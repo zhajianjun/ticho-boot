@@ -25,6 +25,7 @@ projectConfig:
     saveCommandIgnore: [ "createBy", "createTime", "updateBy", "updateTime", "isDelete", "version", "id" ]
     modifyCommandIgnore: [ "createBy", "createTime", "updateBy", "updateTime", "isDelete" ]
     tableColumnIgnore: [ "id", "version", "isDelete" ]
+    modalFormIgore: [ "createBy", "createTime", "updateBy", "updateTime", "isDelete", "version", "id", ]
 
 # 数据源配置 dataConfig 目前仅支持myql
 dataSourceConfig:

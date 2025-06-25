@@ -44,7 +44,7 @@ export function getModalFormColumns(): FormSchema[] {
       show: false,
     },
 <% for(field in table.fields){ %>
-    <% if(array.contain(queryIgnore, field.propertyLowerName)){ %>
+    <% if(array.contain(modalFormIgore, field.propertyLowerName)){ %>
     <% continue; %>
     <% } %>
     {

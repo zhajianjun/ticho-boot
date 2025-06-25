@@ -23,7 +23,7 @@
     components: { BasicModal, BasicForm },
     emits: ['success', 'register'],
     setup(_, { emit }) {
-      const modalType = ref(1);
+      const isUpdate = ref(true);
       const [registerForm, { setFieldsValue, resetFields, validate }] = useForm({
         labelWidth: 120,
         baseColProps: { span: 24 },
@@ -37,20 +37,20 @@
       const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {
         await resetFields();
         setModalProps({ confirmLoading: false });
-        modalType.value = data?.modalType;
-        if (unref(modalType) !== 1) {
+        isUpdate.value = !!data?.isUpdate;
+        if (unref(isUpdate)) {
           await setFieldsValue({
             ...data.record,
           });
         }
       });
 
-      const getTitle = computed(() => (unref(modalType) !== 2 ? '新增配置信息' : '编辑配置信息'));
+      const getTitle = computed(() => (!unref(isUpdate) ? '新增配置信息' : '编辑配置信息'));
 
       async function handleSubmit() {
         try {
           setModalProps({ confirmLoading: true });
-          if (unref(modalType) === 2) {
+          if (unref(isUpdate)) {
             const values = (await validate()) as ${table.entityName}ModifyCommand;
             await modify${table.entityName}(values);
           } else {

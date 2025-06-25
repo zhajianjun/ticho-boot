@@ -115,14 +115,14 @@
 
       function handleCreate() {
         openModal(true, {
-          modalType: 1,
+          isUpdate: false,
         });
       }
 
       function handleEdit(record: Recordable) {
         openModal(true, {
           record,
-          modalType: 2,
+          isUpdate: true,
         });
       }
 
