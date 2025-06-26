@@ -172,7 +172,7 @@ public record ServerHandler(
         // 绑定portInfoMap中存在，而portMapFromMem不存在的端口
         portInfoMap.values()
             .forEach(x -> {
-                if (!portMapFromMem.containsKey(x.getPort())) {
+                if (portMapFromMem.containsKey(x.getPort())) {
                     return;
                 }
                 bind(accessKey, x.getPort(), x.getEndpoint());
