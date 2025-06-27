@@ -1,5 +1,7 @@
 package top.ticho.intranet.server.core;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -15,12 +17,15 @@ import top.ticho.intranet.server.filter.AppListenFilter;
 import top.ticho.intranet.server.support.ApplicationSupport;
 import top.ticho.intranet.server.support.ClientSupport;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 服务端处理器
@@ -146,37 +151,49 @@ public record ServerHandler(
         return bind;
     }
 
-    /**
-     * 刷新客户端的应用
-     */
-    public void flush(String accessKey, Map<Integer, PortInfo> portInfoMap) {
-        checkStatus();
-        IntranetUtil.isNotEmpty(accessKey, "accessKey不能为空");
-        if (Objects.isNull(portInfoMap)) {
+    public void flush(List<ClientInfo> clientInfos) {
+        if (CollUtil.isEmpty(clientInfos)) {
             return;
         }
-        Optional<ClientInfo> clientInfoOpt = findByAccessKey(accessKey);
-        if (clientInfoOpt.isEmpty()) {
-            return;
-        }
-        ClientInfo clientInfo = clientInfoOpt.get();
-        Map<Integer, PortInfo> portMapFromMem = clientInfo.getPortMap();
-        // 解绑portInfoMap中不存在，而portMapFromMem存在的端口
-        portMapFromMem.values()
-            .forEach(x -> {
-                if (portInfoMap.containsKey(x.getPort())) {
+        Map<String, ClientInfo> clientInfoMap = clientInfos
+            .stream()
+            .filter(item -> StrUtil.isNotBlank(item.getAccessKey()))
+            .collect(Collectors.toMap(ClientInfo::getAccessKey, Function.identity(), (v1, v2) -> v1));
+        // 移除需要删除的client
+        List<ClientInfo> clientInfosFromMem = findAll();
+        clientInfosFromMem.forEach(clientInfoFromMem -> {
+            if (clientInfoMap.containsKey(clientInfoFromMem.getAccessKey())) {
+                return;
+            }
+            remove(clientInfoFromMem);
+        });
+        clientInfoMap.forEach((accessKey, clientInfo) -> {
+            Optional<ClientInfo> clientInfoOpt = findByAccessKey(accessKey);
+            if (clientInfoOpt.isEmpty()) {
+                create(accessKey, clientInfo.getName());
+            }
+            clientInfoOpt = findByAccessKey(accessKey);
+            if (clientInfoOpt.isEmpty()) {
+                return;
+            }
+            ClientInfo clientInfoFromMem = clientInfoOpt.get();
+            Map<Integer, PortInfo> portInfoMapFromMem = clientInfoFromMem.getPortMap();
+            Map<Integer, PortInfo> portInfoMap = Optional.ofNullable(clientInfo.getPortMap()).orElseGet(HashMap::new);
+            // 解绑portInfoMap中不存在，而portMapFromMem存在的端口
+            portInfoMapFromMem.values().forEach(portInfoFromMem -> {
+                if (portInfoMap.containsKey(portInfoFromMem.getPort())) {
                     return;
                 }
-                unbind(accessKey, x.getPort());
+                unbind(accessKey, portInfoFromMem.getPort());
             });
-        // 绑定portInfoMap中存在，而portMapFromMem不存在的端口
-        portInfoMap.values()
-            .forEach(x -> {
-                if (portMapFromMem.containsKey(x.getPort())) {
+            // 绑定portInfoMap中存在，而portMapFromMem不存在的端口
+            portInfoMap.values().forEach(portInfo -> {
+                if (portInfoMapFromMem.containsKey(portInfo.getPort())) {
                     return;
                 }
-                bind(accessKey, x.getPort(), x.getEndpoint());
+                bind(accessKey, portInfo.getPort(), portInfo.getEndpoint());
             });
+        });
     }
 
     /**
