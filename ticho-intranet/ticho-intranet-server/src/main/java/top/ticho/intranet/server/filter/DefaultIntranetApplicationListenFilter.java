@@ -4,7 +4,7 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPromise;
 import lombok.Data;
-import top.ticho.intranet.server.entity.AppDataCollector;
+import top.ticho.intranet.server.entity.IntranetApplicationDataCollector;
 
 import java.net.InetSocketAddress;
 
@@ -15,19 +15,19 @@ import java.net.InetSocketAddress;
  * @date 2024-05-14 17:22
  */
 @Data
-public class DefaultAppListenFilter implements AppListenFilter {
+public class DefaultIntranetApplicationListenFilter implements IntranetApplicationListenFilter {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
         InetSocketAddress addr = (InetSocketAddress) ctx.channel().localAddress();
-        AppDataCollector collector = AppDataCollector.getCollector(addr.getPort());
+        IntranetApplicationDataCollector collector = IntranetApplicationDataCollector.getCollector(addr.getPort());
         collector.getChannels().incrementAndGet();
     }
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, ByteBuf byteBuf) {
         InetSocketAddress addr = (InetSocketAddress) ctx.channel().localAddress();
-        AppDataCollector collector = AppDataCollector.getCollector(addr.getPort());
+        IntranetApplicationDataCollector collector = IntranetApplicationDataCollector.getCollector(addr.getPort());
         collector.incrementReadBytes(byteBuf.readableBytes());
         collector.incrementReadMsgs(1L);
     }
@@ -35,7 +35,7 @@ public class DefaultAppListenFilter implements AppListenFilter {
     @Override
     public void write(ChannelHandlerContext ctx, ByteBuf byteBuf, ChannelPromise promise) {
         InetSocketAddress addr = (InetSocketAddress) ctx.channel().localAddress();
-        AppDataCollector collector = AppDataCollector.getCollector(addr.getPort());
+        IntranetApplicationDataCollector collector = IntranetApplicationDataCollector.getCollector(addr.getPort());
         collector.incrementWriteBytes(byteBuf.readableBytes());
         collector.incrementWriteMsgs(1L);
     }
@@ -43,7 +43,7 @@ public class DefaultAppListenFilter implements AppListenFilter {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
         InetSocketAddress addr = (InetSocketAddress) ctx.channel().localAddress();
-        AppDataCollector collector = AppDataCollector.getCollector(addr.getPort());
+        IntranetApplicationDataCollector collector = IntranetApplicationDataCollector.getCollector(addr.getPort());
         collector.getChannels().decrementAndGet();
     }
 

@@ -4,7 +4,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.common.entity.Message;
-import top.ticho.intranet.server.core.ServerHandler;
+import top.ticho.intranet.server.core.IntranetServerHandler;
 
 import java.nio.charset.StandardCharsets;
 
@@ -17,8 +17,8 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class ClientHeartbeatMessageHandler extends AbstractClientMessageHandler {
 
-    public ClientHeartbeatMessageHandler(ServerHandler serverHandler) {
-        super(serverHandler);
+    public ClientHeartbeatMessageHandler(IntranetServerHandler intranetServerHandler) {
+        super(intranetServerHandler);
     }
 
     @Override

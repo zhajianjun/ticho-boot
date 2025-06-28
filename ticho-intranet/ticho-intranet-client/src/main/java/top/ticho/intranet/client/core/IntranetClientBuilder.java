@@ -15,7 +15,7 @@ import top.ticho.intranet.common.prop.ClientProperty;
  * @author zhajianjun
  * @date 2025-05-19 23:15
  */
-public class ClientBuilder {
+public class IntranetClientBuilder {
 
     /**
      * 初始化客户端上下文
@@ -23,7 +23,7 @@ public class ClientBuilder {
      * @param clientProperty 客户端属性配置，包含一些客户端初始化参数
      * @return 返回初始化后的客户端上下文对象
      */
-    public static ClientHandler build(ClientProperty clientProperty) {
+    public static IntranetClientHandler build(ClientProperty clientProperty) {
         // 创建一个NIO事件循环组，用于处理I/O操作
         NioEventLoopGroup workerGroup = new NioEventLoopGroup(clientProperty.getWorkerThreads());
         // 创建客户端的Bootstrap对象，用于配置客户端的NIO通道
@@ -35,12 +35,12 @@ public class ClientBuilder {
         // 创建应用仓库对象，用于管理应用的相关信息和配置
         ApplicationSupport applicationSupport = new ApplicationSupport(appBootstrap);
         // 创建客户端上下文对象，将上述配置和仓库对象传入
-        ClientHandler clientHandler = new ClientHandler(workerGroup, clientProperty, clientSupport, applicationSupport);
+        IntranetClientHandler intranetClientHandler = new IntranetClientHandler(workerGroup, clientProperty, clientSupport, applicationSupport);
         // 为客户端和应用的Bootstrap对象设置初始化处理器
-        clientBootstrap.handler(new ServerMessageListenerRegister(clientHandler));
-        appBootstrap.handler(new AppRequestListenerRegister(clientHandler));
+        clientBootstrap.handler(new ServerMessageListenerRegister(intranetClientHandler));
+        appBootstrap.handler(new AppRequestListenerRegister(intranetClientHandler));
         // 返回初始化后的客户端上下文对象
-        return clientHandler;
+        return intranetClientHandler;
     }
 
     private static Bootstrap createBootstrap(NioEventLoopGroup workerGroup) {

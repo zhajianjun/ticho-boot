@@ -3,8 +3,8 @@ package top.ticho.intranet.server.register;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import lombok.AllArgsConstructor;
-import top.ticho.intranet.server.core.ServerHandler;
-import top.ticho.intranet.server.filter.AppListenProxyFilter;
+import top.ticho.intranet.server.core.IntranetServerHandler;
+import top.ticho.intranet.server.filter.IntranetApplicationListenProxyFilter;
 import top.ticho.intranet.server.listener.AppRequestListener;
 
 /**
@@ -16,11 +16,11 @@ import top.ticho.intranet.server.listener.AppRequestListener;
 @AllArgsConstructor
 public class AppRequestListenerRegister extends ChannelInitializer<SocketChannel> {
 
-    private ServerHandler serverHandler;
+    private IntranetServerHandler intranetServerHandler;
 
     protected void initChannel(SocketChannel socketChannel) {
-        socketChannel.pipeline().addFirst(new AppListenProxyFilter().register(serverHandler.appListenFilter()));
-        socketChannel.pipeline().addLast(new AppRequestListener(serverHandler));
+        socketChannel.pipeline().addFirst(new IntranetApplicationListenProxyFilter().register(intranetServerHandler.intranetApplicationListenFilter()));
+        socketChannel.pipeline().addLast(new AppRequestListener(intranetServerHandler));
     }
 
 }

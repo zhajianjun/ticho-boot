@@ -4,7 +4,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.util.IntranetUtil;
-import top.ticho.intranet.server.core.ServerHandler;
+import top.ticho.intranet.server.core.IntranetServerHandler;
 
 
 /**
@@ -15,10 +15,10 @@ import top.ticho.intranet.server.core.ServerHandler;
  */
 public abstract class AbstractClientMessageHandler {
 
-    protected final ServerHandler serverHandler;
+    protected final IntranetServerHandler intranetServerHandler;
 
-    public AbstractClientMessageHandler(ServerHandler serverHandler) {
-        this.serverHandler = serverHandler;
+    public AbstractClientMessageHandler(IntranetServerHandler intranetServerHandler) {
+        this.intranetServerHandler = intranetServerHandler;
     }
 
     /**

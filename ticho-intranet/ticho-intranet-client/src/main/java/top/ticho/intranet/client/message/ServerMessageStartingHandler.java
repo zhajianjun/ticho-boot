@@ -3,7 +3,7 @@ package top.ticho.intranet.client.message;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
-import top.ticho.intranet.client.core.ClientHandler;
+import top.ticho.intranet.client.core.IntranetClientHandler;
 import top.ticho.intranet.client.support.ClientSupport;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.prop.ClientProperty;
@@ -19,10 +19,10 @@ public class ServerMessageStartingHandler extends AbstractServerMessageHandler {
     private final ClientSupport clientSupport;
     private final ClientProperty clientProperty;
 
-    public ServerMessageStartingHandler(ClientHandler clientHandler) {
-        super(clientHandler);
-        clientSupport = clientHandler.clientSupport();
-        clientProperty = clientHandler.clientProperty();
+    public ServerMessageStartingHandler(IntranetClientHandler intranetClientHandler) {
+        super(intranetClientHandler);
+        clientSupport = intranetClientHandler.clientSupport();
+        clientProperty = intranetClientHandler.clientProperty();
     }
 
     @Override

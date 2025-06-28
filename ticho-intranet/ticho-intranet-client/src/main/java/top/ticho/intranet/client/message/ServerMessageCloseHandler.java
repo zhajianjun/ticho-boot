@@ -3,7 +3,7 @@ package top.ticho.intranet.client.message;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
-import top.ticho.intranet.client.core.ClientHandler;
+import top.ticho.intranet.client.core.IntranetClientHandler;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.util.IntranetUtil;
 
@@ -16,8 +16,8 @@ import top.ticho.intranet.common.util.IntranetUtil;
 @Slf4j
 public class ServerMessageCloseHandler extends AbstractServerMessageHandler {
 
-    public ServerMessageCloseHandler(ClientHandler clientHandler) {
-        super(clientHandler);
+    public ServerMessageCloseHandler(IntranetClientHandler intranetClientHandler) {
+        super(intranetClientHandler);
     }
 
     @Override
@@ -25,7 +25,7 @@ public class ServerMessageCloseHandler extends AbstractServerMessageHandler {
         Channel serverChannel = ctx.channel();
         log.info("服务端{}权限验证失败，消息：{}", serverChannel.remoteAddress(), new String(message.data()));
         IntranetUtil.close(serverChannel);
-        clientHandler.stop(message.type());
+        intranetClientHandler.stop(message.type());
     }
 
 }

@@ -14,7 +14,7 @@ import top.ticho.intranet.common.prop.ClientProperty;
  * @author zhajianjun
  * @date 2025-05-20 22:48
  */
-public record ClientHandler(
+public record IntranetClientHandler(
     NioEventLoopGroup workerGroup,
     ClientProperty clientProperty,
     ClientSupport clientSupport,

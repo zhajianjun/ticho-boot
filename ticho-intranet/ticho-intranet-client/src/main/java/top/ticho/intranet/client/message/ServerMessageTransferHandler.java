@@ -5,7 +5,7 @@ import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
-import top.ticho.intranet.client.core.ClientHandler;
+import top.ticho.intranet.client.core.IntranetClientHandler;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
 
@@ -18,8 +18,8 @@ import top.ticho.intranet.common.entity.Message;
 @Slf4j
 public class ServerMessageTransferHandler extends AbstractServerMessageHandler {
 
-    public ServerMessageTransferHandler(ClientHandler clientHandler) {
-        super(clientHandler);
+    public ServerMessageTransferHandler(IntranetClientHandler intranetClientHandler) {
+        super(intranetClientHandler);
     }
 
     @Override

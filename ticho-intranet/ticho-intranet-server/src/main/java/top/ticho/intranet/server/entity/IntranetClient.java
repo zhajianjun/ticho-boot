@@ -14,20 +14,20 @@ import java.util.Map;
  * @date 2024-02-01 12:30
  */
 @Getter
-public class ClientInfo {
+public class IntranetClient {
 
     /** 客户端秘钥 */
     private final String accessKey;
     /** 客户端名称 */
     private final String name;
     /** 端口信息(端口号, 端口对象信息) */
-    private final Map<Integer, PortInfo> portMap;
+    private final Map<Integer, IntranetPortInfo> portMap;
     /** 连接时间 */
     private LocalDateTime connectTime;
     /** 连接的通道信息 */
     private transient Channel channel;
 
-    public ClientInfo(String accessKey, String name) {
+    public IntranetClient(String accessKey, String name) {
         this.accessKey = accessKey;
         this.name = name;
         this.portMap = new HashMap<>();

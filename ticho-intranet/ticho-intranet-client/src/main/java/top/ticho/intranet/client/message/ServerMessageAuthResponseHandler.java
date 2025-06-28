@@ -2,7 +2,7 @@ package top.ticho.intranet.client.message;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
-import top.ticho.intranet.client.core.ClientHandler;
+import top.ticho.intranet.client.core.IntranetClientHandler;
 import top.ticho.intranet.common.entity.Message;
 
 /**
@@ -14,8 +14,8 @@ import top.ticho.intranet.common.entity.Message;
 @Slf4j
 public class ServerMessageAuthResponseHandler extends AbstractServerMessageHandler {
 
-    public ServerMessageAuthResponseHandler(ClientHandler clientHandler) {
-        super(clientHandler);
+    public ServerMessageAuthResponseHandler(IntranetClientHandler intranetClientHandler) {
+        super(intranetClientHandler);
     }
 
     @Override

@@ -6,7 +6,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
-import top.ticho.intranet.client.core.ClientHandler;
+import top.ticho.intranet.client.core.IntranetClientHandler;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
 
@@ -19,10 +19,10 @@ import top.ticho.intranet.common.entity.Message;
 @Slf4j
 public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
 
-    private final ClientHandler clientHandler;
+    private final IntranetClientHandler intranetClientHandler;
 
-    public AppRequestListener(ClientHandler clientHandler) {
-        this.clientHandler = clientHandler;
+    public AppRequestListener(IntranetClientHandler intranetClientHandler) {
+        this.intranetClientHandler = intranetClientHandler;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         Channel requestCHannel = ctx.channel();
         String requestId = requestCHannel.attr(CommConst.REQUEST_ID).get();
-        clientHandler.removeRequestChannel(requestId);
+        intranetClientHandler.removeRequestChannel(requestId);
         Channel clientChannel = requestCHannel.attr(CommConst.CHANNEL).get();
         if (null != clientChannel) {
             Message message = new Message(Message.DISCONNECT, requestId, null);

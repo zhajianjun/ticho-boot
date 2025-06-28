@@ -17,10 +17,10 @@ import java.util.Objects;
  * @date 2024-02-01 12:30
  */
 @Slf4j
-public class AppListenProxyFilter extends ChannelDuplexHandler {
-    private final List<AppListenFilter> appDataListens = new ArrayList<>();
+public class IntranetApplicationListenProxyFilter extends ChannelDuplexHandler {
+    private final List<IntranetApplicationListenFilter> appDataListens = new ArrayList<>();
 
-    public AppListenProxyFilter register(AppListenFilter appDataListen) {
+    public IntranetApplicationListenProxyFilter register(IntranetApplicationListenFilter appDataListen) {
         if (Objects.isNull(appDataListen)) {
             return this;
         }

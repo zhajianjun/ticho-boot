@@ -5,13 +5,13 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import top.ticho.intranet.common.prop.ServerProperty;
 import top.ticho.intranet.server.common.ServerStatus;
-import top.ticho.intranet.server.filter.AppListenFilter;
-import top.ticho.intranet.server.filter.DefaultAppListenFilter;
+import top.ticho.intranet.server.filter.IntranetApplicationListenFilter;
+import top.ticho.intranet.server.filter.DefaultIntranetApplicationListenFilter;
 import top.ticho.intranet.server.register.AppRequestListenerRegister;
 import top.ticho.intranet.server.register.ClientMessageListenerRegister;
 import top.ticho.intranet.server.register.SslClientMessageListenerRegister;
-import top.ticho.intranet.server.support.ApplicationSupport;
-import top.ticho.intranet.server.support.ClientSupport;
+import top.ticho.intranet.server.support.IntranetApplicationSupport;
+import top.ticho.intranet.server.support.IntranetClientSupport;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -21,25 +21,25 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author zhajianjun
  * @date 2024-02-01 12:30
  */
-public class ServerBuilder {
+public class IntranetServerBuilder {
 
-    public static ServerHandler init(ServerProperty serverProperty) {
-        ServerHandler serverHandler = build(serverProperty);
-        serverHandler.init();
-        return serverHandler;
+    public static IntranetServerHandler init(ServerProperty serverProperty) {
+        IntranetServerHandler intranetServerHandler = build(serverProperty);
+        intranetServerHandler.init();
+        return intranetServerHandler;
     }
 
-    public static ServerHandler init(ServerProperty serverProperty, AppListenFilter appListenFilter) {
-        ServerHandler serverHandler = build(serverProperty, appListenFilter);
-        serverHandler.init();
-        return serverHandler;
+    public static IntranetServerHandler init(ServerProperty serverProperty, IntranetApplicationListenFilter intranetApplicationListenFilter) {
+        IntranetServerHandler intranetServerHandler = build(serverProperty, intranetApplicationListenFilter);
+        intranetServerHandler.init();
+        return intranetServerHandler;
     }
 
-    public static ServerHandler build(ServerProperty serverProperty) {
-        return build(serverProperty, new DefaultAppListenFilter());
+    public static IntranetServerHandler build(ServerProperty serverProperty) {
+        return build(serverProperty, new DefaultIntranetApplicationListenFilter());
     }
 
-    public static ServerHandler build(ServerProperty serverProperty, AppListenFilter appListenFilter) {
+    public static IntranetServerHandler build(ServerProperty serverProperty, IntranetApplicationListenFilter intranetApplicationListenFilter) {
         NioEventLoopGroup serverBoss = new NioEventLoopGroup(serverProperty.getBossThreads());
         NioEventLoopGroup serverWorker = new NioEventLoopGroup(serverProperty.getWorkerThreads());
         boolean sslEnable = Boolean.TRUE.equals(serverProperty.getSslEnable());
@@ -50,23 +50,23 @@ public class ServerBuilder {
             sslServerBootstrap = createBootstrap(serverBoss, serverWorker);
         }
         ServerBootstrap appServerBootstrap = createBootstrap(serverBoss, serverWorker);
-        ServerHandler serverHandler = new ServerHandler(
+        IntranetServerHandler intranetServerHandler = new IntranetServerHandler(
             serverStatus,
             serverBoss,
             serverWorker,
             serverProperty,
             serverBootstrap,
             sslServerBootstrap,
-            new ClientSupport(),
-            new ApplicationSupport(serverProperty, appServerBootstrap),
-            appListenFilter
+            new IntranetClientSupport(),
+            new IntranetApplicationSupport(serverProperty, appServerBootstrap),
+            intranetApplicationListenFilter
         );
-        serverBootstrap.childHandler(new ClientMessageListenerRegister(serverHandler));
+        serverBootstrap.childHandler(new ClientMessageListenerRegister(intranetServerHandler));
         if (sslEnable) {
-            sslServerBootstrap.childHandler(new SslClientMessageListenerRegister(serverHandler));
+            sslServerBootstrap.childHandler(new SslClientMessageListenerRegister(intranetServerHandler));
         }
-        appServerBootstrap.childHandler(new AppRequestListenerRegister(serverHandler));
-        return serverHandler;
+        appServerBootstrap.childHandler(new AppRequestListenerRegister(intranetServerHandler));
+        return intranetServerHandler;
     }
 
     private static ServerBootstrap createBootstrap(NioEventLoopGroup serverBoss, NioEventLoopGroup serverWorker) {

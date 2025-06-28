@@ -5,7 +5,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
-import top.ticho.intranet.client.core.ClientHandler;
+import top.ticho.intranet.client.core.IntranetClientHandler;
 import top.ticho.intranet.client.message.AbstractServerMessageHandler;
 import top.ticho.intranet.client.message.ServerMessageAuthResponseHandler;
 import top.ticho.intranet.client.message.ServerMessageCloseHandler;
@@ -32,21 +32,21 @@ import java.util.Map;
 @Slf4j
 public class ServerMessageListener extends SimpleChannelInboundHandler<Message> {
 
-    private final ClientHandler clientHandler;
+    private final IntranetClientHandler intranetClientHandler;
     public final Map<Byte, AbstractServerMessageHandler> MAP;
     public final AbstractServerMessageHandler UNKNOWN;
 
-    public ServerMessageListener(ClientHandler clientHandler) {
-        this.clientHandler = clientHandler;
-        this.UNKNOWN = new ServerMessageUnknownHandler(clientHandler);
+    public ServerMessageListener(IntranetClientHandler intranetClientHandler) {
+        this.intranetClientHandler = intranetClientHandler;
+        this.UNKNOWN = new ServerMessageUnknownHandler(intranetClientHandler);
         this.MAP = new HashMap<>();
-        ServerMessageConnectHandler clientConnectHandle = new ServerMessageConnectHandler(clientHandler);
-        ServerMessageDisconnectHandler clientDisconnectHandle = new ServerMessageDisconnectHandler(clientHandler);
-        ServerMessageTransferHandler clientTransferHandle = new ServerMessageTransferHandler(clientHandler);
-        ServerMessageCloseHandler clientCloseHandle = new ServerMessageCloseHandler(clientHandler);
-        ServerMessageHeartbeatHandler heartbeatHandler = new ServerMessageHeartbeatHandler(clientHandler);
-        ServerMessageAuthResponseHandler authResponseHandler = new ServerMessageAuthResponseHandler(clientHandler);
-        ServerMessageStartingHandler startingHandler = new ServerMessageStartingHandler(clientHandler);
+        ServerMessageConnectHandler clientConnectHandle = new ServerMessageConnectHandler(intranetClientHandler);
+        ServerMessageDisconnectHandler clientDisconnectHandle = new ServerMessageDisconnectHandler(intranetClientHandler);
+        ServerMessageTransferHandler clientTransferHandle = new ServerMessageTransferHandler(intranetClientHandler);
+        ServerMessageCloseHandler clientCloseHandle = new ServerMessageCloseHandler(intranetClientHandler);
+        ServerMessageHeartbeatHandler heartbeatHandler = new ServerMessageHeartbeatHandler(intranetClientHandler);
+        ServerMessageAuthResponseHandler authResponseHandler = new ServerMessageAuthResponseHandler(intranetClientHandler);
+        ServerMessageStartingHandler startingHandler = new ServerMessageStartingHandler(intranetClientHandler);
         // MAP.put(Message.AUTH, null);
         MAP.put(Message.DISABLED_ACCESS_KEY, clientCloseHandle);
         MAP.put(Message.AUTH, authResponseHandler);
@@ -77,15 +77,15 @@ public class ServerMessageListener extends SimpleChannelInboundHandler<Message> 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         Channel clientChannel = ctx.channel();
-        if (clientHandler.getServerChannel() == clientChannel) {
-            clientHandler.setServerChannel(null);
-            clientHandler.clearRequestChannels();
-            clientHandler.restart();
+        if (intranetClientHandler.getServerChannel() == clientChannel) {
+            intranetClientHandler.setServerChannel(null);
+            intranetClientHandler.clearRequestChannels();
+            intranetClientHandler.restart();
         } else {
             Channel requestCHannel = clientChannel.attr(CommConst.CHANNEL).get();
             IntranetUtil.close(requestCHannel);
         }
-        clientHandler.removeReadyServerChannel(clientChannel);
+        intranetClientHandler.removeReadyServerChannel(clientChannel);
         super.channelInactive(ctx);
     }
 

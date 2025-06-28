@@ -2,7 +2,7 @@ package top.ticho.intranet.client.register;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
-import top.ticho.intranet.client.core.ClientHandler;
+import top.ticho.intranet.client.core.IntranetClientHandler;
 import top.ticho.intranet.client.listener.ServerMessageListener;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.core.IdleChecker;
@@ -22,15 +22,15 @@ import javax.net.ssl.SSLEngine;
  */
 public class ServerMessageListenerRegister extends ChannelInitializer<SocketChannel> {
 
-    private final ClientHandler clientHandler;
+    private final IntranetClientHandler intranetClientHandler;
 
-    public ServerMessageListenerRegister(ClientHandler clientHandler) {
-        this.clientHandler = clientHandler;
+    public ServerMessageListenerRegister(IntranetClientHandler intranetClientHandler) {
+        this.intranetClientHandler = intranetClientHandler;
     }
 
     @Override
     protected void initChannel(SocketChannel socketChannel) {
-        ClientProperty clientProperty = clientHandler.clientProperty();
+        ClientProperty clientProperty = intranetClientHandler.clientProperty();
         if (Boolean.TRUE.equals(clientProperty.getSslEnable())) {
             SslHandler sslHandler = new SslHandler(clientProperty.getSslPath(), clientProperty.getSslPassword());
             SSLContext sslContext = sslHandler.getSslContext();
@@ -41,7 +41,7 @@ public class ServerMessageListenerRegister extends ChannelInitializer<SocketChan
         socketChannel.pipeline().addLast(new MessageDecoder(CommConst.MAX_FRAME_LEN, CommConst.FIELD_OFFSET, CommConst.FIELD_LEN, CommConst.ADJUSTMENT, CommConst.INIT_BYTES_TO_STRIP));
         socketChannel.pipeline().addLast(new MessageEncoder());
         socketChannel.pipeline().addLast(new IdleChecker(CommConst.READ_IDLE_TIME, CommConst.WRITE_IDLE_TIME - 10, 0));
-        socketChannel.pipeline().addLast(new ServerMessageListener(clientHandler));
+        socketChannel.pipeline().addLast(new ServerMessageListener(intranetClientHandler));
     }
 
 }

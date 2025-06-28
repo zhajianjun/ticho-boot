@@ -3,7 +3,7 @@ package top.ticho.intranet.server.message;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.common.entity.Message;
-import top.ticho.intranet.server.core.ServerHandler;
+import top.ticho.intranet.server.core.IntranetServerHandler;
 
 /**
  * 客户端未知消息处理器
@@ -14,8 +14,8 @@ import top.ticho.intranet.server.core.ServerHandler;
 @Slf4j
 public class ClientMessageUnknownHandler extends AbstractClientMessageHandler {
 
-    public ClientMessageUnknownHandler(ServerHandler serverHandler) {
-        super(serverHandler);
+    public ClientMessageUnknownHandler(IntranetServerHandler intranetServerHandler) {
+        super(intranetServerHandler);
     }
 
     @Override

@@ -4,7 +4,7 @@ import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.util.IntranetUtil;
-import top.ticho.intranet.server.entity.ClientInfo;
+import top.ticho.intranet.server.entity.IntranetClient;
 
 import java.util.List;
 import java.util.Map;
@@ -18,24 +18,24 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date 2025-05-18 11:44
  */
 @Slf4j
-public class ClientSupport {
+public class IntranetClientSupport {
     /**
      * 客户端与服务端的通道
      */
-    private final Map<String, ClientInfo> clientMap = new ConcurrentHashMap<>();
+    private final Map<String, IntranetClient> clientMap = new ConcurrentHashMap<>();
 
-    public Optional<ClientInfo> findByAccessKey(String accessKey) {
+    public Optional<IntranetClient> findByAccessKey(String accessKey) {
         if (Objects.isNull(accessKey)) {
             return Optional.empty();
         }
         return Optional.ofNullable(clientMap.get(accessKey));
     }
 
-    public List<ClientInfo> findAll() {
+    public List<IntranetClient> findAll() {
         return clientMap.values().stream().toList();
     }
 
-    public Optional<ClientInfo> findByPort(Integer port) {
+    public Optional<IntranetClient> findByPort(Integer port) {
         return clientMap.values()
             .stream()
             .filter(Objects::nonNull)
@@ -51,7 +51,7 @@ public class ClientSupport {
             log.warn("创建客户端失败，密钥：{}已存在", accessKey);
             return false;
         }
-        clientMap.put(accessKey, new ClientInfo(accessKey, name));
+        clientMap.put(accessKey, new IntranetClient(accessKey, name));
         log.info("创建客户端成功，密钥：{}", accessKey);
         return true;
     }
@@ -63,8 +63,8 @@ public class ClientSupport {
         if (Objects.isNull(accessKey)) {
             return false;
         }
-        ClientInfo clientInfoGet = clientMap.get(accessKey);
-        if (Objects.isNull(clientInfoGet)) {
+        IntranetClient intranetClientGet = clientMap.get(accessKey);
+        if (Objects.isNull(intranetClientGet)) {
             log.warn("移除客户端失败，密钥：{}不存在", accessKey);
             return false;
         }
@@ -94,7 +94,7 @@ public class ClientSupport {
     }
 
     public Channel removeRequestChannel(String accessKey, String requestId) {
-        Optional<ClientInfo> clientInfoOpt = findByAccessKey(accessKey);
+        Optional<IntranetClient> clientInfoOpt = findByAccessKey(accessKey);
         return clientInfoOpt
             .map(item -> removeRequestChannel(item.getChannel(), requestId))
             .orElse(null);
@@ -126,11 +126,11 @@ public class ClientSupport {
             .ifPresent(this::closeRequestChannel);
     }
 
-    public void closeRequestChannel(ClientInfo clientInfo) {
-        if (Objects.isNull(clientInfo)) {
+    public void closeRequestChannel(IntranetClient intranetClient) {
+        if (Objects.isNull(intranetClient)) {
             return;
         }
-        Channel channel = clientInfo.getChannel();
+        Channel channel = intranetClient.getChannel();
         if (Objects.isNull(channel)) {
             return;
         }
@@ -140,7 +140,7 @@ public class ClientSupport {
             requestChannelMap.clear();
         }
         IntranetUtil.close(channel);
-        clientInfo.disconnect();
+        intranetClient.disconnect();
     }
 
 }

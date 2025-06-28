@@ -10,7 +10,7 @@ import io.netty.channel.ChannelPromise;
  * @author zhajianjun
  * @date 2024-05-14 18:18
  */
-public interface AppListenFilter {
+public interface IntranetApplicationListenFilter {
 
     void channelActive(ChannelHandlerContext ctx);
 

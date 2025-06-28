@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @date 2025-05-18 11:53
  */
 @Slf4j
-public class ApplicationSupport {
+public class IntranetApplicationSupport {
     /** 与绑定端口的通道 */
     private final Map<Integer, Channel> bindPortChannelMap;
     /** 请求id */
@@ -29,7 +29,7 @@ public class ApplicationSupport {
     private final ServerProperty serverProperty;
     private final ServerBootstrap appServerBootstrap;
 
-    public ApplicationSupport(ServerProperty serverProperty, ServerBootstrap appServerBootstrap) {
+    public IntranetApplicationSupport(ServerProperty serverProperty, ServerBootstrap appServerBootstrap) {
         this.serverProperty = serverProperty;
         this.appServerBootstrap = appServerBootstrap;
         this.requestId = new AtomicLong(0L);

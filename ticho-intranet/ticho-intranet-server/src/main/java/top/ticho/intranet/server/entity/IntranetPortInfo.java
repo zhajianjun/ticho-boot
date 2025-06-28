@@ -9,7 +9,7 @@ import lombok.Getter;
  * @date 2024-02-01 12:30
  */
 @Getter
-public class PortInfo {
+public class IntranetPortInfo {
 
     /** 客户端秘钥 */
     private final String accessKey;
@@ -18,7 +18,7 @@ public class PortInfo {
     /** 客户端地址 */
     private final String endpoint;
 
-    public PortInfo(String accessKey, Integer port, String endpoint) {
+    public IntranetPortInfo(String accessKey, Integer port, String endpoint) {
         this.accessKey = accessKey;
         this.port = port;
         this.endpoint = endpoint;

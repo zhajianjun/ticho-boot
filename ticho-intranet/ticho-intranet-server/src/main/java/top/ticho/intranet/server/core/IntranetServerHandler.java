@@ -11,11 +11,11 @@ import top.ticho.intranet.common.exception.IntranetException;
 import top.ticho.intranet.common.prop.ServerProperty;
 import top.ticho.intranet.common.util.IntranetUtil;
 import top.ticho.intranet.server.common.ServerStatus;
-import top.ticho.intranet.server.entity.ClientInfo;
-import top.ticho.intranet.server.entity.PortInfo;
-import top.ticho.intranet.server.filter.AppListenFilter;
-import top.ticho.intranet.server.support.ApplicationSupport;
-import top.ticho.intranet.server.support.ClientSupport;
+import top.ticho.intranet.server.entity.IntranetClient;
+import top.ticho.intranet.server.entity.IntranetPortInfo;
+import top.ticho.intranet.server.filter.IntranetApplicationListenFilter;
+import top.ticho.intranet.server.support.IntranetApplicationSupport;
+import top.ticho.intranet.server.support.IntranetClientSupport;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,16 +34,16 @@ import java.util.stream.Collectors;
  * @date 2025-05-18 11:21
  */
 @Slf4j
-public record ServerHandler(
+public record IntranetServerHandler(
     AtomicInteger serverStatus,
     NioEventLoopGroup serverBoss,
     NioEventLoopGroup serverWorker,
     ServerProperty serverProperty,
     ServerBootstrap serverBootstrap,
     ServerBootstrap sslServerBootstrap,
-    ClientSupport clientSupport,
-    ApplicationSupport applicationSupport,
-    AppListenFilter appListenFilter
+    IntranetClientSupport intranetClientSupport,
+    IntranetApplicationSupport intranetApplicationSupport,
+    IntranetApplicationListenFilter intranetApplicationListenFilter
 ) {
 
     public void init() {
@@ -87,7 +87,7 @@ public record ServerHandler(
     public boolean create(String accessKey, String name) {
         checkStatus();
         IntranetUtil.isNotEmpty(accessKey, "accessKey不能为空");
-        return clientSupport.create(accessKey, name);
+        return intranetClientSupport.create(accessKey, name);
     }
 
     /**
@@ -96,12 +96,12 @@ public record ServerHandler(
     public void remove(String accessKey) {
         checkStatus();
         IntranetUtil.isNotEmpty(accessKey, "accessKey不能为空");
-        Optional<ClientInfo> clientInfoOpt = findByAccessKey(accessKey);
+        Optional<IntranetClient> clientInfoOpt = findByAccessKey(accessKey);
         if (clientInfoOpt.isEmpty()) {
             return;
         }
-        ClientInfo clientInfo = clientInfoOpt.get();
-        remove(clientInfo);
+        IntranetClient intranetClient = clientInfoOpt.get();
+        remove(intranetClient);
     }
 
     /**
@@ -112,19 +112,19 @@ public record ServerHandler(
         findAll().forEach(this::remove);
     }
 
-    private void remove(ClientInfo clientInfo) {
+    private void remove(IntranetClient intranetClient) {
         checkStatus();
         // 删除应用
-        Map<Integer, PortInfo> portMap = clientInfo.getPortMap();
+        Map<Integer, IntranetPortInfo> portMap = intranetClient.getPortMap();
         Optional.ofNullable(portMap)
             .map(Map::keySet)
             .ifPresent(ports -> {
-                ports.forEach(applicationSupport::unbind);
+                ports.forEach(intranetApplicationSupport::unbind);
                 portMap.clear();
             });
         // 关闭请求通道
-        clientSupport.closeRequestChannel(clientInfo);
-        clientSupport.deleteClient(clientInfo.getAccessKey());
+        intranetClientSupport.closeRequestChannel(intranetClient);
+        intranetClientSupport.deleteClient(intranetClient.getAccessKey());
     }
 
     /**
@@ -137,38 +137,38 @@ public record ServerHandler(
         IntranetUtil.isNotEmpty(endpoint, "endpoint不能为空");
         boolean matches = endpoint.matches("\\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?):([1-9]|[1-9][0-9]{1,3}|[1-5][0-9]{4}|6[0-5][0-5][0-3][0-5])\\b");
         IntranetUtil.isTrue(matches, "endpoint格式错误，格式[ip:port]");
-        Optional<ClientInfo> clientInfoOpt = findByAccessKey(accessKey);
+        Optional<IntranetClient> clientInfoOpt = findByAccessKey(accessKey);
         if (clientInfoOpt.isEmpty()) {
             log.warn("绑定应用[{}]失败，客户端：{}不存在", port, accessKey);
             return false;
         }
-        ClientInfo clientInfo = clientInfoOpt.get();
-        Map<Integer, PortInfo> portMap = clientInfo.getPortMap();
-        boolean bind = applicationSupport.bind(port);
+        IntranetClient intranetClient = clientInfoOpt.get();
+        Map<Integer, IntranetPortInfo> portMap = intranetClient.getPortMap();
+        boolean bind = intranetApplicationSupport.bind(port);
         if (bind) {
-            portMap.put(port, new PortInfo(accessKey, port, endpoint));
+            portMap.put(port, new IntranetPortInfo(accessKey, port, endpoint));
         }
         return bind;
     }
 
-    public void flush(List<ClientInfo> clientInfos) {
-        if (CollUtil.isEmpty(clientInfos)) {
+    public void flush(List<IntranetClient> intranetClients) {
+        if (CollUtil.isEmpty(intranetClients)) {
             return;
         }
-        Map<String, ClientInfo> clientInfoMap = clientInfos
+        Map<String, IntranetClient> clientInfoMap = intranetClients
             .stream()
             .filter(item -> StrUtil.isNotBlank(item.getAccessKey()))
-            .collect(Collectors.toMap(ClientInfo::getAccessKey, Function.identity(), (v1, v2) -> v1));
+            .collect(Collectors.toMap(IntranetClient::getAccessKey, Function.identity(), (v1, v2) -> v1));
         // 移除需要删除的client
-        List<ClientInfo> clientInfosFromMem = findAll();
-        clientInfosFromMem.forEach(clientInfoFromMem -> {
+        List<IntranetClient> intranetClientInfosFromMem = findAll();
+        intranetClientInfosFromMem.forEach(clientInfoFromMem -> {
             if (clientInfoMap.containsKey(clientInfoFromMem.getAccessKey())) {
                 return;
             }
             remove(clientInfoFromMem);
         });
         clientInfoMap.forEach((accessKey, clientInfo) -> {
-            Optional<ClientInfo> clientInfoOpt = findByAccessKey(accessKey);
+            Optional<IntranetClient> clientInfoOpt = findByAccessKey(accessKey);
             if (clientInfoOpt.isEmpty()) {
                 create(accessKey, clientInfo.getName());
             }
@@ -176,22 +176,22 @@ public record ServerHandler(
             if (clientInfoOpt.isEmpty()) {
                 return;
             }
-            ClientInfo clientInfoFromMem = clientInfoOpt.get();
-            Map<Integer, PortInfo> portInfoMapFromMem = clientInfoFromMem.getPortMap();
-            Map<Integer, PortInfo> portInfoMap = Optional.ofNullable(clientInfo.getPortMap()).orElseGet(HashMap::new);
+            IntranetClient intranetClientFromMem = clientInfoOpt.get();
+            Map<Integer, IntranetPortInfo> portInfoMapFromMem = intranetClientFromMem.getPortMap();
+            Map<Integer, IntranetPortInfo> portInfoMap = Optional.ofNullable(clientInfo.getPortMap()).orElseGet(HashMap::new);
             // 解绑portInfoMap中不存在，而portMapFromMem存在的端口
-            portInfoMapFromMem.values().forEach(portInfoFromMem -> {
-                if (portInfoMap.containsKey(portInfoFromMem.getPort())) {
+            portInfoMapFromMem.values().forEach(intranetPortInfoFromMem -> {
+                if (portInfoMap.containsKey(intranetPortInfoFromMem.getPort())) {
                     return;
                 }
-                unbind(accessKey, portInfoFromMem.getPort());
+                unbind(accessKey, intranetPortInfoFromMem.getPort());
             });
             // 绑定portInfoMap中存在，而portMapFromMem不存在的端口
-            portInfoMap.values().forEach(portInfo -> {
-                if (portInfoMapFromMem.containsKey(portInfo.getPort())) {
+            portInfoMap.values().forEach(intranetPortInfo -> {
+                if (portInfoMapFromMem.containsKey(intranetPortInfo.getPort())) {
                     return;
                 }
-                bind(accessKey, portInfo.getPort(), portInfo.getEndpoint());
+                bind(accessKey, intranetPortInfo.getPort(), intranetPortInfo.getEndpoint());
             });
         });
     }
@@ -202,16 +202,16 @@ public record ServerHandler(
     public boolean unbind(String accessKey) {
         checkStatus();
         IntranetUtil.isNotEmpty(accessKey, "accessKey不能为空");
-        Optional<ClientInfo> clientInfoOpt = findByAccessKey(accessKey);
+        Optional<IntranetClient> clientInfoOpt = findByAccessKey(accessKey);
         if (clientInfoOpt.isEmpty()) {
             log.warn("解绑客户端[{}]下所有应用失败，客户端不存在", accessKey);
             return false;
         }
-        ClientInfo clientInfo = clientInfoOpt.get();
-        Map<Integer, PortInfo> portMap = clientInfo.getPortMap();
+        IntranetClient intranetClient = clientInfoOpt.get();
+        Map<Integer, IntranetPortInfo> portMap = intranetClient.getPortMap();
         boolean allUnbind = portMap.keySet()
             .stream()
-            .allMatch(applicationSupport::unbind);
+            .allMatch(intranetApplicationSupport::unbind);
         portMap.clear();
         return allUnbind;
     }
@@ -223,12 +223,12 @@ public record ServerHandler(
         checkStatus();
         IntranetUtil.isNotEmpty(accessKey, "accessKey不能为空");
         IntranetUtil.isNotNull(port, "port不能为空");
-        Optional<ClientInfo> clientInfoOpt = findByAccessKey(accessKey);
+        Optional<IntranetClient> clientInfoOpt = findByAccessKey(accessKey);
         if (clientInfoOpt.isEmpty()) {
             log.warn("解绑应用[{}]失败，客户端：{}不存在", port, accessKey);
             return;
         }
-        if (applicationSupport.unbind(port)) {
+        if (intranetApplicationSupport.unbind(port)) {
             clientInfoOpt.get().getPortMap().remove(port);
         }
         log.warn("解绑应用[{}]失败，客户端：{}不存在", port, accessKey);
@@ -236,17 +236,17 @@ public record ServerHandler(
 
     public boolean exists(Integer portNum) {
         checkStatus();
-        return applicationSupport.exists(portNum);
+        return intranetApplicationSupport.exists(portNum);
     }
 
-    public Optional<ClientInfo> findByAccessKey(String accessKey) {
+    public Optional<IntranetClient> findByAccessKey(String accessKey) {
         checkStatus();
-        return clientSupport.findByAccessKey(accessKey);
+        return intranetClientSupport.findByAccessKey(accessKey);
     }
 
-    public List<ClientInfo> findAll() {
+    public List<IntranetClient> findAll() {
         checkStatus();
-        return clientSupport.findAll();
+        return intranetClientSupport.findAll();
     }
 
 }

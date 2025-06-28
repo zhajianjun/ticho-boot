@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
  */
 @Data
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class AppDataCollector {
-    private static final Map<Integer, AppDataCollector> collectors = new ConcurrentHashMap<>();
+public class IntranetApplicationDataCollector {
+    private static final Map<Integer, IntranetApplicationDataCollector> collectors = new ConcurrentHashMap<>();
 
     /** 端口 */
     private Integer port;
@@ -35,13 +35,13 @@ public class AppDataCollector {
     /** 访问通道数 */
     private final AtomicInteger channels = new AtomicInteger();
 
-    public static AppDataCollector getCollector(Integer port) {
-        AppDataCollector collector = collectors.get(port);
+    public static IntranetApplicationDataCollector getCollector(Integer port) {
+        IntranetApplicationDataCollector collector = collectors.get(port);
         if (null == collector) {
             synchronized (collectors) {
                 collector = collectors.get(port);
                 if (null == collector) {
-                    collector = new AppDataCollector();
+                    collector = new IntranetApplicationDataCollector();
                     collector.setPort(port);
                     collectors.put(port, collector);
                 }
@@ -50,12 +50,12 @@ public class AppDataCollector {
         return collector;
     }
 
-    public static List<AppDataSummary> getAllData() {
-        return collectors.values().stream().map(AppDataCollector::getData).collect(Collectors.toList());
+    public static List<IntranetApplicationDataSummary> getAllData() {
+        return collectors.values().stream().map(IntranetApplicationDataCollector::getData).collect(Collectors.toList());
     }
 
-    public AppDataSummary getData() {
-        AppDataSummary data = new AppDataSummary();
+    public IntranetApplicationDataSummary getData() {
+        IntranetApplicationDataSummary data = new IntranetApplicationDataSummary();
         data.setChannels(this.channels.get());
         data.setPort(this.port);
         data.setReadBytes(readBytes.get());

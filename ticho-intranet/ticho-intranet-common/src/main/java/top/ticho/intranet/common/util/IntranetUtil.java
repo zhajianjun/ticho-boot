@@ -1,7 +1,6 @@
 package top.ticho.intranet.common.util;
 
 
-import cn.hutool.core.util.StrUtil;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
@@ -64,7 +63,7 @@ public class IntranetUtil {
         try {
             Runtime.getRuntime().exec(cmd);
         } catch (Exception e) {
-            log.error(StrUtil.format("执行命令失败：{}, 错误信息：｛｝", cmd, e.getMessage()), e);
+            log.error("执行命令失败：{}, 错误信息：{}", cmd, e.getMessage(), e);
         }
     }
 

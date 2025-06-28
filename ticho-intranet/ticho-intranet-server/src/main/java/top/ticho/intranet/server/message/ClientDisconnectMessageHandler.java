@@ -8,8 +8,8 @@ import io.netty.channel.ChannelHandlerContext;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.util.IntranetUtil;
-import top.ticho.intranet.server.core.ServerHandler;
-import top.ticho.intranet.server.support.ClientSupport;
+import top.ticho.intranet.server.core.IntranetServerHandler;
+import top.ticho.intranet.server.support.IntranetClientSupport;
 
 /**
  * 客户端断开连接消息处理器
@@ -18,11 +18,11 @@ import top.ticho.intranet.server.support.ClientSupport;
  * @date 2024-02-01 12:30
  */
 public class ClientDisconnectMessageHandler extends AbstractClientMessageHandler {
-    private final ClientSupport clientSupport;
+    private final IntranetClientSupport intranetClientSupport;
 
-    public ClientDisconnectMessageHandler(ServerHandler serverHandler) {
-        super(serverHandler);
-        this.clientSupport = serverHandler.clientSupport();
+    public ClientDisconnectMessageHandler(IntranetServerHandler intranetServerHandler) {
+        super(intranetServerHandler);
+        this.intranetClientSupport = intranetServerHandler.intranetClientSupport();
     }
 
     @Override
@@ -32,13 +32,13 @@ public class ClientDisconnectMessageHandler extends AbstractClientMessageHandler
         String accessKey = channel.attr(CommConst.ACCESS_KEY).get();
         Channel requestChannel;
         if (StrUtil.isEmpty(accessKey)) {
-            requestChannel = clientSupport.removeRequestChannel(channel, requestId);
+            requestChannel = intranetClientSupport.removeRequestChannel(channel, requestId);
             if (IntranetUtil.isActive(requestChannel)) {
                 requestChannel.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
             }
             return;
         }
-        requestChannel = clientSupport.removeRequestChannel(accessKey, requestId);
+        requestChannel = intranetClientSupport.removeRequestChannel(accessKey, requestId);
         if (!IntranetUtil.isActive(requestChannel)) {
             return;
         }

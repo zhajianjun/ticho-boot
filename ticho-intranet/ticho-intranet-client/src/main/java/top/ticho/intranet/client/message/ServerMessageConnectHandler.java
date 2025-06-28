@@ -3,7 +3,7 @@ package top.ticho.intranet.client.message;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
-import top.ticho.intranet.client.core.ClientHandler;
+import top.ticho.intranet.client.core.IntranetClientHandler;
 import top.ticho.intranet.client.listener.AppConnectListener;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
@@ -17,8 +17,8 @@ import top.ticho.intranet.common.entity.Message;
 @Slf4j
 public class ServerMessageConnectHandler extends AbstractServerMessageHandler {
 
-    public ServerMessageConnectHandler(ClientHandler clientHandler) {
-        super(clientHandler);
+    public ServerMessageConnectHandler(IntranetClientHandler intranetClientHandler) {
+        super(intranetClientHandler);
     }
 
     @Override
@@ -28,10 +28,10 @@ public class ServerMessageConnectHandler extends AbstractServerMessageHandler {
         String[] endpoint = new String(message.data()).split(CommConst.COLON);
         String host = endpoint[0];
         int port = Integer.parseInt(endpoint[1]);
-        AppConnectListener listener = new AppConnectListener(clientHandler, serverChannel, requestId);
+        AppConnectListener listener = new AppConnectListener(intranetClientHandler, serverChannel, requestId);
         // log.debug("[客户端]连接{}:{}", host, port);
         // log.warn("[4][客户端]接收连接信息, 连接通道{}, 消息{}", serverChannel, message);
-        clientHandler.request(host, port, listener);
+        intranetClientHandler.request(host, port, listener);
     }
 
 }
