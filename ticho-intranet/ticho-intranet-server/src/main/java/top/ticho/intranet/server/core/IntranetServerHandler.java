@@ -8,11 +8,11 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.exception.IntranetException;
-import top.ticho.intranet.common.prop.ServerProperty;
+import top.ticho.intranet.common.prop.IntranetServerProperty;
 import top.ticho.intranet.common.util.IntranetUtil;
 import top.ticho.intranet.server.common.ServerStatus;
 import top.ticho.intranet.server.entity.IntranetClient;
-import top.ticho.intranet.server.entity.IntranetPortInfo;
+import top.ticho.intranet.server.entity.IntranetPort;
 import top.ticho.intranet.server.filter.IntranetApplicationListenFilter;
 import top.ticho.intranet.server.support.IntranetApplicationSupport;
 import top.ticho.intranet.server.support.IntranetClientSupport;
@@ -38,7 +38,7 @@ public record IntranetServerHandler(
     AtomicInteger serverStatus,
     NioEventLoopGroup serverBoss,
     NioEventLoopGroup serverWorker,
-    ServerProperty serverProperty,
+    IntranetServerProperty intranetServerProperty,
     ServerBootstrap serverBootstrap,
     ServerBootstrap sslServerBootstrap,
     IntranetClientSupport intranetClientSupport,
@@ -52,13 +52,13 @@ public record IntranetServerHandler(
             return;
         }
         try {
-            log.info("内网映射服务初始化中，端口：{}，是否开启ssl：{}, ssl端口：{}", serverProperty.getPort(), serverProperty.getSslEnable(), serverProperty.getSslPort());
-            int servPort = serverProperty.getPort();
+            log.info("内网映射服务初始化中，端口：{}，是否开启ssl：{}, ssl端口：{}", intranetServerProperty.getPort(), intranetServerProperty.getSslEnable(), intranetServerProperty.getSslPort());
+            int servPort = intranetServerProperty.getPort();
             String host = CommConst.LOCALHOST;
             serverBootstrap.bind(host, servPort).get();
             if (Objects.nonNull(sslServerBootstrap)) {
                 // 创建ssl服务端
-                Integer sslServerPort = serverProperty.getSslPort();
+                Integer sslServerPort = intranetServerProperty.getSslPort();
                 ChannelFuture cf = sslServerBootstrap.bind(host, sslServerPort);
                 cf.sync();
             }
@@ -115,7 +115,7 @@ public record IntranetServerHandler(
     private void remove(IntranetClient intranetClient) {
         checkStatus();
         // 删除应用
-        Map<Integer, IntranetPortInfo> portMap = intranetClient.getPortMap();
+        Map<Integer, IntranetPort> portMap = intranetClient.getPortMap();
         Optional.ofNullable(portMap)
             .map(Map::keySet)
             .ifPresent(ports -> {
@@ -143,10 +143,10 @@ public record IntranetServerHandler(
             return false;
         }
         IntranetClient intranetClient = clientInfoOpt.get();
-        Map<Integer, IntranetPortInfo> portMap = intranetClient.getPortMap();
+        Map<Integer, IntranetPort> portMap = intranetClient.getPortMap();
         boolean bind = intranetApplicationSupport.bind(port);
         if (bind) {
-            portMap.put(port, new IntranetPortInfo(accessKey, port, endpoint));
+            portMap.put(port, new IntranetPort(accessKey, port, endpoint));
         }
         return bind;
     }
@@ -177,21 +177,21 @@ public record IntranetServerHandler(
                 return;
             }
             IntranetClient intranetClientFromMem = clientInfoOpt.get();
-            Map<Integer, IntranetPortInfo> portInfoMapFromMem = intranetClientFromMem.getPortMap();
-            Map<Integer, IntranetPortInfo> portInfoMap = Optional.ofNullable(clientInfo.getPortMap()).orElseGet(HashMap::new);
+            Map<Integer, IntranetPort> portInfoMapFromMem = intranetClientFromMem.getPortMap();
+            Map<Integer, IntranetPort> portInfoMap = Optional.ofNullable(clientInfo.getPortMap()).orElseGet(HashMap::new);
             // 解绑portInfoMap中不存在，而portMapFromMem存在的端口
-            portInfoMapFromMem.values().forEach(intranetPortInfoFromMem -> {
-                if (portInfoMap.containsKey(intranetPortInfoFromMem.getPort())) {
+            portInfoMapFromMem.values().forEach(intranetPortFromMem -> {
+                if (portInfoMap.containsKey(intranetPortFromMem.getPort())) {
                     return;
                 }
-                unbind(accessKey, intranetPortInfoFromMem.getPort());
+                unbind(accessKey, intranetPortFromMem.getPort());
             });
             // 绑定portInfoMap中存在，而portMapFromMem不存在的端口
-            portInfoMap.values().forEach(intranetPortInfo -> {
-                if (portInfoMapFromMem.containsKey(intranetPortInfo.getPort())) {
+            portInfoMap.values().forEach(intranetPort -> {
+                if (portInfoMapFromMem.containsKey(intranetPort.getPort())) {
                     return;
                 }
-                bind(accessKey, intranetPortInfo.getPort(), intranetPortInfo.getEndpoint());
+                bind(accessKey, intranetPort.getPort(), intranetPort.getEndpoint());
             });
         });
     }
@@ -208,7 +208,7 @@ public record IntranetServerHandler(
             return false;
         }
         IntranetClient intranetClient = clientInfoOpt.get();
-        Map<Integer, IntranetPortInfo> portMap = intranetClient.getPortMap();
+        Map<Integer, IntranetPort> portMap = intranetClient.getPortMap();
         boolean allUnbind = portMap.keySet()
             .stream()
             .allMatch(intranetApplicationSupport::unbind);

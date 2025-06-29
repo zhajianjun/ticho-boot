@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.core.config.Configurator;
 import top.ticho.intranet.client.core.IntranetClientBuilder;
 import top.ticho.intranet.client.core.IntranetClientHandler;
-import top.ticho.intranet.common.prop.ClientProperty;
+import top.ticho.intranet.common.prop.IntranetClientProperty;
 import top.ticho.tool.json.util.TiJsonUtil;
 
 import java.io.File;
@@ -24,19 +24,19 @@ public class IntranetClientStart {
         Configurator.initialize("Client", "config/log4j2.xml");
         String projectPath = System.getProperty("user.dir");
         String filePath = projectPath + File.separator + "/config/client.yaml";
-        ClientProperty clientProperty;
+        IntranetClientProperty intranetClientProperty;
         try {
-            clientProperty = TiJsonUtil.toObjectFromProperty(new File(filePath), ClientProperty.class);
+            intranetClientProperty = TiJsonUtil.toObjectFromProperty(new File(filePath), IntranetClientProperty.class);
         } catch (Exception e) {
             log.error("配置文件获取失败，{}", e.getMessage(), e);
             return;
         }
-        if (Objects.isNull(clientProperty)) {
+        if (Objects.isNull(intranetClientProperty)) {
             log.error("配置文件不存在");
             return;
         }
-        log.info("配置信息：{}", TiJsonUtil.toJsonString(clientProperty));
-        IntranetClientHandler intranetClientHandler = IntranetClientBuilder.build(clientProperty);
+        log.info("配置信息：{}", TiJsonUtil.toJsonString(intranetClientProperty));
+        IntranetClientHandler intranetClientHandler = IntranetClientBuilder.build(intranetClientProperty);
         intranetClientHandler.start();
     }
 

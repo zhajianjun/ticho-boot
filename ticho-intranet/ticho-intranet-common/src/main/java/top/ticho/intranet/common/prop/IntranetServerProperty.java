@@ -9,7 +9,7 @@ import lombok.Data;
  * @date 2024-02-01 12:30
  */
 @Data
-public class ServerProperty {
+public class IntranetServerProperty {
 
     /** 端口 */
     private Integer port;

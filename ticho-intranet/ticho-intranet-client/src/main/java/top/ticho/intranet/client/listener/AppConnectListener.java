@@ -7,10 +7,10 @@ import io.netty.channel.ChannelOption;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.client.core.IntranetClientHandler;
-import top.ticho.intranet.client.support.ApplicationSupport;
+import top.ticho.intranet.client.support.IntranetApplicationSupport;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
-import top.ticho.intranet.common.prop.ClientProperty;
+import top.ticho.intranet.common.prop.IntranetClientProperty;
 
 
 /**
@@ -35,17 +35,17 @@ public class AppConnectListener implements ChannelFutureListener {
             this.serverChannel.writeAndFlush(message);
             return;
         }
-        ClientProperty clientProperty = intranetClientHandler.clientProperty();
-        ApplicationSupport applicationSupport = intranetClientHandler.applicationSupport();
-        String accessKey = clientProperty.getAccessKey();
+        IntranetClientProperty intranetClientProperty = intranetClientHandler.intranetClientProperty();
+        IntranetApplicationSupport intranetApplicationSupport = intranetClientHandler.intranetApplicationSupport();
+        String accessKey = intranetClientProperty.getAccessKey();
         // 访问的客户端通道
         Channel requestChannel = channelFuture.channel();
         requestChannel.config().setOption(ChannelOption.AUTO_READ, false);
         Channel readyServerChannel = intranetClientHandler.getReadyServerChannel();
         if (readyServerChannel == null) {
-            String host = clientProperty.getServerHost();
-            int port = clientProperty.getServerPort();
-            ServerConnectListener listener = new ServerConnectListener(applicationSupport, accessKey, serverChannel, requestChannel, requestId);
+            String host = intranetClientProperty.getServerHost();
+            int port = intranetClientProperty.getServerPort();
+            ServerConnectListener listener = new ServerConnectListener(intranetApplicationSupport, accessKey, serverChannel, requestChannel, requestId);
             intranetClientHandler.connectServer(host, port, listener);
             return;
         }

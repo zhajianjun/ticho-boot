@@ -9,11 +9,11 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
-import top.ticho.intranet.common.prop.ServerProperty;
+import top.ticho.intranet.common.prop.IntranetServerProperty;
 import top.ticho.intranet.common.util.IntranetUtil;
 import top.ticho.intranet.server.core.IntranetServerHandler;
 import top.ticho.intranet.server.entity.IntranetClient;
-import top.ticho.intranet.server.entity.IntranetPortInfo;
+import top.ticho.intranet.server.entity.IntranetPort;
 import top.ticho.intranet.server.support.IntranetApplicationSupport;
 import top.ticho.intranet.server.support.IntranetClientSupport;
 
@@ -30,12 +30,12 @@ import java.util.Optional;
 @Slf4j
 public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
 
-    private final ServerProperty serverProperty;
+    private final IntranetServerProperty intranetServerProperty;
     private final IntranetClientSupport intranetClientSupport;
     private final IntranetApplicationSupport intranetApplicationSupport;
 
     public AppRequestListener(IntranetServerHandler intranetServerHandler) {
-        this.serverProperty = intranetServerHandler.serverProperty();
+        this.intranetServerProperty = intranetServerHandler.intranetServerProperty();
         this.intranetClientSupport = intranetServerHandler.intranetClientSupport();
         this.intranetApplicationSupport = intranetServerHandler.intranetApplicationSupport();
     }
@@ -56,7 +56,7 @@ public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
             return;
         }
         IntranetClient intranetClient = clientInfoOpt.get();
-        Long maxRequests = serverProperty.getMaxRequests();
+        Long maxRequests = intranetServerProperty.getMaxRequests();
         Channel clientChannel = intranetClient.getChannel();
         // 查询请求连接通道总数，超出最大值，则关闭第一个请求通道requestChannel
         Map<String, Channel> requestChannels = clientChannel.attr(CommConst.REQUEST_ID_ATTR_MAP).get();
@@ -73,7 +73,7 @@ public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
         requestChannel.attr(CommConst.REQUEST_ID).set(requestId);
         requestChannels.put(requestId, requestChannel);
         // 获取端口信息
-        IntranetPortInfo port = intranetClient.getPortMap().get(portNum);
+        IntranetPort port = intranetClient.getPortMap().get(portNum);
         Message message = new Message(Message.CONNECT, requestId, port.getEndpoint().getBytes());
         clientChannel.writeAndFlush(message);
         super.channelActive(ctx);

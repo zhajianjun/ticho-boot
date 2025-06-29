@@ -9,7 +9,7 @@ import lombok.Data;
  * @date 2024-02-01 12:30
  */
 @Data
-public class ClientProperty {
+public class IntranetClientProperty {
 
     /** 秘钥 */
     private String accessKey;

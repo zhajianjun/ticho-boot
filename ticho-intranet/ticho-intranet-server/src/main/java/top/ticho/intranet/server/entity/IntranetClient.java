@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 通道信息
+ * 客户端
  *
  * @author zhajianjun
  * @date 2024-02-01 12:30
@@ -21,7 +21,7 @@ public class IntranetClient {
     /** 客户端名称 */
     private final String name;
     /** 端口信息(端口号, 端口对象信息) */
-    private final Map<Integer, IntranetPortInfo> portMap;
+    private final Map<Integer, IntranetPort> portMap;
     /** 连接时间 */
     private LocalDateTime connectTime;
     /** 连接的通道信息 */

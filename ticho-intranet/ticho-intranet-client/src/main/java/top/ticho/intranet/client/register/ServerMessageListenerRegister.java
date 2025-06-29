@@ -9,7 +9,7 @@ import top.ticho.intranet.common.core.IdleChecker;
 import top.ticho.intranet.common.core.MessageDecoder;
 import top.ticho.intranet.common.core.MessageEncoder;
 import top.ticho.intranet.common.core.SslHandler;
-import top.ticho.intranet.common.prop.ClientProperty;
+import top.ticho.intranet.common.prop.IntranetClientProperty;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLEngine;
@@ -30,9 +30,9 @@ public class ServerMessageListenerRegister extends ChannelInitializer<SocketChan
 
     @Override
     protected void initChannel(SocketChannel socketChannel) {
-        ClientProperty clientProperty = intranetClientHandler.clientProperty();
-        if (Boolean.TRUE.equals(clientProperty.getSslEnable())) {
-            SslHandler sslHandler = new SslHandler(clientProperty.getSslPath(), clientProperty.getSslPassword());
+        IntranetClientProperty intranetClientProperty = intranetClientHandler.intranetClientProperty();
+        if (Boolean.TRUE.equals(intranetClientProperty.getSslEnable())) {
+            SslHandler sslHandler = new SslHandler(intranetClientProperty.getSslPath(), intranetClientProperty.getSslPassword());
             SSLContext sslContext = sslHandler.getSslContext();
             SSLEngine engine = sslContext.createSSLEngine();
             engine.setUseClientMode(true);

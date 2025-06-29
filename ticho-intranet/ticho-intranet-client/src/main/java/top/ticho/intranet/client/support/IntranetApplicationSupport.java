@@ -15,13 +15,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author zhajianjun
  * @date 2025-05-19 23:12
  */
-public class ApplicationSupport {
+public class IntranetApplicationSupport {
     /** 监听app */
     private final Map<String, Channel> requestChannelMap = new ConcurrentHashMap<>();
     /** 监听客户端，用于监听服务器想要请求的应用地址 */
     private final Bootstrap appBootstrap;
 
-    public ApplicationSupport(Bootstrap appBootstrap) {
+    public IntranetApplicationSupport(Bootstrap appBootstrap) {
         this.appBootstrap = appBootstrap;
     }
 

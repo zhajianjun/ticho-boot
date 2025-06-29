@@ -3,7 +3,7 @@ package top.ticho.intranet.server.register;
 import io.netty.channel.socket.SocketChannel;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.core.SslHandler;
-import top.ticho.intranet.common.prop.ServerProperty;
+import top.ticho.intranet.common.prop.IntranetServerProperty;
 import top.ticho.intranet.server.core.IntranetServerHandler;
 
 import javax.net.ssl.SSLContext;
@@ -22,9 +22,9 @@ public class SslClientMessageListenerRegister extends ClientMessageListenerRegis
 
     public SslClientMessageListenerRegister(IntranetServerHandler intranetServerHandler) {
         super(intranetServerHandler);
-        ServerProperty serverProperty = intranetServerHandler.serverProperty();
-        this.sslPath = serverProperty.getSslPath();
-        this.sslPassword = serverProperty.getSslPassword();
+        IntranetServerProperty intranetServerProperty = intranetServerHandler.intranetServerProperty();
+        this.sslPath = intranetServerProperty.getSslPath();
+        this.sslPassword = intranetServerProperty.getSslPassword();
     }
 
     protected void initChannel(SocketChannel sc) {

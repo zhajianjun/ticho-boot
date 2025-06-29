@@ -11,7 +11,7 @@ import top.ticho.intranet.common.util.IntranetUtil;
 import top.ticho.intranet.server.common.ServerStatus;
 import top.ticho.intranet.server.core.IntranetServerHandler;
 import top.ticho.intranet.server.entity.IntranetClient;
-import top.ticho.intranet.server.entity.IntranetPortInfo;
+import top.ticho.intranet.server.entity.IntranetPort;
 import top.ticho.intranet.server.support.IntranetClientSupport;
 
 import java.nio.charset.StandardCharsets;
@@ -56,7 +56,7 @@ public class ClientAuthMessageHandler extends AbstractClientMessageHandler {
             return;
         }
         IntranetClient intranetClient = clientInfoOpt.get();
-        Map<Integer, IntranetPortInfo> portMap = intranetClient.getPortMap();
+        Map<Integer, IntranetPort> portMap = intranetClient.getPortMap();
         if (MapUtil.isEmpty(portMap)) {
             log.info("客户端[{}]未绑定主机端口，通道：{}", accessKey, clientChannel);
             notifyError(clientChannel, StrUtil.format("客户端[{}]未绑定主机端口", accessKey));

@@ -7,7 +7,7 @@ import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import top.ticho.intranet.client.listener.ServerAuthCheckListener;
 import top.ticho.intranet.common.constant.CommConst;
-import top.ticho.intranet.common.prop.ClientProperty;
+import top.ticho.intranet.common.prop.IntranetClientProperty;
 import top.ticho.intranet.common.util.IntranetUtil;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * @author zhajianjun
  * @date 2025-05-20 22:51
  */
-public class ClientSupport {
+public class IntranetClientSupport {
     /** 等待间隔 */
     public static final long[] WAIT_INTERVALS = {
         5_000, 10_000, 30_000, 60_000, 120_000, 180_000, 600_000, 1_800_000, 1_800_000, 1_800_000, 3_600_000
@@ -28,13 +28,13 @@ public class ClientSupport {
      * 当和服务端交互不活跃的情况下会暂时把不活跃的通道放在队列里，重新交互时优先去队列的通道去进行交互，为空时讲重新连接服务端产生新通道进行交互
      */
     private final ConcurrentLinkedQueue<Channel> readyServerChannels;
-    private final ClientProperty clientProperty;
+    private final IntranetClientProperty intranetClientProperty;
     private volatile Channel serverChannel;
     private final Bootstrap clientBootstrap;
     private int retryIndex;
 
-    public ClientSupport(ClientProperty clientProperty, Bootstrap clientBootstrap) {
-        this.clientProperty = clientProperty;
+    public IntranetClientSupport(IntranetClientProperty intranetClientProperty, Bootstrap clientBootstrap) {
+        this.intranetClientProperty = intranetClientProperty;
         this.clientBootstrap = clientBootstrap;
         this.readyServerChannels = new ConcurrentLinkedQueue<>();
         initRetryIndex();
@@ -52,7 +52,7 @@ public class ClientSupport {
      * 添加就绪状态的服务通道
      */
     public void saveReadyServerChannel(Channel channel) {
-        if (readyServerChannels.size() > clientProperty.getMaxPoolSize()) {
+        if (readyServerChannels.size() > intranetClientProperty.getMaxPoolSize()) {
             channel.close();
             return;
         }
@@ -78,10 +78,10 @@ public class ClientSupport {
     }
 
     public void start() {
-        String host = clientProperty.getServerHost();
-        int port = clientProperty.getServerPort();
+        String host = intranetClientProperty.getServerHost();
+        int port = intranetClientProperty.getServerPort();
         // 连接远程服务器，并添加监听器发送accessKey验证权限，服务端验证失败会关闭连接
-        connect(host, port, new ServerAuthCheckListener(this, clientProperty));
+        connect(host, port, new ServerAuthCheckListener(this, intranetClientProperty));
     }
 
     public void restart() {

@@ -6,7 +6,7 @@ import io.netty.channel.ChannelFuture;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.exception.IntranetException;
-import top.ticho.intranet.common.prop.ServerProperty;
+import top.ticho.intranet.common.prop.IntranetServerProperty;
 import top.ticho.intranet.common.util.IntranetUtil;
 
 import java.util.Map;
@@ -26,11 +26,11 @@ public class IntranetApplicationSupport {
     /** 请求id */
     private final AtomicLong requestId;
     /** 配置 */
-    private final ServerProperty serverProperty;
+    private final IntranetServerProperty intranetServerProperty;
     private final ServerBootstrap appServerBootstrap;
 
-    public IntranetApplicationSupport(ServerProperty serverProperty, ServerBootstrap appServerBootstrap) {
-        this.serverProperty = serverProperty;
+    public IntranetApplicationSupport(IntranetServerProperty intranetServerProperty, ServerBootstrap appServerBootstrap) {
+        this.intranetServerProperty = intranetServerProperty;
         this.appServerBootstrap = appServerBootstrap;
         this.requestId = new AtomicLong(0L);
         this.bindPortChannelMap = new ConcurrentHashMap<>();
@@ -55,7 +55,7 @@ public class IntranetApplicationSupport {
             log.warn("绑定应用失败，端口：{}已被绑定", port);
             return false;
         }
-        Long maxBindPorts = serverProperty.getMaxBindPorts();
+        Long maxBindPorts = intranetServerProperty.getMaxBindPorts();
         if (bindPortChannelMap.size() >= maxBindPorts) {
             log.warn("绑定应用失败，端口：{} 超出最大绑定端口数{}", port, maxBindPorts);
             return false;

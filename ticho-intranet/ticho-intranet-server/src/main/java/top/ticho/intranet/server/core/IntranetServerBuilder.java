@@ -3,7 +3,7 @@ package top.ticho.intranet.server.core;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import top.ticho.intranet.common.prop.ServerProperty;
+import top.ticho.intranet.common.prop.IntranetServerProperty;
 import top.ticho.intranet.server.common.ServerStatus;
 import top.ticho.intranet.server.filter.IntranetApplicationListenFilter;
 import top.ticho.intranet.server.filter.DefaultIntranetApplicationListenFilter;
@@ -23,26 +23,26 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class IntranetServerBuilder {
 
-    public static IntranetServerHandler init(ServerProperty serverProperty) {
-        IntranetServerHandler intranetServerHandler = build(serverProperty);
+    public static IntranetServerHandler init(IntranetServerProperty intranetServerProperty) {
+        IntranetServerHandler intranetServerHandler = build(intranetServerProperty);
         intranetServerHandler.init();
         return intranetServerHandler;
     }
 
-    public static IntranetServerHandler init(ServerProperty serverProperty, IntranetApplicationListenFilter intranetApplicationListenFilter) {
-        IntranetServerHandler intranetServerHandler = build(serverProperty, intranetApplicationListenFilter);
+    public static IntranetServerHandler init(IntranetServerProperty intranetServerProperty, IntranetApplicationListenFilter intranetApplicationListenFilter) {
+        IntranetServerHandler intranetServerHandler = build(intranetServerProperty, intranetApplicationListenFilter);
         intranetServerHandler.init();
         return intranetServerHandler;
     }
 
-    public static IntranetServerHandler build(ServerProperty serverProperty) {
-        return build(serverProperty, new DefaultIntranetApplicationListenFilter());
+    public static IntranetServerHandler build(IntranetServerProperty intranetServerProperty) {
+        return build(intranetServerProperty, new DefaultIntranetApplicationListenFilter());
     }
 
-    public static IntranetServerHandler build(ServerProperty serverProperty, IntranetApplicationListenFilter intranetApplicationListenFilter) {
-        NioEventLoopGroup serverBoss = new NioEventLoopGroup(serverProperty.getBossThreads());
-        NioEventLoopGroup serverWorker = new NioEventLoopGroup(serverProperty.getWorkerThreads());
-        boolean sslEnable = Boolean.TRUE.equals(serverProperty.getSslEnable());
+    public static IntranetServerHandler build(IntranetServerProperty intranetServerProperty, IntranetApplicationListenFilter intranetApplicationListenFilter) {
+        NioEventLoopGroup serverBoss = new NioEventLoopGroup(intranetServerProperty.getBossThreads());
+        NioEventLoopGroup serverWorker = new NioEventLoopGroup(intranetServerProperty.getWorkerThreads());
+        boolean sslEnable = Boolean.TRUE.equals(intranetServerProperty.getSslEnable());
         AtomicInteger serverStatus = new AtomicInteger(ServerStatus.INITING.getCode());
         ServerBootstrap serverBootstrap = createBootstrap(serverBoss, serverWorker);
         ServerBootstrap sslServerBootstrap = null;
@@ -54,11 +54,11 @@ public class IntranetServerBuilder {
             serverStatus,
             serverBoss,
             serverWorker,
-            serverProperty,
+            intranetServerProperty,
             serverBootstrap,
             sslServerBootstrap,
             new IntranetClientSupport(),
-            new IntranetApplicationSupport(serverProperty, appServerBootstrap),
+            new IntranetApplicationSupport(intranetServerProperty, appServerBootstrap),
             intranetApplicationListenFilter
         );
         serverBootstrap.childHandler(new ClientMessageListenerRegister(intranetServerHandler));
