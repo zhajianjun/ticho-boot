@@ -13,9 +13,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>ticho-trace-core</module>
-        <module>ticho-trace-spring</module>
         <module>ticho-trace-common</module>
+        <module>ticho-trace-spring</module>
         <module>ticho-trace-feign</module>
         <module>ticho-trace-gateway</module>
         <module>ticho-trace-okhttp</module>

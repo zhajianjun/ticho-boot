@@ -11,11 +11,11 @@ import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import top.ticho.trace.common.bean.TraceInfo;
-import top.ticho.trace.common.constant.LogConst;
+import top.ticho.trace.common.constant.TiTraceConst;
+import top.ticho.trace.common.handle.TracePushContext;
 import top.ticho.trace.common.prop.TiTraceProperty;
-import top.ticho.trace.core.handle.TracePushContext;
-import top.ticho.trace.core.util.TiTraceUtil;
+import top.ticho.trace.common.util.TiTraceUtil;
+import top.ticho.trace.common.view.TraceInfo;
 import top.ticho.trace.spring.event.TraceEvent;
 import top.ticho.trace.spring.util.IpUtil;
 
@@ -58,10 +58,10 @@ public class TraceInterceptor implements HandlerInterceptor, Ordered {
         Map<String, String> headersMap = getHeaders(request);
         String trace = tiTraceProperty.getTrace();
         String appName = environment.getProperty("spring.application.name");
-        String traceId = headersMap.get(LogConst.TRACE_ID_KEY);
-        String spanId = headersMap.get(LogConst.SPAN_ID_KEY);
-        String preAppName = headersMap.get(LogConst.PRE_APP_NAME_KEY);
-        String preIp = headersMap.get(LogConst.PRE_IP_KEY);
+        String traceId = headersMap.get(TiTraceConst.TRACE_ID_KEY);
+        String spanId = headersMap.get(TiTraceConst.SPAN_ID_KEY);
+        String preAppName = headersMap.get(TiTraceConst.PRE_APP_NAME_KEY);
+        String preIp = headersMap.get(TiTraceConst.PRE_IP_KEY);
         String ip = IpUtil.localIp();
         if (preIp == null) {
             preIp = IpUtil.getIp(request);
@@ -84,13 +84,13 @@ public class TraceInterceptor implements HandlerInterceptor, Ordered {
         int status = response.getStatus();
         Long consume = end - start;
         TraceInfo traceInfo = TraceInfo.builder()
-            .traceId(MDC.get(LogConst.TRACE_ID_KEY))
-            .spanId(MDC.get(LogConst.SPAN_ID_KEY))
-            .appName(MDC.get(LogConst.APP_NAME_KEY))
+            .traceId(MDC.get(TiTraceConst.TRACE_ID_KEY))
+            .spanId(MDC.get(TiTraceConst.SPAN_ID_KEY))
+            .appName(MDC.get(TiTraceConst.APP_NAME_KEY))
             .env(env)
-            .ip(MDC.get(LogConst.IP_KEY))
-            .preAppName(MDC.get(LogConst.PRE_APP_NAME_KEY))
-            .preIp(MDC.get(LogConst.PRE_IP_KEY))
+            .ip(MDC.get(TiTraceConst.IP_KEY))
+            .preAppName(MDC.get(TiTraceConst.PRE_APP_NAME_KEY))
+            .preIp(MDC.get(TiTraceConst.PRE_IP_KEY))
             .url(url)
             .port(port)
             .method(handlerMethod.toString())

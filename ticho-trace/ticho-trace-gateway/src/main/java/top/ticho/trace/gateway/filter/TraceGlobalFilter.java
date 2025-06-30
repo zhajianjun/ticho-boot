@@ -26,11 +26,11 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.ticho.tool.json.util.TiJsonUtil;
 import top.ticho.trace.common.bean.HttpLogInfo;
-import top.ticho.trace.common.bean.TraceInfo;
-import top.ticho.trace.common.constant.LogConst;
+import top.ticho.trace.common.constant.TiTraceConst;
+import top.ticho.trace.common.handle.TracePushContext;
 import top.ticho.trace.common.prop.TiTraceProperty;
-import top.ticho.trace.core.handle.TracePushContext;
-import top.ticho.trace.core.util.TiTraceUtil;
+import top.ticho.trace.common.util.TiTraceUtil;
+import top.ticho.trace.common.view.TraceInfo;
 
 import jakarta.annotation.Nonnull;
 import java.net.InetAddress;
@@ -40,7 +40,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -52,7 +51,7 @@ import java.util.stream.Stream;
 @Slf4j
 public class TraceGlobalFilter implements GlobalFilter, Ordered {
     /** 本地ip列表 */
-    private static final List<String> localhosts = Stream.of("127.0.0.1", "0:0:0:0:0:0:0:1").collect(Collectors.toList());
+    private static final List<String> localhosts = Stream.of("127.0.0.1", "0:0:0:0:0:0:0:1").toList();
     /** 环境变量 */
     private final Environment environment;
     /** 链路配置 */
@@ -73,10 +72,10 @@ public class TraceGlobalFilter implements GlobalFilter, Ordered {
     public ServerWebExchange preHandle(ServerWebExchange exchange, HttpLogInfo httpLogInfo) {
         ServerHttpRequest serverHttpRequest = exchange.getRequest();
         HttpHeaders headers = serverHttpRequest.getHeaders();
-        String traceId = headers.getFirst(LogConst.TRACE_ID_KEY);
-        String spanId = headers.getFirst(LogConst.SPAN_ID_KEY);
-        String preAppName = headers.getFirst(LogConst.PRE_APP_NAME_KEY);
-        String preIp = headers.getFirst(LogConst.PRE_IP_KEY);
+        String traceId = headers.getFirst(TiTraceConst.TRACE_ID_KEY);
+        String spanId = headers.getFirst(TiTraceConst.SPAN_ID_KEY);
+        String preAppName = headers.getFirst(TiTraceConst.PRE_APP_NAME_KEY);
+        String preIp = headers.getFirst(TiTraceConst.PRE_IP_KEY);
         if (preIp == null) {
             preIp = preIp(serverHttpRequest);
         }
@@ -93,13 +92,13 @@ public class TraceGlobalFilter implements GlobalFilter, Ordered {
         httpLogInfo.setType(type);
         httpLogInfo.setReqParams(params);
         TiTraceUtil.prepare(traceId, spanId, appName, ip, preAppName, preIp, trace);
-        traceId = MDC.get(LogConst.TRACE_ID_KEY);
+        traceId = MDC.get(TiTraceConst.TRACE_ID_KEY);
         String finalTraceId = traceId;
         Consumer<HttpHeaders> httpHeaders = httpHeader -> {
-            httpHeader.set(LogConst.TRACE_ID_KEY, finalTraceId);
-            httpHeader.set(LogConst.SPAN_ID_KEY, TiTraceUtil.nextSpanId());
-            httpHeader.set(LogConst.PRE_APP_NAME_KEY, appName);
-            httpHeader.set(LogConst.PRE_IP_KEY, ip);
+            httpHeader.set(TiTraceConst.TRACE_ID_KEY, finalTraceId);
+            httpHeader.set(TiTraceConst.SPAN_ID_KEY, TiTraceUtil.nextSpanId());
+            httpHeader.set(TiTraceConst.PRE_APP_NAME_KEY, appName);
+            httpHeader.set(TiTraceConst.PRE_IP_KEY, ip);
         };
         ServerHttpRequest newRequest = serverHttpRequest.mutate().headers(httpHeaders).build();
         ServerHttpResponse response = getResponse(exchange, httpLogInfo);
@@ -108,12 +107,12 @@ public class TraceGlobalFilter implements GlobalFilter, Ordered {
 
     private void complete(HttpLogInfo httpLogInfo) {
         TraceInfo traceInfo = TraceInfo.builder()
-            .traceId(MDC.get(LogConst.TRACE_ID_KEY))
-            .spanId(MDC.get(LogConst.SPAN_ID_KEY))
-            .appName(MDC.get(LogConst.APP_NAME_KEY))
-            .ip(MDC.get(LogConst.IP_KEY))
-            .preAppName(MDC.get(LogConst.PRE_APP_NAME_KEY))
-            .preIp(MDC.get(LogConst.PRE_IP_KEY))
+            .traceId(MDC.get(TiTraceConst.TRACE_ID_KEY))
+            .spanId(MDC.get(TiTraceConst.SPAN_ID_KEY))
+            .appName(MDC.get(TiTraceConst.APP_NAME_KEY))
+            .ip(MDC.get(TiTraceConst.IP_KEY))
+            .preAppName(MDC.get(TiTraceConst.PRE_APP_NAME_KEY))
+            .preIp(MDC.get(TiTraceConst.PRE_IP_KEY))
             .url(httpLogInfo.getUrl())
             .port(httpLogInfo.getPort())
             .method("")

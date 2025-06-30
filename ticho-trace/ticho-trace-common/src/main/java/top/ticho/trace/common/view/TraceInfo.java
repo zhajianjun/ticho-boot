@@ -1,4 +1,4 @@
-package top.ticho.trace.common.bean;
+package top.ticho.trace.common.view;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

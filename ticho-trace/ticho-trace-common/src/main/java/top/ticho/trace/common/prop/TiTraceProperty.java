@@ -1,7 +1,7 @@
 package top.ticho.trace.common.prop;
 
 import lombok.Data;
-import top.ticho.trace.common.constant.LogConst;
+import top.ticho.trace.common.constant.TiTraceConst;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public class TiTraceProperty {
     /** 链路服务秘钥 */
     private String secret;
     /** 链路表达式 */
-    private String trace = LogConst.DEFAULT_TRACE;
+    private String trace = TiTraceConst.DEFAULT_TRACE;
     /** 是否推送日志 */
     private Boolean pushLog = false;
     /** 是否推送链路信息 */

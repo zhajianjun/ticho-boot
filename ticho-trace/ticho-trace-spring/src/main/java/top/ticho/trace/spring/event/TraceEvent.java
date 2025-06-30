@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.ApplicationContextEvent;
-import top.ticho.trace.common.bean.TraceInfo;
+import top.ticho.trace.common.view.TraceInfo;
 
 /**
  * 链路追踪事件

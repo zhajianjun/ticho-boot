@@ -8,11 +8,11 @@ import org.slf4j.MDC;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
-import top.ticho.trace.common.bean.TraceInfo;
-import top.ticho.trace.common.constant.LogConst;
+import top.ticho.trace.common.constant.TiTraceConst;
+import top.ticho.trace.common.handle.TracePushContext;
 import top.ticho.trace.common.prop.TiTraceProperty;
-import top.ticho.trace.core.handle.TracePushContext;
-import top.ticho.trace.core.util.TiTraceUtil;
+import top.ticho.trace.common.util.TiTraceUtil;
+import top.ticho.trace.common.view.TraceInfo;
 import top.ticho.trace.spring.event.TraceEvent;
 import top.ticho.trace.spring.util.IpUtil;
 
@@ -33,7 +33,7 @@ public abstract class AbstractAspect implements Ordered {
     private TiTraceProperty tiTraceProperty;
 
     public Object trace(ProceedingJoinPoint joinPoint, String preAppName, String preIp) throws Throwable {
-        if (StrUtil.isNotBlank(MDC.get(LogConst.TRACE_ID_KEY))) {
+        if (StrUtil.isNotBlank(MDC.get(TiTraceConst.TRACE_ID_KEY))) {
             return joinPoint.proceed();
         }
         long start = SystemClock.now();
@@ -47,13 +47,13 @@ public abstract class AbstractAspect implements Ordered {
             long end = SystemClock.now();
             Long consume = end - start;
             TraceInfo traceInfo = TraceInfo.builder()
-                .traceId(MDC.get(LogConst.TRACE_ID_KEY))
-                .spanId(MDC.get(LogConst.SPAN_ID_KEY))
-                .appName(MDC.get(LogConst.APP_NAME_KEY))
+                .traceId(MDC.get(TiTraceConst.TRACE_ID_KEY))
+                .spanId(MDC.get(TiTraceConst.SPAN_ID_KEY))
+                .appName(MDC.get(TiTraceConst.APP_NAME_KEY))
                 .env(env)
-                .ip(MDC.get(LogConst.IP_KEY))
-                .preAppName(MDC.get(LogConst.PRE_APP_NAME_KEY))
-                .preIp(MDC.get(LogConst.PRE_IP_KEY))
+                .ip(MDC.get(TiTraceConst.IP_KEY))
+                .preAppName(MDC.get(TiTraceConst.PRE_APP_NAME_KEY))
+                .preIp(MDC.get(TiTraceConst.PRE_IP_KEY))
                 // .url(url)
                 // .port(port)
                 // .method(handlerMethod.toString())

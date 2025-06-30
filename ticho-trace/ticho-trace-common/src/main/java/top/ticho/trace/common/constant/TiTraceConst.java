@@ -6,9 +6,9 @@ package top.ticho.trace.common.constant;
  * @author zhajianjun
  * @date 2024-02-01 12:30
  */
-public class LogConst {
+public class TiTraceConst {
 
-    private LogConst() {
+    private TiTraceConst() {
     }
 
     /** 链路id key */

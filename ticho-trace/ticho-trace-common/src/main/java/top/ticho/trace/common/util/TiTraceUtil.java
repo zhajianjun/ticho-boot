@@ -1,12 +1,11 @@
-package top.ticho.trace.core.util;
+package top.ticho.trace.common.util;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import lombok.NoArgsConstructor;
 import org.slf4j.MDC;
-import top.ticho.trace.common.bean.TraceInitInfo;
-import top.ticho.trace.common.constant.LogConst;
+import top.ticho.trace.common.constant.TiTraceConst;
 
 import java.util.Map;
 import java.util.Optional;
@@ -43,7 +42,7 @@ public class TiTraceUtil {
      * @return {@link String}
      */
     public static String nextSpanId() {
-        String currentSpanId = MDC.get(LogConst.SPAN_ID_KEY);
+        String currentSpanId = MDC.get(TiTraceConst.SPAN_ID_KEY);
         int currentSpanIndex = NEXT_SPAN_INDEX_TL.get().incrementAndGet();
         return StrUtil.format("{}.{}", currentSpanId, currentSpanIndex);
     }
@@ -55,36 +54,20 @@ public class TiTraceUtil {
      */
     public static void prepare(Map<String, String> map) {
         // 链路id */
-        String traceId = map.get(LogConst.TRACE_ID_KEY);
+        String traceId = map.get(TiTraceConst.TRACE_ID_KEY);
         // 跨度id */
-        String spanId = map.get(LogConst.SPAN_ID_KEY);
+        String spanId = map.get(TiTraceConst.SPAN_ID_KEY);
         // 当前应用名称 */
-        String currAppName = map.get(LogConst.APP_NAME_KEY);
+        String currAppName = map.get(TiTraceConst.APP_NAME_KEY);
         // 当前ip */
-        String currIp = map.get(LogConst.IP_KEY);
+        String currIp = map.get(TiTraceConst.IP_KEY);
         // 上个链路的应用名称 */
-        String preAppName = map.get(LogConst.PRE_APP_NAME_KEY);
+        String preAppName = map.get(TiTraceConst.PRE_APP_NAME_KEY);
         // 上个链路的Ip */
-        String preIp = map.get(LogConst.PRE_IP_KEY);
+        String preIp = map.get(TiTraceConst.PRE_IP_KEY);
         // 链路
-        String trace = map.get(LogConst.TRACE_KEY);
+        String trace = map.get(TiTraceConst.TRACE_KEY);
         prepare(traceId, spanId, currAppName, currIp, preAppName, preIp, trace);
-    }
-
-    /**
-     * 链路生成准备
-     *
-     * @param traceInitInfo 跟踪初始化
-     */
-    public static void prepare(TraceInitInfo traceInitInfo) {
-        String traceId = traceInitInfo.getTraceId();
-        String spanId = traceInitInfo.getSpanId();
-        String appName = traceInitInfo.getAppName();
-        String ip = traceInitInfo.getIp();
-        String preAppName = traceInitInfo.getPreAppName();
-        String preIp = traceInitInfo.getPreIp();
-        String trace = traceInitInfo.getTrace();
-        prepare(traceId, spanId, appName, ip, preAppName, preIp, trace);
     }
 
     /**
@@ -101,23 +84,23 @@ public class TiTraceUtil {
     public static void prepare(String traceId, String spanId, String appName, String ip, String preAppName, String preIp, String trace) {
         if (StrUtil.isBlank(traceId)) {
             traceId = IdUtil.getSnowflakeNextIdStr();
-            spanId = LogConst.FIRST_SPAN_ID;
+            spanId = TiTraceConst.FIRST_SPAN_ID;
         } else {
-            spanId = nullDefault(spanId, () -> LogConst.FIRST_SPAN_ID);
+            spanId = nullDefault(spanId, () -> TiTraceConst.FIRST_SPAN_ID);
         }
         NEXT_SPAN_INDEX_TL.set(new AtomicInteger(0));
         appName = nullDefault(appName);
         ip = nullDefault(ip);
         preAppName = nullDefault(preAppName);
         preIp = nullDefault(preIp);
-        trace = nullDefault(trace, () -> LogConst.DEFAULT_TRACE);
-        MDC.put(LogConst.TRACE_KEY, trace);
-        MDC.put(LogConst.TRACE_ID_KEY, traceId);
-        MDC.put(LogConst.SPAN_ID_KEY, spanId);
-        MDC.put(LogConst.IP_KEY, ip);
-        MDC.put(LogConst.APP_NAME_KEY, appName);
-        MDC.put(LogConst.PRE_IP_KEY, preIp);
-        MDC.put(LogConst.PRE_APP_NAME_KEY, preAppName);
+        trace = nullDefault(trace, () -> TiTraceConst.DEFAULT_TRACE);
+        MDC.put(TiTraceConst.TRACE_KEY, trace);
+        MDC.put(TiTraceConst.TRACE_ID_KEY, traceId);
+        MDC.put(TiTraceConst.SPAN_ID_KEY, spanId);
+        MDC.put(TiTraceConst.IP_KEY, ip);
+        MDC.put(TiTraceConst.APP_NAME_KEY, appName);
+        MDC.put(TiTraceConst.PRE_IP_KEY, preIp);
+        MDC.put(TiTraceConst.PRE_APP_NAME_KEY, preAppName);
         render();
     }
 
@@ -134,17 +117,17 @@ public class TiTraceUtil {
      * 更新trace表达式
      */
     public static void putTrace(String trace) {
-        trace = nullDefault(trace, () -> Optional.ofNullable(MDC.get(LogConst.TRACE_KEY)).orElse(LogConst.DEFAULT_TRACE));
-        MDC.put(LogConst.TRACE_KEY, trace);
+        trace = nullDefault(trace, () -> Optional.ofNullable(MDC.get(TiTraceConst.TRACE_KEY)).orElse(TiTraceConst.DEFAULT_TRACE));
+        MDC.put(TiTraceConst.TRACE_KEY, trace);
     }
 
     /**
      * 渲染trace表达式
      */
     public static void render() {
-        String traceKey = MDC.get(LogConst.TRACE_KEY);
+        String traceKey = MDC.get(TiTraceConst.TRACE_KEY);
         String trace = TiBeetlUtil.render(traceKey, MDC.getCopyOfContextMap());
-        MDC.put(LogConst.TRACE_KEY, trace);
+        MDC.put(TiTraceConst.TRACE_KEY, trace);
     }
 
     /**
@@ -154,7 +137,7 @@ public class TiTraceUtil {
      * @return {@link String}
      */
     public static String nullDefault(String obj) {
-        return nullDefault(obj, () -> LogConst.UNKNOWN);
+        return nullDefault(obj, () -> TiTraceConst.UNKNOWN);
     }
 
     /**

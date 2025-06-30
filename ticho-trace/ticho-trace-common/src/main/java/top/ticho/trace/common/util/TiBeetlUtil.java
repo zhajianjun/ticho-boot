@@ -1,4 +1,4 @@
-package top.ticho.trace.core.util;
+package top.ticho.trace.common.util;
 
 import lombok.NoArgsConstructor;
 import org.beetl.core.Configuration;

@@ -24,7 +24,7 @@
 
         <dependency>
             <groupId>top.ticho.trace</groupId>
-            <artifactId>ticho-trace-core</artifactId>
+            <artifactId>ticho-trace-common</artifactId>
         </dependency>
 
         <dependency>

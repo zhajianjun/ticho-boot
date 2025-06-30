@@ -98,8 +98,6 @@ Spring Boot Starter modules, ready to use out-of-the-box:
 
 - **[ticho-trace-common](ticho-trace/ticho-trace-common)**  
   Common model definitions (Span, TraceID, etc.).
-- **[ticho-trace-core](ticho-trace/ticho-trace-core)**  
-  Trace context management supporting log correlation and propagation.
 - **[ticho-trace-feign](ticho-trace/ticho-trace-feign)**  
   Feign client interceptor for automatic trace ID injection.
 - **[ticho-trace-gateway](ticho-trace/ticho-trace-gateway)**  

@@ -91,8 +91,6 @@ Spring Boot Starter 系列模块，开箱即用：
 
 - **[ticho-trace-common](ticho-trace/ticho-trace-common)**  
   公共模型定义（Span、TraceID 等）。
-- **[ticho-trace-core](ticho-trace/ticho-trace-core)**  
-  链路上下文管理，支持日志关联与透传。
 - **[ticho-trace-feign](ticho-trace/ticho-trace-feign)**  
   Feign 客户端拦截器，自动注入追踪标识。
 - **[ticho-trace-gateway](ticho-trace/ticho-trace-gateway)**  
