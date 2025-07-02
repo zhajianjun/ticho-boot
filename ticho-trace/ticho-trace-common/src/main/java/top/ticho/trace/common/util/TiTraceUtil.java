@@ -50,29 +50,6 @@ public class TiTraceUtil {
     /**
      * 链路生成准备
      *
-     * @param map map
-     */
-    public static void prepare(Map<String, String> map) {
-        // 链路id */
-        String traceId = map.get(TiTraceConst.TRACE_ID_KEY);
-        // 跨度id */
-        String spanId = map.get(TiTraceConst.SPAN_ID_KEY);
-        // 当前应用名称 */
-        String currAppName = map.get(TiTraceConst.APP_NAME_KEY);
-        // 当前ip */
-        String currIp = map.get(TiTraceConst.IP_KEY);
-        // 上个链路的应用名称 */
-        String preAppName = map.get(TiTraceConst.PRE_APP_NAME_KEY);
-        // 上个链路的Ip */
-        String preIp = map.get(TiTraceConst.PRE_IP_KEY);
-        // 链路
-        String trace = map.get(TiTraceConst.TRACE_KEY);
-        prepare(traceId, spanId, currAppName, currIp, preAppName, preIp, trace);
-    }
-
-    /**
-     * 链路生成准备
-     *
      * @param traceId    链路id
      * @param spanId     跨度id
      * @param appName    当前应用名称
