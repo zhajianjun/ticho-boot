@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import org.slf4j.MDC;
 import top.ticho.trace.common.constant.TiTraceConst;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
