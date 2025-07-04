@@ -1,4 +1,4 @@
-package top.ticho.trace.common.view;
+package top.ticho.trace.gateway.filter;
 
 import cn.hutool.http.useragent.UserAgent;
 import lombok.AllArgsConstructor;
@@ -20,7 +20,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class HttpLogInfo {
+public class GatewayLogInfo {
 
     /** 请求类型 */
     private String type;

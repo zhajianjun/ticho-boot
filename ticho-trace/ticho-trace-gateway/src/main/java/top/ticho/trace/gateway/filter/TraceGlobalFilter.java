@@ -25,7 +25,6 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import top.ticho.tool.json.util.TiJsonUtil;
-import top.ticho.trace.common.bean.HttpLogInfo;
 import top.ticho.trace.common.constant.TiTraceConst;
 import top.ticho.trace.common.handle.TracePushContext;
 import top.ticho.trace.common.prop.TiTraceProperty;
@@ -64,12 +63,12 @@ public class TraceGlobalFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        HttpLogInfo httpLogInfo = new HttpLogInfo();
-        return chain.filter(preHandle(exchange, httpLogInfo))
-            .doFinally(signalType -> complete(httpLogInfo));
+        GatewayLogInfo gatewayLogInfo = new GatewayLogInfo();
+        return chain.filter(preHandle(exchange, gatewayLogInfo))
+            .doFinally(signalType -> complete(gatewayLogInfo));
     }
 
-    public ServerWebExchange preHandle(ServerWebExchange exchange, HttpLogInfo httpLogInfo) {
+    public ServerWebExchange preHandle(ServerWebExchange exchange, GatewayLogInfo gatewayLogInfo) {
         ServerHttpRequest serverHttpRequest = exchange.getRequest();
         HttpHeaders headers = serverHttpRequest.getHeaders();
         String traceId = headers.getFirst(TiTraceConst.TRACE_ID_KEY);
@@ -86,11 +85,11 @@ public class TraceGlobalFilter implements GlobalFilter, Ordered {
         String trace = tiTraceProperty.getTrace();
         String type = serverHttpRequest.getMethod().name();
         String url = serverHttpRequest.getPath().toString();
-        httpLogInfo.setUrl(url);
-        httpLogInfo.setPort(environment.getProperty("server.port"));
-        httpLogInfo.setStart(SystemClock.now());
-        httpLogInfo.setType(type);
-        httpLogInfo.setReqParams(params);
+        gatewayLogInfo.setUrl(url);
+        gatewayLogInfo.setPort(environment.getProperty("server.port"));
+        gatewayLogInfo.setStart(SystemClock.now());
+        gatewayLogInfo.setType(type);
+        gatewayLogInfo.setReqParams(params);
         TiTraceUtil.prepare(traceId, spanId, appName, ip, preAppName, preIp, trace);
         traceId = MDC.get(TiTraceConst.TRACE_ID_KEY);
         String finalTraceId = traceId;
@@ -101,11 +100,11 @@ public class TraceGlobalFilter implements GlobalFilter, Ordered {
             httpHeader.set(TiTraceConst.PRE_IP_KEY, ip);
         };
         ServerHttpRequest newRequest = serverHttpRequest.mutate().headers(httpHeaders).build();
-        ServerHttpResponse response = getResponse(exchange, httpLogInfo);
+        ServerHttpResponse response = getResponse(exchange, gatewayLogInfo);
         return exchange.mutate().request(newRequest).response(response).build();
     }
 
-    private void complete(HttpLogInfo httpLogInfo) {
+    private void complete(GatewayLogInfo gatewayLogInfo) {
         TraceInfo traceInfo = TraceInfo.builder()
             .traceId(MDC.get(TiTraceConst.TRACE_ID_KEY))
             .spanId(MDC.get(TiTraceConst.SPAN_ID_KEY))
@@ -113,20 +112,20 @@ public class TraceGlobalFilter implements GlobalFilter, Ordered {
             .ip(MDC.get(TiTraceConst.IP_KEY))
             .preAppName(MDC.get(TiTraceConst.PRE_APP_NAME_KEY))
             .preIp(MDC.get(TiTraceConst.PRE_IP_KEY))
-            .url(httpLogInfo.getUrl())
-            .port(httpLogInfo.getPort())
+            .url(gatewayLogInfo.getUrl())
+            .port(gatewayLogInfo.getPort())
             .method("")
-            .type(httpLogInfo.getType())
-            .status(httpLogInfo.getStatus())
-            .start(httpLogInfo.getStart())
-            .end(httpLogInfo.getEnd())
-            .consume(httpLogInfo.getConsume())
+            .type(gatewayLogInfo.getType())
+            .status(gatewayLogInfo.getStatus())
+            .start(gatewayLogInfo.getStart())
+            .end(gatewayLogInfo.getEnd())
+            .consume(gatewayLogInfo.getConsume())
             .build();
         TiTraceUtil.complete();
         TracePushContext.asyncPushTrace(tiTraceProperty, traceInfo);
     }
 
-    public ServerHttpResponse getResponse(ServerWebExchange exchange, HttpLogInfo httpLogInfo) {
+    public ServerHttpResponse getResponse(ServerWebExchange exchange, GatewayLogInfo gatewayLogInfo) {
         ServerHttpResponse originalResponse = exchange.getResponse();
         DataBufferFactory bufferFactory = originalResponse.bufferFactory();
         return new ServerHttpResponseDecorator(originalResponse) {
@@ -135,7 +134,7 @@ public class TraceGlobalFilter implements GlobalFilter, Ordered {
             public Mono<Void> writeWith(@NonNull Publisher<? extends DataBuffer> body) {
                 HttpStatusCode httpStatusCode = getStatusCode();
                 // 响应状态码
-                httpLogInfo.setStatus(httpStatusCode.value());
+                gatewayLogInfo.setStatus(httpStatusCode.value());
                 if (Objects.equals(httpStatusCode, HttpStatus.OK) && body instanceof Flux) {
                     Flux<? extends DataBuffer> fluxBody = Flux.from(body);
                     return super.writeWith(fluxBody.buffer().map(dataBuffers -> {
@@ -152,7 +151,7 @@ public class TraceGlobalFilter implements GlobalFilter, Ordered {
                 } else {
                     log.error("获取响应体数据 ：" + httpStatusCode);
                 }
-                httpLogInfo.setEnd(SystemClock.now());
+                gatewayLogInfo.setEnd(SystemClock.now());
                 return super.writeWith(body);
             }
 
