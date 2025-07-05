@@ -31,11 +31,5 @@ public class TiTraceConst {
     public static final String TRACE_KEY = "trace";
     /** 默认链路表达式 */
     public static final String DEFAULT_TRACE = "[${traceId!}].[${spanId!}]";
-    /** secret key */
-    public static final String SECRET_KEY = "secret";
-    /** 链路线程名称前缀 */
-    public static final String THREAD_NAME_PREFIX_TRACE = "ticho-trace-";
-    /** 日志线程名称前缀 */
-    public static final String THREAD_NAME_PREFIX_LOG = "ticho-log-";
 
 }
