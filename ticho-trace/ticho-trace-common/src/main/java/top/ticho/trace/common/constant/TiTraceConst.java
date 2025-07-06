@@ -1,15 +1,15 @@
 package top.ticho.trace.common.constant;
 
+import lombok.NoArgsConstructor;
+
 /**
  * 日志静态常量
  *
  * @author zhajianjun
  * @date 2024-02-01 12:30
  */
+@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class TiTraceConst {
-
-    private TiTraceConst() {
-    }
 
     /** 链路id key */
     public static final String TRACE_ID_KEY = "traceId";
