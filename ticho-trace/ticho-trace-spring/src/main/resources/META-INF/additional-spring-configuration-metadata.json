@@ -1,0 +1,10 @@
+{
+  "properties": [
+    {
+      "name": "ticho.trace.enable",
+      "type": "java.lang.Boolean",
+      "description": "是否开启链路拦截器.",
+      "defaultValue": true
+    }
+  ]
+}
