@@ -3,9 +3,6 @@ package top.ticho.trace.common.prop;
 import lombok.Data;
 import top.ticho.trace.common.constant.TiTraceConst;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * 链路配置
  *
@@ -15,12 +12,8 @@ import java.util.List;
 @Data
 public class TiTraceProperty {
 
-    /** 是否开启链路拦截器 */
-    private Boolean enable = true;
     /** 链路表达式 */
     private String trace = TiTraceConst.DEFAULT_TRACE;
-    /** 链路过滤地址 */
-    private List<String> antPatterns = new ArrayList<>();
     /** 拦截器排序 */
     private Integer order = Integer.MIN_VALUE + 1000;
 
