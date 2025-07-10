@@ -41,8 +41,6 @@ public class TraceInterceptor implements HandlerInterceptor, Ordered {
     /** 环境变量 */
     private final Environment environment;
 
-    /** url地址匹配 */
-
     public TraceInterceptor(TiTraceProperty tiTraceProperty, Environment environment) {
         this.startLocal = new TransmittableThreadLocal<>();
         this.tiTraceProperty = tiTraceProperty;
