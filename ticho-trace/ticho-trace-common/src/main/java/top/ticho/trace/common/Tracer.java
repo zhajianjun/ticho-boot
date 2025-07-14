@@ -1,63 +1,74 @@
 package top.ticho.trace.common;
 
+import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
+
+import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Stack;
+import java.util.Objects;
 
 /**
  * @author zhajianjun
  * @date 2025-07-13 14:26
  */
 public class Tracer {
-    private final Stack<Span> spanStack = new Stack<>();
-    private final List<Span> spans = new ArrayList<>();
+    private final ArrayDeque<Span> spans = new ArrayDeque<>();
     private final Reporter reporter;
 
     public Tracer(Reporter reporter) {
         this.reporter = reporter;
     }
 
-    public Span startSpan(String name) {
+    public void start(String name, String traceId, String parentSpanId) {
         Span span;
-        if (spanStack.isEmpty()) {
-            // 根Span
-            span = new Span(name);
-            TraceContext.setTraceId(span.getTraceId());
+        if (StrUtil.isBlank(traceId)) {
+            TraceContext.setTraceId(IdUtil.getSnowflakeNextIdStr());
+            TraceContext.setSpanId(IdUtil.getSnowflakeNextIdStr());
+            span = new Span(name, TraceContext.getTraceId(), TraceContext.getSpanId(), null);
         } else {
-            // 子Span
-            Span parentSpan = spanStack.peek();
-            span = new Span(name, parentSpan.getTraceId(), parentSpan.getSpanId());
+            String spanId = IdUtil.getSnowflakeNextIdStr();
+            TraceContext.setTraceId(traceId);
+            TraceContext.setSpanId(spanId);
+            span = new Span(name, traceId, spanId, parentSpanId);
         }
-        spanStack.push(span);
         spans.add(span);
-        TraceContext.setSpanId(span.getSpanId());
+    }
+
+    public Span startSpan(String name) {
+        // 根Span
+        Span rootSpan = spans.peek();
+        if (rootSpan == null) {
+            if (StrUtil.isBlank(TraceContext.getTraceId())) {
+                TraceContext.setTraceId(IdUtil.getSnowflakeNextIdStr());
+                TraceContext.setSpanId(IdUtil.getSnowflakeNextIdStr());
+            }
+            Span span = new Span(name, TraceContext.getTraceId(), TraceContext.getSpanId(), null);
+            spans.add(span);
+            return span;
+        }
+        Span span = new Span(name, rootSpan.getTraceId(), IdUtil.getSnowflakeNextIdStr(), rootSpan.getSpanId());
+        spans.add(span);
         return span;
     }
 
     public void finishSpan(Span span) {
-        if (!spanStack.isEmpty() && spanStack.peek() == span) {
+        Span lastSpan = spans.peekLast();
+        if (Objects.equals(lastSpan, span)) {
             span.finish();
-            spanStack.pop();
-            report(span);
-            if (spanStack.isEmpty()) {
-                TraceContext.clear();
-            } else {
-                TraceContext.setSpanId(spanStack.peek().getSpanId());
-            }
+            reporter.report(span);
         }
     }
 
     public Span currentSpan() {
-        return spanStack.isEmpty() ? null : spanStack.peek();
+        return spans.isEmpty() ? null : spans.peekLast();
     }
 
     public List<Span> getSpans() {
-        return Collections.unmodifiableList(spans);
+        return new ArrayList<>(spans);
     }
 
     public void clear() {
-        spanStack.clear();
         spans.clear();
     }
 
@@ -66,7 +77,7 @@ public class Tracer {
     }
 
     public void reportAll() {
-        reporter.reportBatch(spans);
+        reporter.reportBatch(new ArrayList<>(spans));
     }
 
 }

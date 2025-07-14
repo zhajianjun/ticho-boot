@@ -29,14 +29,10 @@ public class Span {
     /** 日志 */
     private final Map<String, Object> logs = new HashMap<>();
 
-    public Span(String name) {
-        this(name, TraceContext.getTraceId(), TraceContext.getSpanId());
-    }
-
-    public Span(String name, String traceId, String parentSpanId) {
+    public Span(String name, String traceId, String spanId, String parentSpanId) {
         this.name = name;
-        this.traceId = traceId != null ? traceId : IdUtil.getSnowflakeNextIdStr();
-        this.spanId = IdUtil.getSnowflakeNextIdStr();
+        this.traceId = traceId;
+        this.spanId = spanId;
         this.parentSpanId = parentSpanId;
         this.startTime = System.currentTimeMillis();
     }

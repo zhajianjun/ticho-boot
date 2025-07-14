@@ -1,5 +1,7 @@
 package top.ticho.trace.common;
 
+import org.slf4j.MDC;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,19 +13,19 @@ public class TraceContext {
     private static final ThreadLocal<Map<String, String>> context = ThreadLocal.withInitial(HashMap::new);
 
     public static void put(String key, String value) {
-        context.get().put(key, value);
+        MDC.put(key, value);
     }
 
     public static String get(String key) {
-        return context.get().get(key);
+        return MDC.get(key);
     }
 
     public static void remove(String key) {
-        context.get().remove(key);
+        MDC.remove(key);
     }
 
     public static void clear() {
-        context.get().clear();
+        MDC.clear();
     }
 
     public static String getTraceId() {
