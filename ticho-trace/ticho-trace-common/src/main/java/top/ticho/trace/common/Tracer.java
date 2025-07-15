@@ -2,6 +2,7 @@ package top.ticho.trace.common;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
+import org.slf4j.MDC;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -20,6 +21,10 @@ public class Tracer {
         this.reporter = reporter;
     }
 
+    public void start(String name) {
+        start(name, TraceContext.getTraceId(), TraceContext.getSpanId());
+    }
+
     public void start(String name, String traceId, String parentSpanId) {
         Span span;
         if (StrUtil.isBlank(traceId)) {
@@ -33,6 +38,11 @@ public class Tracer {
             span = new Span(name, traceId, spanId, parentSpanId);
         }
         spans.add(span);
+    }
+
+    public void finish() {
+        reportAll();
+        clear();
     }
 
     public Span startSpan(String name) {
@@ -56,7 +66,7 @@ public class Tracer {
         Span lastSpan = spans.peekLast();
         if (Objects.equals(lastSpan, span)) {
             span.finish();
-            reporter.report(span);
+            report(span);
         }
     }
 
@@ -70,6 +80,7 @@ public class Tracer {
 
     public void clear() {
         spans.clear();
+        MDC.clear();
     }
 
     public void report(Span span) {
