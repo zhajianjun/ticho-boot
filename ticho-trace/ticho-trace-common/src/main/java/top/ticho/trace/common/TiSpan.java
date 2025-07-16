@@ -1,6 +1,5 @@
 package top.ticho.trace.common;
 
-import cn.hutool.core.util.IdUtil;
 import lombok.Getter;
 
 import java.util.HashMap;
@@ -11,7 +10,7 @@ import java.util.Map;
  * @date 2025-07-13 14:05
  */
 @Getter
-public class Span {
+public class TiSpan {
     /** 全局唯一Trace ID */
     private final String traceId;
     /** 当前Span ID */
@@ -29,7 +28,7 @@ public class Span {
     /** 日志 */
     private final Map<String, Object> logs = new HashMap<>();
 
-    public Span(String name, String traceId, String spanId, String parentSpanId) {
+    public TiSpan(String name, String traceId, String spanId, String parentSpanId) {
         this.name = name;
         this.traceId = traceId;
         this.spanId = spanId;

@@ -26,11 +26,11 @@
       const isUpdate = ref(true);
       const [registerForm, { setFieldsValue, resetFields, validate }] = useForm({
         labelWidth: 120,
-        baseColProps: { span: 24 },
+        baseColProps: { tiSpan: 24 },
         schemas: getModalFormColumns(),
         showActionButtonGroup: false,
         actionColOptions: {
-          span: 23,
+          tiSpan: 23,
         },
       });
 
