@@ -25,8 +25,6 @@ public class TiSpan {
     private long endTime;
     /** 标签 */
     private final Map<String, String> tags = new HashMap<>();
-    /** 日志 */
-    private final Map<String, Object> logs = new HashMap<>();
 
     public TiSpan(String name, String traceId, String spanId, String parentSpanId) {
         this.name = name;
@@ -36,16 +34,12 @@ public class TiSpan {
         this.startTime = System.currentTimeMillis();
     }
 
-    public void finish() {
+    public void close() {
         this.endTime = System.currentTimeMillis();
     }
 
     public void addTag(String key, String value) {
         tags.put(key, value);
-    }
-
-    public void addLog(String key, Object value) {
-        logs.put(key, value);
     }
 
     public long getDuration() {

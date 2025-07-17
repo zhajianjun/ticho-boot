@@ -3,7 +3,6 @@ package top.ticho.trace.common;
 import cn.hutool.core.util.IdUtil;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -14,70 +13,87 @@ import java.util.Objects;
  */
 @Slf4j
 public class TiTracer {
-    private final ArrayDeque<TiSpan> tiSpans = new ArrayDeque<>();
+    private TiSpan rootSpan;
+    private TiSpan childSpan;
     private TiReporter tiReporter = new TiConsoleReporter();
+    private final List<TiSpan> allSpans = new ArrayList<>();
 
 
     public void replaceReporter(TiReporter tiReporter) {
         this.tiReporter = tiReporter;
     }
 
-    public void addSpan(TiSpan tiSpan) {
-        tiSpans.add(tiSpan);
-    }
-
     public void start(TiSpan rootSpan) {
-        if (!tiSpans.isEmpty()) {
-            log.warn("链路已开启！已存在根节点Span");
+        if (Objects.nonNull(this.rootSpan)) {
+            log.warn("链路已开启，已存在根节点链路");
             return;
         }
-        addSpan(rootSpan);
+        this.rootSpan = rootSpan;
+        allSpans.add(rootSpan);
     }
 
-    public void start(String name, String traceId, String spanId, String parentSpanId) {
-        if (!tiSpans.isEmpty()) {
-            log.warn("链路已开启！已存在根节点Span");
-            return;
+    public TiSpan start(String name, String traceId, String spanId, String parentSpanId) {
+        if (Objects.nonNull(rootSpan)) {
+            log.warn("链路已开启，已存在根链路");
+            return null;
         }
         TiSpan rootSpan = new TiSpan(name, traceId, spanId, parentSpanId);
-        addSpan(rootSpan);
+        this.rootSpan = rootSpan;
+        this.allSpans.add(rootSpan);
+        return rootSpan;
     }
 
-    public void finish() {
+    public TiSpan close() {
+        rootSpan.close();
+        report(rootSpan);
         reportAll();
         clear();
+        return rootSpan;
     }
 
     public TiSpan startSpan(String name) {
-        // 根Span
-        TiSpan rootTiSpan = tiSpans.peek();
-        if (rootTiSpan == null) {
+        if (Objects.isNull(rootSpan)) {
+            log.warn("开启子链路异常，链路未开启");
             return null;
         }
-        TiSpan tiSpan = new TiSpan(name, rootTiSpan.getTraceId(), IdUtil.getSnowflakeNextIdStr(), rootTiSpan.getSpanId());
-        addSpan(tiSpan);
+        if (Objects.nonNull(childSpan)) {
+            log.warn("开启子链路异常，请完成上一个子链路");
+            return null;
+        }
+        TiSpan tiSpan = new TiSpan(name, rootSpan.getTraceId(), IdUtil.getSnowflakeNextIdStr(), rootSpan.getSpanId());
+        this.childSpan = tiSpan;
+        this.allSpans.add(rootSpan);
         return tiSpan;
     }
 
-    public void finishSpan(TiSpan tiSpan) {
-        TiSpan lastTiSpan = tiSpans.peekLast();
-        if (Objects.equals(lastTiSpan, tiSpan)) {
-            tiSpan.finish();
-            report(tiSpan);
+    public TiSpan closeSpan() {
+        if (Objects.isNull(rootSpan)) {
+            log.warn("关闭子链路异常，链路未开启");
+            return null;
         }
+        if (Objects.isNull(childSpan)) {
+            log.warn("关闭子链路异常，没有未完成的子链路");
+            return null;
+        }
+        childSpan.close();
+        report(childSpan);
+        return childSpan;
     }
 
-    public TiSpan currentSpan() {
-        return tiSpans.isEmpty() ? null : tiSpans.peekLast();
+    public TiSpan rootSpan() {
+        return this.rootSpan;
     }
 
-    public List<TiSpan> getSpans() {
-        return new ArrayList<>(tiSpans);
+    public TiSpan childSpan() {
+        return this.childSpan;
+    }
+
+    public List<TiSpan> allSpans() {
+        return allSpans;
     }
 
     public void clear() {
-        tiSpans.clear();
-        TiTraceContext.clear();
+        allSpans.clear();
     }
 
     public void report(TiSpan tiSpan) {
@@ -85,7 +101,7 @@ public class TiTracer {
     }
 
     public void reportAll() {
-        tiReporter.reportBatch(new ArrayList<>(tiSpans));
+        tiReporter.reportBatch(allSpans);
     }
 
 }

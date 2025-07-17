@@ -29,7 +29,6 @@ public class TiConsoleReporter implements TiReporter {
         System.out.println("Name: " + tiSpan.getName());
         System.out.println("Duration: " + tiSpan.getDuration() + "ms");
         System.out.println("Tags: " + tiSpan.getTags());
-        System.out.println("Logs: " + tiSpan.getLogs());
     }
 
 }

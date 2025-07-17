@@ -15,6 +15,8 @@ public class TiTraceConst {
     public static final String TRACE_ID_KEY = "traceId";
     /** 跨度id key */
     public static final String SPAN_ID_KEY = "spanId";
+    /** 父跨度id key */
+    public static final String PARENT_SPAN_ID_KEY = "parentSpanId";
     /** 第一个跨度id */
     public static final String FIRST_SPAN_ID = "0";
     /** 当前应用名称 key */
