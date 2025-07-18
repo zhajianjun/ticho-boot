@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import top.ticho.trace.spring.interceptor.TraceInterceptor;
+import top.ticho.trace.spring.interceptor.TiTraceInterceptor;
 
 import jakarta.annotation.Resource;
 
@@ -21,11 +21,11 @@ import jakarta.annotation.Resource;
 public class TraceMvcConfig implements WebMvcConfigurer {
 
     @Resource
-    private TraceInterceptor traceInterceptor;
+    private TiTraceInterceptor tiTraceInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(traceInterceptor).order(traceInterceptor.getOrder());
+        registry.addInterceptor(tiTraceInterceptor).order(tiTraceInterceptor.getOrder());
     }
 
 }

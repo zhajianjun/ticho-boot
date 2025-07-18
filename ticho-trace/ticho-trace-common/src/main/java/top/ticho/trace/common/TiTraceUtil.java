@@ -1,11 +1,10 @@
-package top.ticho.trace.common.util;
+package top.ticho.trace.common;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import lombok.NoArgsConstructor;
 import org.slf4j.MDC;
-import top.ticho.trace.common.constant.TiTraceConst;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;

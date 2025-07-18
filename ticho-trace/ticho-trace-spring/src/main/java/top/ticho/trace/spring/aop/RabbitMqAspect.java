@@ -26,7 +26,7 @@ public class RabbitMqAspect extends AbstractAspect {
 
     @Around("pointCut()")
     public Object trace(ProceedingJoinPoint joinPoint) throws Throwable {
-        return trace(joinPoint, "RabbitMQ消息队列", null);
+        return trace(joinPoint, "RabbitMQ消息队列");
     }
 
     @Override

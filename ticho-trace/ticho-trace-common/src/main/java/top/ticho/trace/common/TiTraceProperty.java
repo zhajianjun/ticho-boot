@@ -1,7 +1,6 @@
-package top.ticho.trace.common.prop;
+package top.ticho.trace.common;
 
 import lombok.Data;
-import top.ticho.trace.common.constant.TiTraceConst;
 
 /**
  * 链路配置

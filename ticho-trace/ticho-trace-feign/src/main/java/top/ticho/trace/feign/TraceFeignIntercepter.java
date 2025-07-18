@@ -1,13 +1,11 @@
 package top.ticho.trace.feign;
 
-import cn.hutool.core.util.StrUtil;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
-import top.ticho.trace.common.constant.TiTraceConst;
-import top.ticho.trace.common.util.TiTraceUtil;
+import top.ticho.trace.common.TiTraceConst;
+import top.ticho.trace.common.TiTraceContext;
 
 /**
  * 链路feign拦截器
@@ -21,15 +19,8 @@ public class TraceFeignIntercepter implements RequestInterceptor {
 
     @Override
     public void apply(RequestTemplate requestTemplate) {
-        String traceId = MDC.get(TiTraceConst.TRACE_ID_KEY);
-        if (StrUtil.isBlank(traceId)) {
-            log.debug("MDC中不存在链路信息,本次调用不传递traceId");
-            return;
-        }
-        requestTemplate.header(TiTraceConst.TRACE_ID_KEY, traceId);
-        requestTemplate.header(TiTraceConst.SPAN_ID_KEY, TiTraceUtil.nextSpanId());
-        requestTemplate.header(TiTraceConst.PRE_APP_NAME_KEY, MDC.get(TiTraceConst.APP_NAME_KEY));
-        requestTemplate.header(TiTraceConst.PRE_IP_KEY, MDC.get(TiTraceConst.IP_KEY));
+        requestTemplate.header(TiTraceConst.TRACE_ID_KEY, TiTraceContext.getTraceId());
+        requestTemplate.header(TiTraceConst.SPAN_ID_KEY, TiTraceContext.getSpanId());
     }
 
 }

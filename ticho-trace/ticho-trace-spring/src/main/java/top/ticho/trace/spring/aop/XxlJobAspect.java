@@ -25,7 +25,7 @@ public class XxlJobAspect extends AbstractAspect {
 
     @Around("pointCut()")
     public Object trace(ProceedingJoinPoint joinPoint) throws Throwable {
-        return trace(joinPoint, "XxlJob定时任务", null);
+        return trace(joinPoint, "XxlJob定时任务");
     }
 
     @Override

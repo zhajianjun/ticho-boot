@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import top.ticho.trace.common.prop.TiTraceProperty;
-import top.ticho.trace.spring.interceptor.TraceInterceptor;
+import top.ticho.trace.common.TiTraceProperty;
+import top.ticho.trace.spring.interceptor.TiTraceInterceptor;
 
 /**
  * 链路bean初始化配置
@@ -28,8 +28,8 @@ public class TraceBeanConfig {
     }
 
     @Bean
-    public TraceInterceptor traceInterceptor(TiTraceProperty tiTraceProperty, Environment environment) {
-        return new TraceInterceptor(tiTraceProperty, environment);
+    public TiTraceInterceptor traceInterceptor(TiTraceProperty tiTraceProperty, Environment environment) {
+        return new TiTraceInterceptor(tiTraceProperty, environment);
     }
 
 }

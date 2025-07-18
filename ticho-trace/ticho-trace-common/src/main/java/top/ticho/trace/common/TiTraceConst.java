@@ -1,4 +1,4 @@
-package top.ticho.trace.common.constant;
+package top.ticho.trace.common;
 
 import lombok.NoArgsConstructor;
 

@@ -1,5 +1,7 @@
 package top.ticho.trace.common;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import lombok.Getter;
 
 import java.util.HashMap;
@@ -24,6 +26,8 @@ public class TiSpan {
     /** 结束时间(毫秒) */
     private long endTime;
     /** 标签 */
+    @JsonAnyGetter
+    @JsonAnySetter
     private final Map<String, String> tags = new HashMap<>();
 
     public TiSpan(String name, String traceId, String spanId, String parentSpanId) {

@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import top.ticho.trace.common.prop.TiTraceProperty;
+import top.ticho.trace.common.TiTraceProperty;
 import top.ticho.trace.gateway.filter.TraceGlobalFilter;
 
 /**

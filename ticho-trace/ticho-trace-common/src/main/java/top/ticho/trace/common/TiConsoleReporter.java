@@ -7,6 +7,7 @@ import java.util.List;
  * @date 2025-07-13 14:18
  */
 public class TiConsoleReporter implements TiReporter {
+
     @Override
     public void report(TiSpan tiSpan) {
         System.out.println("Reporting Single Span:");

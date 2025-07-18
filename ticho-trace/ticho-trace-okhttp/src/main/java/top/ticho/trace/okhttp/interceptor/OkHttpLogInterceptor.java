@@ -1,14 +1,12 @@
 package top.ticho.trace.okhttp.interceptor;
 
-import cn.hutool.core.util.StrUtil;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.slf4j.MDC;
-import top.ticho.trace.common.constant.TiTraceConst;
-import top.ticho.trace.common.util.TiTraceUtil;
+import top.ticho.trace.common.TiTraceConst;
+import top.ticho.trace.common.TiTraceContext;
 
 import java.io.IOException;
 
@@ -25,20 +23,14 @@ public class OkHttpLogInterceptor implements Interceptor {
     @NonNull
     public Response intercept(Chain chain) throws IOException {
         Request req = chain.request();
-        String traceId = MDC.get(TiTraceConst.TRACE_ID_KEY);
-        if (StrUtil.isBlank(traceId)) {
-            if (log.isDebugEnabled()) {
-                log.debug("MDC中不存在链路信息,本次调用不传递traceId");
-            }
-            return chain.proceed(req);
-        }
+        TiTraceContext.startSpan(req.url().host());
         Request.Builder builder = req.newBuilder();
-        builder.addHeader(TiTraceConst.TRACE_ID_KEY, traceId);
-        builder.addHeader(TiTraceConst.SPAN_ID_KEY, TiTraceUtil.nextSpanId());
-        builder.addHeader(TiTraceConst.PRE_APP_NAME_KEY, MDC.get(TiTraceConst.APP_NAME_KEY));
-        builder.addHeader(TiTraceConst.PRE_IP_KEY, MDC.get(TiTraceConst.IP_KEY));
+        builder.addHeader(TiTraceConst.TRACE_ID_KEY, TiTraceContext.getTraceId());
+        builder.addHeader(TiTraceConst.SPAN_ID_KEY, TiTraceContext.getSpanId());
         req = builder.build();
-        return chain.proceed(req);
+        Response proceed = chain.proceed(req);
+        TiTraceContext.closeSpan();
+        return proceed;
     }
 
 }

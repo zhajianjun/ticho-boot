@@ -15,12 +15,15 @@ import java.util.Objects;
 public class TiTracer {
     private TiSpan rootSpan;
     private TiSpan childSpan;
-    private TiReporter tiReporter = new TiConsoleReporter();
+    private final TiReporter tiReporter;
     private final List<TiSpan> allSpans = new ArrayList<>();
 
-
-    public void replaceReporter(TiReporter tiReporter) {
-        this.tiReporter = tiReporter;
+    public TiTracer(TiReporter tiReporter) {
+        if (Objects.isNull(tiReporter)) {
+            this.tiReporter = new TiConsoleReporter();
+        } else {
+            this.tiReporter = tiReporter;
+        }
     }
 
     public void start(TiSpan rootSpan) {

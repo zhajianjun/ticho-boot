@@ -1,9 +1,8 @@
 package top.ticho.trace.common;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
 import org.slf4j.MDC;
-import top.ticho.trace.common.constant.TiTraceConst;
-import top.ticho.trace.common.util.TiBeetlUtil;
 
 import java.util.Objects;
 
@@ -14,8 +13,8 @@ import java.util.Objects;
 public class TiTraceContext {
     private static final ThreadLocal<TiTracer> context = new ThreadLocal<>();
 
-    public static void init() {
-        context.set(new TiTracer());
+    public static void init(TiReporter tiReporter) {
+        context.set(new TiTracer(tiReporter));
     }
 
     public static void init(TiTracer tiTracer) {
@@ -28,13 +27,12 @@ public class TiTraceContext {
         return tiTracer;
     }
 
-    public static TiSpan start(String name) {
+    public static TiSpan start(String name, String trace) {
         TiTracer tiTracer = getTiTracer();
         String traceId = IdUtil.getSnowflakeNextIdStr();
         MDC.put(TiTraceConst.TRACE_KEY, traceId);
         MDC.put(TiTraceConst.SPAN_ID_KEY, TiTraceConst.FIRST_SPAN_ID);
         MDC.put(TiTraceConst.PARENT_SPAN_ID_KEY, null);
-        String trace = MDC.get(TiTraceConst.TRACE_KEY);
         if (trace == null) {
             trace = TiTraceConst.DEFAULT_TRACE;
         }
@@ -42,13 +40,16 @@ public class TiTraceContext {
         return tiTracer.start(name, traceId, TiTraceConst.FIRST_SPAN_ID, null);
     }
 
-    public static TiSpan start(String name, String traceId, String parentSpanId) {
+    public static TiSpan start(String name, String traceId, String parentSpanId, String trace) {
         TiTracer tiTracer = getTiTracer();
+        if (StrUtil.isBlank(traceId)) {
+            traceId = IdUtil.getSnowflakeNextIdStr();
+            parentSpanId = TiTraceConst.FIRST_SPAN_ID;
+        }
         String spanId = IdUtil.getSnowflakeNextIdStr();
         MDC.put(TiTraceConst.TRACE_KEY, traceId);
         MDC.put(TiTraceConst.SPAN_ID_KEY, spanId);
         MDC.put(TiTraceConst.PARENT_SPAN_ID_KEY, parentSpanId);
-        String trace = MDC.get(TiTraceConst.TRACE_KEY);
         if (trace == null) {
             trace = TiTraceConst.DEFAULT_TRACE;
         }
@@ -60,8 +61,20 @@ public class TiTraceContext {
         getTiTracer().start(rootSpan);
     }
 
+    public static void addTag(String key, String value) {
+        getTiTracer().rootSpan().addTag(key, value);
+    }
+
+    public static TiSpan close() {
+        return getTiTracer().close();
+    }
+
     public static TiSpan startSpan(String name) {
         return getTiTracer().startSpan(name);
+    }
+
+    public static void addSpanTag(String key, String value) {
+        getTiTracer().childSpan().addTag(key, value);
     }
 
     public static TiSpan closeSpan() {

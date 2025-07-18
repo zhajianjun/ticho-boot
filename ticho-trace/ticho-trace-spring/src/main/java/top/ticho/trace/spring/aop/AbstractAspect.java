@@ -1,19 +1,12 @@
 package top.ticho.trace.spring.aop;
 
-import cn.hutool.core.date.SystemClock;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.spring.SpringUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.slf4j.MDC;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
-import top.ticho.trace.common.constant.TiTraceConst;
-import top.ticho.trace.common.handle.TracePushContext;
-import top.ticho.trace.common.prop.TiTraceProperty;
-import top.ticho.trace.common.util.TiTraceUtil;
-import top.ticho.trace.common.view.TraceInfo;
-import top.ticho.trace.spring.event.TraceEvent;
+import top.ticho.trace.common.TiTraceContext;
+import top.ticho.trace.common.TiTraceProperty;
+import top.ticho.trace.common.TiTraceUtil;
 import top.ticho.trace.spring.util.IpUtil;
 
 import jakarta.annotation.Resource;
@@ -32,40 +25,16 @@ public abstract class AbstractAspect implements Ordered {
     @Resource
     private TiTraceProperty tiTraceProperty;
 
-    public Object trace(ProceedingJoinPoint joinPoint, String preAppName, String preIp) throws Throwable {
-        if (StrUtil.isNotBlank(MDC.get(TiTraceConst.TRACE_ID_KEY))) {
+    public Object trace(ProceedingJoinPoint joinPoint, String appName) throws Throwable {
+        if (StrUtil.isNotBlank(TiTraceContext.getTraceId())) {
             return joinPoint.proceed();
         }
-        long start = SystemClock.now();
         try {
-            String appName = environment.getProperty("spring.application.name");
-            String ip = IpUtil.localIp();
-            TiTraceUtil.prepare(null, null, appName, ip, preAppName, preIp, null);
+            TiTraceContext.start(appName, tiTraceProperty.getTrace());
+            TiTraceContext.addTag("ip", IpUtil.localIp());
+            TiTraceContext.addTag("env", environment.getProperty("spring.profiles.active"));
             return joinPoint.proceed();
         } finally {
-            String env = environment.getProperty("spring.profiles.active");
-            long end = SystemClock.now();
-            Long consume = end - start;
-            TraceInfo traceInfo = TraceInfo.builder()
-                .traceId(MDC.get(TiTraceConst.TRACE_ID_KEY))
-                .spanId(MDC.get(TiTraceConst.SPAN_ID_KEY))
-                .appName(MDC.get(TiTraceConst.APP_NAME_KEY))
-                .env(env)
-                .ip(MDC.get(TiTraceConst.IP_KEY))
-                .preAppName(MDC.get(TiTraceConst.PRE_APP_NAME_KEY))
-                .preIp(MDC.get(TiTraceConst.PRE_IP_KEY))
-                // .url(url)
-                // .port(port)
-                // .method(handlerMethod.toString())
-                // .type(type)
-                // .status(status)
-                .start(start)
-                .end(end)
-                .consume(consume)
-                .build();
-            TracePushContext.asyncPushTrace(tiTraceProperty, traceInfo);
-            ApplicationContext applicationContext = SpringUtil.getApplicationContext();
-            applicationContext.publishEvent(new TraceEvent(applicationContext, traceInfo));
             TiTraceUtil.complete();
         }
     }

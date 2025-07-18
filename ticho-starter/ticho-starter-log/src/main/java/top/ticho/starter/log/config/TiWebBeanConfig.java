@@ -12,7 +12,7 @@ import top.ticho.starter.log.filter.TiWapperRequestFilter;
 import top.ticho.starter.log.interceptor.TiWebLogInterceptor;
 import top.ticho.starter.view.log.TiLogProperty;
 import top.ticho.starter.view.task.TiTaskDecortor;
-import top.ticho.trace.common.util.TiTraceUtil;
+import top.ticho.trace.common.TiTraceUtil;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
