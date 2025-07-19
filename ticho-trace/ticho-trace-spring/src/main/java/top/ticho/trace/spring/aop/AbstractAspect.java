@@ -6,7 +6,6 @@ import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
 import top.ticho.trace.common.TiTraceContext;
 import top.ticho.trace.common.TiTraceProperty;
-import top.ticho.trace.common.TiTraceUtil;
 import top.ticho.trace.spring.util.IpUtil;
 
 import jakarta.annotation.Resource;
@@ -35,7 +34,7 @@ public abstract class AbstractAspect implements Ordered {
             TiTraceContext.addTag("env", environment.getProperty("spring.profiles.active"));
             return joinPoint.proceed();
         } finally {
-            TiTraceUtil.complete();
+            TiTraceContext.close();
         }
     }
 

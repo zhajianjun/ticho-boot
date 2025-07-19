@@ -21,7 +21,7 @@ public class TiTraceContext {
         context.set(tiTracer);
     }
 
-    private static TiTracer getTiTracer() {
+    public static TiTracer getTiTracer() {
         TiTracer tiTracer = context.get();
         Objects.requireNonNull(tiTracer, "TiTracer is null");
         return tiTracer;
@@ -66,7 +66,7 @@ public class TiTraceContext {
     }
 
     public static TiSpan close() {
-        return getTiTracer().close();
+        return getTiTracer().end();
     }
 
     public static TiSpan startSpan(String name) {
@@ -78,11 +78,11 @@ public class TiTraceContext {
     }
 
     public static TiSpan closeSpan() {
-        return getTiTracer().closeSpan();
+        return getTiTracer().endSpan();
     }
 
     public static TiSpan finish() {
-        return getTiTracer().close();
+        return getTiTracer().end();
     }
 
     public static void clear() {

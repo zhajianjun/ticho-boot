@@ -2,7 +2,6 @@ package top.ticho.trace.spring.interceptor;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
 import org.springframework.web.method.HandlerMethod;
@@ -35,10 +34,10 @@ public class TiTraceInterceptor implements HandlerInterceptor, Ordered {
     /** 链路报告器 */
     private final TiReporter tiReporter;
 
-    public TiTraceInterceptor(TiTraceProperty tiTraceProperty, Environment environment, ObjectProvider<TiReporter> tiReporterObjectProvider) {
+    public TiTraceInterceptor(TiTraceProperty tiTraceProperty, Environment environment, TiReporter tiReporter) {
         this.tiTraceProperty = tiTraceProperty;
         this.environment = environment;
-        this.tiReporter = tiReporterObjectProvider.getIfAvailable();
+        this.tiReporter = tiReporter;
     }
 
     @Override

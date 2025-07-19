@@ -41,13 +41,14 @@ public class TiTracer {
             return null;
         }
         TiSpan rootSpan = new TiSpan(name, traceId, spanId, parentSpanId);
+        rootSpan.start();
         this.rootSpan = rootSpan;
         this.allSpans.add(rootSpan);
         return rootSpan;
     }
 
-    public TiSpan close() {
-        rootSpan.close();
+    public TiSpan end() {
+        rootSpan.end();
         report(rootSpan);
         reportAll();
         clear();
@@ -63,13 +64,14 @@ public class TiTracer {
             log.warn("开启子链路异常，请完成上一个子链路");
             return null;
         }
-        TiSpan tiSpan = new TiSpan(name, rootSpan.getTraceId(), IdUtil.getSnowflakeNextIdStr(), rootSpan.getSpanId());
-        this.childSpan = tiSpan;
+        TiSpan childSpan = new TiSpan(name, rootSpan.getTraceId(), IdUtil.getSnowflakeNextIdStr(), rootSpan.getSpanId());
+        childSpan.start();
+        this.childSpan = childSpan;
         this.allSpans.add(rootSpan);
-        return tiSpan;
+        return childSpan;
     }
 
-    public TiSpan closeSpan() {
+    public TiSpan endSpan() {
         if (Objects.isNull(rootSpan)) {
             log.warn("关闭子链路异常，链路未开启");
             return null;
@@ -78,7 +80,7 @@ public class TiTracer {
             log.warn("关闭子链路异常，没有未完成的子链路");
             return null;
         }
-        childSpan.close();
+        childSpan.end();
         report(childSpan);
         return childSpan;
     }

@@ -1,5 +1,6 @@
 package top.ticho.trace.spring.config;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -7,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import top.ticho.trace.common.TiReporter;
 import top.ticho.trace.common.TiTraceProperty;
 import top.ticho.trace.spring.interceptor.TiTraceInterceptor;
 
@@ -28,8 +30,8 @@ public class TraceBeanConfig {
     }
 
     @Bean
-    public TiTraceInterceptor traceInterceptor(TiTraceProperty tiTraceProperty, Environment environment) {
-        return new TiTraceInterceptor(tiTraceProperty, environment);
+    public TiTraceInterceptor traceInterceptor(TiTraceProperty tiTraceProperty, Environment environment, ObjectProvider<TiReporter> tiReporterObjectProvider) {
+        return new TiTraceInterceptor(tiTraceProperty, environment, tiReporterObjectProvider.getIfAvailable());
     }
 
 }

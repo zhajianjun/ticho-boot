@@ -1,5 +1,6 @@
 package top.ticho.starter.log.config;
 
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -12,9 +13,9 @@ import top.ticho.starter.log.filter.TiWapperRequestFilter;
 import top.ticho.starter.log.interceptor.TiWebLogInterceptor;
 import top.ticho.starter.view.log.TiLogProperty;
 import top.ticho.starter.view.task.TiTaskDecortor;
-import top.ticho.trace.common.TiTraceUtil;
-
-import java.util.concurrent.atomic.AtomicInteger;
+import top.ticho.trace.common.TiReporter;
+import top.ticho.trace.common.TiTraceContext;
+import top.ticho.trace.common.TiTracer;
 
 /**
  * 日志bean初始化配置
@@ -45,17 +46,15 @@ public class TiWebBeanConfig {
     }
 
     /**
-     * 下个跨度id的索引 上下文传递
-     * <p>虽然TransmittableThreadLocal可以进行父子线程的变量传递，但是子线程结束也得清除线程变量，所以还是手动方式注入，子线程结束进行清除</p>
-     *
-     * @return {@link TiTaskDecortor}<{@link AtomicInteger}>
+     * 链路上下文传递
      */
     @Bean
-    public TiTaskDecortor<AtomicInteger> nextSpanIndex() {
-        TiTaskDecortor<AtomicInteger> decortor = new TiTaskDecortor<>();
-        decortor.setSupplier(TiTraceUtil::getNextSpanIndex);
-        decortor.setExecute(TiTraceUtil::setNextSpanIndex);
-        decortor.setComplete(x -> TiTraceUtil.clearNextSpanIndex());
+    public TiTaskDecortor<TiTracer> tracerTaskDecortor(ObjectProvider<TiReporter> tiReporterObjectProvider) {
+        TiTraceContext.init(tiReporterObjectProvider.getIfAvailable());
+        TiTaskDecortor<TiTracer> decortor = new TiTaskDecortor<>();
+        decortor.setSupplier(TiTraceContext::getTiTracer);
+        decortor.setExecute(item -> TiTraceContext.start(item.rootSpan().copy()));
+        decortor.setComplete(x -> TiTraceContext.close());
         return decortor;
     }
 

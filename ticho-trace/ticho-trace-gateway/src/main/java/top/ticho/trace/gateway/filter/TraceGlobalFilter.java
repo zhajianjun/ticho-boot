@@ -1,22 +1,17 @@
 package top.ticho.trace.gateway.filter;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.MDC;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.http.server.reactive.ServerHttpResponse;
-import org.springframework.http.server.reactive.ServerHttpResponseDecorator;
-import org.springframework.lang.NonNull;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import top.ticho.trace.common.TiTraceConst;
 import top.ticho.trace.common.TiTraceContext;
 import top.ticho.trace.common.TiTraceProperty;
-import top.ticho.trace.common.TiTraceUtil;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -49,7 +44,6 @@ public class TraceGlobalFilter implements GlobalFilter, Ordered {
 
     public ServerWebExchange preHandle(ServerWebExchange exchange) {
         ServerHttpRequest serverHttpRequest = exchange.getRequest();
-        ServerHttpResponse serverHttpResponse = exchange.getResponse();
         HttpHeaders headers = serverHttpRequest.getHeaders();
         String traceId = headers.getFirst(TiTraceConst.TRACE_ID_KEY);
         String spanId = headers.getFirst(TiTraceConst.SPAN_ID_KEY);
@@ -61,21 +55,10 @@ public class TraceGlobalFilter implements GlobalFilter, Ordered {
         TiTraceContext.addTag("type", serverHttpRequest.getMethod().name());
         Consumer<HttpHeaders> httpHeaders = httpHeader -> {
             httpHeader.set(TiTraceConst.TRACE_ID_KEY, traceId);
-            httpHeader.set(TiTraceConst.SPAN_ID_KEY, TiTraceUtil.nextSpanId());
+            httpHeader.set(TiTraceConst.SPAN_ID_KEY, spanId);
         };
         ServerHttpRequest newRequest = serverHttpRequest.mutate().headers(httpHeaders).build();
-        // ServerHttpResponse header添加链路信息
-        ServerHttpResponse newResponse = new ServerHttpResponseDecorator(serverHttpResponse) {
-            @NonNull
-            @Override
-            public HttpHeaders getHeaders() {
-                HttpHeaders headers = super.getHeaders();
-                headers.add(TiTraceConst.TRACE_ID_KEY, MDC.get(TiTraceConst.TRACE_ID_KEY));
-                headers.add(TiTraceConst.SPAN_ID_KEY, TiTraceUtil.nextSpanId());
-                return headers;
-            }
-        };
-        return exchange.mutate().request(newRequest).response(newResponse).build();
+        return exchange.mutate().request(newRequest).build();
     }
 
     public static String localIp() {
