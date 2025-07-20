@@ -14,8 +14,11 @@ import top.ticho.starter.log.interceptor.TiWebLogInterceptor;
 import top.ticho.starter.view.log.TiLogProperty;
 import top.ticho.starter.view.task.TiTaskDecortor;
 import top.ticho.trace.common.TiReporter;
+import top.ticho.trace.common.TiSpan;
 import top.ticho.trace.common.TiTraceContext;
 import top.ticho.trace.common.TiTracer;
+
+import java.util.List;
 
 /**
  * 日志bean初始化配置
@@ -50,11 +53,39 @@ public class TiWebBeanConfig {
      */
     @Bean
     public TiTaskDecortor<TiTracer> tracerTaskDecortor(ObjectProvider<TiReporter> tiReporterObjectProvider) {
-        TiTraceContext.init(tiReporterObjectProvider.getIfAvailable());
         TiTaskDecortor<TiTracer> decortor = new TiTaskDecortor<>();
         decortor.setSupplier(TiTraceContext::getTiTracer);
-        decortor.setExecute(item -> TiTraceContext.start(item.rootSpan().copy()));
-        decortor.setComplete(x -> TiTraceContext.close());
+        decortor.setExecute(item -> {
+            if (item == null) {
+                return;
+            }
+            TiReporter ifAvailable = tiReporterObjectProvider.getIfAvailable();
+            TiReporter tiReporter = new TiReporter() {
+                @Override
+                public void report(TiSpan tiSpan) {
+
+                }
+
+                @Override
+                public void reportBatch(List<TiSpan> tiSpans) {
+                    if (ifAvailable == null) {
+                        return;
+                    }
+                    if (tiSpans == null || tiSpans.isEmpty()) {
+                        return;
+                    }
+                    tiSpans.remove(0);
+                }
+            };
+            TiTraceContext.init(tiReporter);
+            TiTraceContext.start(item.rootSpan().copy());
+        });
+        decortor.setComplete(item -> {
+            if (item == null) {
+                return;
+            }
+            TiTraceContext.close();
+        });
         return decortor;
     }
 

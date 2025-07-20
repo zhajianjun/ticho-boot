@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +14,7 @@ import java.util.Map;
  * @date 2025-07-13 14:05
  */
 @Getter
+@Setter
 @AllArgsConstructor
 public class TiSpan {
 
@@ -29,8 +31,6 @@ public class TiSpan {
     /** 结束时间(毫秒) */
     private long endTime;
     /** 标签 */
-    @JsonAnyGetter
-    @JsonAnySetter
     private final Map<String, String> tags;
 
     public TiSpan(String name, String traceId, String spanId, String parentSpanId) {
@@ -39,6 +39,12 @@ public class TiSpan {
         this.spanId = spanId;
         this.parentSpanId = parentSpanId;
         this.tags = new HashMap<>();
+    }
+
+    @JsonAnyGetter
+    @JsonAnySetter
+    public Map<String, String> getTags() {
+        return tags;
     }
 
     public void start() {

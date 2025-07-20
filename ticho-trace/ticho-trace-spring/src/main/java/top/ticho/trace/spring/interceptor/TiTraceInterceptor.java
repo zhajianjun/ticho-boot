@@ -50,8 +50,8 @@ public class TiTraceInterceptor implements HandlerInterceptor, Ordered {
         String trace = tiTraceProperty.getTrace();
         String appName = environment.getProperty("spring.application.name");
         String traceId = headersMap.get(TiTraceConst.TRACE_ID_KEY);
-        String spanId = headersMap.get(TiTraceConst.SPAN_ID_KEY);
-        TiTraceContext.start(appName, traceId, spanId, trace);
+        String parentSpanId = headersMap.get(TiTraceConst.SPAN_ID_KEY);
+        TiTraceContext.start(appName, traceId, parentSpanId, trace);
         TiTraceContext.addTag("ip", IpUtil.localIp());
         TiTraceContext.addTag("env", environment.getProperty("spring.profiles.active"));
         TiTraceContext.addTag("url", request.getRequestURI());

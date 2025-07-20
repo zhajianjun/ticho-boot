@@ -11,10 +11,6 @@ public interface TiReporter {
     void report(TiSpan tiSpan);
 
     // 批量上报
-    default void reportBatch(List<TiSpan> tiSpans) {
-        for (TiSpan tiSpan : tiSpans) {
-            report(tiSpan);
-        }
-    }
+    void reportBatch(List<TiSpan> tiSpans);
 
 }

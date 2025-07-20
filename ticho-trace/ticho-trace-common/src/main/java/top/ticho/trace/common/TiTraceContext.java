@@ -4,8 +4,6 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import org.slf4j.MDC;
 
-import java.util.Objects;
-
 /**
  * @author zhajianjun
  * @date 2025-07-13 13:22
@@ -22,15 +20,13 @@ public class TiTraceContext {
     }
 
     public static TiTracer getTiTracer() {
-        TiTracer tiTracer = context.get();
-        Objects.requireNonNull(tiTracer, "TiTracer is null");
-        return tiTracer;
+        return context.get();
     }
 
     public static TiSpan start(String name, String trace) {
         TiTracer tiTracer = getTiTracer();
         String traceId = IdUtil.getSnowflakeNextIdStr();
-        MDC.put(TiTraceConst.TRACE_KEY, traceId);
+        MDC.put(TiTraceConst.TRACE_ID_KEY, traceId);
         MDC.put(TiTraceConst.SPAN_ID_KEY, TiTraceConst.FIRST_SPAN_ID);
         MDC.put(TiTraceConst.PARENT_SPAN_ID_KEY, null);
         if (trace == null) {
@@ -47,7 +43,7 @@ public class TiTraceContext {
             parentSpanId = TiTraceConst.FIRST_SPAN_ID;
         }
         String spanId = IdUtil.getSnowflakeNextIdStr();
-        MDC.put(TiTraceConst.TRACE_KEY, traceId);
+        MDC.put(TiTraceConst.TRACE_ID_KEY, traceId);
         MDC.put(TiTraceConst.SPAN_ID_KEY, spanId);
         MDC.put(TiTraceConst.PARENT_SPAN_ID_KEY, parentSpanId);
         if (trace == null) {
