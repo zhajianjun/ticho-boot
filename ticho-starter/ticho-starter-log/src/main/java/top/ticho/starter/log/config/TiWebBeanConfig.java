@@ -13,7 +13,7 @@ import top.ticho.starter.log.filter.TiWapperRequestFilter;
 import top.ticho.starter.log.interceptor.TiWebLogInterceptor;
 import top.ticho.starter.view.log.TiLogProperty;
 import top.ticho.starter.view.task.TiTaskDecortor;
-import top.ticho.trace.common.TiReporter;
+import top.ticho.trace.common.TiTraceReporter;
 import top.ticho.trace.common.TiSpan;
 import top.ticho.trace.common.TiTraceContext;
 import top.ticho.trace.common.TiTracer;
@@ -52,15 +52,15 @@ public class TiWebBeanConfig {
      * 链路上下文传递
      */
     @Bean
-    public TiTaskDecortor<TiTracer> tracerTaskDecortor(ObjectProvider<TiReporter> tiReporterObjectProvider) {
+    public TiTaskDecortor<TiTracer> tracerTaskDecortor(ObjectProvider<TiTraceReporter> tiReporterObjectProvider) {
         TiTaskDecortor<TiTracer> decortor = new TiTaskDecortor<>();
         decortor.setSupplier(TiTraceContext::getTiTracer);
         decortor.setExecute(item -> {
             if (item == null) {
                 return;
             }
-            TiReporter ifAvailable = tiReporterObjectProvider.getIfAvailable();
-            TiReporter tiReporter = new TiReporter() {
+            TiTraceReporter ifAvailable = tiReporterObjectProvider.getIfAvailable();
+            TiTraceReporter tiTraceReporter = new TiTraceReporter() {
                 @Override
                 public void report(TiSpan tiSpan) {
 
@@ -77,7 +77,7 @@ public class TiWebBeanConfig {
                     tiSpans.remove(0);
                 }
             };
-            TiTraceContext.init(tiReporter);
+            TiTraceContext.init(tiTraceReporter);
             TiTraceContext.start(item.rootSpan().copy());
         });
         decortor.setComplete(item -> {

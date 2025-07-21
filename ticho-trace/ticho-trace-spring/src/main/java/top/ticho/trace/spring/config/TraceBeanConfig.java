@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import top.ticho.trace.common.TiReporter;
+import top.ticho.trace.common.TiTraceReporter;
 import top.ticho.trace.common.TiTraceProperty;
 import top.ticho.trace.spring.interceptor.TiTraceInterceptor;
 
@@ -30,7 +30,7 @@ public class TraceBeanConfig {
     }
 
     @Bean
-    public TiTraceInterceptor traceInterceptor(TiTraceProperty tiTraceProperty, Environment environment, ObjectProvider<TiReporter> tiReporterObjectProvider) {
+    public TiTraceInterceptor traceInterceptor(TiTraceProperty tiTraceProperty, Environment environment, ObjectProvider<TiTraceReporter> tiReporterObjectProvider) {
         return new TiTraceInterceptor(tiTraceProperty, environment, tiReporterObjectProvider.getIfAvailable());
     }
 

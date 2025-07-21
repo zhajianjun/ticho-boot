@@ -15,14 +15,14 @@ import java.util.Objects;
 public class TiTracer {
     private TiSpan rootSpan;
     private TiSpan childSpan;
-    private final TiReporter tiReporter;
+    private final TiTraceReporter tiTraceReporter;
     private final List<TiSpan> allSpans = new ArrayList<>();
 
-    public TiTracer(TiReporter tiReporter) {
-        if (Objects.isNull(tiReporter)) {
-            this.tiReporter = new TiConsoleReporter();
+    public TiTracer(TiTraceReporter tiTraceReporter) {
+        if (Objects.isNull(tiTraceReporter)) {
+            this.tiTraceReporter = new TiConsoleTraceReporter();
         } else {
-            this.tiReporter = tiReporter;
+            this.tiTraceReporter = tiTraceReporter;
         }
     }
 
@@ -102,11 +102,11 @@ public class TiTracer {
     }
 
     public void report(TiSpan tiSpan) {
-        tiReporter.report(tiSpan);
+        tiTraceReporter.report(tiSpan);
     }
 
     public void reportAll() {
-        tiReporter.reportBatch(allSpans);
+        tiTraceReporter.reportBatch(allSpans);
     }
 
 }

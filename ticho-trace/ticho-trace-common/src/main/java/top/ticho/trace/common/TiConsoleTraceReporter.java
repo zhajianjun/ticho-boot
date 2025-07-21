@@ -7,7 +7,7 @@ import java.util.Objects;
  * @author zhajianjun
  * @date 2025-07-13 14:18
  */
-public class TiConsoleReporter implements TiReporter {
+public class TiConsoleTraceReporter implements TiTraceReporter {
 
     @Override
     public void report(TiSpan tiSpan) {

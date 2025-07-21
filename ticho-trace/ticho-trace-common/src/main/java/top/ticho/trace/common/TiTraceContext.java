@@ -11,8 +11,8 @@ import org.slf4j.MDC;
 public class TiTraceContext {
     private static final ThreadLocal<TiTracer> context = new ThreadLocal<>();
 
-    public static void init(TiReporter tiReporter) {
-        context.set(new TiTracer(tiReporter));
+    public static void init(TiTraceReporter tiTraceReporter) {
+        context.set(new TiTracer(tiTraceReporter));
     }
 
     public static void init(TiTracer tiTracer) {
@@ -57,8 +57,8 @@ public class TiTraceContext {
         getTiTracer().start(rootSpan);
     }
 
-    public static void addTag(String key, String value) {
-        getTiTracer().rootSpan().addTag(key, value);
+    public static void addTag(TiTraceTag tiTraceTag) {
+        getTiTracer().rootSpan().addTag(tiTraceTag);
     }
 
     public static TiSpan close() {
@@ -69,8 +69,8 @@ public class TiTraceContext {
         return getTiTracer().startSpan(name);
     }
 
-    public static void addSpanTag(String key, String value) {
-        getTiTracer().childSpan().addTag(key, value);
+    public static void addSpanTag(TiTraceTag tiTraceTag) {
+        getTiTracer().childSpan().addTag(tiTraceTag);
     }
 
     public static TiSpan closeSpan() {

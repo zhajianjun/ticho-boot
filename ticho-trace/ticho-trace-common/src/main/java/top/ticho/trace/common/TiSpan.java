@@ -55,8 +55,8 @@ public class TiSpan {
         this.endTime = System.currentTimeMillis();
     }
 
-    public void addTag(String key, String value) {
-        tags.put(key, value);
+    public void addTag(TiTraceTag tiTraceTag) {
+        tags.put(tiTraceTag.code(), tiTraceTag.name());
     }
 
     public long getDuration() {

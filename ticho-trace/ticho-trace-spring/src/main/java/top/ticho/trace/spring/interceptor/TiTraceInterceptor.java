@@ -6,7 +6,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import top.ticho.trace.common.TiReporter;
+import top.ticho.trace.common.TiTraceReporter;
 import top.ticho.trace.common.TiTraceConst;
 import top.ticho.trace.common.TiTraceContext;
 import top.ticho.trace.common.TiTraceProperty;
@@ -32,12 +32,12 @@ public class TiTraceInterceptor implements HandlerInterceptor, Ordered {
     /** 环境变量 */
     private final Environment environment;
     /** 链路报告器 */
-    private final TiReporter tiReporter;
+    private final TiTraceReporter tiTraceReporter;
 
-    public TiTraceInterceptor(TiTraceProperty tiTraceProperty, Environment environment, TiReporter tiReporter) {
+    public TiTraceInterceptor(TiTraceProperty tiTraceProperty, Environment environment, TiTraceReporter tiTraceReporter) {
         this.tiTraceProperty = tiTraceProperty;
         this.environment = environment;
-        this.tiReporter = tiReporter;
+        this.tiTraceReporter = tiTraceReporter;
     }
 
     @Override
@@ -45,7 +45,7 @@ public class TiTraceInterceptor implements HandlerInterceptor, Ordered {
         if (!(handler instanceof HandlerMethod handlerMethod)) {
             return true;
         }
-        TiTraceContext.init(tiReporter);
+        TiTraceContext.init(tiTraceReporter);
         Map<String, String> headersMap = getHeaders(request);
         String trace = tiTraceProperty.getTrace();
         String appName = environment.getProperty("spring.application.name");
