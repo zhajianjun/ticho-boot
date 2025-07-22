@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+import top.ticho.trace.common.TiHttpTraceTag;
 import top.ticho.trace.common.TiTraceConst;
 import top.ticho.trace.common.TiTraceContext;
 import top.ticho.trace.common.TiTraceProperty;
@@ -49,10 +50,10 @@ public class TraceGlobalFilter implements GlobalFilter, Ordered {
         String spanId = headers.getFirst(TiTraceConst.SPAN_ID_KEY);
         String appName = environment.getProperty("spring.application.name");
         TiTraceContext.start(appName, traceId, spanId, tiTraceProperty.getTrace());
-        TiTraceContext.addTag("ip", localIp());
-        TiTraceContext.addTag("env", environment.getProperty("spring.profiles.active"));
-        TiTraceContext.addTag("url", serverHttpRequest.getPath().toString());
-        TiTraceContext.addTag("type", serverHttpRequest.getMethod().name());
+        TiTraceContext.addTag(TiHttpTraceTag.IP, localIp());
+        TiTraceContext.addTag(TiHttpTraceTag.ENV, environment.getProperty("spring.profiles.active"));
+        TiTraceContext.addTag(TiHttpTraceTag.URL, serverHttpRequest.getPath().toString());
+        TiTraceContext.addTag(TiHttpTraceTag.TYPE, serverHttpRequest.getMethod().name());
         Consumer<HttpHeaders> httpHeaders = httpHeader -> {
             httpHeader.set(TiTraceConst.TRACE_ID_KEY, traceId);
             httpHeader.set(TiTraceConst.SPAN_ID_KEY, spanId);

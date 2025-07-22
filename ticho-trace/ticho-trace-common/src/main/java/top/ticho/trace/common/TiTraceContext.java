@@ -57,8 +57,8 @@ public class TiTraceContext {
         getTiTracer().start(rootSpan);
     }
 
-    public static void addTag(TiTraceTag tiTraceTag) {
-        getTiTracer().rootSpan().addTag(tiTraceTag);
+    public static void addTag(TiTraceTag tiTraceTag, String value) {
+        getTiTracer().rootSpan().addTag(tiTraceTag, value);
     }
 
     public static TiSpan close() {
@@ -69,8 +69,8 @@ public class TiTraceContext {
         return getTiTracer().startSpan(name);
     }
 
-    public static void addSpanTag(TiTraceTag tiTraceTag) {
-        getTiTracer().childSpan().addTag(tiTraceTag);
+    public static void addSpanTag(TiTraceTag tiTraceTag, String value) {
+        getTiTracer().childSpan().addTag(tiTraceTag, value);
     }
 
     public static TiSpan closeSpan() {

@@ -6,8 +6,6 @@ package top.ticho.trace.common;
  */
 public interface TiTraceTag {
 
-    String code();
-
-    String name();
+    String getKey();
 
 }

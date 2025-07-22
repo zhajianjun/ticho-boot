@@ -6,10 +6,11 @@ import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import top.ticho.trace.common.TiTraceReporter;
+import top.ticho.trace.common.TiHttpTraceTag;
 import top.ticho.trace.common.TiTraceConst;
 import top.ticho.trace.common.TiTraceContext;
 import top.ticho.trace.common.TiTraceProperty;
+import top.ticho.trace.common.TiTraceReporter;
 import top.ticho.trace.spring.util.IpUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -52,11 +53,11 @@ public class TiTraceInterceptor implements HandlerInterceptor, Ordered {
         String traceId = headersMap.get(TiTraceConst.TRACE_ID_KEY);
         String parentSpanId = headersMap.get(TiTraceConst.SPAN_ID_KEY);
         TiTraceContext.start(appName, traceId, parentSpanId, trace);
-        TiTraceContext.addTag("ip", IpUtil.localIp());
-        TiTraceContext.addTag("env", environment.getProperty("spring.profiles.active"));
-        TiTraceContext.addTag("url", request.getRequestURI());
-        TiTraceContext.addTag("method", handlerMethod.toString());
-        TiTraceContext.addTag("type", request.getMethod());
+        TiTraceContext.addTag(TiHttpTraceTag.IP, IpUtil.localIp());
+        TiTraceContext.addTag(TiHttpTraceTag.ENV, environment.getProperty("spring.profiles.active"));
+        TiTraceContext.addTag(TiHttpTraceTag.URL, request.getRequestURI());
+        TiTraceContext.addTag(TiHttpTraceTag.METHOD, handlerMethod.toString());
+        TiTraceContext.addTag(TiHttpTraceTag.TYPE, request.getMethod());
         return true;
     }
 
@@ -65,7 +66,7 @@ public class TiTraceInterceptor implements HandlerInterceptor, Ordered {
         if (!(handler instanceof HandlerMethod)) {
             return;
         }
-        TiTraceContext.addTag("status", String.valueOf(response.getStatus()));
+        TiTraceContext.addTag(TiHttpTraceTag.STATUS, String.valueOf(response.getStatus()));
         TiTraceContext.close();
     }
 
