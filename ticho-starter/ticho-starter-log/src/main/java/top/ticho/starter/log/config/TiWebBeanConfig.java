@@ -13,12 +13,10 @@ import top.ticho.starter.log.filter.TiWapperRequestFilter;
 import top.ticho.starter.log.interceptor.TiWebLogInterceptor;
 import top.ticho.starter.view.log.TiLogProperty;
 import top.ticho.starter.view.task.TiTaskDecortor;
-import top.ticho.trace.common.TiTraceReporter;
-import top.ticho.trace.common.TiSpan;
 import top.ticho.trace.common.TiTraceContext;
+import top.ticho.trace.common.TiTraceReporter;
+import top.ticho.trace.common.TiTraceRunableDecorator;
 import top.ticho.trace.common.TiTracer;
-
-import java.util.List;
 
 /**
  * 日志bean初始化配置
@@ -55,37 +53,8 @@ public class TiWebBeanConfig {
     public TiTaskDecortor<TiTracer> tracerTaskDecortor(ObjectProvider<TiTraceReporter> tiReporterObjectProvider) {
         TiTaskDecortor<TiTracer> decortor = new TiTaskDecortor<>();
         decortor.setSupplier(TiTraceContext::getTiTracer);
-        decortor.setExecute(item -> {
-            if (item == null) {
-                return;
-            }
-            TiTraceReporter ifAvailable = tiReporterObjectProvider.getIfAvailable();
-            TiTraceReporter tiTraceReporter = new TiTraceReporter() {
-                @Override
-                public void report(TiSpan tiSpan) {
-
-                }
-
-                @Override
-                public void reportBatch(List<TiSpan> tiSpans) {
-                    if (ifAvailable == null) {
-                        return;
-                    }
-                    if (tiSpans == null || tiSpans.isEmpty()) {
-                        return;
-                    }
-                    tiSpans.remove(0);
-                }
-            };
-            TiTraceContext.init(tiTraceReporter);
-            TiTraceContext.start(item.rootSpan().copy());
-        });
-        decortor.setComplete(item -> {
-            if (item == null) {
-                return;
-            }
-            TiTraceContext.close();
-        });
+        decortor.setExecute(item -> TiTraceRunableDecorator.execute(item, tiReporterObjectProvider.getIfAvailable()));
+        decortor.setComplete(TiTraceRunableDecorator::complete);
         return decortor;
     }
 

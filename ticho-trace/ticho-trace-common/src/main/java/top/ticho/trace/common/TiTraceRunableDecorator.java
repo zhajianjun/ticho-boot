@@ -13,36 +13,47 @@ public class TiTraceRunableDecorator {
             TiTracer tiTracer = TiTraceContext.getTiTracer();
             return () -> {
                 try {
-                    if (tiTracer != null) {
-                        TiTraceReporter tiTraceReporter = new TiTraceReporter() {
-                            @Override
-                            public void report(TiSpan tiSpan) {
-
-                            }
-                            @Override
-                            public void reportBatch(List<TiSpan> tiSpans) {
-                                if (ifAvailable == null) {
-                                    return;
-                                }
-                                if (tiSpans == null || tiSpans.isEmpty()) {
-                                    return;
-                                }
-                                tiSpans.remove(0);
-                            }
-                        };
-                        TiTraceContext.init(tiTraceReporter);
-                        TiTraceContext.start(tiTracer.rootSpan().copy());
-                    }
+                    execute(tiTracer, ifAvailable);
                     runnable.run();
                 } finally {
-                    if (tiTracer != null) {
-                        TiTraceContext.close();
-                    }
+                    complete(tiTracer);
                 }
             };
         } catch (Exception e) {
             return runnable;
         }
+    }
+
+    public static void complete(TiTracer tiTracer) {
+        if (tiTracer == null) {
+            return;
+        }
+        TiTraceContext.close();
+    }
+
+    public static void execute(TiTracer tiTracer, TiTraceReporter ifAvailable) {
+        if (tiTracer == null) {
+            return;
+        }
+        TiTraceReporter tiTraceReporter = new TiTraceReporter() {
+            @Override
+            public void report(TiSpan tiSpan) {
+
+            }
+
+            @Override
+            public void reportBatch(List<TiSpan> tiSpans) {
+                if (ifAvailable == null) {
+                    return;
+                }
+                if (tiSpans == null || tiSpans.isEmpty()) {
+                    return;
+                }
+                tiSpans.remove(0);
+            }
+        };
+        TiTraceContext.init(tiTraceReporter);
+        TiTraceContext.start(tiTracer.rootSpan().copy());
     }
 
 }
