@@ -10,7 +10,6 @@ public interface TiTraceReporter {
 
     void report(TiSpan tiSpan);
 
-    // 批量上报
-    void reportBatch(List<TiSpan> tiSpans);
+    void report(List<TiSpan> tiSpans);
 
 }

@@ -50,7 +50,7 @@ public class TiTracer {
     public TiSpan end() {
         rootSpan.end();
         report(rootSpan);
-        reportAll();
+        report();
         clear();
         return rootSpan;
     }
@@ -105,8 +105,8 @@ public class TiTracer {
         tiTraceReporter.report(tiSpan);
     }
 
-    public void reportAll() {
-        tiTraceReporter.reportBatch(allSpans);
+    public void report() {
+        tiTraceReporter.report(allSpans);
     }
 
 }

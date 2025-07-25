@@ -26,7 +26,7 @@ public class TiConsoleTraceReporter implements TiTraceReporter {
     }
 
     @Override
-    public void reportBatch(List<TiSpan> tiSpans) {
+    public void report(List<TiSpan> tiSpans) {
         if (Objects.isNull(tiSpans) || tiSpans.isEmpty()) {
             return;
         }
