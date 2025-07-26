@@ -1,5 +1,7 @@
 package top.ticho.trace.common;
 
+import top.ticho.tool.json.util.TiJsonUtil;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -30,20 +32,7 @@ public class TiConsoleTraceReporter implements TiTraceReporter {
         if (Objects.isNull(tiSpans) || tiSpans.isEmpty()) {
             return;
         }
-        System.out.println("-------------Reporting Batch Spans:----------------");
-        for (int i = 0; i < tiSpans.size(); i++) {
-            StringBuilder t = new StringBuilder();
-            // 根据索引添加缩进
-            t.append("\t".repeat(i));
-            TiSpan tiSpan = tiSpans.get(i);
-            String sb = t + "TraceId: " + tiSpan.getTraceId() + "\n" +
-                t + "SpanId: " + tiSpan.getSpanId() + "\n" +
-                t + "ParentSpanId: " + tiSpan.getParentSpanId() + "\n" +
-                t + "Name: " + tiSpan.getName() + "\n" +
-                t + "Duration: " + tiSpan.getDuration() + "ms\n" +
-                t + "Tags: " + tiSpan.getTags();
-            System.out.println(sb);
-        }
+        System.out.println("<Trace>" + TiJsonUtil.toJsonString(tiSpans) + "</Trace>");
     }
 
 }
