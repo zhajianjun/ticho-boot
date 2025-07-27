@@ -42,7 +42,7 @@ public class TiTraceRunableDecorator {
             }
 
             @Override
-            public void reportBatch(List<TiSpan> tiSpans) {
+            public void report(List<TiSpan> tiSpans) {
                 if (ifAvailable == null) {
                     return;
                 }

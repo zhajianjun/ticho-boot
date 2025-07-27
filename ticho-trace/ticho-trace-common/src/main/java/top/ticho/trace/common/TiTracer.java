@@ -49,7 +49,6 @@ public class TiTracer {
 
     public TiSpan end() {
         rootSpan.end();
-        report(rootSpan);
         report();
         clear();
         return rootSpan;
@@ -81,7 +80,6 @@ public class TiTracer {
             return null;
         }
         childSpan.end();
-        report(childSpan);
         return childSpan;
     }
 
@@ -99,10 +97,6 @@ public class TiTracer {
 
     public void clear() {
         allSpans.clear();
-    }
-
-    public void report(TiSpan tiSpan) {
-        tiTraceReporter.report(tiSpan);
     }
 
     public void report() {
