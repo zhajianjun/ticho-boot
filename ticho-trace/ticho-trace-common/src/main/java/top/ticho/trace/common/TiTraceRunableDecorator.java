@@ -50,6 +50,7 @@ public class TiTraceRunableDecorator {
                     return;
                 }
                 tiSpans.remove(0);
+                ifAvailable.report(tiSpans);
             }
         };
         TiTraceContext.init(tiTraceReporter);
