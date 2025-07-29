@@ -75,7 +75,7 @@ public class TiWebBeanConfig {
     public TaskDecorator taskDecorator(List<TiTaskDecortor<?>> taskDecorators) {
         return runnable -> {
             try {
-                taskDecorators.forEach(TiTaskDecortor::setData);
+                taskDecorators.forEach(TiTaskDecortor::initData);
                 return () -> {
                     try {
                         taskDecorators.forEach(TiTaskDecortor::execute);
