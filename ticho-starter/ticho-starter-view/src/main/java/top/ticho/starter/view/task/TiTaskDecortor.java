@@ -30,8 +30,9 @@ public class TiTaskDecortor<T> {
      * 通过调用supplier的get方法来获取数据，并将其赋值给data字段
      * 这是任务执行链的第一步，确保后续操作有正确的数据基础
      */
-    public void initData() {
+    public T getData() {
         this.data = supplier.get();
+        return this.data;
     }
 
     /**
