@@ -91,10 +91,6 @@ public class TiTracer {
         return this.childSpan;
     }
 
-    public List<TiSpan> allSpans() {
-        return allSpans;
-    }
-
     public void clear() {
         allSpans.clear();
     }
