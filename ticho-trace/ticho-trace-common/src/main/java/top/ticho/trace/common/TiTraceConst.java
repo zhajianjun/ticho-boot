@@ -19,16 +19,6 @@ public class TiTraceConst {
     public static final String PARENT_SPAN_ID_KEY = "parentSpanId";
     /** 第一个跨度id */
     public static final String FIRST_SPAN_ID = "0";
-    /** 当前应用名称 key */
-    public static final String APP_NAME_KEY = "appName";
-    /** 当前ip key */
-    public static final String IP_KEY = "ip";
-    /** 上个链路的应用名称 key */
-    public static final String PRE_APP_NAME_KEY = "preAppName";
-    /** 上个链路的Ip key */
-    public static final String PRE_IP_KEY = "preIp";
-    /** UNKNOWN */
-    public static final String UNKNOWN = "UNKNOWN";
     /** 链路表达式 key */
     public static final String TRACE_KEY = "trace";
     /** 默认链路表达式 */
