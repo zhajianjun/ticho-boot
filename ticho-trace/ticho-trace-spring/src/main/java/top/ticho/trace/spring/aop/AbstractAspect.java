@@ -4,8 +4,10 @@ import cn.hutool.core.util.StrUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
+import top.ticho.trace.common.TiHttpTraceTag;
 import top.ticho.trace.common.TiTraceContext;
 import top.ticho.trace.common.TiTraceProperty;
+import top.ticho.trace.common.TiTraceTag;
 import top.ticho.trace.spring.util.IpUtil;
 
 import jakarta.annotation.Resource;
@@ -30,8 +32,8 @@ public abstract class AbstractAspect implements Ordered {
         }
         try {
             TiTraceContext.start(appName, tiTraceProperty.getTrace());
-            TiTraceContext.addTag("ip", IpUtil.localIp());
-            TiTraceContext.addTag("env", environment.getProperty("spring.profiles.active"));
+            TiTraceContext.addTag(TiHttpTraceTag.IP, IpUtil.localIp());
+            TiTraceContext.addTag(TiHttpTraceTag.ENV, environment.getProperty("spring.profiles.active"));
             return joinPoint.proceed();
         } finally {
             TiTraceContext.close();
