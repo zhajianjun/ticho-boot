@@ -7,7 +7,6 @@ import org.springframework.core.env.Environment;
 import top.ticho.trace.common.TiHttpTraceTag;
 import top.ticho.trace.common.TiTraceContext;
 import top.ticho.trace.common.TiTraceProperty;
-import top.ticho.trace.common.TiTraceTag;
 import top.ticho.trace.spring.util.IpUtil;
 
 import jakarta.annotation.Resource;
