@@ -159,6 +159,12 @@
 
             <dependency>
                 <groupId>top.ticho.tool</groupId>
+                <artifactId>ticho-tool-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>top.ticho.tool</groupId>
                 <artifactId>ticho-tool-json</artifactId>
                 <version>${project.version}</version>
             </dependency>

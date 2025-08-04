@@ -1,6 +1,5 @@
-package top.ticho.trace.common;
+package top.ticho.tool.core;
 
-import lombok.NoArgsConstructor;
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.ReThrowConsoleErrorHandler;
@@ -11,14 +10,10 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * 模版引擎渲染工具类
- *
  * @author zhajianjun
- * @date 2024-02-01 12:30
+ * @date 2025-08-04 22:33
  */
-@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-public class TiBeetlUtil {
-
+public class TiTemplateUtil {
     public static GroupTemplate gt;
 
     static {

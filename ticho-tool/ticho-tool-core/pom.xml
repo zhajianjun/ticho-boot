@@ -10,5 +10,19 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ticho-tool-core</artifactId>
 
+    <dependencies>
+
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ibeetl</groupId>
+            <artifactId>beetl</artifactId>
+        </dependency>
+
+    </dependencies>
+
 
 </project>

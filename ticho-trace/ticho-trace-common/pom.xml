@@ -28,18 +28,14 @@
         </dependency>
 
         <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>transmittable-thread-local</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.ibeetl</groupId>
-            <artifactId>beetl</artifactId>
+            <groupId>top.ticho.tool</groupId>
+            <artifactId>ticho-tool-core</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

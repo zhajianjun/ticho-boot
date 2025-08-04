@@ -1,7 +1,7 @@
 package top.ticho.trace.common;
 
-import cn.hutool.core.util.IdUtil;
 import lombok.extern.slf4j.Slf4j;
+import top.ticho.tool.core.TiIdUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +63,7 @@ public class TiTracer {
             log.warn("开启子链路异常，请完成上一个子链路");
             return null;
         }
-        TiSpan childSpan = new TiSpan(name, rootSpan.getTraceId(), IdUtil.getSnowflakeNextIdStr(), rootSpan.getSpanId());
+        TiSpan childSpan = new TiSpan(name, rootSpan.getTraceId(), TiIdUtil.getSnowflakeNextIdStr(), rootSpan.getSpanId());
         childSpan.start();
         this.childSpan = childSpan;
         this.allSpans.add(rootSpan);

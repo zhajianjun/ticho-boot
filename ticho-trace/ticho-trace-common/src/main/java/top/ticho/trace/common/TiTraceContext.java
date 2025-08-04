@@ -1,8 +1,9 @@
 package top.ticho.trace.common;
 
-import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.StrUtil;
 import org.slf4j.MDC;
+import top.ticho.tool.core.TiIdUtil;
+import top.ticho.tool.core.TiStrUtil;
+import top.ticho.tool.core.TiTemplateUtil;
 
 /**
  * @author zhajianjun
@@ -25,31 +26,31 @@ public class TiTraceContext {
 
     public static TiSpan start(String name, String trace) {
         TiTracer tiTracer = getTiTracer();
-        String traceId = IdUtil.getSnowflakeNextIdStr();
+        String traceId = TiIdUtil.getSnowflakeNextIdStr();
         MDC.put(TiTraceConst.TRACE_ID_KEY, traceId);
         MDC.put(TiTraceConst.SPAN_ID_KEY, TiTraceConst.FIRST_SPAN_ID);
         MDC.put(TiTraceConst.PARENT_SPAN_ID_KEY, null);
         if (trace == null) {
             trace = TiTraceConst.DEFAULT_TRACE;
         }
-        MDC.put(TiTraceConst.TRACE_KEY, TiBeetlUtil.render(trace, MDC.getCopyOfContextMap()));
+        MDC.put(TiTraceConst.TRACE_KEY, TiTemplateUtil.render(trace, MDC.getCopyOfContextMap()));
         return tiTracer.start(name, traceId, TiTraceConst.FIRST_SPAN_ID, null);
     }
 
     public static TiSpan start(String name, String traceId, String parentSpanId, String trace) {
         TiTracer tiTracer = getTiTracer();
-        if (StrUtil.isBlank(traceId)) {
-            traceId = IdUtil.getSnowflakeNextIdStr();
+        if (TiStrUtil.isBlank(traceId)) {
+            traceId = TiIdUtil.getSnowflakeNextIdStr();
             parentSpanId = TiTraceConst.FIRST_SPAN_ID;
         }
-        String spanId = IdUtil.getSnowflakeNextIdStr();
+        String spanId = TiIdUtil.getSnowflakeNextIdStr();
         MDC.put(TiTraceConst.TRACE_ID_KEY, traceId);
         MDC.put(TiTraceConst.SPAN_ID_KEY, spanId);
         MDC.put(TiTraceConst.PARENT_SPAN_ID_KEY, parentSpanId);
         if (trace == null) {
             trace = TiTraceConst.DEFAULT_TRACE;
         }
-        MDC.put(TiTraceConst.TRACE_KEY, TiBeetlUtil.render(trace, MDC.getCopyOfContextMap()));
+        MDC.put(TiTraceConst.TRACE_KEY, TiTemplateUtil.render(trace, MDC.getCopyOfContextMap()));
         return tiTracer.start(name, traceId, spanId, parentSpanId);
     }
 
