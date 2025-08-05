@@ -6,7 +6,7 @@ import cn.hutool.core.util.StrUtil;
  * @author zhajianjun
  * @date 2025-08-04 22:32
  */
-public class TiStrUtil extends StrUtil {
+public class TiStrUtil {
 
     public static boolean isBlankIfStr(Object obj) {
         return StrUtil.isBlankIfStr(obj);
