@@ -1,9 +1,9 @@
 package top.ticho.trace.spring.aop;
 
-import cn.hutool.core.util.StrUtil;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
+import top.ticho.tool.core.TiStrUtil;
 import top.ticho.trace.common.TiHttpTraceTag;
 import top.ticho.trace.common.TiTraceContext;
 import top.ticho.trace.common.TiTraceProperty;
@@ -26,7 +26,7 @@ public abstract class AbstractAspect implements Ordered {
     private TiTraceProperty tiTraceProperty;
 
     public Object trace(ProceedingJoinPoint joinPoint, String appName) throws Throwable {
-        if (StrUtil.isNotBlank(TiTraceContext.getTraceId())) {
+        if (TiStrUtil.isNotBlank(TiTraceContext.getTraceId())) {
             return joinPoint.proceed();
         }
         try {

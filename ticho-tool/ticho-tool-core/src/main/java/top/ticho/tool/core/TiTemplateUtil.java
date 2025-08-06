@@ -14,7 +14,7 @@ import java.util.Map;
  * @date 2025-08-04 22:33
  */
 public class TiTemplateUtil {
-    public static GroupTemplate gt;
+    private static GroupTemplate gt;
 
     static {
         gt = null;

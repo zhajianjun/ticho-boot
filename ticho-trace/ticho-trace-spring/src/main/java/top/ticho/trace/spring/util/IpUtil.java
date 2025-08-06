@@ -1,10 +1,8 @@
 package top.ticho.trace.spring.util;
 
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.useragent.UserAgent;
-import cn.hutool.http.useragent.UserAgentUtil;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import top.ticho.tool.core.TiStrUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.net.InetAddress;
@@ -49,7 +47,7 @@ public class IpUtil {
         if (ip == null || ip.isEmpty() || unknown.equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
         }
-        if (StrUtil.isBlank(ip)) {
+        if (TiStrUtil.isBlank(ip)) {
             return "";
         }
         int index = ip.indexOf(",");
@@ -70,11 +68,5 @@ public class IpUtil {
             return null;
         }
     }
-
-    public static UserAgent getUserAgent(HttpServletRequest request) {
-        String header = request.getHeader(USER_AGENT);
-        return UserAgentUtil.parse(header);
-    }
-
 
 }

@@ -1,6 +1,5 @@
 package top.ticho.trace.gateway.filter;
 
-import cn.hutool.http.useragent.UserAgent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -48,8 +47,6 @@ public class GatewayLogInfo {
     private Long consume;
     /* 用户信息 */
     private String username;
-    /* User-Agent信息对象 */
-    private UserAgent userAgent;
 
     public Long getConsume() {
         if (start == null || end == null) {
