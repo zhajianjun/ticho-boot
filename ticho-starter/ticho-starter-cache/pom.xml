@@ -34,12 +34,6 @@
         </dependency>
 
         <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-core</artifactId>
-        </dependency>
-
-        <!-- 配合additional-spring-configuration-metadata.json时，添加配置时有提示 -->
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
         </dependency>
@@ -47,6 +41,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>top.ticho.tool</groupId>
+            <artifactId>ticho-tool-core</artifactId>
         </dependency>
     </dependencies>
 

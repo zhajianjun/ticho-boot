@@ -1,10 +1,10 @@
 package top.ticho.starter.cache.component;
 
-import cn.hutool.core.util.StrUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.caffeine.CaffeineCache;
+import top.ticho.tool.core.TiStrUtil;
 
 import java.util.Optional;
 import java.util.concurrent.Callable;
@@ -22,7 +22,7 @@ public class TiCacheTemplate {
     private CacheManager cacheManager;
 
     public Optional<Cache> getOptCache(String name) {
-        if (StrUtil.isBlank(name)) {
+        if (TiStrUtil.isBlank(name)) {
             return Optional.empty();
         }
         return Optional.ofNullable(cacheManager.getCache(name));
