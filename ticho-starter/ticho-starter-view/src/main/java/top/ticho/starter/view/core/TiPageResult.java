@@ -1,9 +1,9 @@
 package top.ticho.starter.view.core;
 
 
-import cn.hutool.core.util.NumberUtil;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import top.ticho.tool.core.TiNumberUtil;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -41,9 +41,9 @@ public class TiPageResult<T> implements Serializable {
     }
 
     public TiPageResult(Number pageNum, Number pageSize, Number total, List<T> rows) {
-        BigDecimal pageSizeDec = NumberUtil.toBigDecimal(pageSize);
-        BigDecimal totalDec = NumberUtil.toBigDecimal(total);
-        this.pageNum = NumberUtil.toBigDecimal(pageNum).intValue();
+        BigDecimal pageSizeDec = TiNumberUtil.toBigDecimal(pageSize);
+        BigDecimal totalDec = TiNumberUtil.toBigDecimal(total);
+        this.pageNum = TiNumberUtil.toBigDecimal(pageNum).intValue();
         this.pageSize = pageSizeDec.intValue();
         this.total = totalDec.intValue();
         this.pages = pageSizeDec.intValue() <= 0 ? 0 : (int) Math.ceil(totalDec.divide(pageSizeDec, 2, RoundingMode.HALF_UP).doubleValue());

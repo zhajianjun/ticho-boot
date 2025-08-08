@@ -18,8 +18,8 @@
         </dependency>
 
         <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
+            <groupId>top.ticho.tool</groupId>
+            <artifactId>ticho-tool-core</artifactId>
         </dependency>
     </dependencies>
 

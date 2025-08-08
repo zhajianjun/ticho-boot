@@ -1,6 +1,5 @@
 package top.ticho.starter.view.log;
 
-import cn.hutool.http.useragent.UserAgent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -63,7 +62,7 @@ public class TiHttpLog {
     /* 用户信息 */
     private String username;
     /* User-Agent信息对象 */
-    private UserAgent userAgent;
+    // private UserAgent userAgent;
     /** MDC信息 */
     private Map<String, String> mdcMap;
 

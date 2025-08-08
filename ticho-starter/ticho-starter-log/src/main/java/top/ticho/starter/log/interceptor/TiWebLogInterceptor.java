@@ -4,8 +4,6 @@ import cn.hutool.core.date.SystemClock;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
-import cn.hutool.http.useragent.UserAgent;
-import cn.hutool.http.useragent.UserAgentUtil;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -102,8 +100,8 @@ public class TiWebLogInterceptor implements HandlerInterceptor, Ordered {
         // header
         Map<String, String> headersMap = getHeaders(request);
         String reqHeaders = toJson(headersMap);
-        String userAgentHeader = request.getHeader(USER_AGENT);
-        UserAgent userAgent = UserAgentUtil.parse(userAgentHeader);
+        // String userAgentHeader = request.getHeader(USER_AGENT);
+        // UserAgent userAgent = UserAgentUtil.parse(userAgentHeader);
         Principal principal = request.getUserPrincipal();
         String port = environment.getProperty("server.port");
         TiLog annotation = handlerMethod.getMethodAnnotation(TiLog.class);
@@ -121,7 +119,7 @@ public class TiWebLogInterceptor implements HandlerInterceptor, Ordered {
             .reqHeaders(reqHeaders)
             .start(millis)
             .username((principal != null ? principal.getName() : null))
-            .userAgent(userAgent)
+            // .userAgent(userAgent)
             .mdcMap(MDC.getCopyOfContextMap())
             .build();
         logTheadLocal.set(TIHttpLog);
