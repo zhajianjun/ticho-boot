@@ -7,7 +7,6 @@ top.ticho.starter.web.converter.TiDateConverter
 top.ticho.starter.web.converter.TiLocalDateConverter
 top.ticho.starter.web.converter.TiLocalDateTimeConverter
 top.ticho.starter.web.event.TiApplicationReadyEvent
-top.ticho.starter.web.util.TiIdUtil
 top.ticho.starter.web.config.TiWebBeanConfig
 
 

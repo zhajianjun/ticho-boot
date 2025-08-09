@@ -19,7 +19,7 @@
 
         <dependency>
             <groupId>top.ticho.starter</groupId>
-            <artifactId>ticho-starter-web</artifactId>
+            <artifactId>ticho-starter-view</artifactId>
             <optional>true</optional>
         </dependency>
 

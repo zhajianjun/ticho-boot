@@ -16,4 +16,12 @@ public class TiNumberUtil {
         return NumberUtil.toBigDecimal(number);
     }
 
+    public static boolean isNumber(CharSequence str) {
+        return NumberUtil.isNumber(str);
+    }
+
+    public static int parseInt(String number) {
+        return NumberUtil.parseInt(number);
+    }
+
 }

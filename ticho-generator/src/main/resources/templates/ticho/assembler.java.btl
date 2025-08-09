@@ -8,7 +8,7 @@ import ${package.modifyVo}.${className.modifyVo};
 import ${package.modifyCommand}.${className.modifyCommand};
 import ${package.saveCommand}.${className.saveCommand};
 import ${package.dto}.${className.dto};
-import top.ticho.starter.web.util.TiIdUtil;
+import top.ticho.tool.core.TiIdUtil;
 
 
 /**

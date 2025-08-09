@@ -18,4 +18,8 @@ public class TiObjUtil {
         return ObjUtil.isNotEmpty(obj);
     }
 
+    public static int length(Object obj) {
+        return ObjUtil.length(obj);
+    }
+
 }

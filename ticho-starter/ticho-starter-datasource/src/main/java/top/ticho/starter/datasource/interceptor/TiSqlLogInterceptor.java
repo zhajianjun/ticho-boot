@@ -1,11 +1,5 @@
 package top.ticho.starter.datasource.interceptor;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.DatePattern;
-import cn.hutool.core.date.LocalDateTimeUtil;
-import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.MybatisConfiguration;
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.baomidou.mybatisplus.core.toolkit.SystemClock;
@@ -28,6 +22,11 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 import top.ticho.starter.datasource.prop.TiDataSourceProperty;
+import top.ticho.tool.core.TiClassUtil;
+import top.ticho.tool.core.TiCollUtil;
+import top.ticho.tool.core.TiLocalDateTimeUtil;
+import top.ticho.tool.core.TiNumberUtil;
+import top.ticho.tool.core.TiObjUtil;
 import top.ticho.tool.json.util.TiJsonUtil;
 
 import java.sql.Statement;
@@ -94,14 +93,14 @@ public class TiSqlLogInterceptor implements Interceptor {
         int length;
         if (Objects.isNull(result)) {
             length = -1;
-        } else if (ClassUtil.isSimpleValueType(result.getClass())) {
-            if (NumberUtil.isNumber(result.toString())) {
-                length = NumberUtil.parseInt(result.toString());
+        } else if (TiClassUtil.isSimpleValueType(result.getClass())) {
+            if (TiNumberUtil.isNumber(result.toString())) {
+                length = TiNumberUtil.parseInt(result.toString());
             } else {
                 length = 1;
             }
         } else {
-            length = ObjUtil.length(result);
+            length = TiObjUtil.length(result);
         }
         if (Boolean.TRUE.equals(tiDataSourcePropertyLog.getPrintSimple())) {
             log.info("[SQL]【{}】-【{}】-【计数:{}】-【耗时:{}ms】", ms.getId(), sql, length, timing);
@@ -121,7 +120,7 @@ public class TiSqlLogInterceptor implements Interceptor {
         if (!Boolean.TRUE.equals(tiDataSourcePropertyLog.getShowParams())) {
             return sql;
         }
-        if (CollUtil.isEmpty(parameterMappings) || Objects.isNull(parameterObject)) {
+        if (TiCollUtil.isEmpty(parameterMappings) || Objects.isNull(parameterObject)) {
             return sql;
         }
         // 获取类型处理器注册器，类型处理器的功能是进行java类型和数据库类型的转换
@@ -166,13 +165,13 @@ public class TiSqlLogInterceptor implements Interceptor {
             return "'" + formatter.format(obj) + "'";
         }
         if (obj instanceof LocalDateTime localDateTime) {
-            return "'" + LocalDateTimeUtil.formatNormal(localDateTime) + "'";
+            return "'" + TiLocalDateTimeUtil.formatNormal(localDateTime) + "'";
         }
         if (obj instanceof LocalDate localDate) {
-            return "'" + LocalDateTimeUtil.formatNormal(localDate) + "'";
+            return "'" + TiLocalDateTimeUtil.formatNormal(localDate) + "'";
         }
         if (obj instanceof LocalTime localTime) {
-            return "'" + localTime.format(DatePattern.NORM_TIME_FORMATTER) + "'";
+            return "'" + TiLocalDateTimeUtil.formatNormal(localTime) + "'";
         }
         return obj.toString();
     }

@@ -1,6 +1,5 @@
 package top.ticho.starter.datasource.service.impl;
 
-import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -9,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import top.ticho.starter.datasource.mapper.TiMapper;
 import top.ticho.starter.datasource.prop.TiDataSourceProperty;
 import top.ticho.starter.datasource.service.TiRepository;
+import top.ticho.tool.core.TiCollUtil;
 
 import jakarta.annotation.Resource;
 import java.io.Serializable;
@@ -57,7 +57,7 @@ public class TiRepositoryImpl<M extends TiMapper<T>, T> extends ServiceImpl<M, T
     @Transactional(rollbackFor = {Exception.class})
     @Override
     public boolean saveBatch(Collection<T> entityList, int batchSize) {
-        if (CollUtil.isEmpty(entityList)) {
+        if (TiCollUtil.isEmpty(entityList)) {
             log.info("{}批量保存异常，集合为null或者大小为0", getTableName());
             return false;
         }
@@ -68,7 +68,7 @@ public class TiRepositoryImpl<M extends TiMapper<T>, T> extends ServiceImpl<M, T
         if (size <= batchSize) {
             return size == baseMapper.insertBatch(entityList);
         }
-        List<List<T>> split = CollUtil.split(entityList, batchSize);
+        List<List<T>> split = TiCollUtil.split(entityList, batchSize);
         Integer total = split.stream().map(baseMapper::insertBatch).reduce(0, Integer::sum);
         return total == entityList.size();
     }
@@ -88,7 +88,7 @@ public class TiRepositoryImpl<M extends TiMapper<T>, T> extends ServiceImpl<M, T
     }
 
     public boolean removeByIds(Collection<?> ids, int batchSize) {
-        if (CollUtil.isEmpty(ids)) {
+        if (TiCollUtil.isEmpty(ids)) {
             log.info("{}批量删除异常，集合为null或者大小为0", getTableName());
             return false;
         }
@@ -99,14 +99,14 @@ public class TiRepositoryImpl<M extends TiMapper<T>, T> extends ServiceImpl<M, T
         if (size <= batchSize) {
             return size == baseMapper.deleteByIds(ids);
         }
-        List<? extends List<?>> split = CollUtil.split(ids, batchSize);
+        List<? extends List<?>> split = TiCollUtil.split(ids, batchSize);
         Integer total = split.stream().map(baseMapper::deleteByIds).reduce(0, Integer::sum);
         return total == size;
     }
 
     @Override
     public boolean updateBatchById(Collection<T> entityList, int batchSize) {
-        if (CollUtil.isEmpty(entityList)) {
+        if (TiCollUtil.isEmpty(entityList)) {
             log.info("{}批量修改异常，集合为null或者大小为0", getTableName());
             return false;
         }
@@ -114,7 +114,7 @@ public class TiRepositoryImpl<M extends TiMapper<T>, T> extends ServiceImpl<M, T
         if (size <= batchSize) {
             return size == baseMapper.updateBatch(entityList);
         }
-        List<List<T>> split = CollUtil.split(entityList, batchSize);
+        List<List<T>> split = TiCollUtil.split(entityList, batchSize);
         Integer total = split.stream().map(baseMapper::updateBatch).reduce(0, Integer::sum);
         return total == entityList.size();
     }
@@ -157,7 +157,7 @@ public class TiRepositoryImpl<M extends TiMapper<T>, T> extends ServiceImpl<M, T
     @Transactional(rollbackFor = Exception.class)
     @Override
     public boolean saveOrUpdateBatch(Collection<T> entityList, int batchSize) {
-        if (CollUtil.isEmpty(entityList)) {
+        if (TiCollUtil.isEmpty(entityList)) {
             log.info("{}批量保存更新异常，集合为null或者大小为0", getTableName());
             return false;
         }
@@ -165,7 +165,7 @@ public class TiRepositoryImpl<M extends TiMapper<T>, T> extends ServiceImpl<M, T
         if (size <= batchSize) {
             return size == baseMapper.insertOrUpdateBatch(entityList);
         }
-        List<List<T>> split = CollUtil.split(entityList, batchSize);
+        List<List<T>> split = TiCollUtil.split(entityList, batchSize);
         Integer total = split.stream().map(baseMapper::insertOrUpdateBatch).reduce(0, Integer::sum);
         return total == entityList.size();
     }

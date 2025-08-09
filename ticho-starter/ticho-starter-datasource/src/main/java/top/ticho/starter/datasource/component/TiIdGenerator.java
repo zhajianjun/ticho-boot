@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Component;
-import top.ticho.starter.web.util.TiIdUtil;
+import top.ticho.tool.core.TiIdUtil;
 
 import java.io.Serializable;
 
