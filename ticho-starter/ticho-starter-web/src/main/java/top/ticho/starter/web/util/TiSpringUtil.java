@@ -1,6 +1,5 @@
 package top.ticho.starter.web.util;
 
-import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -35,8 +34,7 @@ public class TiSpringUtil implements ApplicationContextAware {
     /**
      * 存储当前的 ApplicationContext 实例。
      */
-    @Getter
-    private static final AtomicReference<ApplicationContext> applicationContext = new AtomicReference<>();
+    public static final AtomicReference<ApplicationContext> APPLICATION_CONTEXT_ATOMIC_REFERENCE = new AtomicReference<>();
 
     /**
      * 设置 ApplicationContext 实例。
@@ -46,7 +44,11 @@ public class TiSpringUtil implements ApplicationContextAware {
      */
     @Override
     public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
-        TiSpringUtil.applicationContext.compareAndSet(null, applicationContext);
+        TiSpringUtil.APPLICATION_CONTEXT_ATOMIC_REFERENCE.compareAndSet(null, applicationContext);
+    }
+
+    public static ApplicationContext getApplicationContext() {
+        return APPLICATION_CONTEXT_ATOMIC_REFERENCE.get();
     }
 
     /**
@@ -55,7 +57,7 @@ public class TiSpringUtil implements ApplicationContextAware {
      * @param event 应用事件
      */
     public static void publishEvent(ApplicationEvent event) {
-        applicationContext.get().publishEvent(event);
+        APPLICATION_CONTEXT_ATOMIC_REFERENCE.get().publishEvent(event);
     }
 
     /**
@@ -65,7 +67,7 @@ public class TiSpringUtil implements ApplicationContextAware {
      * @return Bean 实例
      */
     public static Object getBean(String name) {
-        return applicationContext.get().getBean(name);
+        return APPLICATION_CONTEXT_ATOMIC_REFERENCE.get().getBean(name);
     }
 
     /**
@@ -76,7 +78,7 @@ public class TiSpringUtil implements ApplicationContextAware {
      * @return Bean 实例
      */
     public static <T> T getBean(Class<T> clazz) {
-        return applicationContext.get().getBean(clazz);
+        return APPLICATION_CONTEXT_ATOMIC_REFERENCE.get().getBean(clazz);
     }
 
     /**
@@ -88,7 +90,7 @@ public class TiSpringUtil implements ApplicationContextAware {
      * @return Bean 实例
      */
     public static <T> T getBean(String name, Class<T> clazz) {
-        return applicationContext.get().getBean(name, clazz);
+        return APPLICATION_CONTEXT_ATOMIC_REFERENCE.get().getBean(name, clazz);
     }
 
     /**
@@ -97,7 +99,7 @@ public class TiSpringUtil implements ApplicationContextAware {
      * @return RequestMappingHandlerMapping 实例
      */
     private static RequestMappingHandlerMapping getRequestMappingHandlerMapping() {
-        return applicationContext.get().getBean(RequestMappingHandlerMapping.class);
+        return APPLICATION_CONTEXT_ATOMIC_REFERENCE.get().getBean(RequestMappingHandlerMapping.class);
     }
 
     /**
@@ -149,9 +151,9 @@ public class TiSpringUtil implements ApplicationContextAware {
      * @return 注册的 Bean 实例
      */
     public static Object registerSingletonBean(String beanName, Object singletonObject) {
-        DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) applicationContext.get().getAutowireCapableBeanFactory();
+        DefaultListableBeanFactory beanFactory = (DefaultListableBeanFactory) APPLICATION_CONTEXT_ATOMIC_REFERENCE.get().getAutowireCapableBeanFactory();
         beanFactory.registerSingleton(beanName, singletonObject);
-        return applicationContext.get().getBean(beanName);
+        return APPLICATION_CONTEXT_ATOMIC_REFERENCE.get().getBean(beanName);
     }
 
     /**
@@ -163,7 +165,7 @@ public class TiSpringUtil implements ApplicationContextAware {
      * @return 是否成功添加
      */
     public static boolean addBean(String beanName, Class<?> beanClass, Object... constructValues) {
-        BeanDefinitionRegistry beanDefReg = (DefaultListableBeanFactory) ((AbstractRefreshableApplicationContext) applicationContext.get()).getBeanFactory();
+        BeanDefinitionRegistry beanDefReg = (DefaultListableBeanFactory) ((AbstractRefreshableApplicationContext) APPLICATION_CONTEXT_ATOMIC_REFERENCE.get()).getBeanFactory();
         if (beanDefReg.containsBeanDefinition(beanName)) {
             return false;
         }
@@ -182,7 +184,7 @@ public class TiSpringUtil implements ApplicationContextAware {
      * @param beanName Bean 名称
      */
     public static void removeBean(String beanName) {
-        BeanDefinitionRegistry beanDefReg = (DefaultListableBeanFactory) ((AbstractRefreshableApplicationContext) applicationContext.get()).getBeanFactory();
+        BeanDefinitionRegistry beanDefReg = (DefaultListableBeanFactory) ((AbstractRefreshableApplicationContext) APPLICATION_CONTEXT_ATOMIC_REFERENCE.get()).getBeanFactory();
         beanDefReg.removeBeanDefinition(beanName);
     }
 

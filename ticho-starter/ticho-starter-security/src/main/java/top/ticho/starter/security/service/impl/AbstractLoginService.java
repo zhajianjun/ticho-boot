@@ -1,6 +1,5 @@
 package top.ticho.starter.security.service.impl;
 
-import cn.hutool.core.collection.CollUtil;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +20,7 @@ import top.ticho.starter.view.enums.TiBizErrorCode;
 import top.ticho.starter.view.enums.TiHttpErrorCode;
 import top.ticho.starter.view.exception.TiBizException;
 import top.ticho.starter.view.util.TiAssert;
+import top.ticho.tool.core.TiMapUtil;
 
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -120,7 +120,7 @@ public abstract class AbstractLoginService implements TiLoginService {
         Map<String, Object> map = new HashMap<>(8);
         for (JwtExtra value : jwtExtInfoMap.values()) {
             Map<String, Object> ext = value.getExtra();
-            if (CollUtil.isEmpty(ext)) {
+            if (TiMapUtil.isEmpty(ext)) {
                 continue;
             }
             map.putAll(ext);

@@ -1,6 +1,5 @@
 package top.ticho.starter.web.util.valid;
 
-import cn.hutool.core.util.ObjUtil;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.BaseHibernateValidatorConfiguration;
@@ -9,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.ticho.starter.view.enums.TiBizErrorCode;
 import top.ticho.starter.view.exception.TiBizException;
+import top.ticho.tool.core.TiObjUtil;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -288,7 +288,7 @@ public class TiValidUtil {
      */
     @SuppressWarnings("all")
     private static <T> T preCheck(T obj) {
-        if (ObjUtil.isEmpty(obj)) {
+        if (TiObjUtil.isEmpty(obj)) {
             throw new TiBizException(TiBizErrorCode.PARAM_ERROR);
         }
         if (obj instanceof Collection<?> collection) {
@@ -313,7 +313,7 @@ public class TiValidUtil {
      */
     @SuppressWarnings("all")
     private static <T> T preCheck(T obj, String customMessage) {
-        if (ObjUtil.isEmpty(obj)) {
+        if (TiObjUtil.isEmpty(obj)) {
             throw new TiBizException(TiBizErrorCode.PARAM_ERROR, customMessage);
         }
         if (obj instanceof Collection<?> collection) {

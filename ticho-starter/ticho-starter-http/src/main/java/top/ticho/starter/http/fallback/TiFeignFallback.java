@@ -1,6 +1,5 @@
 package top.ticho.starter.http.fallback;
 
-import cn.hutool.core.util.StrUtil;
 import feign.FeignException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +7,7 @@ import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
 import top.ticho.starter.view.core.TiResult;
 import top.ticho.starter.view.enums.TiBizErrorCode;
+import top.ticho.tool.core.TiStrUtil;
 
 import java.lang.reflect.Method;
 import java.util.Objects;
@@ -41,7 +41,7 @@ public class TiFeignFallback<T> implements MethodInterceptor {
         }
         String content = exception.contentUTF8();
         // 如果返回的数据为空
-        if (StrUtil.isBlank(content)) {
+        if (TiStrUtil.isBlank(content)) {
             return TiResult.of(TiBizErrorCode.APP_SERVICE_ERR, errorMessage);
         }
         return TiResult.fail(content);

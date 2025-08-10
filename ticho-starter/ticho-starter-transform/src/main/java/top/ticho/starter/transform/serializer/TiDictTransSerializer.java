@@ -1,6 +1,5 @@
 package top.ticho.starter.transform.serializer;
 
-import cn.hutool.core.util.ClassUtil;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.BeanProperty;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -11,6 +10,7 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import lombok.Setter;
 import top.ticho.starter.transform.annotation.TiDictTrans;
 import top.ticho.starter.transform.factory.TiDictTransFactory;
+import top.ticho.tool.core.TiClassUtil;
 
 import java.io.IOException;
 import java.util.Map;
@@ -36,7 +36,7 @@ public class TiDictTransSerializer extends StdSerializer<Object> implements Cont
             // 获取属性的原始类型
             Class<?> rawClass = beanProperty.getType().getRawClass();
             // 检查属性类型是否为基本类型或String类型
-            if (ClassUtil.isBasicType(rawClass) || rawClass == String.class) {
+            if (TiClassUtil.isSimpleValueType(rawClass) || rawClass == String.class) {
                 // 尝试从属性上获取TiDictTrans注解
                 TiDictTrans annotation = beanProperty.getAnnotation(TiDictTrans.class);
                 if (annotation == null) {

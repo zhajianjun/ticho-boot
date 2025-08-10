@@ -1,6 +1,5 @@
 package top.ticho.starter.http.interceptor;
 
-import cn.hutool.core.util.StrUtil;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +11,7 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import top.ticho.starter.http.constant.TiHttpConst;
+import top.ticho.tool.core.TiStrUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -34,7 +34,7 @@ public class TiFeignInterceptor implements RequestInterceptor {
             HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
             authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
         }
-        if (StrUtil.isBlank(authorization)) {
+        if (TiStrUtil.isBlank(authorization)) {
             authorization = MDC.get(HttpHeaders.AUTHORIZATION);
         }
         template.header(HttpHeaders.AUTHORIZATION, authorization);

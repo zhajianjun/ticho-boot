@@ -1,6 +1,5 @@
 package top.ticho.starter.redis.util;
 
-import cn.hutool.core.util.ObjUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.HashOperations;
@@ -9,6 +8,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.core.ZSetOperations;
+import top.ticho.tool.core.TiObjUtil;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -550,7 +550,7 @@ public class TiRedisUtil<K, V> {
      * @return {@link Set}<{@link V}>
      */
     public final Set<V> difference(K... keys) {
-        if (ObjUtil.isEmpty(keys)) {
+        if (TiObjUtil.isEmpty(keys)) {
             return Collections.emptySet();
         }
         Set<K> keySet = Arrays.stream(keys).collect(Collectors.toSet());
@@ -588,7 +588,7 @@ public class TiRedisUtil<K, V> {
      * @return {@link Set}<{@link V}>
      */
     public final Set<V> union(K... keys) {
-        if (ObjUtil.isEmpty(keys)) {
+        if (TiObjUtil.isEmpty(keys)) {
             return Collections.emptySet();
         }
         Set<K> keySet = Arrays.stream(keys).collect(Collectors.toSet());

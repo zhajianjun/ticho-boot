@@ -1,6 +1,5 @@
 package top.ticho.starter.security.filter;
 
-import cn.hutool.core.util.StrUtil;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +18,7 @@ import top.ticho.starter.view.enums.TiBizErrorCode;
 import top.ticho.starter.view.enums.TiHttpErrorCode;
 import top.ticho.starter.view.exception.TiBizException;
 import top.ticho.starter.view.util.TiAssert;
+import top.ticho.tool.core.TiStrUtil;
 import top.ticho.tool.json.util.TiJsonUtil;
 
 import jakarta.annotation.Resource;
@@ -85,9 +85,9 @@ public abstract class AbstractAuthTokenFilter<T extends TiSecurityUser> extends 
             support(request, response);
             String token = request.getHeader(HttpHeaders.AUTHORIZATION);
             if (tiAntPatternsAuthHandle.ignoreAuth(request)) {
-                if (StrUtil.isNotBlank(token)) {
-                    token = StrUtil.removePrefixIgnoreCase(token, TiSecurityConst.BEARER);
-                    token = StrUtil.trimStart(token);
+                if (TiStrUtil.isNotBlank(token)) {
+                    token = TiStrUtil.removePrefixIgnoreCase(token, TiSecurityConst.BEARER);
+                    token = TiStrUtil.trimStart(token);
                     Map<String, Object> map = jwtDecode.decode(token);
                     boolean expired = jwtDecode.isExpired(map);
                     T securityUser = null;
@@ -100,8 +100,8 @@ public abstract class AbstractAuthTokenFilter<T extends TiSecurityUser> extends 
                 return;
             }
             TiAssert.isNotNull(token, TiHttpErrorCode.NOT_LOGIN);
-            token = StrUtil.removePrefixIgnoreCase(token, TiSecurityConst.BEARER);
-            token = StrUtil.trimStart(token);
+            token = TiStrUtil.removePrefixIgnoreCase(token, TiSecurityConst.BEARER);
+            token = TiStrUtil.trimStart(token);
             Map<String, Object> map = jwtDecode.decodeAndVerify(token);
             Object type = map.getOrDefault(TiSecurityConst.TYPE, "");
             TiAssert.isTrue(Objects.equals(type, TiSecurityConst.ACCESS_TOKEN), TiBizErrorCode.FAIL, "token不合法");

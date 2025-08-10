@@ -1,7 +1,5 @@
 package top.ticho.starter.mail.component;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -11,6 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 import top.ticho.starter.mail.prop.TiMailProperty;
 import top.ticho.starter.view.enums.TiBizErrorCode;
 import top.ticho.starter.view.util.TiAssert;
+import top.ticho.tool.core.TiCollUtil;
+import top.ticho.tool.core.TiStrUtil;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -59,13 +59,13 @@ public class TiMailTemplate {
         MimeMessageHelper helper = null;
         try {
             helper = new MimeMessageHelper(mimeMessage, true);
-            String senderName = StrUtil.isBlank(tiMailProperty.getSenderName()) ? tiMailProperty.getUsername() : tiMailProperty.getSenderName();
+            String senderName = TiStrUtil.isBlank(tiMailProperty.getSenderName()) ? tiMailProperty.getUsername() : tiMailProperty.getSenderName();
             helper.setFrom(tiMailProperty.getUsername(), senderName);
             helper.setTo(tiMailContent.getTo());
             helper.setSubject(tiMailContent.getSubject());
             helper.setText(tiMailContent.getContent(), true);
             List<String> cc = tiMailContent.getCc();
-            if (CollUtil.isNotEmpty(cc)) {
+            if (TiCollUtil.isNotEmpty(cc)) {
                 helper.setCc(cc.toArray(new String[0]));
             }
         } catch (MessagingException | UnsupportedEncodingException e) {
@@ -73,12 +73,12 @@ public class TiMailTemplate {
             TiAssert.cast(TiBizErrorCode.FAIL, "创建邮件MimeMessageHelper失败");
         }
         List<TiMailInines> inlines = tiMailContent.getInlines();
-        if (CollUtil.isNotEmpty(inlines)) {
+        if (TiCollUtil.isNotEmpty(inlines)) {
             MimeMessageHelper finalHelper = helper;
             inlines.forEach(inline -> addInline(finalHelper, inline));
         }
         List<MultipartFile> files = tiMailContent.getFiles();
-        if (CollUtil.isNotEmpty(files)) {
+        if (TiCollUtil.isNotEmpty(files)) {
             MimeMessageHelper finalHelper = helper;
             files.forEach(file -> addAttachment(finalHelper, file));
         }

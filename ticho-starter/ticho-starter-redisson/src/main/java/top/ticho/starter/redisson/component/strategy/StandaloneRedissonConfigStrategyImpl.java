@@ -1,10 +1,10 @@
 package top.ticho.starter.redisson.component.strategy;
 
-import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.config.Config;
 import top.ticho.starter.redisson.constant.TiRedissonConst;
 import top.ticho.starter.redisson.prop.TiRedissonProperty;
+import top.ticho.tool.core.TiStrUtil;
 
 /**
  * 单机方式Redisson配置
@@ -25,7 +25,7 @@ public class StandaloneRedissonConfigStrategyImpl implements RedissonConfigStrat
             String redisAddr = TiRedissonConst.prefix + address;
             config.useSingleServer().setAddress(redisAddr);
             config.useSingleServer().setDatabase(database);
-            if (StrUtil.isNotBlank(password)) {
+            if (TiStrUtil.isNotBlank(password)) {
                 config.useSingleServer().setPassword(password);
             }
             log.info("初始化[standalone]方式Config,redisAddress:{}", address);

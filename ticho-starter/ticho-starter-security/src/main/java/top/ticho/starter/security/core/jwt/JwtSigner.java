@@ -1,7 +1,5 @@
 package top.ticho.starter.security.core.jwt;
 
-import cn.hutool.core.codec.Base64;
-import cn.hutool.core.util.StrUtil;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -15,6 +13,8 @@ import org.springframework.security.jwt.crypto.sign.SignatureVerifier;
 import org.springframework.security.jwt.crypto.sign.Signer;
 import top.ticho.starter.view.enums.TiBizErrorCode;
 import top.ticho.starter.view.util.TiAssert;
+import top.ticho.tool.core.TiBase64Util;
+import top.ticho.tool.core.TiStrUtil;
 
 import java.security.KeyPair;
 import java.security.PrivateKey;
@@ -81,8 +81,8 @@ public class JwtSigner implements InitializingBean {
         signer = new RsaSigner((RSAPrivateKey) privateKey);
         RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
         verifier = new RsaVerifier(publicKey);
-        String encode = Base64.encode(publicKey.getEncoded());
-        verifierKey = Arrays.stream(StrUtil.split(encode, 64)).collect(Collectors.joining("\n", "-----BEGIN PUBLIC KEY-----\n", "\n-----END PUBLIC KEY-----"));
+        String encode = TiBase64Util.encode(publicKey.getEncoded());
+        verifierKey = Arrays.stream(TiStrUtil.split(encode, 64)).collect(Collectors.joining("\n", "-----BEGIN PUBLIC KEY-----\n", "\n-----END PUBLIC KEY-----"));
     }
 
     /**

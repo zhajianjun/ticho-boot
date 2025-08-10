@@ -1,7 +1,5 @@
 package top.ticho.starter.security.core.jwt;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.NumberUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.jwt.JwtHelper;
 import org.springframework.security.jwt.crypto.sign.SignatureVerifier;
@@ -9,6 +7,8 @@ import top.ticho.starter.security.constant.TiSecurityConst;
 import top.ticho.starter.view.enums.TiBizErrorCode;
 import top.ticho.starter.view.exception.TiBizException;
 import top.ticho.starter.view.util.TiAssert;
+import top.ticho.tool.core.TiMapUtil;
+import top.ticho.tool.core.TiNumberUtil;
 import top.ticho.tool.json.util.TiJsonUtil;
 
 import java.math.BigDecimal;
@@ -52,10 +52,10 @@ public record JwtDecode(JwtSigner jwtSigner) {
     }
 
     public boolean isExpired(Map<String, Object> map) {
-        boolean isExpired = CollUtil.isEmpty(map) || !map.containsKey(TiSecurityConst.EXP);
+        boolean isExpired = TiMapUtil.isEmpty(map) || !map.containsKey(TiSecurityConst.EXP);
         if (!isExpired) {
             String numberStr = Optional.ofNullable(map.get(TiSecurityConst.EXP)).map(Object::toString).orElse(null);
-            BigDecimal exp = NumberUtil.toBigDecimal(numberStr);
+            BigDecimal exp = TiNumberUtil.toBigDecimal(numberStr);
             isExpired = exp.longValue() < TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
         }
         return isExpired;

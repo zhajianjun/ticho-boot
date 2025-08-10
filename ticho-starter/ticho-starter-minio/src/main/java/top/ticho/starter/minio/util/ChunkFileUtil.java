@@ -3,11 +3,11 @@ package top.ticho.starter.minio.util;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.io.unit.DataSize;
 import cn.hutool.core.io.unit.DataUnit;
-import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.StrUtil;
 import lombok.Cleanup;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import top.ticho.tool.core.TiIdUtil;
+import top.ticho.tool.core.TiStrUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,7 +47,7 @@ public class ChunkFileUtil {
      */
     public static File fileSpliceChunk(File bigFile, long chunkSize, DataUnit dataUnit) throws IOException {
         if (!bigFile.exists()) {
-            throw new IOException(StrUtil.format("{}文件不存在", bigFile.getAbsolutePath()));
+            throw new IOException(TiStrUtil.format("{}文件不存在", bigFile.getAbsolutePath()));
         }
         String chunkFolderFileName = FileNameUtil.mainName(bigFile.getAbsolutePath());
         // 本地大文件分片文件夹
@@ -169,7 +169,7 @@ public class ChunkFileUtil {
         String mainName = FileNameUtil.mainName(localFile);
         String extName = FileNameUtil.extName(localFile);
         File localChunkFolder = fileSpliceChunk(localFile, 10);
-        String newFileName = mainName + "-" + IdUtil.fastSimpleUUID() + StrUtil.DOT + extName;
+        String newFileName = mainName + "-" + TiIdUtil.getUuid() + TiStrUtil.DOT + extName;
         String newFilePath = localChunkFolder.getParent() + File.separator + newFileName;
         File newFile = new File(newFilePath);
         composeLocalObject(localChunkFolder, newFile);

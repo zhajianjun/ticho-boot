@@ -1,8 +1,5 @@
 package top.ticho.starter.es.component;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.bulk.BulkItemResponse;
@@ -37,6 +34,9 @@ import top.ticho.starter.es.query.EsQuery;
 import top.ticho.starter.view.core.TiEntity;
 import top.ticho.starter.view.core.TiEsPageResult;
 import top.ticho.starter.view.exception.TiBizException;
+import top.ticho.tool.core.TiCollUtil;
+import top.ticho.tool.core.TiIdUtil;
+import top.ticho.tool.core.TiStrUtil;
 import top.ticho.tool.json.util.TiJsonUtil;
 
 import java.io.IOException;
@@ -92,7 +92,7 @@ public class EsTemplateImpl implements EsTemplate {
     }
 
     public void saveBatch(String index, List<? extends TiEntity> entityList, Integer bachSize) {
-        if (CollUtil.isEmpty(entityList)) {
+        if (TiCollUtil.isEmpty(entityList)) {
             log.info("es批量保存数据异常，集合为null或者大小为0");
             return;
         }
@@ -103,7 +103,7 @@ public class EsTemplateImpl implements EsTemplate {
             saveBatchDb(index, entityList);
             return;
         }
-        List<? extends List<? extends TiEntity>> split = CollUtil.split(entityList, bachSize);
+        List<? extends List<? extends TiEntity>> split = TiCollUtil.split(entityList, bachSize);
         split.forEach(item -> saveBatchDb(index, item));
     }
 
@@ -128,7 +128,7 @@ public class EsTemplateImpl implements EsTemplate {
     }
 
     public void saveBatchForMap(String index, List<Map<String, Object>> entityList, Integer bachSize) {
-        if (CollUtil.isEmpty(entityList)) {
+        if (TiCollUtil.isEmpty(entityList)) {
             log.info("es批量保存数据异常，集合为null或者大小为0");
             return;
         }
@@ -139,7 +139,7 @@ public class EsTemplateImpl implements EsTemplate {
             saveBatchForMapDb(index, entityList);
             return;
         }
-        List<? extends List<Map<String, Object>>> split = CollUtil.split(entityList, bachSize);
+        List<? extends List<Map<String, Object>>> split = TiCollUtil.split(entityList, bachSize);
         split.forEach(item -> saveBatchForMapDb(index, item));
     }
 
@@ -190,7 +190,7 @@ public class EsTemplateImpl implements EsTemplate {
     }
 
     public void saveOrUpdateBatch(String index, List<? extends TiEntity> entityList, Integer bachSize) {
-        if (CollUtil.isEmpty(entityList)) {
+        if (TiCollUtil.isEmpty(entityList)) {
             log.info("es批量保存或者更新数据异常，集合为null或者大小为0");
             return;
         }
@@ -201,7 +201,7 @@ public class EsTemplateImpl implements EsTemplate {
             saveOrUpdateBatchDb(index, entityList);
             return;
         }
-        List<? extends List<? extends TiEntity>> split = CollUtil.split(entityList, bachSize);
+        List<? extends List<? extends TiEntity>> split = TiCollUtil.split(entityList, bachSize);
         split.forEach(item -> saveOrUpdateBatchDb(index, item));
     }
 
@@ -238,7 +238,7 @@ public class EsTemplateImpl implements EsTemplate {
     }
 
     public void saveOrUpdateBatchForMap(String index, List<Map<String, Object>> entityList, Integer bachSize) {
-        if (CollUtil.isEmpty(entityList)) {
+        if (TiCollUtil.isEmpty(entityList)) {
             log.info("es批量保存或者更新数据异常，集合为null或者大小为0");
             return;
         }
@@ -249,7 +249,7 @@ public class EsTemplateImpl implements EsTemplate {
             saveOrUpdateBatchForMapDb(index, entityList);
             return;
         }
-        List<List<Map<String, Object>>> split = CollUtil.split(entityList, bachSize);
+        List<List<Map<String, Object>>> split = TiCollUtil.split(entityList, bachSize);
         split.forEach(item -> saveOrUpdateBatchForMapDb(index, item));
     }
 
@@ -282,7 +282,7 @@ public class EsTemplateImpl implements EsTemplate {
      * @param id    编号
      */
     public void removeById(String index, String id) {
-        if (StrUtil.isBlank(id)) {
+        if (TiStrUtil.isBlank(id)) {
             log.info("es删除数据异常，id为null");
             return;
         }
@@ -303,7 +303,7 @@ public class EsTemplateImpl implements EsTemplate {
      * @param ids   编号列表
      */
     public void removeByIds(String index, Collection<String> ids) {
-        if (CollUtil.isEmpty(ids)) {
+        if (TiCollUtil.isEmpty(ids)) {
             log.info("es批量删除数据异常，id列表集合为null或者大小为0");
             return;
         }
@@ -410,7 +410,7 @@ public class EsTemplateImpl implements EsTemplate {
             updateBatchDb(index, entities);
             return;
         }
-        List<? extends List<? extends TiEntity>> split = CollUtil.split(entities, bachSize);
+        List<? extends List<? extends TiEntity>> split = TiCollUtil.split(entities, bachSize);
         for (List<? extends TiEntity> maps : split) {
             updateBatchDb(index, maps);
         }
@@ -459,7 +459,7 @@ public class EsTemplateImpl implements EsTemplate {
             updateBatchForMapDb(index, entities);
             return;
         }
-        List<List<Map<String, Object>>> split = CollUtil.split(entities, bachSize);
+        List<List<Map<String, Object>>> split = TiCollUtil.split(entities, bachSize);
         for (List<Map<String, Object>> maps : split) {
             updateBatchForMapDb(index, maps);
         }
@@ -495,7 +495,7 @@ public class EsTemplateImpl implements EsTemplate {
         esQuery.setClazz(tClass);
         esQuery.setIndexs(List.of(index));
         TiEsPageResult<T> pageInfo = page(esQuery);
-        if (pageInfo == null || CollUtil.isEmpty(pageInfo.getRows())) {
+        if (pageInfo == null || TiCollUtil.isEmpty(pageInfo.getRows())) {
             return null;
         }
         return pageInfo.getRows().get(0);
@@ -508,7 +508,7 @@ public class EsTemplateImpl implements EsTemplate {
         esQuery.setQueryBuilder(query);
         esQuery.setIndexs(List.of(index));
         TiEsPageResult<Map<String, Object>> pageInfo = pageForMap(esQuery);
-        if (pageInfo == null || CollUtil.isEmpty(pageInfo.getRows())) {
+        if (pageInfo == null || TiCollUtil.isEmpty(pageInfo.getRows())) {
             return null;
         }
         return pageInfo.getRows().get(0);
@@ -579,13 +579,13 @@ public class EsTemplateImpl implements EsTemplate {
             // 查询超时时间
             searchBuilder.timeout(new TimeValue(30000));
             // 需要显示的字段，逗号分隔（缺省为全部字段）
-            if (CollUtil.isNotEmpty(esQuery.getFields())) {
+            if (TiCollUtil.isNotEmpty(esQuery.getFields())) {
                 searchBuilder.fetchSource(esQuery.getFields().toArray(new String[0]), null);
             }
             // 排序字段
             setSortField(esQuery, searchBuilder);
             // 设置高亮字段
-            if (StrUtil.isNotBlank(esQuery.getHighlightField())) {
+            if (TiStrUtil.isNotBlank(esQuery.getHighlightField())) {
                 HighlightBuilder highlightBuilder = new HighlightBuilder();
                 highlightBuilder.field(esQuery.getHighlightField());
                 searchBuilder.highlighter(highlightBuilder);
@@ -606,7 +606,7 @@ public class EsTemplateImpl implements EsTemplate {
             }
             searchBuilder.from(esQuery.getFrom()).size(esQuery.getSize());
             List<String> searchAfter = esQuery.getSearchAfter();
-            if (CollUtil.isNotEmpty(searchAfter)) {
+            if (TiCollUtil.isNotEmpty(searchAfter)) {
                 // searchAfter 必须从0开始
                 esQuery.setFrom(0);
                 searchBuilder.searchAfter(searchAfter.toArray());
@@ -642,12 +642,12 @@ public class EsTemplateImpl implements EsTemplate {
      */
     private void setSortField(EsQuery<?> esQuery, SearchSourceBuilder searchBuilder) {
         List<String> sortFields = esQuery.getSortFields();
-        if (CollUtil.isEmpty(sortFields)) {
+        if (TiCollUtil.isEmpty(sortFields)) {
             return;
         }
         List<String> sortOrder = esQuery.getSortOrders();
         SortOrder asc = SortOrder.ASC;
-        if (CollUtil.isEmpty(sortOrder)) {
+        if (TiCollUtil.isEmpty(sortOrder)) {
             sortFields.forEach(x -> searchBuilder.sort(x, asc));
             return;
         }
@@ -698,7 +698,7 @@ public class EsTemplateImpl implements EsTemplate {
      * @return {@link UpdateRequest}
      */
     private UpdateRequest getUpdateRequest(String index, Map<String, Object> entity, boolean docAsUpsert) {
-        String id = Optional.ofNullable(entity.get("id")).map(Object::toString).orElseGet(IdUtil::getSnowflakeNextIdStr);
+        String id = Optional.ofNullable(entity.get("id")).map(Object::toString).orElseGet(TiIdUtil::getIdStr);
         UpdateRequest updateRequest = new UpdateRequest(index, id);
         IndexRequest indexRequest = getIndexRequest(index, entity);
         updateRequest.doc(indexRequest);
@@ -707,7 +707,7 @@ public class EsTemplateImpl implements EsTemplate {
     }
 
     private IndexRequest getIndexRequest(String index, Map<String, Object> entity) {
-        String id = Optional.ofNullable(entity.get("id")).map(Object::toString).orElseGet(IdUtil::getSnowflakeNextIdStr);
+        String id = Optional.ofNullable(entity.get("id")).map(Object::toString).orElseGet(TiIdUtil::getIdStr);
         IndexRequest indexRequest = new IndexRequest(index).id(id);
         indexRequest.source(entity);
         return indexRequest;
@@ -753,7 +753,7 @@ public class EsTemplateImpl implements EsTemplate {
      */
     public void printErrorMessage(BulkResponse response) {
         String errorMessage = getErrorMessage(response);
-        if (StrUtil.isEmpty(errorMessage)) {
+        if (TiStrUtil.isEmpty(errorMessage)) {
             return;
         }
         log.error(errorMessage);

@@ -1,9 +1,5 @@
 package top.ticho.starter.log.interceptor;
 
-import cn.hutool.core.date.SystemClock;
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.spring.SpringUtil;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
@@ -23,6 +19,9 @@ import top.ticho.starter.log.wrapper.TiRequestWrapper;
 import top.ticho.starter.log.wrapper.TiResponseWrapper;
 import top.ticho.starter.view.log.TiHttpLog;
 import top.ticho.starter.view.log.TiLogProperty;
+import top.ticho.starter.web.util.TiSpringUtil;
+import top.ticho.tool.core.TiMapUtil;
+import top.ticho.tool.core.TiStrUtil;
 import top.ticho.tool.json.util.TiJsonUtil;
 import top.ticho.trace.spring.util.IpUtil;
 
@@ -85,7 +84,7 @@ public class TiWebLogInterceptor implements HandlerInterceptor, Ordered {
         if (!(request instanceof TiRequestWrapper tiRequestWrapper) || !(handler instanceof HandlerMethod handlerMethod)) {
             return true;
         }
-        long millis = SystemClock.now();
+        long millis = System.currentTimeMillis();
         String type = request.getMethod();
         String url = request.getRequestURI();
         if (reqParamsAllMap == null) {
@@ -144,7 +143,7 @@ public class TiWebLogInterceptor implements HandlerInterceptor, Ordered {
         String resBody = getResBody(response);
         Map<String, String> resHeaderMap = getHeaders(response);
         String resHeaders = toJson(resHeaderMap);
-        long end = SystemClock.now();
+        long end = System.currentTimeMillis();
         int status = response.getStatus();
         Long consume = tiHttpLog.getConsume();
         tiHttpLog.setResBody(resBody);
@@ -160,7 +159,7 @@ public class TiWebLogInterceptor implements HandlerInterceptor, Ordered {
         if (print && !anyMatch) {
             log.info("[REQ] {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}, 响应头={}", type, url, status, consume, nullOfDefault(resBody), nullOfDefault(resHeaders));
         }
-        ApplicationContext applicationContext = SpringUtil.getApplicationContext();
+        ApplicationContext applicationContext = TiSpringUtil.getApplicationContext();
         applicationContext.publishEvent(new TiWebLogEvent(applicationContext, tiHttpLog, handler));
         logTheadLocal.remove();
         antPathMatchLocal.remove();
@@ -186,7 +185,7 @@ public class TiWebLogInterceptor implements HandlerInterceptor, Ordered {
             // 根据文本域的name来获取值
             // 因为无法判断文本域是否是单值或者双值，所以我们全部使用双值接收
             String[] values = request.getParameterValues(name);
-            String value = String.join(",", Arrays.stream(values).filter(StrUtil::isNotBlank).collect(Collectors.joining(",")));
+            String value = String.join(",", Arrays.stream(values).filter(TiStrUtil::isNotBlank).collect(Collectors.joining(",")));
             map.put(name, value);
         }
         return map;
@@ -217,7 +216,7 @@ public class TiWebLogInterceptor implements HandlerInterceptor, Ordered {
     }
 
     private String toJson(Map<String, ?> map) {
-        if (MapUtil.isEmpty(map)) {
+        if (TiMapUtil.isEmpty(map)) {
             return null;
         }
         return TiJsonUtil.toJsonString(map);
@@ -225,7 +224,7 @@ public class TiWebLogInterceptor implements HandlerInterceptor, Ordered {
 
     private String nullOfDefault(String result) {
         if (result == null) {
-            return StrUtil.EMPTY;
+            return TiStrUtil.EMPTY;
         }
         return result;
     }

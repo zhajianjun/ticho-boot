@@ -12,11 +12,6 @@
     <name>ticho-starter-log</name>
 
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <optional>true</optional>
-        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -27,11 +22,6 @@
         <dependency>
             <groupId>top.ticho.tool</groupId>
             <artifactId>ticho-tool-json</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
         </dependency>
 
         <dependency>
@@ -46,7 +36,7 @@
 
         <dependency>
             <groupId>top.ticho.starter</groupId>
-            <artifactId>ticho-starter-view</artifactId>
+            <artifactId>ticho-starter-web</artifactId>
         </dependency>
 
         <dependency>

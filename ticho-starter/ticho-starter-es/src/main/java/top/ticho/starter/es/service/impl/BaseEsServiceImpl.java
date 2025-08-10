@@ -3,9 +3,9 @@ package top.ticho.starter.es.service.impl;
 import cn.easyes.core.biz.EntityInfo;
 import cn.easyes.core.conditions.select.LambdaEsQueryWrapper;
 import cn.easyes.core.core.BaseEsMapper;
-import cn.hutool.core.collection.CollUtil;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.starter.es.service.BaseEsService;
+import top.ticho.tool.core.TiCollUtil;
 
 import jakarta.annotation.Resource;
 import java.io.Serializable;
@@ -76,7 +76,7 @@ public class BaseEsServiceImpl<M extends BaseEsMapper<T>, T> implements BaseEsSe
 
     @Override
     public boolean saveBatch(Collection<T> entityList, int batchSize, String... indexNames) {
-        if (CollUtil.isEmpty(entityList)) {
+        if (TiCollUtil.isEmpty(entityList)) {
             log.info("索引{}批量保存异常，集合为null或者大小为0", String.join(",", indexNames));
             return false;
         }
@@ -87,14 +87,14 @@ public class BaseEsServiceImpl<M extends BaseEsMapper<T>, T> implements BaseEsSe
         if (size <= batchSize) {
             return size == baseEsMapper.insertBatch(entityList, indexNames);
         }
-        List<List<T>> split = CollUtil.split(entityList, batchSize);
+        List<List<T>> split = TiCollUtil.split(entityList, batchSize);
         Integer total = split.stream().map(x -> baseEsMapper.insertBatch(x, indexNames)).reduce(0, Integer::sum);
         return total == entityList.size();
     }
 
     @Override
     public boolean updateBatchById(Collection<T> entityList, int batchSize, String... indexNames) {
-        if (CollUtil.isEmpty(entityList)) {
+        if (TiCollUtil.isEmpty(entityList)) {
             log.info("索引{}批量更新异常，集合为null或者大小为0", String.join(",", indexNames));
             return false;
         }
@@ -105,14 +105,14 @@ public class BaseEsServiceImpl<M extends BaseEsMapper<T>, T> implements BaseEsSe
         if (size <= batchSize) {
             return size == baseEsMapper.updateBatchByIds(entityList, indexNames);
         }
-        List<List<T>> split = CollUtil.split(entityList, batchSize);
+        List<List<T>> split = TiCollUtil.split(entityList, batchSize);
         Integer total = split.stream().map(x -> baseEsMapper.updateBatchByIds(x, indexNames)).reduce(0, Integer::sum);
         return total == size;
     }
 
     @Override
     public boolean removeByIds(Collection<? extends Serializable> idList, int batchSize, String... indexNames) {
-        if (CollUtil.isEmpty(idList)) {
+        if (TiCollUtil.isEmpty(idList)) {
             log.info("索引{}批量删除异常，集合为null或者大小为0", String.join(",", indexNames));
             return false;
         }
@@ -123,7 +123,7 @@ public class BaseEsServiceImpl<M extends BaseEsMapper<T>, T> implements BaseEsSe
         if (size <= batchSize) {
             return size == baseEsMapper.deleteBatchIds(idList, indexNames);
         }
-        List<? extends List<? extends Serializable>> split = CollUtil.split(idList, batchSize);
+        List<? extends List<? extends Serializable>> split = TiCollUtil.split(idList, batchSize);
         Integer total = split.stream().map(x -> baseEsMapper.deleteBatchIds(x, indexNames)).reduce(0, Integer::sum);
         return total == size;
     }

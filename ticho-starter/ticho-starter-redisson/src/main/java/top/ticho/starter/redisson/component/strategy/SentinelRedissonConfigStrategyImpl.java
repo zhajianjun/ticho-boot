@@ -1,10 +1,10 @@
 package top.ticho.starter.redisson.component.strategy;
 
-import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.config.Config;
 import top.ticho.starter.redisson.constant.TiRedissonConst;
 import top.ticho.starter.redisson.prop.TiRedissonProperty;
+import top.ticho.tool.core.TiStrUtil;
 
 /**
  * 哨兵方式Redis连接配置
@@ -27,7 +27,7 @@ public class SentinelRedissonConfigStrategyImpl implements RedissonConfigStrateg
             // 设置redis配置文件sentinel.conf配置的sentinel别名
             config.useSentinelServers().setMasterName(sentinelAliasName);
             config.useSentinelServers().setDatabase(database);
-            if (StrUtil.isNotBlank(password)) {
+            if (TiStrUtil.isNotBlank(password)) {
                 config.useSentinelServers().setPassword(password);
             }
             // 设置sentinel节点的服务IP和端口

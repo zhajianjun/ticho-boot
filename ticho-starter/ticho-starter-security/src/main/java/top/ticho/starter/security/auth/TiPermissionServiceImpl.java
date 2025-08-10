@@ -1,9 +1,9 @@
 package top.ticho.starter.security.auth;
 
-import cn.hutool.core.util.ArrayUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import top.ticho.tool.core.TiObjUtil;
 import top.ticho.tool.json.util.TiJsonUtil;
 
 /**
@@ -16,7 +16,7 @@ import top.ticho.tool.json.util.TiJsonUtil;
 public class TiPermissionServiceImpl implements TiPermissionService {
 
     public boolean hasPerms(String... permissions) {
-        if (ArrayUtil.isEmpty(permissions)) {
+        if (TiObjUtil.isEmpty(permissions)) {
             return false;
         }
         log.info("权限校验，permissions = {}", String.join(",", permissions));

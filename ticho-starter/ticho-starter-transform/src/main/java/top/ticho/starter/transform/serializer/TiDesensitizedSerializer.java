@@ -1,8 +1,5 @@
 package top.ticho.starter.transform.serializer;
 
-import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.DesensitizedUtil;
-import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.BeanProperty;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -13,6 +10,9 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import lombok.Setter;
 import top.ticho.starter.transform.annotation.TiDesensitized;
 import top.ticho.starter.transform.enums.TiDesensitizedType;
+import top.ticho.tool.core.TiClassUtil;
+import top.ticho.tool.core.TiDesensitizedUtil;
+import top.ticho.tool.core.TiStrUtil;
 
 import java.io.IOException;
 
@@ -47,7 +47,7 @@ public class TiDesensitizedSerializer extends StdSerializer<Object> implements C
             // 获取属性的原始类型
             Class<?> rawClass = beanProperty.getType().getRawClass();
             // 检查属性类型是否为基本类型或String类型
-            if (ClassUtil.isBasicType(rawClass) || rawClass == String.class) {
+            if (TiClassUtil.isSimpleValueType(rawClass) || rawClass == String.class) {
                 // 尝试从属性上获取TiDesensitized注解
                 TiDesensitized annotation = beanProperty.getAnnotation(TiDesensitized.class);
                 if (annotation == null) {
@@ -78,25 +78,25 @@ public class TiDesensitizedSerializer extends StdSerializer<Object> implements C
     }
 
     public static String desensitized(CharSequence str, TiDesensitized tiDesensitized) {
-        if (StrUtil.isBlank(str)) {
-            return StrUtil.EMPTY;
+        if (TiStrUtil.isBlank(str)) {
+            return TiStrUtil.EMPTY;
         }
         TiDesensitizedType tiDesensitizedType = tiDesensitized.type();
         return switch (tiDesensitizedType) {
-            case USER_ID -> String.valueOf(DesensitizedUtil.userId());
-            case CHINESE_NAME -> DesensitizedUtil.chineseName(String.valueOf(str));
-            case ID_CARD -> DesensitizedUtil.idCardNum(String.valueOf(str), 1, 2);
-            case FIXED_PHONE -> DesensitizedUtil.fixedPhone(String.valueOf(str));
-            case MOBILE_PHONE -> DesensitizedUtil.mobilePhone(String.valueOf(str));
-            case ADDRESS -> DesensitizedUtil.address(String.valueOf(str), 8);
-            case EMAIL -> DesensitizedUtil.email(String.valueOf(str));
-            case PASSWORD -> DesensitizedUtil.password(String.valueOf(str));
-            case CAR_LICENSE -> DesensitizedUtil.carLicense(String.valueOf(str));
-            case BANK_CARD -> DesensitizedUtil.bankCard(String.valueOf(str));
-            case IPV4 -> DesensitizedUtil.ipv4(String.valueOf(str));
-            case IPV6 -> DesensitizedUtil.ipv6(String.valueOf(str));
-            case FIRST_MASK -> DesensitizedUtil.firstMask(String.valueOf(str));
-            default -> StrUtil.hide(String.valueOf(str), tiDesensitized.start(), tiDesensitized.end());
+            case USER_ID -> String.valueOf(TiDesensitizedUtil.userId());
+            case CHINESE_NAME -> TiDesensitizedUtil.chineseName(String.valueOf(str));
+            case ID_CARD -> TiDesensitizedUtil.idCardNum(String.valueOf(str), 1, 2);
+            case FIXED_PHONE -> TiDesensitizedUtil.fixedPhone(String.valueOf(str));
+            case MOBILE_PHONE -> TiDesensitizedUtil.mobilePhone(String.valueOf(str));
+            case ADDRESS -> TiDesensitizedUtil.address(String.valueOf(str), 8);
+            case EMAIL -> TiDesensitizedUtil.email(String.valueOf(str));
+            case PASSWORD -> TiDesensitizedUtil.password(String.valueOf(str));
+            case CAR_LICENSE -> TiDesensitizedUtil.carLicense(String.valueOf(str));
+            case BANK_CARD -> TiDesensitizedUtil.bankCard(String.valueOf(str));
+            case IPV4 -> TiDesensitizedUtil.ipv4(String.valueOf(str));
+            case IPV6 -> TiDesensitizedUtil.ipv6(String.valueOf(str));
+            case FIRST_MASK -> TiDesensitizedUtil.firstMask(String.valueOf(str));
+            default -> TiStrUtil.hide(String.valueOf(str), tiDesensitized.start(), tiDesensitized.end());
         };
     }
 

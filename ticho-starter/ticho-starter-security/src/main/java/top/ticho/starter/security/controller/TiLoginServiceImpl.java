@@ -1,13 +1,13 @@
 package top.ticho.starter.security.controller;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.IdUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import top.ticho.starter.security.constant.TiSecurityConst;
 import top.ticho.starter.security.prop.TiSecurityProperty;
 import top.ticho.starter.security.service.impl.AbstractLoginService;
 import top.ticho.starter.view.core.TiSecurityUser;
+import top.ticho.tool.core.TiCollUtil;
+import top.ticho.tool.core.TiIdUtil;
 import top.ticho.tool.json.util.TiJsonUtil;
 
 import java.util.List;
@@ -24,12 +24,12 @@ public class TiLoginServiceImpl extends AbstractLoginService {
     public TiLoginServiceImpl(TiSecurityProperty tiSecurityProperty, PasswordEncoder passwordEncoder) {
         this.tiSecurityProperty = tiSecurityProperty;
         List<TiSecurityUser> users = tiSecurityProperty.getUsers();
-        if (CollUtil.isNotEmpty(users)) {
+        if (TiCollUtil.isNotEmpty(users)) {
             return;
         }
         TiSecurityUser userInfo = new TiSecurityUser();
         userInfo.setUsername(TiSecurityConst.DEFAULT_USERNAME);
-        String password = IdUtil.fastUUID();
+        String password = TiIdUtil.getUuid();
         userInfo.setPassword(passwordEncoder.encode(password));
         userInfo.setRoles(List.of(TiSecurityConst.DEFAULT_ROLE));
         users.add(userInfo);

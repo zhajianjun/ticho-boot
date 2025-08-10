@@ -19,4 +19,18 @@ public class TiCollUtil {
         return CollUtil.split(collection, batchSize);
     }
 
+    public static boolean isNotEmpty(Collection<?> collection) {
+        return CollUtil.isNotEmpty(collection);
+    }
+
+    public static List<String> toList(Collection<?> collection) {
+        if (isEmpty(collection)) {
+            return null;
+        }
+        return collection
+            .stream()
+            .map(Object::toString)
+            .toList();
+    }
+
 }

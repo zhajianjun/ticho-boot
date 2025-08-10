@@ -1,10 +1,10 @@
 package top.ticho.starter.web.converter;
 
-import cn.hutool.core.text.CharSequenceUtil;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
+import top.ticho.tool.core.TiStrUtil;
 import top.ticho.tool.json.constant.TiDateFormatConst;
 
 import java.text.ParseException;
@@ -26,7 +26,7 @@ public class TiDateConverter implements Converter<String, Date> {
 
     @Override
     public Date convert(@NonNull String source) {
-        if (CharSequenceUtil.isBlank(source)) {
+        if (TiStrUtil.isBlank(source)) {
             return null;
         }
         if (source.matches(TiDateFormatConst.YYYY_MM_DD_REGEX)) {

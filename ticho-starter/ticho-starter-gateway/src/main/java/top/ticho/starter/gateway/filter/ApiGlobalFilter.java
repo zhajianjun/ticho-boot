@@ -1,6 +1,5 @@
 package top.ticho.starter.gateway.filter;
 
-import cn.hutool.core.date.SystemClock;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -76,7 +75,7 @@ public class ApiGlobalFilter implements GlobalFilter, Ordered {
         // UserAgent userAgent = UserAgentUtil.parse(header);
         TiHttpLogInfo.setUrl(url);
         TiHttpLogInfo.setPort(environment.getProperty("server.port"));
-        TiHttpLogInfo.setStart(SystemClock.now());
+        TiHttpLogInfo.setStart(System.currentTimeMillis());
         TiHttpLogInfo.setType(type);
         TiHttpLogInfo.setReqParams(params);
         // TiHttpLogInfo.setUserAgent(userAgent);
@@ -107,7 +106,7 @@ public class ApiGlobalFilter implements GlobalFilter, Ordered {
                         join.read(content);
                         DataBufferUtils.release(join);
                         String resBody = new String(content, StandardCharsets.UTF_8);
-                        TiHttpLogInfo.setEnd(SystemClock.now());
+                        TiHttpLogInfo.setEnd(System.currentTimeMillis());
                         TiHttpLogInfo.setResBody(resBody);
                         TiHttpLogInfo.setStatus(statusCode.value());
                         originalResponse.getHeaders().setContentLength(content.length);

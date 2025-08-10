@@ -1,9 +1,5 @@
 package top.ticho.starter.http.interceptor;
 
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.core.util.URLUtil;
-import cn.hutool.extra.spring.SpringUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +18,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import top.ticho.starter.http.event.TiHttpLogEvent;
 import top.ticho.starter.http.prop.TiHttpProperty;
 import top.ticho.starter.view.log.TiHttpLog;
+import top.ticho.starter.web.util.TiSpringUtil;
+import top.ticho.tool.core.TiMapUtil;
+import top.ticho.tool.core.TiStrUtil;
+import top.ticho.tool.core.TiUrlUtil;
 import top.ticho.tool.json.util.TiJsonUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -59,7 +59,7 @@ public class TiOkHttpInterceptor implements Interceptor {
         String reqHeaders = toJson(reqHeaderMap);
         String method = req.method();
         HttpUrl httpUrl = req.url();
-        String fullUrl = StrUtil.subBefore(httpUrl.toString(), "?", false);
+        String fullUrl = TiStrUtil.subBefore(httpUrl.toString(), "?", false);
         Map<String, Object> paramsMap = getParams(httpUrl);
         String params = toJson(paramsMap);
         log.info("[HTTP] {} {} 请求开始, 请求参数={}, 请求体={}, 请求头={}", method, fullUrl, nullOfDefault(params), nullOfDefault(reqBody), nullOfDefault(reqHeaders));
@@ -76,7 +76,7 @@ public class TiOkHttpInterceptor implements Interceptor {
         int status = res.code();
         long millis = t2 - t1;
         log.info("[HTTP] {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}, 响应头={}", method, fullUrl, status, millis, resBody, resHeader);
-        URI uri = URLUtil.toURI(fullUrl);
+        URI uri = TiUrlUtil.toURI(fullUrl);
         String host = uri.getHost();
         String port = Integer.toString(uri.getPort());
         String url = uri.getPath();
@@ -97,7 +97,7 @@ public class TiOkHttpInterceptor implements Interceptor {
             .username(getUsername())
             .mdcMap(MDC.getCopyOfContextMap())
             .build();
-        ApplicationContext applicationContext = SpringUtil.getApplicationContext();
+        ApplicationContext applicationContext = TiSpringUtil.getApplicationContext();
         applicationContext.publishEvent(new TiHttpLogEvent(applicationContext, TIHttpLog));
         return res;
     }
@@ -125,7 +125,7 @@ public class TiOkHttpInterceptor implements Interceptor {
         Set<String> parameterNames = httpUrl.queryParameterNames();
         for (String parameterName : parameterNames) {
             List<String> values = httpUrl.queryParameterValues(parameterName);
-            map.put(parameterName, values.stream().filter(StrUtil::isNotBlank).collect(Collectors.joining(",")));
+            map.put(parameterName, values.stream().filter(TiStrUtil::isNotBlank).collect(Collectors.joining(",")));
         }
         return map;
     }
@@ -145,7 +145,7 @@ public class TiOkHttpInterceptor implements Interceptor {
     }
 
     private String toJson(Map<String, Object> map) {
-        if (MapUtil.isEmpty(map)) {
+        if (TiMapUtil.isEmpty(map)) {
             return null;
         }
         return TiJsonUtil.toJsonString(map);
@@ -153,7 +153,7 @@ public class TiOkHttpInterceptor implements Interceptor {
 
     private String nullOfDefault(String result) {
         if (result == null) {
-            return StrUtil.EMPTY;
+            return TiStrUtil.EMPTY;
         }
         return result;
     }

@@ -1,9 +1,9 @@
 package top.ticho.starter.web.converter;
 
-import cn.hutool.core.text.CharSequenceUtil;
 import lombok.NonNull;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
+import top.ticho.tool.core.TiStrUtil;
 import top.ticho.tool.json.constant.TiDateFormatConst;
 
 import java.time.LocalDate;
@@ -22,7 +22,7 @@ import java.time.format.DateTimeFormatter;
 public class TiLocalDateConverter implements Converter<String, LocalDate> {
     @Override
     public LocalDate convert(@NonNull String source) {
-        if (CharSequenceUtil.isBlank(source)) {
+        if (TiStrUtil.isBlank(source)) {
             return null;
         }
         if (source.matches(TiDateFormatConst.YYYY_MM_DD_REGEX)) {

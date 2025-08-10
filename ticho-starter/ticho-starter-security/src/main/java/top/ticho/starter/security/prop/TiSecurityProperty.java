@@ -1,12 +1,12 @@
 package top.ticho.starter.security.prop;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import top.ticho.starter.view.core.TiSecurityUser;
 import top.ticho.starter.web.util.TiSpringUtil;
+import top.ticho.tool.core.TiCollUtil;
+import top.ticho.tool.core.TiStrUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,13 +33,13 @@ public class TiSecurityProperty {
     private List<String> antPatterns = new ArrayList<>();
 
     public void setUsers(List<TiSecurityUser> users) {
-        if (CollUtil.isEmpty(users)) {
+        if (TiCollUtil.isEmpty(users)) {
             return;
         }
         PasswordEncoder passwordEncoder = TiSpringUtil.getBean(PasswordEncoder.class);
         for (TiSecurityUser userInfo : users) {
             String password = userInfo.getPassword();
-            if (StrUtil.isBlank(password)) {
+            if (TiStrUtil.isBlank(password)) {
                 continue;
             }
             userInfo.setPassword(passwordEncoder.encode(password));
