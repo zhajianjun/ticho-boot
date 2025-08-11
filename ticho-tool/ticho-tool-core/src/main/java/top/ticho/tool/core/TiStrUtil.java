@@ -54,4 +54,8 @@ public class TiStrUtil {
         return StrUtil.format(template, params);
     }
 
+    public static boolean startWithIgnoreCase(CharSequence str, CharSequence prefix) {
+        return StrUtil.startWithIgnoreCase(str, prefix);
+    }
+
 }

@@ -1,12 +1,11 @@
 package top.ticho.starter.minio;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.file.FileNameUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.starter.minio.component.TiMinioTemplate;
 import top.ticho.starter.minio.prop.TiMinioProperty;
 import top.ticho.starter.minio.util.ChunkFileUtil;
+import top.ticho.tool.core.TiFileUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -71,15 +70,15 @@ public class TiMinioChunkFileTest {
     public static void main(String[] args) throws IOException {
         String localFilePath = "/Users/zhajianjun/developing/1/055596953ae67a1e4eba6bd91a5e1e5e.zip";
         // 20240218_193644.mp4
-        String fileName = FileNameUtil.getName(localFilePath);
+        String fileName = TiFileUtil.getName(localFilePath);
         // 20240218_193644
-        String chunkFolderFileName = FileNameUtil.mainName(localFilePath);
+        String chunkFolderFileName = TiFileUtil.mainName(localFilePath);
         String chunkBucket = "rainbow";
         File localFile = new File(localFilePath);
         String parentFilePath = localFile.getParentFile().getAbsolutePath();
         String localChunkFolderFilePath = parentFilePath + File.separator + chunkFolderFileName;
         File localChunkFolderFile = new File(localChunkFolderFilePath);
-        String mimeType = FileUtil.getMimeType(localFilePath);
+        String mimeType = TiFileUtil.getMimeType(localFilePath);
         fileSpliceChunk(chunkBucket, localFile);
         // 分片上传到minio
         uploadChunkToMinio(localChunkFolderFile, chunkBucket, chunkFolderFileName);
