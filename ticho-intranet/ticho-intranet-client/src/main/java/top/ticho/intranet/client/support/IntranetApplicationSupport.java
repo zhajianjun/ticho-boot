@@ -1,12 +1,12 @@
 package top.ticho.intranet.client.support;
 
-import cn.hutool.core.util.StrUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
+import top.ticho.tool.core.TiStrUtil;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,7 +34,7 @@ public class IntranetApplicationSupport {
     }
 
     public void removeRequestChannel(String requestId) {
-        if (StrUtil.isEmpty(requestId)) {
+        if (TiStrUtil.isEmpty(requestId)) {
             return;
         }
         requestChannelMap.remove(requestId);

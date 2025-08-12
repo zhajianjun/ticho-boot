@@ -1,6 +1,5 @@
 package top.ticho.intranet.server.listener;
 
-import cn.hutool.core.map.MapUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
@@ -16,6 +15,7 @@ import top.ticho.intranet.server.entity.IntranetClient;
 import top.ticho.intranet.server.entity.IntranetPort;
 import top.ticho.intranet.server.support.IntranetApplicationSupport;
 import top.ticho.intranet.server.support.IntranetClientSupport;
+import top.ticho.tool.core.TiMapUtil;
 
 import java.util.Map;
 import java.util.Objects;
@@ -60,7 +60,7 @@ public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
         Channel clientChannel = intranetClient.getChannel();
         // 查询请求连接通道总数，超出最大值，则关闭第一个请求通道requestChannel
         Map<String, Channel> requestChannels = clientChannel.attr(CommConst.REQUEST_ID_ATTR_MAP).get();
-        if (MapUtil.isNotEmpty(requestChannels) && requestChannels.size() >= maxRequests) {
+        if (TiMapUtil.isNotEmpty(requestChannels) && requestChannels.size() >= maxRequests) {
             String firstKey = requestChannels.keySet().stream().findFirst().orElse(null);
             Channel oldRequestChannel = requestChannels.remove(firstKey);
             log.warn("超过最大连接数，关闭请求通道 {}", oldRequestChannel);

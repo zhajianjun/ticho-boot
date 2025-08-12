@@ -1,7 +1,5 @@
 package top.ticho.intranet.server.core;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -16,6 +14,8 @@ import top.ticho.intranet.server.entity.IntranetPort;
 import top.ticho.intranet.server.filter.IntranetApplicationListenFilter;
 import top.ticho.intranet.server.support.IntranetApplicationSupport;
 import top.ticho.intranet.server.support.IntranetClientSupport;
+import top.ticho.tool.core.TiCollUtil;
+import top.ticho.tool.core.TiStrUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -152,12 +152,12 @@ public record IntranetServerHandler(
     }
 
     public void flush(List<IntranetClient> intranetClients) {
-        if (CollUtil.isEmpty(intranetClients)) {
+        if (TiCollUtil.isEmpty(intranetClients)) {
             return;
         }
         Map<String, IntranetClient> clientInfoMap = intranetClients
             .stream()
-            .filter(item -> StrUtil.isNotBlank(item.getAccessKey()))
+            .filter(item -> TiStrUtil.isNotBlank(item.getAccessKey()))
             .collect(Collectors.toMap(IntranetClient::getAccessKey, Function.identity(), (v1, v2) -> v1));
         // 移除需要删除的client
         List<IntranetClient> intranetClientInfosFromMem = findAll();

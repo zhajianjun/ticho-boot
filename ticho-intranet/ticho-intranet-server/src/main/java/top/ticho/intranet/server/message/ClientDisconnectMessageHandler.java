@@ -1,6 +1,5 @@
 package top.ticho.intranet.server.message;
 
-import cn.hutool.core.util.StrUtil;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
@@ -10,6 +9,7 @@ import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.util.IntranetUtil;
 import top.ticho.intranet.server.core.IntranetServerHandler;
 import top.ticho.intranet.server.support.IntranetClientSupport;
+import top.ticho.tool.core.TiStrUtil;
 
 /**
  * 客户端断开连接消息处理器
@@ -31,7 +31,7 @@ public class ClientDisconnectMessageHandler extends AbstractClientMessageHandler
         String requestId = message.requestId();
         String accessKey = channel.attr(CommConst.ACCESS_KEY).get();
         Channel requestChannel;
-        if (StrUtil.isEmpty(accessKey)) {
+        if (TiStrUtil.isBlank(accessKey)) {
             requestChannel = intranetClientSupport.removeRequestChannel(channel, requestId);
             if (IntranetUtil.isActive(requestChannel)) {
                 requestChannel.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);

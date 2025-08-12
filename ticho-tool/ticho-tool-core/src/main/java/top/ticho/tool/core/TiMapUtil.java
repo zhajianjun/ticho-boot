@@ -16,4 +16,8 @@ public class TiMapUtil {
         return MapUtil.isEmpty(map);
     }
 
+    public static boolean isNotEmpty(Map<?, ?> map) {
+        return MapUtil.isNotEmpty(map);
+    }
+
 }
