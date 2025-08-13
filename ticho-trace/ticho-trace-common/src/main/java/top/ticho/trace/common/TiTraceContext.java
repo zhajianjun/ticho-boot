@@ -3,7 +3,7 @@ package top.ticho.trace.common;
 import org.slf4j.MDC;
 import top.ticho.tool.core.TiIdUtil;
 import top.ticho.tool.core.TiStrUtil;
-import top.ticho.tool.core.TiTemplateUtil;
+import top.ticho.tool.template.TiTemplateUtil;
 
 /**
  * @author zhajianjun

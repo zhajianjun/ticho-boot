@@ -42,6 +42,11 @@
             <artifactId>ticho-tool-json</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>top.ticho.tool</groupId>
+            <artifactId>ticho-tool-template</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

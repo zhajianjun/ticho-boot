@@ -1,4 +1,4 @@
-package top.ticho.tool.core;
+package top.ticho.tool.template;
 
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
