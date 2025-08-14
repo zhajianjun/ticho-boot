@@ -1,6 +1,5 @@
 package top.ticho.tool.core;
 
-import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.date.TemporalAccessorUtil;
 
@@ -15,6 +14,7 @@ import java.time.LocalTime;
  * @date 2025-08-09 19:59
  */
 public class TiLocalDateTimeUtil {
+    public static final String NORM_TIME_PATTERN = "HH:mm:ss";
 
     public static String formatNormal(LocalDateTime time) {
         return LocalDateTimeUtil.formatNormal(time);
@@ -25,7 +25,7 @@ public class TiLocalDateTimeUtil {
     }
 
     public static String formatNormal(LocalTime time) {
-        return TemporalAccessorUtil.format(time, DatePattern.NORM_TIME_PATTERN);
+        return TemporalAccessorUtil.format(time, NORM_TIME_PATTERN);
     }
 
 }
