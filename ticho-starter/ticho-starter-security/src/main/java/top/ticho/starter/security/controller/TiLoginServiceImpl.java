@@ -29,7 +29,7 @@ public class TiLoginServiceImpl extends AbstractLoginService {
         }
         TiSecurityUser userInfo = new TiSecurityUser();
         userInfo.setUsername(TiSecurityConst.DEFAULT_USERNAME);
-        String password = TiIdUtil.getUuid();
+        String password = TiIdUtil.uuid();
         userInfo.setPassword(passwordEncoder.encode(password));
         userInfo.setRoles(List.of(TiSecurityConst.DEFAULT_ROLE));
         users.add(userInfo);

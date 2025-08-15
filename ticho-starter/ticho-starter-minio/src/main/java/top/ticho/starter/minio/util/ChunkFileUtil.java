@@ -170,7 +170,7 @@ public class ChunkFileUtil {
         String mainName = TiFileUtil.mainName(name);
         String extName = TiFileUtil.extName(name);
         File localChunkFolder = fileSpliceChunk(localFile, 10);
-        String newFileName = mainName + "-" + TiIdUtil.getUuid() + TiStrUtil.DOT + extName;
+        String newFileName = mainName + "-" + TiIdUtil.uuid() + TiStrUtil.DOT + extName;
         String newFilePath = localChunkFolder.getParent() + File.separator + newFileName;
         File newFile = new File(newFilePath);
         composeLocalObject(localChunkFolder, newFile);

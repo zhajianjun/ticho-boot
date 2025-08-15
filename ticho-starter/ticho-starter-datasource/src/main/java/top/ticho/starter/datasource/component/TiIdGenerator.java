@@ -35,7 +35,7 @@ public class TiIdGenerator implements IdentifierGenerator {
      */
     @Override
     public String nextUUID(Object entity) {
-        String uuid = TiIdUtil.getUuid();
+        String uuid = TiIdUtil.uuid();
         printLog(entity, uuid);
         return uuid;
     }
