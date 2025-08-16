@@ -20,10 +20,11 @@ import java.util.regex.Pattern;
  *     terabyte    1TB    1,099,511,627,776
  * </pre>
  *
+ * @param bytes bytes长度
  * @author Sam Brannen,Stephane Nicoll
  * @since 5.3.10
  */
-public final class DataSize implements Comparable<DataSize> {
+public record DataSize(long bytes) implements Comparable<DataSize> {
 
     /**
      * The pattern for parsing.
@@ -52,18 +53,11 @@ public final class DataSize implements Comparable<DataSize> {
 
 
     /**
-     * bytes长度
-     */
-    private final long bytes;
-
-
-    /**
      * 构造
      *
      * @param bytes 长度
      */
-    private DataSize(long bytes) {
-        this.bytes = bytes;
+    public DataSize {
     }
 
 
