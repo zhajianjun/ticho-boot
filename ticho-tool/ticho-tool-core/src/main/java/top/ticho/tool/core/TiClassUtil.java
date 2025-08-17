@@ -14,4 +14,8 @@ public class TiClassUtil {
         return ClassUtil.isSimpleValueType(aClass);
     }
 
+    public static <T> Class<T> loadClass(String className) {
+        return ClassUtil.loadClass(className);
+    }
+
 }

@@ -2,6 +2,8 @@ package top.ticho.tool.core;
 
 import cn.hutool.core.util.StrUtil;
 
+import java.util.List;
+
 /**
  * @author zhajianjun
  * @date 2025-08-04 22:32
@@ -9,9 +11,14 @@ import cn.hutool.core.util.StrUtil;
 public class TiStrUtil {
     public static final String EMPTY = "";
     public static final String DOT = ".";
+    public static final String DASHED = "-";
 
     public static boolean isBlankIfStr(Object obj) {
         return StrUtil.isBlankIfStr(obj);
+    }
+
+    public static String blankToDefault(CharSequence str, String defaultStr) {
+        return StrUtil.blankToDefault(str, defaultStr);
     }
 
     public static boolean isBlank(CharSequence str) {
@@ -56,6 +63,26 @@ public class TiStrUtil {
 
     public static boolean startWithIgnoreCase(CharSequence str, CharSequence prefix) {
         return StrUtil.startWithIgnoreCase(str, prefix);
+    }
+
+    public static String strip(CharSequence str, CharSequence prefixOrSuffix) {
+        return StrUtil.strip(str, prefixOrSuffix);
+    }
+
+    public static String strip(CharSequence str, CharSequence prefix, CharSequence suffix) {
+        return StrUtil.strip(str, prefix, suffix);
+    }
+
+    public static String removeSuffix(CharSequence str, CharSequence suffix) {
+        return StrUtil.removeSuffix(str, suffix);
+    }
+
+    public static String removePrefix(CharSequence str, CharSequence prefix) {
+        return StrUtil.removePrefix(str, prefix);
+    }
+
+    public static List<String> split(CharSequence str, char separator) {
+        return StrUtil.split(str, separator, 0);
     }
 
 }

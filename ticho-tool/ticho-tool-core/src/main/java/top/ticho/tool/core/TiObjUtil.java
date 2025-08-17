@@ -22,4 +22,8 @@ public class TiObjUtil {
         return ObjUtil.length(obj);
     }
 
+    public static <T> T defaultIfNull(final T object, final T defaultValue) {
+        return ObjUtil.defaultIfNull(object, defaultValue);
+    }
+
 }

@@ -33,4 +33,8 @@ public class TiCollUtil {
             .toList();
     }
 
+    public static <T> String join(Iterable<T> iterable, CharSequence conjunction) {
+        return CollUtil.join(iterable, conjunction);
+    }
+
 }
