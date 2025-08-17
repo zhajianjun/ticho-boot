@@ -17,11 +17,11 @@
             <artifactId>hutool-all</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.ibeetl</groupId>
-            <artifactId>beetl</artifactId>
-        </dependency>
 
+        <dependency>
+            <groupId>com.github.f4b6a3</groupId>
+            <artifactId>ulid-creator</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

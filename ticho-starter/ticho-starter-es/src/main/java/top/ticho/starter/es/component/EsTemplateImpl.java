@@ -698,7 +698,7 @@ public class EsTemplateImpl implements EsTemplate {
      * @return {@link UpdateRequest}
      */
     private UpdateRequest getUpdateRequest(String index, Map<String, Object> entity, boolean docAsUpsert) {
-        String id = Optional.ofNullable(entity.get("id")).map(Object::toString).orElseGet(TiIdUtil::getIdStr);
+        String id = Optional.ofNullable(entity.get("id")).map(Object::toString).orElseGet(TiIdUtil::ulid);
         UpdateRequest updateRequest = new UpdateRequest(index, id);
         IndexRequest indexRequest = getIndexRequest(index, entity);
         updateRequest.doc(indexRequest);
@@ -707,7 +707,7 @@ public class EsTemplateImpl implements EsTemplate {
     }
 
     private IndexRequest getIndexRequest(String index, Map<String, Object> entity) {
-        String id = Optional.ofNullable(entity.get("id")).map(Object::toString).orElseGet(TiIdUtil::getIdStr);
+        String id = Optional.ofNullable(entity.get("id")).map(Object::toString).orElseGet(TiIdUtil::ulid);
         IndexRequest indexRequest = new IndexRequest(index).id(id);
         indexRequest.source(entity);
         return indexRequest;

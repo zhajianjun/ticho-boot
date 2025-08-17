@@ -22,7 +22,7 @@ public class TiIdGenerator implements IdentifierGenerator {
 
     @Override
     public Number nextId(Object entity) {
-        long id = TiIdUtil.getId();
+        long id = TiIdUtil.snowId();
         printLog(entity, id);
         return id;
     }
