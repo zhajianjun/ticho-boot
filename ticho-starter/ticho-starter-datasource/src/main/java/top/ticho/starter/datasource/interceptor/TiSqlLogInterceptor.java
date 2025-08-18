@@ -19,7 +19,6 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 import top.ticho.starter.datasource.prop.TiDataSourceProperty;
 import top.ticho.tool.core.TiClassUtil;
@@ -54,14 +53,13 @@ import java.util.regex.Matcher;
 })
 @Slf4j
 @Component
-@RefreshScope
 @ConditionalOnProperty(value = "ticho.datasource.log.enable", havingValue = "true")
 public class TiSqlLogInterceptor implements Interceptor {
 
-    private final TiDataSourceProperty.Log tiDataSourcePropertyLog;
+    private final TiDataSourceProperty tiDataSourceProperty;
 
     public TiSqlLogInterceptor(TiDataSourceProperty tiDataSourceProperty) {
-        this.tiDataSourcePropertyLog = tiDataSourceProperty.getLog();
+        this.tiDataSourceProperty = tiDataSourceProperty;
     }
 
     /**
@@ -78,6 +76,7 @@ public class TiSqlLogInterceptor implements Interceptor {
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
+        TiDataSourceProperty.Log tiDataSourcePropertyLog = tiDataSourceProperty.getLog();
         if (Objects.isNull(tiDataSourcePropertyLog) || !Boolean.TRUE.equals(tiDataSourcePropertyLog.getPrintSql())) {
             return invocation.proceed();
         }
@@ -117,6 +116,7 @@ public class TiSqlLogInterceptor implements Interceptor {
         List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
         // sql语句中多个空格都用一个空格代替
         String sql = boundSql.getSql().replaceAll("\\s+", " ");
+        TiDataSourceProperty.Log tiDataSourcePropertyLog = tiDataSourceProperty.getLog();
         if (!Boolean.TRUE.equals(tiDataSourcePropertyLog.getShowParams())) {
             return sql;
         }
