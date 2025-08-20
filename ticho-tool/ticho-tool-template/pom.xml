@@ -12,6 +12,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>top.ticho.tool</groupId>
+            <artifactId>ticho-tool-core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.ibeetl</groupId>
             <artifactId>beetl</artifactId>
         </dependency>
