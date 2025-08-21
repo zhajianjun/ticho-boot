@@ -7,7 +7,7 @@ import top.ticho.tool.core.TiStrUtil;
 import top.ticho.trace.common.TiHttpTraceTag;
 import top.ticho.trace.common.TiTraceContext;
 import top.ticho.trace.common.TiTraceProperty;
-import top.ticho.trace.spring.util.IpUtil;
+import top.ticho.trace.spring.util.TiIpUtil;
 
 import jakarta.annotation.Resource;
 
@@ -31,7 +31,7 @@ public abstract class AbstractAspect implements Ordered {
         }
         try {
             TiTraceContext.start(appName, tiTraceProperty.getTrace());
-            TiTraceContext.addTag(TiHttpTraceTag.IP, IpUtil.localIp());
+            TiTraceContext.addTag(TiHttpTraceTag.IP, TiIpUtil.localIp());
             TiTraceContext.addTag(TiHttpTraceTag.ENV, environment.getProperty("spring.profiles.active"));
             return joinPoint.proceed();
         } finally {

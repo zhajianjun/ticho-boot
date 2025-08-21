@@ -11,7 +11,7 @@ import top.ticho.trace.common.TiTraceConst;
 import top.ticho.trace.common.TiTraceContext;
 import top.ticho.trace.common.TiTraceProperty;
 import top.ticho.trace.common.TiTraceReporter;
-import top.ticho.trace.spring.util.IpUtil;
+import top.ticho.trace.spring.util.TiIpUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -53,7 +53,7 @@ public class TiTraceInterceptor implements HandlerInterceptor, Ordered {
         String traceId = headersMap.get(TiTraceConst.TRACE_ID_KEY);
         String parentSpanId = headersMap.get(TiTraceConst.SPAN_ID_KEY);
         TiTraceContext.start(appName, traceId, parentSpanId, trace);
-        TiTraceContext.addTag(TiHttpTraceTag.IP, IpUtil.localIp());
+        TiTraceContext.addTag(TiHttpTraceTag.IP, TiIpUtil.localIp());
         TiTraceContext.addTag(TiHttpTraceTag.ENV, environment.getProperty("spring.profiles.active"));
         TiTraceContext.addTag(TiHttpTraceTag.URL, request.getRequestURI());
         TiTraceContext.addTag(TiHttpTraceTag.METHOD, handlerMethod.toString());

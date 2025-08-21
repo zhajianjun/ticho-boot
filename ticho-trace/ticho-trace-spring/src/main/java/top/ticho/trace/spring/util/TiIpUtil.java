@@ -17,7 +17,7 @@ import java.util.stream.Stream;
  * @date 2024-02-01 12:30
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class IpUtil {
+public class TiIpUtil {
 
     public static final String USER_AGENT = "User-Agent";
 
