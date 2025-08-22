@@ -23,7 +23,7 @@ import top.ticho.starter.web.util.TiSpringUtil;
 import top.ticho.tool.core.TiMapUtil;
 import top.ticho.tool.core.TiStrUtil;
 import top.ticho.tool.json.util.TiJsonUtil;
-import top.ticho.trace.spring.util.IpUtil;
+import top.ticho.trace.spring.util.TiIpUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -110,7 +110,7 @@ public class TiWebLogInterceptor implements HandlerInterceptor, Ordered {
             .type(type)
             .name(name)
             .position(position)
-            .ip(IpUtil.getIp(request))
+            .ip(TiIpUtil.getIp(request))
             .url(url)
             .port(port)
             .reqParams(params)
