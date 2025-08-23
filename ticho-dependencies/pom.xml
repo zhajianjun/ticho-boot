@@ -220,6 +220,20 @@
                 <scope>import</scope>
             </dependency>
 
+            <!--              修复升级版本              -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-webmvc</artifactId>
+                <version>6.2.10</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>6.2.10</version>
+            </dependency>
+            <!--              修复升级版本              -->
+
             <!-- SpringCloud -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
