@@ -59,6 +59,10 @@ public class TiSpan {
         tags.put(tiTraceTag.getKey(), value);
     }
 
+    public String getTag(TiTraceTag tiTraceTag) {
+        return tags.get(tiTraceTag.getKey());
+    }
+
     public long getDuration() {
         return endTime - startTime;
     }

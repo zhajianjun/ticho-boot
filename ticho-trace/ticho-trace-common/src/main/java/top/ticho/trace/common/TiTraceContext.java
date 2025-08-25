@@ -5,6 +5,8 @@ import top.ticho.tool.core.TiIdUtil;
 import top.ticho.tool.core.TiStrUtil;
 import top.ticho.tool.template.TiTemplateUtil;
 
+import java.util.Map;
+
 /**
  * @author zhajianjun
  * @date 2025-07-13 13:22
@@ -33,7 +35,7 @@ public class TiTraceContext {
         if (trace == null) {
             trace = TiTraceConst.DEFAULT_TRACE;
         }
-        MDC.put(TiTraceConst.TRACE_KEY, TiTemplateUtil.render(trace, MDC.getCopyOfContextMap()));
+        renderTrace(trace, MDC.getCopyOfContextMap());
         return tiTracer.start(name, traceId, TiTraceConst.FIRST_SPAN_ID, null);
     }
 
@@ -43,7 +45,7 @@ public class TiTraceContext {
             traceId = TiIdUtil.ulid();
             parentSpanId = TiTraceConst.FIRST_SPAN_ID;
         }
-        String spanId = TiIdUtil.ulid();
+        String spanId = TiIdUtil.shortUuid();
         MDC.put(TiTraceConst.TRACE_ID_KEY, traceId);
         MDC.put(TiTraceConst.SPAN_ID_KEY, spanId);
         MDC.put(TiTraceConst.PARENT_SPAN_ID_KEY, parentSpanId);
@@ -62,8 +64,16 @@ public class TiTraceContext {
         getTiTracer().rootSpan().addTag(tiTraceTag, value);
     }
 
+    public static String getTag(TiTraceTag tiTraceTag) {
+        return getTiTracer().rootSpan().getTag(tiTraceTag);
+    }
+
     public static TiSpan close() {
         return getTiTracer().end();
+    }
+
+    public static TiSpan close(boolean report) {
+        return getTiTracer().end(report);
     }
 
     public static TiSpan startSpan(String name) {
@@ -78,16 +88,12 @@ public class TiTraceContext {
         return getTiTracer().endSpan();
     }
 
-    public static TiSpan finish() {
-        return getTiTracer().end();
-    }
-
     public static void clear() {
         MDC.clear();
     }
 
     public static String getTraceId() {
-        return MDC.get(TiTraceConst.TRACE_KEY);
+        return MDC.get(TiTraceConst.TRACE_ID_KEY);
     }
 
     public static String getSpanId() {
@@ -95,11 +101,25 @@ public class TiTraceContext {
     }
 
     public static void setTraceId(String traceId) {
-        MDC.put(TiTraceConst.TRACE_KEY, traceId);
+        MDC.put(TiTraceConst.TRACE_ID_KEY, traceId);
     }
 
     public static void setSpanId(String spanId) {
         MDC.put(TiTraceConst.SPAN_ID_KEY, spanId);
+    }
+
+    public static String getTrace() {
+        return MDC.get(TiTraceConst.TRACE_KEY);
+    }
+
+    public static void renderTrace(String trace, String key, String value) {
+        String render = TiTemplateUtil.render(trace, key, value);
+        MDC.put(TiTraceConst.TRACE_KEY, render);
+    }
+
+    public static void renderTrace(String trace, Map<String, String> traceMap) {
+        String render = TiTemplateUtil.render(trace, traceMap);
+        MDC.put(TiTraceConst.TRACE_KEY, render);
     }
 
 }

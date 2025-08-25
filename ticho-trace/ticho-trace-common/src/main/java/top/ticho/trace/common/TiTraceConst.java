@@ -22,6 +22,6 @@ public class TiTraceConst {
     /** 链路表达式 key */
     public static final String TRACE_KEY = "trace";
     /** 默认链路表达式 */
-    public static final String DEFAULT_TRACE = "[${traceId!}].[${spanId!}]";
+    public static final String DEFAULT_TRACE = "[${traceId!}].[${parentSpanId!}].[${spanId!}]";
 
 }

@@ -1,27 +1,21 @@
 package top.ticho.trace.common;
 
-import java.util.List;
-
 /**
  * @author zhajianjun
  * @date 2025-07-23 22:55
  */
 public class TiTraceRunableDecorator {
 
-    public static Runnable decorate(Runnable runnable, TiTraceReporter ifAvailable) {
-        try {
-            TiTracer tiTracer = TiTraceContext.getTiTracer();
-            return () -> {
-                try {
-                    execute(tiTracer, ifAvailable);
-                    runnable.run();
-                } finally {
-                    complete(tiTracer);
-                }
-            };
-        } catch (Exception e) {
-            return runnable;
-        }
+    public static Runnable decorate(Runnable runnable, TiTraceReporter tiTraceReporter) {
+        TiTracer tiTracer = TiTraceContext.getTiTracer();
+        return () -> {
+            try {
+                execute(tiTracer, tiTraceReporter);
+                runnable.run();
+            } finally {
+                complete(tiTracer);
+            }
+        };
     }
 
     public static void complete(TiTracer tiTracer) {
@@ -31,30 +25,14 @@ public class TiTraceRunableDecorator {
         TiTraceContext.close();
     }
 
-    public static void execute(TiTracer tiTracer, TiTraceReporter ifAvailable) {
+    public static void execute(TiTracer tiTracer, TiTraceReporter tiTraceReporter) {
         if (tiTracer == null) {
             return;
         }
-        TiTraceReporter tiTraceReporter = new TiTraceReporter() {
-            @Override
-            public void report(TiSpan tiSpan) {
-
-            }
-
-            @Override
-            public void report(List<TiSpan> tiSpans) {
-                if (ifAvailable == null) {
-                    return;
-                }
-                if (tiSpans == null || tiSpans.isEmpty()) {
-                    return;
-                }
-                tiSpans.remove(0);
-                ifAvailable.report(tiSpans);
-            }
-        };
         TiTraceContext.init(tiTraceReporter);
-        TiTraceContext.start(tiTracer.rootSpan().copy());
+        TiSpan newRootSpan = tiTracer.rootSpan().copy();
+        newRootSpan.addTag(TiHttpTraceTag.ASYNC, newRootSpan.getTraceId());
+        TiTraceContext.start(newRootSpan);
     }
 
 }

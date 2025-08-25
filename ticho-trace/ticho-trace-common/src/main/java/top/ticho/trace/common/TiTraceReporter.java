@@ -8,8 +8,6 @@ import java.util.List;
  */
 public interface TiTraceReporter {
 
-    void report(TiSpan tiSpan);
-
     void report(List<TiSpan> tiSpans);
 
 }

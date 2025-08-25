@@ -17,6 +17,7 @@ public enum TiHttpTraceTag implements TiTraceTag {
     METHOD("http.method"),
     TYPE("http.type"),
     STATUS("http.status"),
+    ASYNC("thread.async"),
     ;
 
     private final String key;

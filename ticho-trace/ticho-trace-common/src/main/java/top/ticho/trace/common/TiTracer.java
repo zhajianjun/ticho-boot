@@ -16,7 +16,7 @@ public class TiTracer {
     private TiSpan rootSpan;
     private TiSpan childSpan;
     private final TiTraceReporter tiTraceReporter;
-    private final List<TiSpan> allSpans = new ArrayList<>();
+    private final List<TiSpan> childSpans = new ArrayList<>();
 
     public TiTracer(TiTraceReporter tiTraceReporter) {
         if (Objects.isNull(tiTraceReporter)) {
@@ -32,7 +32,6 @@ public class TiTracer {
             return;
         }
         this.rootSpan = rootSpan;
-        allSpans.add(rootSpan);
     }
 
     public TiSpan start(String name, String traceId, String spanId, String parentSpanId) {
@@ -43,13 +42,21 @@ public class TiTracer {
         TiSpan rootSpan = new TiSpan(name, traceId, spanId, parentSpanId);
         rootSpan.start();
         this.rootSpan = rootSpan;
-        this.allSpans.add(rootSpan);
         return rootSpan;
     }
 
     public TiSpan end() {
         rootSpan.end();
         report();
+        clear();
+        return rootSpan;
+    }
+
+    public TiSpan end(boolean report) {
+        rootSpan.end();
+        if (report) {
+            report();
+        }
         clear();
         return rootSpan;
     }
@@ -66,7 +73,7 @@ public class TiTracer {
         TiSpan childSpan = new TiSpan(name, rootSpan.getTraceId(), TiIdUtil.ulid(), rootSpan.getSpanId());
         childSpan.start();
         this.childSpan = childSpan;
-        this.allSpans.add(rootSpan);
+        this.childSpans.add(childSpan);
         return childSpan;
     }
 
@@ -92,10 +99,15 @@ public class TiTracer {
     }
 
     public void clear() {
-        allSpans.clear();
+        childSpans.clear();
     }
 
     public void report() {
+        ArrayList<TiSpan> allSpans = new ArrayList<>(childSpans);
+        // 非异步链路则打印根链路
+        if (!rootSpan.getTags().containsKey(TiHttpTraceTag.ASYNC.getKey())) {
+            allSpans.add(0, rootSpan);
+        }
         tiTraceReporter.report(allSpans);
     }
 
