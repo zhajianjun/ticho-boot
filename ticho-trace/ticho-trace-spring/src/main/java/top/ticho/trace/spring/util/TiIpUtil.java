@@ -18,9 +18,6 @@ import java.util.stream.Stream;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TiIpUtil {
-
-    public static final String USER_AGENT = "User-Agent";
-
     private static final List<String> localhosts = Stream.of("127.0.0.1", "0:0:0:0:0:0:0:1").toList();
 
 

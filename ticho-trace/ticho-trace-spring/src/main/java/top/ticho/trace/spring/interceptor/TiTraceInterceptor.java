@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.Environment;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import top.ticho.trace.common.TiHttpTraceTag;
@@ -34,6 +35,8 @@ public class TiTraceInterceptor implements HandlerInterceptor, Ordered {
     private final Environment environment;
     /** 链路报告器 */
     private final TiTraceReporter tiTraceReporter;
+    /** url地址匹配 */
+    private final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     public TiTraceInterceptor(TiTraceProperty tiTraceProperty, Environment environment, TiTraceReporter tiTraceReporter) {
         this.tiTraceProperty = tiTraceProperty;
@@ -43,8 +46,9 @@ public class TiTraceInterceptor implements HandlerInterceptor, Ordered {
 
     @Override
     public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler) {
-        if (!(handler instanceof HandlerMethod handlerMethod)) {
-            return true;
+        String methodName = "";
+        if (handler instanceof HandlerMethod handlerMethod) {
+            methodName = handlerMethod.toString();
         }
         TiTraceContext.init(tiTraceReporter);
         Map<String, String> headersMap = getHeaders(request);
@@ -53,21 +57,24 @@ public class TiTraceInterceptor implements HandlerInterceptor, Ordered {
         String traceId = headersMap.get(TiTraceConst.TRACE_ID_KEY);
         String parentSpanId = headersMap.get(TiTraceConst.SPAN_ID_KEY);
         TiTraceContext.start(appName, traceId, parentSpanId, trace);
-        TiTraceContext.addTag(TiHttpTraceTag.IP, TiIpUtil.localIp());
+        TiTraceContext.addTag(TiHttpTraceTag.IP, TiIpUtil.getIp(request));
         TiTraceContext.addTag(TiHttpTraceTag.ENV, environment.getProperty("spring.profiles.active"));
         TiTraceContext.addTag(TiHttpTraceTag.URL, request.getRequestURI());
-        TiTraceContext.addTag(TiHttpTraceTag.METHOD, handlerMethod.toString());
+        TiTraceContext.addTag(TiHttpTraceTag.METHOD, methodName);
         TiTraceContext.addTag(TiHttpTraceTag.TYPE, request.getMethod());
+        // response添加traceId和spanId
+        response.setHeader(TiTraceConst.TRACE_ID_KEY, TiTraceContext.getTraceId());
+        response.setHeader(TiTraceConst.PARENT_SPAN_ID_KEY, parentSpanId);
+        response.setHeader(TiTraceConst.SPAN_ID_KEY, TiTraceContext.getSpanId());
         return true;
     }
 
     @Override
     public void afterCompletion(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Object handler, Exception ex) {
-        if (!(handler instanceof HandlerMethod)) {
-            return;
-        }
         TiTraceContext.addTag(TiHttpTraceTag.STATUS, String.valueOf(response.getStatus()));
-        TiTraceContext.close();
+        String url = TiTraceContext.getTag(TiHttpTraceTag.URL);
+        boolean ignore = tiTraceProperty.getAntPatterns().stream().anyMatch(x -> antPathMatcher.match(x, url));
+        TiTraceContext.close(!ignore);
     }
 
 
