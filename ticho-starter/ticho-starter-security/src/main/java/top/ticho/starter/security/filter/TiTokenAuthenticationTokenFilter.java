@@ -19,7 +19,8 @@ public class TiTokenAuthenticationTokenFilter extends AbstractAuthTokenFilter<Ti
     @Override
     public TiSecurityUser convert(Map<String, Object> decodeAndVerify) {
         String username = Optional.ofNullable(decodeAndVerify.get(TiSecurityConst.USERNAME)).map(Object::toString).orElse(null);
-        List<String> authorities = Optional.ofNullable(decodeAndVerify.get(TiSecurityConst.AUTHORITIES)).map(x -> TiJsonUtil.toList(TiJsonUtil.toJsonString(x), String.class)).orElse(null);
+        List<String> authorities = Optional.ofNullable(decodeAndVerify.get(TiSecurityConst.AUTHORITIES))
+            .map(x -> TiJsonUtil.toList(TiJsonUtil.toJsonString(x), String.class)).orElse(null);
         TiSecurityUser user = new TiSecurityUser();
         user.setUsername(username);
         user.setRoles(authorities);
