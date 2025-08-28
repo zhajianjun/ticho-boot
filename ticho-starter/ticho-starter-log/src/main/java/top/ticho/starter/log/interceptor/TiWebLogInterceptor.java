@@ -46,8 +46,6 @@ import java.util.stream.Collectors;
 @Slf4j
 public class TiWebLogInterceptor implements HandlerInterceptor, Ordered {
 
-    /** 用户代理key */
-    private static final String USER_AGENT = "User-Agent";
     /** 日志信息线程变量 */
     private static final ThreadLocal<TiHttpLog> logTheadLocal = new ThreadLocal<>();
     /** 日志过滤地址匹配线程变量 */
