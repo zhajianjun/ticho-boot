@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import top.ticho.trace.common.TiTraceReporter;
 import top.ticho.trace.common.TiTraceProperty;
+import top.ticho.trace.common.TiTraceReporter;
 import top.ticho.trace.spring.interceptor.TiTraceInterceptor;
 
 /**
