@@ -145,7 +145,7 @@ public class TiDesensitizedUtil {
     }
 
     /**
-     * 【固定电话 前四位，后两位
+     * 【固定电话】 前四位，后两位
      *
      * @param num 固定电话
      * @return 脱敏后的固定电话；

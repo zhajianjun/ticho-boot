@@ -239,7 +239,6 @@ public class TiLineCaptcha {
             g.setColor(color);
             g.drawLine(i, (int) d, i, 0);
             g.drawLine(i, (int) d + h1, i, h1);
-
         }
     }
 
@@ -250,7 +249,8 @@ public class TiLineCaptcha {
 
     public byte[] getBytes() {
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-            ImageIO.write(buffImg, "png", baos);// 写入流中
+            // 写入流中
+            ImageIO.write(buffImg, "png", baos);
             return baos.toByteArray();
         } catch (IOException e) {
             throw new TiUtilException(e);
