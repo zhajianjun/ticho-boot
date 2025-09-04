@@ -51,16 +51,6 @@ public record DataSize(long bytes) implements Comparable<DataSize> {
      */
     private static final long BYTES_PER_TB = BYTES_PER_GB * 1024;
 
-
-    /**
-     * 构造
-     *
-     * @param bytes 长度
-     */
-    public DataSize {
-    }
-
-
     /**
      * 获得对应bytes的DataSize
      *
