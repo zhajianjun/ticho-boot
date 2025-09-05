@@ -22,7 +22,7 @@ public class DataSizeUtil {
 
     /**
      * 可读的文件大小<br>
-     * 参考 http://stackoverflow.com/questions/3263892/format-file-size-as-mb-gb-etc
+     * <a href="http://stackoverflow.com/questions/3263892/format-file-size-as-mb-gb-etc">参考</a>
      *
      * @param size Long类型大小
      * @return 大小
@@ -35,4 +35,5 @@ public class DataSizeUtil {
         return new DecimalFormat("#,##0.##")
             .format(size / Math.pow(1024, digitGroups)) + " " + DataUnit.UNIT_NAMES[digitGroups];
     }
+
 }
