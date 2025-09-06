@@ -31,6 +31,7 @@
         <module>ticho-starter-es</module>
         <module>ticho-starter-health</module>
         <module>ticho-starter-transform</module>
+        <module>ticho-starter-s3</module>
     </modules>
 
     <dependencyManagement>

@@ -1,0 +1,9 @@
+# 配置模版
+ticho:
+  s3:
+    endpoint: http://localhost
+    accessKey: root
+    secretKey: 123456
+    imgSize: 10MB
+    fileSize: 10MB
+    defaultBucket: default

@@ -17,6 +17,7 @@
         <spring-cloud-alibaba-dependencies.version>2023.0.3.2</spring-cloud-alibaba-dependencies.version>
         <!-- 其它的一些信息 -->
         <minio.version>8.1.0</minio.version>
+        <amazon-s3.version>2.33.2</amazon-s3.version>
         <guava.version>33.4.8-jre</guava.version>
         <mybatis-plus.version>3.5.11</mybatis-plus.version>
         <pagehelper-spring-boot-starter.version>2.1.0</pagehelper-spring-boot-starter.version>
@@ -26,6 +27,7 @@
         <flyway.version>10.5.0</flyway.version>
 
         <jackson.version>2.18.3</jackson.version>
+
     </properties>
 
     <dependencyManagement>
@@ -336,6 +338,18 @@
                         <groupId>com.google.guava</groupId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>s3</artifactId>
+                <version>${amazon-s3.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>s3-transfer-manager</artifactId>
+                <version>${amazon-s3.version}</version>
             </dependency>
 
             <dependency>
