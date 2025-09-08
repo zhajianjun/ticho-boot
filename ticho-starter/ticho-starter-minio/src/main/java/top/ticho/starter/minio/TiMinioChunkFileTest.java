@@ -38,7 +38,7 @@ public class TiMinioChunkFileTest {
         // 将分块文件上传至minio
         for (File file : files) {
             String objectName = prefix + "/" + file.getName();
-            tiMinioTemplate.uploadObject(bucket, file.getAbsolutePath(), objectName, "application/octet-stream", null);
+            tiMinioTemplate.uploadObject(bucket, objectName, "application/octet-stream", null, file.getAbsolutePath());
             log.info("上传分块成功{}", objectName);
         }
     }

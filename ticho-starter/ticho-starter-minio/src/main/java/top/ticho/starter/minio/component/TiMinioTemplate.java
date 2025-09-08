@@ -143,16 +143,16 @@ public class TiMinioTemplate {
      * @param bucketName   bucket名称
      * @param objectName   文件名称
      * @param userMetadata 用户自定义数据
-     * @param stream       文件流
+     * @param inputStream       文件流
      */
-    public void putObject(String bucketName, String objectName, String contentType, Map<String, String> userMetadata, InputStream stream) {
+    public void putObject(String bucketName, String objectName, String contentType, Map<String, String> userMetadata, InputStream inputStream) {
         try {
             minioClient.putObject(PutObjectArgs.builder()
                 .bucket(bucketName)
                 .object(objectName)
                 .userMetadata(userMetadata)
                 // 分段上传中允许的最小分段大小为5MiB。
-                .stream(stream, stream.available(), tiMinioProperty.getPartSize())
+                .stream(inputStream, inputStream.available(), tiMinioProperty.getPartSize())
                 .contentType(contentType)
                 .build());
         } catch (Exception e) {
@@ -171,15 +171,16 @@ public class TiMinioTemplate {
      */
     public void putObject(String bucketName, String objectName, Map<String, String> userMetadata, MultipartFile multipartFile) {
         try {
-            InputStream stream = multipartFile.getInputStream();
+            InputStream inputStream = multipartFile.getInputStream();
             minioClient.putObject(
                 PutObjectArgs.builder()
                     .bucket(bucketName)
                     .object(objectName)
                     .userMetadata(userMetadata)
                     // 分段上传中允许的最小分段大小为5MiB。
-                    .stream(stream, stream.available(), tiMinioProperty.getPartSize())
-                    .contentType(multipartFile.getContentType()).build()
+                    .stream(inputStream, multipartFile.getSize(), tiMinioProperty.getPartSize())
+                    .contentType(multipartFile.getContentType())
+                    .build()
             );
         } catch (Exception e) {
             log.error("上传文件异常，{}", e.getMessage(), e);
@@ -193,9 +194,9 @@ public class TiMinioTemplate {
      * @param bucketName   bucket名称
      * @param objectName   文件名称
      * @param userMetadata 用户自定义数据
-     * @param stream       文件流
+     * @param inputStream       文件流
      */
-    public void uploadObject(String bucketName, String filename, String objectName, String contentType, Map<String, String> userMetadata) {
+    public void uploadObject(String bucketName, String objectName, String contentType, Map<String, String> userMetadata, String filename) {
         try {
             minioClient.uploadObject(UploadObjectArgs.builder()
                 .bucket(bucketName)
