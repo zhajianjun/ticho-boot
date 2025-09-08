@@ -22,6 +22,8 @@ public class TiS3Property {
     private String secretKey;
     /** 地区 */
     private String region;
+    /** forcePathStyle */
+    private Boolean forcePathStyle = true;
     /** 图片大小限制，默认20MB */
     private DataSize maxImgSize = DataSize.ofMegabytes(20L);
     /** 文件大小限制，默认20MB */

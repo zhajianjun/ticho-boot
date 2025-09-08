@@ -6,6 +6,8 @@ import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.ResponseInputStream;
+import software.amazon.awssdk.core.async.AsyncRequestBody;
+import software.amazon.awssdk.core.exception.SdkException;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
@@ -47,9 +49,10 @@ import top.ticho.starter.s3.prop.TiS3Property;
 import top.ticho.starter.view.enums.TiBizErrorCode;
 import top.ticho.starter.view.exception.TiBizException;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,6 +60,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -76,13 +80,18 @@ public class TiS3Template {
     private final S3TransferManager s3TransferManager;
 
     public TiS3Template(TiS3Property tiS3Property) {
-        AwsBasicCredentials credentials = AwsBasicCredentials.create(tiS3Property.getAccessKey(), tiS3Property.getSecretKey());
+        String endpoint = tiS3Property.getEndpoint();
+        String accessKey = tiS3Property.getAccessKey();
+        String secretKey = tiS3Property.getSecretKey();
+        Boolean forcePathStyle = tiS3Property.getForcePathStyle();
+        URI endpointOverride = URI.create(endpoint);
+        AwsBasicCredentials credentials = AwsBasicCredentials.create(accessKey, secretKey);
         Region region = Region.of(tiS3Property.getRegion());
         StaticCredentialsProvider credentialsProvider = StaticCredentialsProvider.create(credentials);
         this.tiS3Property = tiS3Property;
-        this.s3Client = S3Client.builder().region(region).credentialsProvider(credentialsProvider).build();
-        this.s3Presigner = S3Presigner.builder().region(region).credentialsProvider(credentialsProvider).build();
-        this.s3AsyncClient = S3AsyncClient.builder().region(region).credentialsProvider(credentialsProvider).build();
+        this.s3Client = S3Client.builder().endpointOverride(endpointOverride).region(region).credentialsProvider(credentialsProvider).forcePathStyle(forcePathStyle).build();
+        this.s3Presigner = S3Presigner.builder().endpointOverride(endpointOverride).region(region).credentialsProvider(credentialsProvider).build();
+        this.s3AsyncClient = S3AsyncClient.builder().endpointOverride(endpointOverride).region(region).credentialsProvider(credentialsProvider).forcePathStyle(forcePathStyle).build();
         this.s3TransferManager = S3TransferManager.builder().s3Client(s3AsyncClient).build();
     }
 
@@ -178,19 +187,19 @@ public class TiS3Template {
     /**
      * 上传文件
      *
-     * @param bucketName bucket名称
-     * @param objectName 文件名称
-     * @param metadata   用户自定义数据
-     * @param stream     文件流
+     * @param bucketName  bucket名称
+     * @param objectName  文件名称
+     * @param metadata    用户自定义数据
+     * @param inputStream 文件流
      */
-    public void putObject(String bucketName, String objectName, String contentType, Map<String, String> metadata, InputStream stream) {
+    public void putObject(String bucketName, String objectName, String contentType, Map<String, String> metadata, InputStream inputStream) {
         try {
             s3Client.putObject(PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(objectName)
                 .metadata(metadata)
                 .contentType(contentType)
-                .build(), RequestBody.fromInputStream(stream, stream.available()));
+                .build(), RequestBody.fromInputStream(inputStream, inputStream.available()));
         } catch (Exception e) {
             log.error("上传文件异常，{}", e.getMessage(), e);
             throw new TiBizException(TiBizErrorCode.FAIL, "上传文件异常");
@@ -206,18 +215,24 @@ public class TiS3Template {
      * @param multipartFile 文件
      */
     public void putObject(String bucketName, String objectName, Map<String, String> metadata, MultipartFile multipartFile) {
-        try {
-            InputStream stream = multipartFile.getInputStream();
+        try (InputStream inputStream = multipartFile.getInputStream()) {
             s3Client.putObject(
                 PutObjectRequest.builder()
                     .bucket(bucketName)
                     .key(objectName)
                     .metadata(metadata)
                     .contentType(multipartFile.getContentType())
-                    .build(), RequestBody.fromInputStream(stream, stream.available())
+                    .build(),
+                RequestBody.fromInputStream(inputStream, multipartFile.getSize())
             );
+        } catch (IOException e) {
+            log.error("上传文件IO异常，{}", e.getMessage(), e);
+            throw new TiBizException(TiBizErrorCode.FAIL, "上传文件IO异常");
+        } catch (SdkException e) {
+            log.error("上传文件SDK异常，{}", e.getMessage(), e);
+            throw new TiBizException(TiBizErrorCode.FAIL, "上传文件SDK异常");
         } catch (Exception e) {
-            log.error("上传文件异常，{}", e.getMessage(), e);
+            log.error("上传文件未知异常，{}", e.getMessage(), e);
             throw new TiBizException(TiBizErrorCode.FAIL, "上传文件异常");
         }
     }
@@ -225,14 +240,51 @@ public class TiS3Template {
     /**
      * 上传文件
      *
-     * @param bucketName bucket名称
-     * @param objectName 文件名称
-     * @param metadata   用户自定义数据
-     * @param stream     文件流
+     * @param bucketName  bucket名称
+     * @param objectName  文件名称
+     * @param metadata    用户自定义数据
+     * @param inputStream 文件流
      */
-    public void putLargeObject(String bucketName, String objectName, String contentType, Map<String, String> metadata, InputStream stream) {
+    public void putLargeObject(String bucketName, String objectName, Map<String, String> metadata, MultipartFile multipartFile, ExecutorService executorService) {
+        try (InputStream inputStream = multipartFile.getInputStream()) {
+            AsyncRequestBody requestBody = AsyncRequestBody.fromInputStream(inputStream, multipartFile.getSize(), executorService);
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(objectName)
+                .metadata(metadata)
+                .contentType(multipartFile.getContentType())
+                .build();
+            UploadRequest uploadFileRequest = UploadRequest.builder()
+                .putObjectRequest(b -> b.bucket(bucketName).key(objectName))
+                .putObjectRequest(putObjectRequest)
+                .requestBody(requestBody)
+                .build();
+            Upload upload = s3TransferManager.upload(uploadFileRequest);
+            upload.completionFuture().join();
+        } catch (IOException e) {
+            log.error("上传文件IO异常，{}", e.getMessage(), e);
+            throw new TiBizException(TiBizErrorCode.FAIL, "上传文件IO异常");
+        } catch (SdkException e) {
+            log.error("上传文件SDK异常，{}", e.getMessage(), e);
+            throw new TiBizException(TiBizErrorCode.FAIL, "上传文件SDK异常");
+        } catch (Exception e) {
+            log.error("上传文件未知异常，{}", e.getMessage(), e);
+            throw new TiBizException(TiBizErrorCode.FAIL, "上传文件异常");
+        }
+    }
+
+    /**
+     * 上传文件
+     *
+     * @param bucketName  bucket名称
+     * @param objectName  文件名称
+     * @param metadata    用户自定义数据
+     * @param inputStream 文件流
+     */
+    public void putLargeObject(String bucketName, String objectName, String contentType, Map<String, String> metadata, InputStream inputStream, ExecutorService executorService) {
         try {
-            RequestBody requestBody = RequestBody.fromInputStream(stream, stream.available());
+            long available = inputStream.available();
+            AsyncRequestBody requestBody = AsyncRequestBody.fromInputStream(inputStream, available, executorService);
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(objectName)
@@ -242,6 +294,7 @@ public class TiS3Template {
             UploadRequest uploadFileRequest = UploadRequest.builder()
                 .putObjectRequest(b -> b.bucket(bucketName).key(objectName))
                 .putObjectRequest(putObjectRequest)
+                .requestBody(requestBody)
                 .build();
             Upload upload = s3TransferManager.upload(uploadFileRequest);
             upload.completionFuture().join();
@@ -254,12 +307,12 @@ public class TiS3Template {
     /**
      * 本地上传文件
      *
-     * @param bucketName bucket名称
-     * @param objectName 文件名称
-     * @param metadata   用户自定义数据
-     * @param stream     文件流
+     * @param bucketName  bucket名称
+     * @param objectName  文件名称
+     * @param metadata    用户自定义数据
+     * @param inputStream 文件流
      */
-    public void uploadObject(String bucketName, String filename, String objectName, String contentType, Map<String, String> metadata) {
+    public void uploadObject(String bucketName, String objectName, String contentType, Map<String, String> metadata, String filePath) {
         try {
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
@@ -267,7 +320,7 @@ public class TiS3Template {
                 .metadata(metadata)
                 .contentType(contentType)
                 .build();
-            RequestBody requestBody = RequestBody.fromFile(new File(filename));
+            RequestBody requestBody = RequestBody.fromFile(Paths.get(filePath));
             s3Client.putObject(putObjectRequest, requestBody);
         } catch (Exception e) {
             log.error("上传文件异常，{}", e.getMessage(), e);
@@ -365,16 +418,15 @@ public class TiS3Template {
         String uploadId,
         String contentType,
         Map<String, String> metadata,
-        InputStream stream
+        InputStream inputStream
     ) {
         List<CompletedPart> completedParts = new ArrayList<>();
-        // 5 MB（最小分片大小，最后一个分片可小于此值）:cite[3]:cite[6]:cite[7]
         long partSize = tiS3Property.getPartSize();
         int partNumber = 1;
         try {
             byte[] buffer = new byte[(int) partSize];
             int bytesRead;
-            while ((bytesRead = stream.read(buffer)) > 0) {
+            while ((bytesRead = inputStream.read(buffer)) > 0) {
                 if (bytesRead < partSize) {
                     // 处理最后一块可能不满的情况
                     byte[] lastBuffer = new byte[bytesRead];
