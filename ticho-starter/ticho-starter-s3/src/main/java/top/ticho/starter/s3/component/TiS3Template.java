@@ -261,14 +261,8 @@ public class TiS3Template {
                 .build();
             Upload upload = s3TransferManager.upload(uploadFileRequest);
             upload.completionFuture().join();
-        } catch (IOException e) {
-            log.error("上传文件IO异常，{}", e.getMessage(), e);
-            throw new TiBizException(TiBizErrorCode.FAIL, "上传文件IO异常");
-        } catch (SdkException e) {
-            log.error("上传文件SDK异常，{}", e.getMessage(), e);
-            throw new TiBizException(TiBizErrorCode.FAIL, "上传文件SDK异常");
         } catch (Exception e) {
-            log.error("上传文件未知异常，{}", e.getMessage(), e);
+            log.error("上传文件异常，{}", e.getMessage(), e);
             throw new TiBizException(TiBizErrorCode.FAIL, "上传文件异常");
         }
     }
