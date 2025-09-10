@@ -1,6 +1,9 @@
 package top.ticho.tool.core;
 
-import cn.hutool.core.codec.Base64;
+
+import org.apache.commons.codec.binary.Base64;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  *
@@ -11,7 +14,24 @@ import cn.hutool.core.codec.Base64;
 public class TiBase64Util {
 
     public static String encode(byte[] source) {
-        return Base64.encode(source);
+        if (source == null || source.length == 0) {
+            return null;
+        }
+        return Base64.encodeBase64String(source);
+    }
+
+    public static String encode(String source) {
+        if (TiStrUtil.isEmpty(source)) {
+            return null;
+        }
+        return Base64.encodeBase64String(source.getBytes(StandardCharsets.UTF_8));
+    }
+
+    public static String decode(String source) {
+        if (TiStrUtil.isEmpty(source)) {
+            return null;
+        }
+        return new String(Base64.decodeBase64(source), StandardCharsets.UTF_8);
     }
 
 }
