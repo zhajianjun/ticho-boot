@@ -1,6 +1,7 @@
 package top.ticho.tool.core;
 
-import cn.hutool.core.util.ClassUtil;
+import org.apache.commons.lang3.ClassUtils;
+import top.ticho.tool.core.exception.TiUtilException;
 
 /**
  *
@@ -11,11 +12,17 @@ import cn.hutool.core.util.ClassUtil;
 public class TiClassUtil {
 
     public static boolean isSimpleValueType(Class<?> aClass) {
-        return ClassUtil.isSimpleValueType(aClass);
+        return ClassUtils.isPrimitiveOrWrapper(aClass);
     }
 
     public static <T> Class<T> loadClass(String className) {
-        return ClassUtil.loadClass(className);
+        Class<?> aClass;
+        try {
+            aClass = ClassUtils.getClass(className);
+        } catch (ClassNotFoundException e) {
+            throw new TiUtilException(e);
+        }
+        return (Class<T>) aClass;
     }
 
 }
