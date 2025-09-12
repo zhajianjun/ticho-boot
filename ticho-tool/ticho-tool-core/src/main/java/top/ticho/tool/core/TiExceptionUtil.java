@@ -1,6 +1,7 @@
 package top.ticho.tool.core;
 
-import cn.hutool.core.exceptions.ExceptionUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 /**
  *
@@ -11,11 +12,12 @@ import cn.hutool.core.exceptions.ExceptionUtil;
 public class TiExceptionUtil {
 
     public static String stacktraceToString(Throwable throwable) {
-        return ExceptionUtil.stacktraceToString(throwable);
+        return stacktraceToString(throwable, 3000);
     }
 
-    public static String stacktraceToString(Throwable throwable, int limit) {
-        return ExceptionUtil.stacktraceToString(throwable, limit, null);
+    public static String stacktraceToString(Throwable throwable, int length) {
+        String stackTrace = ExceptionUtils.getStackTrace(throwable);
+        return StringUtils.substring(stackTrace, 0, length);
     }
 
 }

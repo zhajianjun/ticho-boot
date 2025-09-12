@@ -1,9 +1,11 @@
 package top.ticho.tool.core;
 
 import cn.hutool.core.collection.CollUtil;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author zhajianjun
@@ -12,7 +14,7 @@ import java.util.List;
 public class TiCollUtil {
 
     public static boolean isEmpty(Collection<?> collection) {
-        return CollUtil.isEmpty(collection);
+        return CollectionUtils.isEmpty(collection);
     }
 
     public static <T> List<List<T>> split(Collection<T> collection, int batchSize) {
@@ -20,7 +22,7 @@ public class TiCollUtil {
     }
 
     public static boolean isNotEmpty(Collection<?> collection) {
-        return CollUtil.isNotEmpty(collection);
+        return CollectionUtils.isNotEmpty(collection);
     }
 
     public static List<String> toList(Collection<?> collection) {
@@ -33,8 +35,14 @@ public class TiCollUtil {
             .toList();
     }
 
-    public static <T> String join(Iterable<T> iterable, CharSequence conjunction) {
-        return CollUtil.join(iterable, conjunction);
+    public static <T> String join(Collection<T> collection, CharSequence conjunction) {
+        if (null == collection) {
+            return null;
+        }
+        return collection
+            .stream()
+            .map(Object::toString)
+            .collect(Collectors.joining(conjunction));
     }
 
 }
