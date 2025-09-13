@@ -1,20 +1,18 @@
 package top.ticho.tool.core;
 
-import cn.hutool.core.lang.Snowflake;
-import cn.hutool.core.lang.UUID;
-import cn.hutool.core.util.IdUtil;
 import com.github.f4b6a3.ulid.Ulid;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.UUID;
 
 /**
  * @author zhajianjun
  * @date 2025-08-04 22:41
  */
 public class TiIdUtil {
-    private static final Snowflake snowflake = IdUtil.getSnowflake(0, 0);
+    private static final TiSnowflake snowflake = new TiSnowflake(0, 0);
     private static final char[] ALPHABET = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 
     public static Long snowId() {
@@ -30,7 +28,8 @@ public class TiIdUtil {
     }
 
     public static String uuid(boolean isSimple) {
-        return UUID.fastUUID().toString(isSimple);
+        UUID uuid = UUID.randomUUID();
+        return isSimple ? uuid.toString().replace("-", "") : uuid.toString();
     }
 
     public static String shortUuid() {

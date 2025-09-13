@@ -1,7 +1,7 @@
 package ${package.repositoryImpl};
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
+import top.ticho.tool.core.TiCollUtil;
+import top.ticho.tool.core.TiStrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
@@ -63,13 +63,13 @@ public class ${className.repositoryImpl} extends TiRepositoryImpl<${className.ma
     @Override
     public TiPageResult<${className.dto}> page(${className.query} ${lowEntity}Query) {
         LambdaQueryWrapper<${className.po}> wrapper = Wrappers.lambdaQuery();
-        wrapper.in(CollUtil.isNotEmpty(${lowEntity}Query.getIds()), ${className.po}::get${keyNameUF}, ${lowEntity}Query.get${keyNameUF}s());
+        wrapper.in(TiCollUtil.isNotEmpty(${lowEntity}Query.getIds()), ${className.po}::get${keyNameUF}, ${lowEntity}Query.get${keyNameUF}s());
     <% for(field in table.fields){ %>
         <% if(array.contain(queryIgnore, field.propertyLowerName)){ %>
         <% continue; %>
         <% } else { %>
             <% if(field.propertyType == "String"){ %>
-        wrapper.eq(StrUtil.isNotBlank(${lowEntity}Query.get${field.propertyUpperName}()), ${className.po}::get${field.propertyUpperName}, ${lowEntity}Query.get${field.propertyUpperName}());
+        wrapper.eq(TiStrUtil.isNotBlank(${lowEntity}Query.get${field.propertyUpperName}()), ${className.po}::get${field.propertyUpperName}, ${lowEntity}Query.get${field.propertyUpperName}());
             <% } else { %>
         wrapper.eq(Objects.nonNull(${lowEntity}Query.get${field.propertyUpperName}()), ${className.po}::get${field.propertyUpperName}, ${lowEntity}Query.get${field.propertyUpperName}());
             <% } %>

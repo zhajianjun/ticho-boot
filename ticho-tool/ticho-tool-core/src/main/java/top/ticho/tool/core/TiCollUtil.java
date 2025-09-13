@@ -1,8 +1,8 @@
 package top.ticho.tool.core;
 
-import cn.hutool.core.collection.CollUtil;
 import org.apache.commons.collections4.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,7 +18,21 @@ public class TiCollUtil {
     }
 
     public static <T> List<List<T>> split(Collection<T> collection, int batchSize) {
-        return CollUtil.split(collection, batchSize);
+        final List<List<T>> result = new ArrayList<>();
+        if (isEmpty(collection)) {
+            return result;
+        }
+        final int initSize = Math.min(collection.size(), batchSize);
+        List<T> subList = new ArrayList<>(initSize);
+        for (T t : collection) {
+            if (subList.size() >= batchSize) {
+                result.add(subList);
+                subList = new ArrayList<>(initSize);
+            }
+            subList.add(t);
+        }
+        result.add(subList);
+        return result;
     }
 
     public static boolean isNotEmpty(Collection<?> collection) {

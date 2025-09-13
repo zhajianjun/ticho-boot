@@ -1,6 +1,5 @@
 package top.ticho.tool.core;
 
-import cn.hutool.core.util.StrUtil;
 import top.ticho.tool.core.constant.TiCharConst;
 import top.ticho.tool.core.enums.TiDesensitizedType;
 
@@ -11,50 +10,50 @@ import top.ticho.tool.core.enums.TiDesensitizedType;
  * @date 2025-08-10 12:16
  */
 public class TiDesensitizedUtil {
-    public static String desensitized(CharSequence str, TiDesensitizedType desensitizedType) {
-        if (StrUtil.isBlank(str)) {
-            return StrUtil.EMPTY;
+    public static String desensitized(String str, TiDesensitizedType desensitizedType) {
+        if (TiStrUtil.isBlank(str)) {
+            return TiStrUtil.EMPTY;
         }
-        String newStr = String.valueOf(str);
+        String newStr = (str);
         switch (desensitizedType) {
             case USER_ID:
                 newStr = String.valueOf(userId());
                 break;
             case CHINESE_NAME:
-                newStr = chineseName(String.valueOf(str));
+                newStr = chineseName(str);
                 break;
             case ID_CARD:
-                newStr = idCardNum(String.valueOf(str), 1, 2);
+                newStr = idCardNum((str), 1, 2);
                 break;
             case FIXED_PHONE:
-                newStr = fixedPhone(String.valueOf(str));
+                newStr = fixedPhone((str));
                 break;
             case MOBILE_PHONE:
-                newStr = mobilePhone(String.valueOf(str));
+                newStr = mobilePhone((str));
                 break;
             case ADDRESS:
-                newStr = address(String.valueOf(str), 8);
+                newStr = address((str), 8);
                 break;
             case EMAIL:
-                newStr = email(String.valueOf(str));
+                newStr = email((str));
                 break;
             case PASSWORD:
-                newStr = password(String.valueOf(str));
+                newStr = password((str));
                 break;
             case CAR_LICENSE:
-                newStr = carLicense(String.valueOf(str));
+                newStr = carLicense((str));
                 break;
             case BANK_CARD:
-                newStr = bankCard(String.valueOf(str));
+                newStr = bankCard((str));
                 break;
             case IPV4:
-                newStr = ipv4(String.valueOf(str));
+                newStr = ipv4((str));
                 break;
             case IPV6:
-                newStr = ipv6(String.valueOf(str));
+                newStr = ipv6((str));
                 break;
             case FIRST_MASK:
-                newStr = firstMask(String.valueOf(str));
+                newStr = firstMask((str));
                 break;
             case CLEAR_TO_EMPTY:
                 newStr = clear();
@@ -74,7 +73,7 @@ public class TiDesensitizedUtil {
      * @since 5.8.22
      */
     public static String clear() {
-        return StrUtil.EMPTY;
+        return TiStrUtil.EMPTY;
     }
 
     /**
@@ -104,7 +103,7 @@ public class TiDesensitizedUtil {
      * @return 脱敏后的字符串
      */
     public static String firstMask(String str) {
-        if (StrUtil.isBlank(str)) {
+        if (TiStrUtil.isBlank(str)) {
             return TiStrUtil.EMPTY;
         }
         return TiStrUtil.hide(str, 1, str.length());
@@ -130,18 +129,18 @@ public class TiDesensitizedUtil {
      */
     public static String idCardNum(String idCardNum, int front, int end) {
         // 身份证不能为空
-        if (StrUtil.isBlank(idCardNum)) {
-            return StrUtil.EMPTY;
+        if (TiStrUtil.isBlank(idCardNum)) {
+            return TiStrUtil.EMPTY;
         }
         // 需要截取的长度不能大于身份证号长度
         if ((front + end) > idCardNum.length()) {
-            return StrUtil.EMPTY;
+            return TiStrUtil.EMPTY;
         }
         // 需要截取的不能小于0
         if (front < 0 || end < 0) {
-            return StrUtil.EMPTY;
+            return TiStrUtil.EMPTY;
         }
-        return StrUtil.hide(idCardNum, front, idCardNum.length() - end);
+        return TiStrUtil.hide(idCardNum, front, idCardNum.length() - end);
     }
 
     /**
@@ -151,10 +150,10 @@ public class TiDesensitizedUtil {
      * @return 脱敏后的固定电话；
      */
     public static String fixedPhone(String num) {
-        if (StrUtil.isBlank(num)) {
-            return StrUtil.EMPTY;
+        if (TiStrUtil.isBlank(num)) {
+            return TiStrUtil.EMPTY;
         }
-        return StrUtil.hide(num, 4, num.length() - 2);
+        return TiStrUtil.hide(num, 4, num.length() - 2);
     }
 
     /**
@@ -164,10 +163,10 @@ public class TiDesensitizedUtil {
      * @return 脱敏后的移动电话；
      */
     public static String mobilePhone(String num) {
-        if (StrUtil.isBlank(num)) {
-            return StrUtil.EMPTY;
+        if (TiStrUtil.isBlank(num)) {
+            return TiStrUtil.EMPTY;
         }
-        return StrUtil.hide(num, 3, num.length() - 4);
+        return TiStrUtil.hide(num, 3, num.length() - 4);
     }
 
     /**
@@ -178,11 +177,11 @@ public class TiDesensitizedUtil {
      * @return 脱敏后的家庭地址
      */
     public static String address(String address, int sensitiveSize) {
-        if (StrUtil.isBlank(address)) {
-            return StrUtil.EMPTY;
+        if (TiStrUtil.isBlank(address)) {
+            return TiStrUtil.EMPTY;
         }
         int length = address.length();
-        return StrUtil.hide(address, length - sensitiveSize, length);
+        return TiStrUtil.hide(address, length - sensitiveSize, length);
     }
 
     /**
@@ -192,14 +191,14 @@ public class TiDesensitizedUtil {
      * @return 脱敏后的邮箱
      */
     public static String email(String email) {
-        if (StrUtil.isBlank(email)) {
-            return StrUtil.EMPTY;
+        if (TiStrUtil.isBlank(email)) {
+            return TiStrUtil.EMPTY;
         }
-        int index = StrUtil.indexOf(email, '@');
+        int index = TiStrUtil.indexOf(email, '@');
         if (index <= 1) {
             return email;
         }
-        return StrUtil.hide(email, 1, index);
+        return TiStrUtil.hide(email, 1, index);
     }
 
     /**
@@ -209,10 +208,10 @@ public class TiDesensitizedUtil {
      * @return 脱敏后的密码
      */
     public static String password(String password) {
-        if (StrUtil.isBlank(password)) {
-            return StrUtil.EMPTY;
+        if (TiStrUtil.isBlank(password)) {
+            return TiStrUtil.EMPTY;
         }
-        return StrUtil.repeat('*', password.length());
+        return TiStrUtil.repeat('*', password.length());
     }
 
     /**
@@ -227,15 +226,15 @@ public class TiDesensitizedUtil {
      * @return 脱敏后的车牌
      */
     public static String carLicense(String carLicense) {
-        if (StrUtil.isBlank(carLicense)) {
-            return StrUtil.EMPTY;
+        if (TiStrUtil.isBlank(carLicense)) {
+            return TiStrUtil.EMPTY;
         }
         // 普通车牌
         if (carLicense.length() == 7) {
-            carLicense = StrUtil.hide(carLicense, 3, 6);
+            carLicense = TiStrUtil.hide(carLicense, 3, 6);
         } else if (carLicense.length() == 8) {
             // 新能源车牌
-            carLicense = StrUtil.hide(carLicense, 3, 7);
+            carLicense = TiStrUtil.hide(carLicense, 3, 7);
         }
         return carLicense;
     }
@@ -254,10 +253,10 @@ public class TiDesensitizedUtil {
      * @return 脱敏之后的银行卡号
      */
     public static String bankCard(String bankCardNo) {
-        if (StrUtil.isBlank(bankCardNo)) {
+        if (TiStrUtil.isBlank(bankCardNo)) {
             return bankCardNo;
         }
-        bankCardNo = StrUtil.cleanBlank(bankCardNo);
+        bankCardNo = TiStrUtil.cleanBlank(bankCardNo);
         if (bankCardNo.length() < 9) {
             return bankCardNo;
         }
@@ -285,7 +284,7 @@ public class TiDesensitizedUtil {
      * @return 脱敏后的地址
      */
     public static String ipv4(String ipv4) {
-        return StrUtil.subBefore(ipv4, '.', false) + ".*.*.*";
+        return TiStrUtil.subBefore(ipv4, ".") + ".*.*.*";
     }
 
     /**
@@ -295,7 +294,7 @@ public class TiDesensitizedUtil {
      * @return 脱敏后的地址
      */
     public static String ipv6(String ipv6) {
-        return TiStrUtil.subBefore(ipv6, ":", false) + ":*:*:*:*:*:*:*";
+        return TiStrUtil.subBefore(ipv6, ":") + ":*:*:*:*:*:*:*";
     }
 
 }

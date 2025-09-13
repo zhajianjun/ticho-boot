@@ -1,13 +1,13 @@
 package top.ticho.tool.core;
 
-import cn.hutool.core.date.LocalDateTimeUtil;
-import cn.hutool.core.date.TemporalAccessorUtil;
+import top.ticho.tool.core.constant.TiDateFormatConst;
 
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
@@ -17,26 +17,29 @@ import java.util.Date;
  * @date 2025-08-09 19:59
  */
 public class TiLocalDateTimeUtil {
-    public static final String NORM_TIME_PATTERN = "HH:mm:ss";
 
     public static LocalDateTime of(long epochMilli) {
-        return LocalDateTimeUtil.of(epochMilli);
+        Instant instant = Instant.ofEpochMilli(epochMilli);
+        return of(instant);
     }
 
     public static LocalDateTime of(Instant instant) {
-        return LocalDateTimeUtil.of(instant, ZoneId.systemDefault());
+        return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
     }
 
     public static String formatNormal(LocalDateTime time) {
-        return LocalDateTimeUtil.formatNormal(time);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(TiDateFormatConst.YYYY_MM_DD_HH_MM_SS);
+        return formatter.format(time);
     }
 
     public static String formatNormal(LocalDate time) {
-        return LocalDateTimeUtil.formatNormal(time);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(TiDateFormatConst.YYYY_MM_DD);
+        return formatter.format(time);
     }
 
     public static String formatNormal(LocalTime time) {
-        return TemporalAccessorUtil.format(time, NORM_TIME_PATTERN);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(TiDateFormatConst.HH_MM_SS);
+        return formatter.format(time);
     }
 
     public static Date toDate(LocalDateTime localDateTime) {

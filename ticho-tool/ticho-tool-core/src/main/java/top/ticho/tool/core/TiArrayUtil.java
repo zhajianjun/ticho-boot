@@ -1,5 +1,7 @@
 package top.ticho.tool.core;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.lang.reflect.Array;
 
 /**
@@ -28,6 +30,14 @@ public class TiArrayUtil {
 
     public static int getLength(Object array) {
         return array != null ? Array.getLength(array) : 0;
+    }
+
+    public static String toString(Object obj) {
+        return ArrayUtils.toString(obj);
+    }
+
+    public static boolean isArray(Object obj) {
+        return null != obj && obj.getClass().isArray();
     }
 
 }

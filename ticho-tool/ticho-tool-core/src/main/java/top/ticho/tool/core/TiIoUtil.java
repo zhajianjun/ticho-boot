@@ -1,7 +1,9 @@
 package top.ticho.tool.core;
 
-import cn.hutool.core.io.IoUtil;
+import org.apache.commons.io.IOUtils;
+import top.ticho.tool.core.exception.TiUtilException;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -14,7 +16,11 @@ import java.io.OutputStream;
 public class TiIoUtil {
 
     public static long copy(InputStream in, OutputStream out, int bufferSize) {
-        return IoUtil.copy(in, out, bufferSize);
+        try {
+            return IOUtils.copy(in, out, bufferSize);
+        } catch (IOException e) {
+            throw new TiUtilException(e);
+        }
     }
 
 }

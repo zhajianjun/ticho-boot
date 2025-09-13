@@ -59,7 +59,7 @@ public class TiOkHttpInterceptor implements Interceptor {
         String reqHeaders = toJson(reqHeaderMap);
         String method = req.method();
         HttpUrl httpUrl = req.url();
-        String fullUrl = TiStrUtil.subBefore(httpUrl.toString(), "?", false);
+        String fullUrl = TiStrUtil.subBefore(httpUrl.toString(), "?");
         Map<String, Object> paramsMap = getParams(httpUrl);
         String params = toJson(paramsMap);
         log.info("[HTTP] {} {} 请求开始, 请求参数={}, 请求体={}, 请求头={}", method, fullUrl, nullOfDefault(params), nullOfDefault(reqBody), nullOfDefault(reqHeaders));

@@ -1,7 +1,6 @@
 package top.ticho.tool.core.thread;
 
-import cn.hutool.core.thread.ThreadUtil;
-import cn.hutool.core.util.StrUtil;
+import top.ticho.tool.core.TiStrUtil;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -55,9 +54,9 @@ public class TiNamedThreadFactory implements ThreadFactory {
      * @param handler     未捕获异常处理
      */
     public TiNamedThreadFactory(String prefix, ThreadGroup threadGroup, boolean isDaemon, Thread.UncaughtExceptionHandler handler) {
-        this.prefix = StrUtil.isBlank(prefix) ? "Hutool" : prefix;
+        this.prefix = TiStrUtil.isBlank(prefix) ? "Hutool" : prefix;
         if (null == threadGroup) {
-            threadGroup = ThreadUtil.currentThreadGroup();
+            threadGroup = Thread.currentThread().getThreadGroup();
         }
         this.group = threadGroup;
         this.isDaemon = isDaemon;
@@ -66,7 +65,7 @@ public class TiNamedThreadFactory implements ThreadFactory {
 
     @Override
     public Thread newThread(Runnable runnable) {
-        Thread t = new Thread(this.group, runnable, StrUtil.format("{}{}", prefix, threadNumber.getAndIncrement()));
+        Thread t = new Thread(this.group, runnable, TiStrUtil.format("{}{}", prefix, threadNumber.getAndIncrement()));
         // 守护线程
         if (!t.isDaemon()) {
             if (isDaemon) {

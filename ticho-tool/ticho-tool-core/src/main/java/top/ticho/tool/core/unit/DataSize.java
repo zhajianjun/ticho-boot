@@ -1,7 +1,7 @@
 package top.ticho.tool.core.unit;
 
-import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.StrUtil;
+import org.apache.commons.lang3.StringUtils;
+import top.ticho.tool.core.TiStrUtil;
 
 import java.math.BigDecimal;
 import java.util.regex.Matcher;
@@ -142,9 +142,9 @@ public record DataSize(long bytes) implements Comparable<DataSize> {
      *
      * @param text the text to parse
      * @return the parsed DataSize
-     * @see #parse(CharSequence, DataUnit)
+     * @see #parse(String, DataUnit)
      */
-    public static DataSize parse(CharSequence text) {
+    public static DataSize parse(String text) {
         return parse(text, null);
     }
 
@@ -166,12 +166,15 @@ public record DataSize(long bytes) implements Comparable<DataSize> {
      * @param defaultUnit 默认的数据单位
      * @return the parsed DataSize
      */
-    public static DataSize parse(CharSequence text, DataUnit defaultUnit) {
-        Assert.notNull(text, "Text must not be null");
+    public static DataSize parse(String text, DataUnit defaultUnit) {
+        if (text == null) {
+            throw new IllegalArgumentException("Text must not be empty");
+        }
         try {
-            final Matcher matcher = PATTERN.matcher(StrUtil.cleanBlank(text));
-            Assert.state(matcher.matches(), "Does not match data size pattern");
-
+            final Matcher matcher = PATTERN.matcher(TiStrUtil.filter(text, TiStrUtil::isNotBlankChar));
+            if (!matcher.matches()) {
+                throw new IllegalArgumentException("Does not match data size pattern");
+            }
             final DataUnit unit = determineDataUnit(matcher.group(3), defaultUnit);
             return DataSize.of(new BigDecimal(matcher.group(1)), unit);
         } catch (Exception ex) {
@@ -188,7 +191,7 @@ public record DataSize(long bytes) implements Comparable<DataSize> {
      */
     private static DataUnit determineDataUnit(String suffix, DataUnit defaultUnit) {
         DataUnit defaultUnitToUse = (defaultUnit != null ? defaultUnit : DataUnit.BYTES);
-        return (StrUtil.isNotEmpty(suffix) ? DataUnit.fromSuffix(suffix) : defaultUnitToUse);
+        return (StringUtils.isNotEmpty(suffix) ? DataUnit.fromSuffix(suffix) : defaultUnitToUse);
     }
 
     /**
