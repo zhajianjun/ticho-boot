@@ -2,6 +2,7 @@ package top.ticho.tool.core;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
+import top.ticho.tool.core.constant.TiStrConst;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
@@ -17,9 +18,6 @@ import java.util.stream.Collectors;
  * @date 2025-08-04 22:32
  */
 public class TiStrUtil {
-    public static final String EMPTY = "";
-    public static final String DOT = ".";
-    public static final String EMPTY_JSON = "{}";
 
     public static <T extends String> T blankToDefault(T str, T defaultStr) {
         return StringUtils.defaultIfBlank(str, defaultStr);
@@ -39,7 +37,7 @@ public class TiStrUtil {
 
     public static String repeat(char c, int count) {
         if (count <= 0) {
-            return EMPTY;
+            return TiStrConst.EMPTY;
         }
         char[] result = new char[count];
         Arrays.fill(result, c);
@@ -283,7 +281,7 @@ public class TiStrUtil {
             toIndexExclude = tmp;
         }
         if (fromIndexInclude == toIndexExclude) {
-            return EMPTY;
+            return TiStrConst.EMPTY;
         }
         return str.substring(fromIndexInclude, toIndexExclude);
     }

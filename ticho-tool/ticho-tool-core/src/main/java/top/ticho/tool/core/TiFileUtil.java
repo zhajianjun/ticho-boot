@@ -102,7 +102,7 @@ public class TiFileUtil {
         }
     }
 
-    public static void moveContent(File src, File target) {
+    public static void moveFile(File src, File target) {
         try {
             FileUtils.moveFile(src, target);
         } catch (IOException e) {

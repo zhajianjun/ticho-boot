@@ -1,6 +1,7 @@
 package top.ticho.tool.core;
 
 import top.ticho.tool.core.constant.TiCharConst;
+import top.ticho.tool.core.constant.TiStrConst;
 
 import java.util.Map;
 
@@ -25,7 +26,7 @@ public class TiStrFormatter {
      * @return 结果
      */
     public static String format(String strPattern, Object... argArray) {
-        return formatWith(strPattern, TiStrUtil.EMPTY_JSON, argArray);
+        return formatWith(strPattern, TiStrConst.EMPTY_JSON, argArray);
     }
 
     /**

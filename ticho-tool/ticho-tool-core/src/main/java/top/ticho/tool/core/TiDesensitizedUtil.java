@@ -1,6 +1,7 @@
 package top.ticho.tool.core;
 
 import top.ticho.tool.core.constant.TiCharConst;
+import top.ticho.tool.core.constant.TiStrConst;
 import top.ticho.tool.core.enums.TiDesensitizedType;
 
 /**
@@ -12,7 +13,7 @@ import top.ticho.tool.core.enums.TiDesensitizedType;
 public class TiDesensitizedUtil {
     public static String desensitized(String str, TiDesensitizedType desensitizedType) {
         if (TiStrUtil.isBlank(str)) {
-            return TiStrUtil.EMPTY;
+            return TiStrConst.EMPTY;
         }
         String newStr = (str);
         switch (desensitizedType) {
@@ -73,7 +74,7 @@ public class TiDesensitizedUtil {
      * @since 5.8.22
      */
     public static String clear() {
-        return TiStrUtil.EMPTY;
+        return TiStrConst.EMPTY;
     }
 
     /**
@@ -104,7 +105,7 @@ public class TiDesensitizedUtil {
      */
     public static String firstMask(String str) {
         if (TiStrUtil.isBlank(str)) {
-            return TiStrUtil.EMPTY;
+            return TiStrConst.EMPTY;
         }
         return TiStrUtil.hide(str, 1, str.length());
     }
@@ -130,15 +131,15 @@ public class TiDesensitizedUtil {
     public static String idCardNum(String idCardNum, int front, int end) {
         // 身份证不能为空
         if (TiStrUtil.isBlank(idCardNum)) {
-            return TiStrUtil.EMPTY;
+            return TiStrConst.EMPTY;
         }
         // 需要截取的长度不能大于身份证号长度
         if ((front + end) > idCardNum.length()) {
-            return TiStrUtil.EMPTY;
+            return TiStrConst.EMPTY;
         }
         // 需要截取的不能小于0
         if (front < 0 || end < 0) {
-            return TiStrUtil.EMPTY;
+            return TiStrConst.EMPTY;
         }
         return TiStrUtil.hide(idCardNum, front, idCardNum.length() - end);
     }
@@ -151,7 +152,7 @@ public class TiDesensitizedUtil {
      */
     public static String fixedPhone(String num) {
         if (TiStrUtil.isBlank(num)) {
-            return TiStrUtil.EMPTY;
+            return TiStrConst.EMPTY;
         }
         return TiStrUtil.hide(num, 4, num.length() - 2);
     }
@@ -164,7 +165,7 @@ public class TiDesensitizedUtil {
      */
     public static String mobilePhone(String num) {
         if (TiStrUtil.isBlank(num)) {
-            return TiStrUtil.EMPTY;
+            return TiStrConst.EMPTY;
         }
         return TiStrUtil.hide(num, 3, num.length() - 4);
     }
@@ -178,7 +179,7 @@ public class TiDesensitizedUtil {
      */
     public static String address(String address, int sensitiveSize) {
         if (TiStrUtil.isBlank(address)) {
-            return TiStrUtil.EMPTY;
+            return TiStrConst.EMPTY;
         }
         int length = address.length();
         return TiStrUtil.hide(address, length - sensitiveSize, length);
@@ -192,7 +193,7 @@ public class TiDesensitizedUtil {
      */
     public static String email(String email) {
         if (TiStrUtil.isBlank(email)) {
-            return TiStrUtil.EMPTY;
+            return TiStrConst.EMPTY;
         }
         int index = TiStrUtil.indexOf(email, '@');
         if (index <= 1) {
@@ -209,7 +210,7 @@ public class TiDesensitizedUtil {
      */
     public static String password(String password) {
         if (TiStrUtil.isBlank(password)) {
-            return TiStrUtil.EMPTY;
+            return TiStrConst.EMPTY;
         }
         return TiStrUtil.repeat('*', password.length());
     }
@@ -227,7 +228,7 @@ public class TiDesensitizedUtil {
      */
     public static String carLicense(String carLicense) {
         if (TiStrUtil.isBlank(carLicense)) {
-            return TiStrUtil.EMPTY;
+            return TiStrConst.EMPTY;
         }
         // 普通车牌
         if (carLicense.length() == 7) {
