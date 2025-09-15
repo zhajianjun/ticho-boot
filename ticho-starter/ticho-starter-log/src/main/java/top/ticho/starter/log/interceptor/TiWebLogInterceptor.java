@@ -22,6 +22,7 @@ import top.ticho.starter.view.log.TiLogProperty;
 import top.ticho.starter.web.util.TiSpringUtil;
 import top.ticho.tool.core.TiMapUtil;
 import top.ticho.tool.core.TiStrUtil;
+import top.ticho.tool.core.constant.TiStrConst;
 import top.ticho.tool.json.util.TiJsonUtil;
 import top.ticho.trace.spring.util.TiIpUtil;
 
@@ -222,7 +223,7 @@ public class TiWebLogInterceptor implements HandlerInterceptor, Ordered {
 
     private String nullOfDefault(String result) {
         if (result == null) {
-            return TiStrUtil.EMPTY;
+            return TiStrConst.EMPTY;
         }
         return result;
     }

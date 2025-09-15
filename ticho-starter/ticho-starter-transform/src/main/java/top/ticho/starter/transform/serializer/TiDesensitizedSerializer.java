@@ -13,6 +13,7 @@ import top.ticho.starter.transform.enums.TiDesensitizedType;
 import top.ticho.tool.core.TiClassUtil;
 import top.ticho.tool.core.TiDesensitizedUtil;
 import top.ticho.tool.core.TiStrUtil;
+import top.ticho.tool.core.constant.TiStrConst;
 
 import java.io.IOException;
 
@@ -77,26 +78,26 @@ public class TiDesensitizedSerializer extends StdSerializer<Object> implements C
         gen.writeObject(render);
     }
 
-    public static String desensitized(CharSequence str, TiDesensitized tiDesensitized) {
+    public static String desensitized(String str, TiDesensitized tiDesensitized) {
         if (TiStrUtil.isBlank(str)) {
-            return TiStrUtil.EMPTY;
+            return TiStrConst.EMPTY;
         }
         TiDesensitizedType tiDesensitizedType = tiDesensitized.type();
         return switch (tiDesensitizedType) {
             case USER_ID -> String.valueOf(TiDesensitizedUtil.userId());
-            case CHINESE_NAME -> TiDesensitizedUtil.chineseName(String.valueOf(str));
-            case ID_CARD -> TiDesensitizedUtil.idCardNum(String.valueOf(str), 1, 2);
-            case FIXED_PHONE -> TiDesensitizedUtil.fixedPhone(String.valueOf(str));
-            case MOBILE_PHONE -> TiDesensitizedUtil.mobilePhone(String.valueOf(str));
-            case ADDRESS -> TiDesensitizedUtil.address(String.valueOf(str), 8);
-            case EMAIL -> TiDesensitizedUtil.email(String.valueOf(str));
-            case PASSWORD -> TiDesensitizedUtil.password(String.valueOf(str));
-            case CAR_LICENSE -> TiDesensitizedUtil.carLicense(String.valueOf(str));
-            case BANK_CARD -> TiDesensitizedUtil.bankCard(String.valueOf(str));
-            case IPV4 -> TiDesensitizedUtil.ipv4(String.valueOf(str));
-            case IPV6 -> TiDesensitizedUtil.ipv6(String.valueOf(str));
-            case FIRST_MASK -> TiDesensitizedUtil.firstMask(String.valueOf(str));
-            default -> TiStrUtil.hide(String.valueOf(str), tiDesensitized.start(), tiDesensitized.end());
+            case CHINESE_NAME -> TiDesensitizedUtil.chineseName(str);
+            case ID_CARD -> TiDesensitizedUtil.idCardNum(str, 1, 2);
+            case FIXED_PHONE -> TiDesensitizedUtil.fixedPhone(str);
+            case MOBILE_PHONE -> TiDesensitizedUtil.mobilePhone(str);
+            case ADDRESS -> TiDesensitizedUtil.address(str, 8);
+            case EMAIL -> TiDesensitizedUtil.email(str);
+            case PASSWORD -> TiDesensitizedUtil.password(str);
+            case CAR_LICENSE -> TiDesensitizedUtil.carLicense(str);
+            case BANK_CARD -> TiDesensitizedUtil.bankCard(str);
+            case IPV4 -> TiDesensitizedUtil.ipv4(str);
+            case IPV6 -> TiDesensitizedUtil.ipv6(str);
+            case FIRST_MASK -> TiDesensitizedUtil.firstMask(str);
+            default -> TiStrUtil.hide(str, tiDesensitized.start(), tiDesensitized.end());
         };
     }
 

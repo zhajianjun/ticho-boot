@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import top.ticho.tool.core.TiFileUtil;
 import top.ticho.tool.core.TiIdUtil;
 import top.ticho.tool.core.TiStrUtil;
+import top.ticho.tool.core.constant.TiStrConst;
 import top.ticho.tool.core.unit.DataSize;
 import top.ticho.tool.core.unit.DataUnit;
 
@@ -170,7 +171,7 @@ public class ChunkFileUtil {
         String mainName = TiFileUtil.mainName(name);
         String extName = TiFileUtil.extName(name);
         File localChunkFolder = fileSpliceChunk(localFile, 10);
-        String newFileName = mainName + "-" + TiIdUtil.uuid() + TiStrUtil.DOT + extName;
+        String newFileName = mainName + "-" + TiIdUtil.uuid() + TiStrConst.DOT + extName;
         String newFilePath = localChunkFolder.getParent() + File.separator + newFileName;
         File newFile = new File(newFilePath);
         composeLocalObject(localChunkFolder, newFile);

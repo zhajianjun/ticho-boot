@@ -9,6 +9,7 @@ import org.beetl.core.resource.StringTemplateResourceLoader;
 import top.ticho.tool.core.TiMapUtil;
 import top.ticho.tool.core.TiObjUtil;
 import top.ticho.tool.core.TiStrUtil;
+import top.ticho.tool.core.constant.TiStrConst;
 
 import java.io.IOException;
 import java.util.Map;
@@ -47,7 +48,7 @@ public class TiTemplateUtil {
     public static String render(String template, String key, Object value) {
         Template t = gtForString.getTemplate(template);
         if (TiStrUtil.isNotBlank(key)) {
-            t.binding(key, TiObjUtil.defaultIfNull(value, TiStrUtil.EMPTY));
+            t.binding(key, TiObjUtil.defaultIfNull(value, TiStrConst.EMPTY));
         }
         return t.render();
     }
@@ -70,7 +71,7 @@ public class TiTemplateUtil {
     public static String render(String template, String key, Object value, boolean isClasspath) {
         Template t = isClasspath ? gtForFile.getTemplate(template) : gtForString.getTemplate(template);
         if (TiStrUtil.isNotBlank(key)) {
-            t.binding(key, TiObjUtil.defaultIfNull(value, TiStrUtil.EMPTY));
+            t.binding(key, TiObjUtil.defaultIfNull(value, TiStrConst.EMPTY));
         }
         return t.render();
     }

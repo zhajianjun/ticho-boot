@@ -22,6 +22,7 @@ import top.ticho.starter.web.util.TiSpringUtil;
 import top.ticho.tool.core.TiMapUtil;
 import top.ticho.tool.core.TiStrUtil;
 import top.ticho.tool.core.TiUrlUtil;
+import top.ticho.tool.core.constant.TiStrConst;
 import top.ticho.tool.json.util.TiJsonUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -153,7 +154,7 @@ public class TiOkHttpInterceptor implements Interceptor {
 
     private String nullOfDefault(String result) {
         if (result == null) {
-            return TiStrUtil.EMPTY;
+            return TiStrConst.EMPTY;
         }
         return result;
     }

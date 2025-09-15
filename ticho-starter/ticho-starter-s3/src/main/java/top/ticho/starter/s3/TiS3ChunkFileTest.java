@@ -8,7 +8,7 @@ import top.ticho.starter.s3.component.TiS3Template;
 import top.ticho.starter.s3.prop.TiS3Property;
 import top.ticho.tool.core.TiFileUtil;
 import top.ticho.tool.core.TiIdUtil;
-import top.ticho.tool.core.TiStrUtil;
+import top.ticho.tool.core.constant.TiStrConst;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -52,7 +52,7 @@ public class TiS3ChunkFileTest {
         File file = new File(filePath);
         String fileName = TiFileUtil.getName(filePath);
         String mimeType = TiFileUtil.getMimeType(fileName);
-        String objectname = TiIdUtil.ulid() + TiStrUtil.DOT + TiFileUtil.extName(fileName);
+        String objectname = TiIdUtil.ulid() + TiStrConst.DOT + TiFileUtil.extName(fileName);
         Map<String, String> metadata = Collections.singletonMap("filename", fileName);
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
             tiS3Template.putObject(bucket, objectname, mimeType, metadata, fileInputStream);
