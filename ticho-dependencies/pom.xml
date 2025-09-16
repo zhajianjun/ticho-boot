@@ -253,19 +253,6 @@
                 <version>1.2.8</version>
             </dependency>
 
-            <!-- hutool全能工具包 -->
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-all</artifactId>
-                <version>5.8.25</version>
-            </dependency>
-
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-core</artifactId>
-                <version>5.8.25</version>
-            </dependency>
-
             <!-- mybatis plus -->
             <dependency>
                 <groupId>com.baomidou</groupId>
