@@ -117,7 +117,7 @@ public class TiStrFormatter {
             if (null == value && ignoreNull) {
                 continue;
             }
-            template2 = TiStrUtil.replace(template2, "{" + entry.getKey() + "}", value);
+            template2 = TiStrUtil.replace(template2, "{" + entry.getKey() + "}", value, true);
         }
         return template2;
     }

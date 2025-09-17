@@ -21,14 +21,14 @@ public class TiArrayUtil {
     }
 
     public static boolean isEmpty(Object array) {
-        return getLength(array) == 0;
+        return length(array) == 0;
     }
 
     public static boolean isNotEmpty(Object array) {
         return !isEmpty(array);
     }
 
-    public static int getLength(Object array) {
+    public static int length(Object array) {
         return array != null ? Array.getLength(array) : 0;
     }
 

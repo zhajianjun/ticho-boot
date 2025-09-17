@@ -48,7 +48,7 @@ public class TiTemplateUtil {
     public static String render(String template, String key, Object value) {
         Template t = gtForString.getTemplate(template);
         if (TiStrUtil.isNotBlank(key)) {
-            t.binding(key, TiObjUtil.defaultIfNull(value, TiStrConst.EMPTY));
+            t.binding(key, TiObjUtil.getIfNull(value, TiStrConst.EMPTY));
         }
         return t.render();
     }
@@ -71,7 +71,7 @@ public class TiTemplateUtil {
     public static String render(String template, String key, Object value, boolean isClasspath) {
         Template t = isClasspath ? gtForFile.getTemplate(template) : gtForString.getTemplate(template);
         if (TiStrUtil.isNotBlank(key)) {
-            t.binding(key, TiObjUtil.defaultIfNull(value, TiStrConst.EMPTY));
+            t.binding(key, TiObjUtil.getIfNull(value, TiStrConst.EMPTY));
         }
         return t.render();
     }

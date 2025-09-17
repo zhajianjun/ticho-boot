@@ -1,12 +1,11 @@
 package top.ticho.tool.core;
 
-import org.apache.commons.lang3.ObjectUtils;
-
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  *
@@ -16,12 +15,26 @@ import java.util.Map;
  */
 public class TiObjUtil {
 
-    public static boolean isEmpty(Object obj) {
-        return ObjectUtils.isEmpty(obj);
+    public static boolean isEmpty(final Object object) {
+        if (object == null) {
+            return true;
+        }
+        if (object instanceof CharSequence cs) {
+            return cs.isEmpty();
+        }
+        if (TiArrayUtil.isArray(object)) {
+            return Array.getLength(object) == 0;
+        }
+        return switch (object) {
+            case Collection<?> collection -> collection.isEmpty();
+            case Map<?, ?> map -> map.isEmpty();
+            case Optional<?> o -> o.isEmpty();
+            default -> false;
+        };
     }
 
     public static boolean isNotEmpty(Object obj) {
-        return ObjectUtils.isNotEmpty(obj);
+        return !isEmpty(obj);
     }
 
     /**
@@ -39,19 +52,22 @@ public class TiObjUtil {
      * @return 长度
      */
     public static int length(Object obj) {
-        if (obj == null) {
-            return 0;
+        switch (obj) {
+            case null -> {
+                return 0;
+            }
+            case CharSequence cs -> {
+                return cs.length();
+            }
+            case Collection<?> collection -> {
+                return collection.size();
+            }
+            case Map<?, ?> map -> {
+                return map.size();
+            }
+            default -> {
+            }
         }
-        if (obj instanceof CharSequence) {
-            return ((CharSequence) obj).length();
-        }
-        if (obj instanceof Collection) {
-            return ((Collection<?>) obj).size();
-        }
-        if (obj instanceof Map) {
-            return ((Map<?, ?>) obj).size();
-        }
-
         int count;
         if (obj instanceof Iterator<?> iter) {
             count = 0;
@@ -75,8 +91,9 @@ public class TiObjUtil {
         return -1;
     }
 
-    public static <T> T defaultIfNull(final T object, final T defaultValue) {
-        return ObjectUtils.getIfNull(object, defaultValue);
+    public static <T> T getIfNull(final T object, final T defaultValue) {
+        return object != null ? object : defaultValue;
     }
+
 
 }

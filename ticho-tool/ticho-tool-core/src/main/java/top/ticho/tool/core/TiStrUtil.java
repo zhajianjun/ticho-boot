@@ -19,33 +19,85 @@ import java.util.stream.Collectors;
  */
 public class TiStrUtil {
 
-    public static <T extends String> T blankToDefault(T str, T defaultStr) {
-        return StringUtils.defaultIfBlank(str, defaultStr);
+    public static <T extends CharSequence> T defaultIfBlank(final T str, final T defaultStr) {
+        return isBlank(str) ? defaultStr : str;
     }
 
-    public static boolean isBlank(String str) {
-        return StringUtils.isBlank(str);
+    public static boolean isBlank(final CharSequence cs) {
+        final int strLen = length(cs);
+        if (strLen == 0) {
+            return true;
+        }
+        for (int i = 0; i < strLen; i++) {
+            if (!Character.isWhitespace(cs.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
     }
 
-    public static boolean isNotBlank(String str) {
-        return StringUtils.isNotBlank(str);
+    public static boolean isNotBlank(final CharSequence cs) {
+        return !isBlank(cs);
     }
 
-    public static boolean isEmpty(String str) {
-        return StringUtils.isEmpty(str);
+    public static boolean isEmpty(final CharSequence cs) {
+        return cs == null || cs.isEmpty();
     }
 
+    /**
+     * 重复指定字符指定次数，生成新的字符串
+     *
+     * @param c     要重复的字符
+     * @param count 重复次数
+     * @return 由指定字符重复指定次数组成的新字符串，如果count小于等于0则返回空字符串
+     */
     public static String repeat(char c, int count) {
+        // 处理无效的重复次数
         if (count <= 0) {
             return TiStrConst.EMPTY;
         }
+        // 创建字符数组并填充指定字符
         char[] result = new char[count];
         Arrays.fill(result, c);
+        // 转换为字符串并返回
         return new String(result);
     }
 
+
     public static int indexOf(CharSequence str, char searchChar) {
-        return StringUtils.indexOf(str, searchChar, 0);
+        return indexOf(str, searchChar, 0);
+    }
+
+    public static int indexOf(final CharSequence cs, final int searchChar, int start) {
+        if (isEmpty(cs)) {
+            return Character.DIRECTIONALITY_UNDEFINED;
+        }
+        if (cs instanceof String) {
+            return ((String) cs).indexOf(searchChar, start);
+        }
+        final int sz = cs.length();
+        if (start < 0) {
+            start = 0;
+        }
+        if (searchChar < Character.MIN_SUPPLEMENTARY_CODE_POINT) {
+            for (int i = start; i < sz; i++) {
+                if (cs.charAt(i) == searchChar) {
+                    return i;
+                }
+            }
+            return Character.DIRECTIONALITY_UNDEFINED;
+        }
+        if (searchChar <= Character.MAX_CODE_POINT) {
+            final char[] chars = Character.toChars(searchChar);
+            for (int i = start; i < sz - 1; i++) {
+                final char high = cs.charAt(i);
+                final char low = cs.charAt(i + 1);
+                if (high == chars[0] && low == chars[1]) {
+                    return i;
+                }
+            }
+        }
+        return Character.DIRECTIONALITY_UNDEFINED;
     }
 
     public static String subBefore(String string, String separator) {
@@ -78,35 +130,11 @@ public class TiStrUtil {
         return str;
     }
 
-    public static String trim(String str, int mode) {
-        String result;
+    public static String trim(String str) {
         if (str == null) {
-            result = null;
-        } else {
-            int length = str.length();
-            int start = 0;
-            int end = length;// 扫描字符串头部
-            if (mode <= 0) {
-                while ((start < end) && (isBlankChar(str.charAt(start)))) {
-                    start++;
-                }
-            }// 扫描字符串尾部
-            if (mode >= 0) {
-                while ((start < end) && (isBlankChar(str.charAt(end - 1)))) {
-                    end--;
-                }
-            }
-            if ((start > 0) || (end < length)) {
-                result = str.substring(start, end);
-            } else {
-                result = str;
-            }
+            return null;
         }
-        return result;
-    }
-
-    public static String trimStart(String str) {
-        return trim(str, -1);
+        return str.trim();
     }
 
     public static String cleanBlank(String str) {
@@ -172,7 +200,7 @@ public class TiStrUtil {
             return null;
         }
         if (str.endsWith(suffix)) {
-            return subPre(str, str.length() - suffix.length());// 截取前半段
+            return substringPre(str, str.length() - suffix.length());// 截取前半段
         }
         return str;
     }
@@ -182,7 +210,7 @@ public class TiStrUtil {
             return null;
         }
         if (str.startsWith(prefix)) {
-            return subSuf(str, prefix.length());// 截取后半段
+            return substringSuf(str, prefix.length());// 截取后半段
         }
         return str;
     }
@@ -254,51 +282,61 @@ public class TiStrUtil {
         }
     }
 
-    public static String sub(String str, int fromIndexInclude, int toIndexExclude) {
-        if (isEmpty(str)) {
+    public static String substring(final String str, int start) {
+        if (str == null) {
             return null;
         }
-        int len = str.length();
-        if (fromIndexInclude < 0) {
-            fromIndexInclude = len + fromIndexInclude;
-            if (fromIndexInclude < 0) {
-                fromIndexInclude = 0;
-            }
-        } else if (fromIndexInclude > len) {
-            fromIndexInclude = len;
+        if (start < 0) {
+            start = str.length() + start;
         }
-        if (toIndexExclude < 0) {
-            toIndexExclude = len + toIndexExclude;
-            if (toIndexExclude < 0) {
-                toIndexExclude = len;
-            }
-        } else if (toIndexExclude > len) {
-            toIndexExclude = len;
+        if (start < 0) {
+            start = 0;
         }
-        if (toIndexExclude < fromIndexInclude) {
-            int tmp = fromIndexInclude;
-            fromIndexInclude = toIndexExclude;
-            toIndexExclude = tmp;
-        }
-        if (fromIndexInclude == toIndexExclude) {
+        if (start > str.length()) {
             return TiStrConst.EMPTY;
         }
-        return str.substring(fromIndexInclude, toIndexExclude);
+        return str.substring(start);
     }
 
-    public static String subPre(String string, int toIndexExclude) {
-        return sub(string, 0, toIndexExclude);
+    public static String substring(final String str, int start, int end) {
+        if (str == null) {
+            return null;
+        }
+        if (end < 0) {
+            end = str.length() + end;
+        }
+        if (start < 0) {
+            start = str.length() + start;
+        }
+        if (end > str.length()) {
+            end = str.length();
+        }
+        if (start > end) {
+            return TiStrConst.EMPTY;
+        }
+        if (start < 0) {
+            start = 0;
+        }
+        if (end < 0) {
+            end = 0;
+        }
+        return str.substring(start, end);
     }
 
-    public static String subSuf(String string, int fromIndex) {
+    public static String substringPre(String string, int toIndexExclude) {
+        return substring(string, 0, toIndexExclude);
+    }
+
+    public static String substringSuf(String string, int fromIndex) {
         if (isEmpty(string)) {
             return null;
         }
-        return sub(string, fromIndex, string.length());
+        return substring(string, fromIndex, string.length());
     }
 
-    public static String replace(String str, String searchStr, String replacement) {
-        return Strings.CS.replace(str, searchStr, replacement);
+    public static String replace(String text, String searchString, String replacement, boolean ignoreCase) {
+        Strings cs = ignoreCase ? Strings.CI : Strings.CS;
+        return cs.replace(text, searchString, replacement);
     }
 
     public static String str(Object obj) {
@@ -311,12 +349,23 @@ public class TiStrUtil {
         }
         if (obj instanceof String) {
             return (String) obj;
-        } else if (obj instanceof byte[]) {
-            return str(obj, charset);
-        } else if (obj instanceof Byte[]) {
-            return str(obj, charset);
-        } else if (obj instanceof ByteBuffer) {
-            return str(obj, charset);
+        } else if (obj instanceof byte[] bytes) {
+            return new String(bytes, charset);
+        } else if (obj instanceof Byte[] byteObjects) {
+            byte[] bytes = new byte[byteObjects.length];
+            for (int i = 0; i < byteObjects.length; i++) {
+                bytes[i] = byteObjects[i];
+            }
+            return new String(bytes, charset);
+        } else if (obj instanceof ByteBuffer byteBuffer) {
+            byte[] bytes;
+            if (byteBuffer.hasArray()) {
+                bytes = byteBuffer.array();
+            } else {
+                bytes = new byte[byteBuffer.remaining()];
+                byteBuffer.get(bytes);
+            }
+            return new String(bytes, charset);
         } else if (TiArrayUtil.isArray(obj)) {
             return TiArrayUtil.toString(obj);
         }
@@ -325,6 +374,10 @@ public class TiStrUtil {
 
     public static boolean isNotBlankChar(int c) {
         return !isBlankChar(c);
+    }
+
+    public static int length(CharSequence cs) {
+        return cs == null ? 0 : cs.length();
     }
 
     public static boolean isBlankChar(int c) {

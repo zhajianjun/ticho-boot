@@ -87,7 +87,7 @@ public abstract class AbstractAuthTokenFilter<T extends TiSecurityUser> extends 
             if (tiAntPatternsAuthHandle.ignoreAuth(request)) {
                 if (TiStrUtil.isNotBlank(token)) {
                     token = TiStrUtil.removePrefixIgnoreCase(token, TiSecurityConst.BEARER);
-                    token = TiStrUtil.trimStart(token);
+                    token = TiStrUtil.trim(token);
                     Map<String, Object> map = jwtDecode.decode(token);
                     boolean expired = jwtDecode.isExpired(map);
                     T securityUser = null;
@@ -101,7 +101,7 @@ public abstract class AbstractAuthTokenFilter<T extends TiSecurityUser> extends 
             }
             TiAssert.isNotNull(token, TiHttpErrorCode.NOT_LOGIN);
             token = TiStrUtil.removePrefixIgnoreCase(token, TiSecurityConst.BEARER);
-            token = TiStrUtil.trimStart(token);
+            token = TiStrUtil.trim(token);
             Map<String, Object> map = jwtDecode.decodeAndVerify(token);
             Object type = map.getOrDefault(TiSecurityConst.TYPE, "");
             TiAssert.isTrue(Objects.equals(type, TiSecurityConst.ACCESS_TOKEN), TiBizErrorCode.FAIL, "token不合法");
