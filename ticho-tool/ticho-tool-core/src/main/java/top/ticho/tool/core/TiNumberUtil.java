@@ -1,7 +1,5 @@
 package top.ticho.tool.core;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import top.ticho.tool.core.exception.TiUtilException;
 
 import java.math.BigDecimal;
@@ -35,21 +33,24 @@ public class TiNumberUtil {
     }
 
     public static BigDecimal toBigDecimal(String numberStr) {
-        if (StringUtils.isBlank(numberStr)) {
+        if (TiStrUtil.isBlank(numberStr)) {
             return BigDecimal.ZERO;
         }
-        if (!StringUtils.isNumeric(numberStr)) {
+        if (!TiStrUtil.isNumber(numberStr)) {
             return null;
         }
         return new BigDecimal(numberStr);
     }
 
     public static boolean isNumber(CharSequence str) {
-        return StringUtils.isNumeric(str);
+        return TiStrUtil.isNumber(str);
     }
 
     public static int parseInt(String number) {
-        return NumberUtils.toInt(number);
+        if (!isNumber(number)) {
+            return 0;
+        }
+        return Integer.parseInt(number);
     }
 
 

@@ -2,7 +2,6 @@ package top.ticho.tool.core;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.StringUtils;
 import top.ticho.tool.core.exception.TiUtilException;
 
 import java.io.File;
@@ -21,7 +20,7 @@ import java.nio.file.Paths;
 public class TiFileUtil {
 
     public static String getMimeType(String filePath) {
-        if (StringUtils.isBlank(filePath)) {
+        if (TiStrUtil.isBlank(filePath)) {
             return null;
         }
         if (TiStrUtil.endWith(filePath, ".css", true, false)) {
@@ -64,7 +63,7 @@ public class TiFileUtil {
 
     public static boolean del(File file) {
         try {
-            FileUtils.delete(file);
+            Files.delete(file.toPath());
         } catch (IOException e) {
             throw new TiUtilException(e);
         }

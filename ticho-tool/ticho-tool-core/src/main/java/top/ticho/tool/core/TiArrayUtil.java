@@ -1,8 +1,7 @@
 package top.ticho.tool.core;
 
-import org.apache.commons.lang3.ArrayUtils;
-
 import java.lang.reflect.Array;
+import java.util.Arrays;
 
 /**
  *
@@ -33,7 +32,32 @@ public class TiArrayUtil {
     }
 
     public static String toString(Object obj) {
-        return ArrayUtils.toString(obj);
+        if (null == obj) {
+            return null;
+        }
+        if (obj instanceof long[] array) {
+            return Arrays.toString(array);
+        } else if (obj instanceof int[] array) {
+            return Arrays.toString(array);
+        } else if (obj instanceof short[] array) {
+            return Arrays.toString(array);
+        } else if (obj instanceof char[] array) {
+            return Arrays.toString(array);
+        } else if (obj instanceof byte[] array) {
+            return Arrays.toString(array);
+        } else if (obj instanceof boolean[] array) {
+            return Arrays.toString(array);
+        } else if (obj instanceof float[] array) {
+            return Arrays.toString(array);
+        } else if (obj instanceof double[] array) {
+            return Arrays.toString(array);
+        } else if (TiArrayUtil.isArray(obj)) {
+            try {
+                return Arrays.deepToString((Object[]) obj);
+            } catch (Exception ignore) {
+            }
+        }
+        return obj.toString();
     }
 
     public static boolean isArray(Object obj) {

@@ -83,4 +83,7 @@ public class TiCharConst {
      * 字符常量：艾特 {@code '@'}
      */
     public static final char AT = '@';
+
+    public static final char DL = '$';
+
 }

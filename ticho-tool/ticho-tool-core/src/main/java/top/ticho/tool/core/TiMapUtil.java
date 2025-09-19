@@ -1,7 +1,5 @@
 package top.ticho.tool.core;
 
-import org.apache.commons.collections4.MapUtils;
-
 import java.util.Map;
 
 /**
@@ -13,11 +11,11 @@ import java.util.Map;
 public class TiMapUtil {
 
     public static boolean isEmpty(Map<?, ?> map) {
-        return MapUtils.isEmpty(map);
+        return map == null || map.isEmpty();
     }
 
     public static boolean isNotEmpty(Map<?, ?> map) {
-        return MapUtils.isNotEmpty(map);
+        return !isEmpty(map);
     }
 
 }

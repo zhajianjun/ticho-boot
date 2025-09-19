@@ -1,6 +1,5 @@
 package top.ticho.tool.core;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import top.ticho.tool.core.constant.TiStrConst;
 
@@ -18,6 +17,7 @@ import java.util.stream.Collectors;
  * @date 2025-08-04 22:32
  */
 public class TiStrUtil {
+    public static final int INDEX_NOT_FOUND = -1;
 
     public static <T extends CharSequence> T defaultIfBlank(final T str, final T defaultStr) {
         return isBlank(str) ? defaultStr : str;
@@ -42,6 +42,40 @@ public class TiStrUtil {
 
     public static boolean isEmpty(final CharSequence cs) {
         return cs == null || cs.isEmpty();
+    }
+
+    public static boolean isNumber(final CharSequence cs) {
+        if (isEmpty(cs)) {
+            return false;
+        }
+        final int sz = cs.length();
+        for (int i = 0; i < sz; i++) {
+            if (!Character.isDigit(cs.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static String deleteWhitespace(final String str) {
+        if (isEmpty(str)) {
+            return str;
+        }
+        final int sz = str.length();
+        final char[] chs = new char[sz];
+        int count = 0;
+        for (int i = 0; i < sz; i++) {
+            if (!Character.isWhitespace(str.charAt(i))) {
+                chs[count++] = str.charAt(i);
+            }
+        }
+        if (count == sz) {
+            return str;
+        }
+        if (count == 0) {
+            return TiStrConst.EMPTY;
+        }
+        return new String(chs, 0, count);
     }
 
     /**
@@ -100,8 +134,18 @@ public class TiStrUtil {
         return Character.DIRECTIONALITY_UNDEFINED;
     }
 
-    public static String subBefore(String string, String separator) {
-        return StringUtils.substringBefore(string, separator);
+    public static String subBefore(String str, String separator) {
+        if (isEmpty(str) || separator == null) {
+            return str;
+        }
+        if (separator.isEmpty()) {
+            return TiStrConst.EMPTY;
+        }
+        final int pos = str.indexOf(separator);
+        if (pos == INDEX_NOT_FOUND) {
+            return str;
+        }
+        return str.substring(0, pos);
     }
 
     public static String[] split(String str, int length) {

@@ -1,7 +1,5 @@
 package top.ticho.tool.core;
 
-import org.apache.commons.collections4.CollectionUtils;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -14,7 +12,7 @@ import java.util.stream.Collectors;
 public class TiCollUtil {
 
     public static boolean isEmpty(Collection<?> collection) {
-        return CollectionUtils.isEmpty(collection);
+        return collection == null || collection.isEmpty();
     }
 
     public static <T> List<List<T>> split(Collection<T> collection, int batchSize) {
@@ -36,7 +34,7 @@ public class TiCollUtil {
     }
 
     public static boolean isNotEmpty(Collection<?> collection) {
-        return CollectionUtils.isNotEmpty(collection);
+        return !isEmpty(collection);
     }
 
     public static List<String> toList(Collection<?> collection) {
