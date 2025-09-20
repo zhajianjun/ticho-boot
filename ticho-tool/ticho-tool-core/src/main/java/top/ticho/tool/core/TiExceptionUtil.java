@@ -27,4 +27,12 @@ public class TiExceptionUtil {
         return TiStrUtil.substring(stackTrace, 0, length);
     }
 
+    public static String getMessage(Throwable e) {
+        if (e == null) {
+            return TiStrConst.EMPTY;
+        }
+        final String clsName = TiClassUtil.getShortClassName(e.getClass());
+        return clsName + ": " + TiStrUtil.defaultIfEmpty(e.getMessage(), TiStrConst.EMPTY);
+    }
+
 }

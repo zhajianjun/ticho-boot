@@ -1,6 +1,5 @@
 package top.ticho.tool.core;
 
-import org.apache.commons.lang3.Strings;
 import top.ticho.tool.core.constant.TiStrConst;
 
 import java.nio.ByteBuffer;
@@ -23,6 +22,14 @@ public class TiStrUtil {
         return isBlank(str) ? defaultStr : str;
     }
 
+    public static <T extends CharSequence> T defaultIfEmpty(final T str, final T defaultStr) {
+        return isEmpty(str) ? defaultStr : str;
+    }
+
+    public static <T extends CharSequence> T defaultIfNull(final T str, final T defaultStr) {
+        return str == null ? defaultStr : str;
+    }
+
     public static boolean isBlank(final CharSequence cs) {
         final int strLen = length(cs);
         if (strLen == 0) {
@@ -42,6 +49,10 @@ public class TiStrUtil {
 
     public static boolean isEmpty(final CharSequence cs) {
         return cs == null || cs.isEmpty();
+    }
+
+    public static boolean isNotEmpty(final CharSequence cs) {
+        return !isEmpty(cs);
     }
 
     public static boolean isNumber(final CharSequence cs) {
@@ -379,8 +390,25 @@ public class TiStrUtil {
     }
 
     public static String replace(String text, String searchString, String replacement, boolean ignoreCase) {
-        Strings cs = ignoreCase ? Strings.CI : Strings.CS;
-        return cs.replace(text, searchString, replacement);
+        if (text == null || text.isEmpty() || searchString == null || searchString.isEmpty()) {
+            return text;
+        }
+        if (replacement == null) {
+            replacement = "";
+        }
+        StringBuilder result = new StringBuilder();
+        int i = 0;
+        while (i <= text.length() - searchString.length()) {
+            if (text.regionMatches(ignoreCase, i, searchString, 0, searchString.length())) {
+                result.append(replacement);
+                i += searchString.length();
+            } else {
+                result.append(text.charAt(i));
+                i++;
+            }
+        }
+        result.append(text.substring(i));
+        return result.toString();
     }
 
     public static String str(Object obj) {

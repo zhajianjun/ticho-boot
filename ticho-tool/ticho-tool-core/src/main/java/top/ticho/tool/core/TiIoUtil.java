@@ -1,6 +1,5 @@
 package top.ticho.tool.core;
 
-import org.apache.commons.io.IOUtils;
 import top.ticho.tool.core.exception.TiUtilException;
 
 import java.io.IOException;
@@ -14,10 +13,18 @@ import java.io.OutputStream;
  * @date 2025-08-17 14:20
  */
 public class TiIoUtil {
+    public static final int EOF = -1;
 
     public static long copy(InputStream in, OutputStream out, int bufferSize) {
         try {
-            return IOUtils.copy(in, out, bufferSize);
+            long count = 0;
+            int n;
+            byte[] buffer = new byte[bufferSize];
+            while (EOF != (n = in.read(buffer))) {
+                out.write(buffer, 0, n);
+                count += n;
+            }
+            return count;
         } catch (IOException e) {
             throw new TiUtilException(e);
         }

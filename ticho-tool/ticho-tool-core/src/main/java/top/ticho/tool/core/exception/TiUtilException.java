@@ -1,6 +1,7 @@
 package top.ticho.tool.core.exception;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
+
+import top.ticho.tool.core.TiExceptionUtil;
 
 import java.io.Serial;
 
@@ -15,7 +16,7 @@ public class TiUtilException extends RuntimeException {
     private static final long serialVersionUID = 8247610319171014183L;
 
     public TiUtilException(Throwable e) {
-        super(ExceptionUtils.getMessage(e), e);
+        super(TiExceptionUtil.getMessage(e), e);
     }
 
     public TiUtilException(String message) {

@@ -1,6 +1,5 @@
 package top.ticho.tool.core.unit;
 
-import org.apache.commons.lang3.StringUtils;
 import top.ticho.tool.core.TiStrUtil;
 
 import java.math.BigDecimal;
@@ -191,7 +190,7 @@ public record DataSize(long bytes) implements Comparable<DataSize> {
      */
     private static DataUnit determineDataUnit(String suffix, DataUnit defaultUnit) {
         DataUnit defaultUnitToUse = (defaultUnit != null ? defaultUnit : DataUnit.BYTES);
-        return (StringUtils.isNotEmpty(suffix) ? DataUnit.fromSuffix(suffix) : defaultUnitToUse);
+        return (TiStrUtil.isNotEmpty(suffix) ? DataUnit.fromSuffix(suffix) : defaultUnitToUse);
     }
 
     /**

@@ -1,6 +1,7 @@
 package top.ticho.tool.core;
 
-import com.github.f4b6a3.ulid.Ulid;
+
+import top.ticho.tool.core.ulid.Ulid;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -24,12 +25,11 @@ public class TiIdUtil {
     }
 
     public static String uuid() {
-        return uuid(false);
+        return UUID.randomUUID().toString();
     }
 
-    public static String uuid(boolean isSimple) {
-        UUID uuid = UUID.randomUUID();
-        return isSimple ? uuid.toString().replace("-", "") : uuid.toString();
+    public static String simpleUuid() {
+        return UUID.randomUUID().toString().replace("-", "");
     }
 
     public static String shortUuid() {
