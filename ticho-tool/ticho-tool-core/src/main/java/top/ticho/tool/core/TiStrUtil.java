@@ -173,6 +173,14 @@ public class TiStrUtil {
         return result.toArray(new String[0]);
     }
 
+    public static List<String> split(String str, String separator) {
+        if (isEmpty(str) || isEmpty(separator)) {
+            return new ArrayList<>();
+        }
+        return Arrays.stream(str.split(separator))
+            .collect(Collectors.toList());
+    }
+
     public static String removePrefixIgnoreCase(String str, String prefix) {
         if (str == null || prefix == null) {
             return str;
@@ -268,11 +276,6 @@ public class TiStrUtil {
             return substringSuf(str, prefix.length());// 截取后半段
         }
         return str;
-    }
-
-    public static List<String> split(String str, String separator) {
-        return Arrays.stream(str.split(separator))
-            .collect(Collectors.toList());
     }
 
     public static String filter(String str, final Predicate<Character> filter) {
