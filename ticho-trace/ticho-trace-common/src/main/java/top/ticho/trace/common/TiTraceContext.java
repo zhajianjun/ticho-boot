@@ -28,7 +28,7 @@ public class TiTraceContext {
 
     public static TiSpan start(String name, String trace) {
         TiTracer tiTracer = getTiTracer();
-        String traceId = TiIdUtil.ulid();
+        String traceId = TiIdUtil.simpleUuid();
         MDC.put(TiTraceConst.TRACE_ID_KEY, traceId);
         MDC.put(TiTraceConst.SPAN_ID_KEY, TiTraceConst.FIRST_SPAN_ID);
         MDC.put(TiTraceConst.PARENT_SPAN_ID_KEY, null);
@@ -42,7 +42,7 @@ public class TiTraceContext {
     public static TiSpan start(String name, String traceId, String parentSpanId, String trace) {
         TiTracer tiTracer = getTiTracer();
         if (TiStrUtil.isBlank(traceId)) {
-            traceId = TiIdUtil.ulid();
+            traceId = TiIdUtil.simpleUuid();
             parentSpanId = TiTraceConst.FIRST_SPAN_ID;
         }
         String spanId = TiIdUtil.shortUuid();

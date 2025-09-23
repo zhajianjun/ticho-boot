@@ -70,7 +70,7 @@ public class TiTracer {
             log.warn("开启子链路异常，请完成上一个子链路");
             return null;
         }
-        TiSpan childSpan = new TiSpan(name, rootSpan.getTraceId(), TiIdUtil.ulid(), rootSpan.getSpanId());
+        TiSpan childSpan = new TiSpan(name, rootSpan.getTraceId(), TiIdUtil.simpleUuid(), rootSpan.getSpanId());
         childSpan.start();
         this.childSpan = childSpan;
         this.childSpans.add(childSpan);
