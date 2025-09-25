@@ -17,7 +17,7 @@ import top.ticho.intranet.server.support.IntranetClientSupport;
 import top.ticho.tool.core.TiCollUtil;
 import top.ticho.tool.core.TiStrUtil;
 
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -151,77 +151,49 @@ public record IntranetServerHandler(
         return bind;
     }
 
-    /**
-     * fixme
-     */
     public void flush(List<IntranetClient> intranetClients) {
         if (TiCollUtil.isEmpty(intranetClients)) {
             return;
         }
-
         Map<String, IntranetClient> clientInfoMap = intranetClients
             .stream()
             .filter(item -> TiStrUtil.isNotBlank(item.getAccessKey()))
             .collect(Collectors.toMap(IntranetClient::getAccessKey, Function.identity(), (v1, v2) -> v1));
-
         // 移除需要删除的client
         List<IntranetClient> intranetClientInfosFromMem = findAll();
-        for (IntranetClient clientInfoFromMem : intranetClientInfosFromMem) {
-            String accessKey = clientInfoFromMem.getAccessKey();
-            if (!clientInfoMap.containsKey(accessKey)) {
-                try {
-                    remove(clientInfoFromMem);
-                } catch (Exception e) {
-                    // 记录日志或做补偿处理
-                    log.warn("Failed to remove client: {}", accessKey);
-                }
+        intranetClientInfosFromMem.forEach(clientInfoFromMem -> {
+            if (clientInfoMap.containsKey(clientInfoFromMem.getAccessKey())) {
+                return;
             }
-        }
-
-        for (Map.Entry<String, IntranetClient> entry : clientInfoMap.entrySet()) {
-            String accessKey = entry.getKey();
-            IntranetClient clientInfo = entry.getValue();
-
+            remove(clientInfoFromMem);
+        });
+        clientInfoMap.forEach((accessKey, clientInfo) -> {
             Optional<IntranetClient> clientInfoOpt = findByAccessKey(accessKey);
             if (clientInfoOpt.isEmpty()) {
                 create(accessKey, clientInfo.getName());
-                clientInfoOpt = findByAccessKey(accessKey); // 再次尝试获取
-                if (clientInfoOpt.isEmpty()) {
-                    log.warn("Client creation failed for accessKey: {}", accessKey);
-                    continue;
-                }
             }
-
+            clientInfoOpt = findByAccessKey(accessKey);
+            if (clientInfoOpt.isEmpty()) {
+                return;
+            }
             IntranetClient intranetClientFromMem = clientInfoOpt.get();
             Map<Integer, IntranetPort> portInfoMapFromMem = intranetClientFromMem.getPortMap();
-
-            Map<Integer, IntranetPort> portInfoMap = Optional.ofNullable(clientInfo.getPortMap())
-                .orElse(Collections.emptyMap());
-
+            Map<Integer, IntranetPort> portInfoMap = Optional.ofNullable(clientInfo.getPortMap()).orElseGet(HashMap::new);
             // 解绑portInfoMap中不存在，而portMapFromMem存在的端口
-            for (IntranetPort intranetPortFromMem : portInfoMapFromMem.values()) {
-                int port = intranetPortFromMem.getPort();
-                if (!portInfoMap.containsKey(port)) {
-                    try {
-                        unbind(accessKey, port);
-                    } catch (Exception e) {
-                        log.warn("Failed to unbind port: {}, accessKey: {}", port, accessKey, e);
-                    }
+            portInfoMapFromMem.values().forEach(intranetPortFromMem -> {
+                if (portInfoMap.containsKey(intranetPortFromMem.getPort())) {
+                    return;
                 }
-            }
-
+                unbind(accessKey, intranetPortFromMem.getPort());
+            });
             // 绑定portInfoMap中存在，而portMapFromMem不存在的端口
-            for (IntranetPort intranetPort : portInfoMap.values()) {
-                int port = intranetPort.getPort();
-                if (!portInfoMapFromMem.containsKey(port)) {
-                    try {
-                        bind(accessKey, port, intranetPort.getEndpoint());
-                    } catch (Exception e) {
-                        log.warn("Failed to bind port: {}, accessKey: {}", port, accessKey, e);
-                    }
+            portInfoMap.values().forEach(intranetPort -> {
+                if (portInfoMapFromMem.containsKey(intranetPort.getPort())) {
+                    return;
                 }
-            }
-        }
+                bind(accessKey, intranetPort.getPort(), intranetPort.getEndpoint());
+            });
+        });
     }
 
     /**
