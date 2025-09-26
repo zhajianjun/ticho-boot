@@ -11,7 +11,7 @@ import java.util.Map;
  * @author zhajianjun
  * @date 2025-09-13 18:28
  */
-public class TiStrFormatter {
+class TiStrFormatter {
     /**
      * 格式化字符串<br>
      * 此方法只是简单将占位符 {} 按照顺序替换为参数<br>
