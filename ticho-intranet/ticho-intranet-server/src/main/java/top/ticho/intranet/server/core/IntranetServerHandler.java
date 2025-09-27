@@ -177,18 +177,20 @@ public record IntranetServerHandler(
                 return;
             }
             IntranetClient intranetClientFromMem = clientInfoOpt.get();
-            Map<Integer, IntranetPort> portInfoMapFromMem = intranetClientFromMem.getPortMap();
-            Map<Integer, IntranetPort> portInfoMap = Optional.ofNullable(clientInfo.getPortMap()).orElseGet(HashMap::new);
+            Map<Integer, IntranetPort> portMapFromMem = new HashMap<>(intranetClientFromMem.getPortMap());
+            Map<Integer, IntranetPort> portMap = Optional.ofNullable(clientInfo.getPortMap())
+                .map(HashMap::new)
+                .orElseGet(HashMap::new);
             // 解绑portInfoMap中不存在，而portMapFromMem存在的端口
-            portInfoMapFromMem.values().forEach(intranetPortFromMem -> {
-                if (portInfoMap.containsKey(intranetPortFromMem.getPort())) {
+            portMapFromMem.values().forEach(intranetPortFromMem -> {
+                if (portMap.containsKey(intranetPortFromMem.getPort())) {
                     return;
                 }
                 unbind(accessKey, intranetPortFromMem.getPort());
             });
             // 绑定portInfoMap中存在，而portMapFromMem不存在的端口
-            portInfoMap.values().forEach(intranetPort -> {
-                if (portInfoMapFromMem.containsKey(intranetPort.getPort())) {
+            portMap.values().forEach(intranetPort -> {
+                if (portMapFromMem.containsKey(intranetPort.getPort())) {
                     return;
                 }
                 bind(accessKey, intranetPort.getPort(), intranetPort.getEndpoint());

@@ -6,6 +6,7 @@ import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.util.IntranetUtil;
 import top.ticho.intranet.server.entity.IntranetClient;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -32,7 +33,7 @@ public class IntranetClientSupport {
     }
 
     public List<IntranetClient> findAll() {
-        return clientMap.values().stream().toList();
+        return new ArrayList<>(clientMap.values());
     }
 
     public Optional<IntranetClient> findByPort(Integer port) {
