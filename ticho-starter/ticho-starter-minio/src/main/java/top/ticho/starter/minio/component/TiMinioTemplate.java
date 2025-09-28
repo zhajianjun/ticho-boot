@@ -143,7 +143,7 @@ public class TiMinioTemplate {
      * @param bucketName   bucket名称
      * @param objectName   文件名称
      * @param userMetadata 用户自定义数据
-     * @param inputStream       文件流
+     * @param inputStream  文件流
      */
     public void putObject(String bucketName, String objectName, String contentType, Map<String, String> userMetadata, InputStream inputStream) {
         try {
@@ -194,7 +194,7 @@ public class TiMinioTemplate {
      * @param bucketName   bucket名称
      * @param objectName   文件名称
      * @param userMetadata 用户自定义数据
-     * @param inputStream       文件流
+     * @param inputStream  文件流
      */
     public void uploadObject(String bucketName, String objectName, String contentType, Map<String, String> userMetadata, String filename) {
         try {
