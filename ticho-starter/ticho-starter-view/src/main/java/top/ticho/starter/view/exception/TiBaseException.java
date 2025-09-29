@@ -23,8 +23,20 @@ public class TiBaseException extends RuntimeException {
         this.message = message;
     }
 
+    public TiBaseException(int code, String message, Throwable throwable) {
+        super(getMessage(code, message), throwable);
+        this.code = code;
+        this.message = message;
+    }
+
     public TiBaseException(String message) {
         super(getMessage(TiHttpErrorCode.INTERNAL_SERVER_ERROR.getCode(), message));
+        this.code = TiHttpErrorCode.INTERNAL_SERVER_ERROR.getCode();
+        this.message = message;
+    }
+
+    public TiBaseException(String message, Throwable throwable) {
+        super(getMessage(TiHttpErrorCode.INTERNAL_SERVER_ERROR.getCode(), message), throwable);
         this.code = TiHttpErrorCode.INTERNAL_SERVER_ERROR.getCode();
         this.message = message;
     }
@@ -35,8 +47,20 @@ public class TiBaseException extends RuntimeException {
         this.message = errorCode.getMessage();
     }
 
+    public TiBaseException(TiErrorCode errorCode, Throwable throwable) {
+        super(getMessage(errorCode.getCode(), errorCode.getMessage()), throwable);
+        this.code = errorCode.getCode();
+        this.message = errorCode.getMessage();
+    }
+
     public TiBaseException(TiErrorCode errCode, String message) {
         super(getMessage(errCode.getCode(), message));
+        this.code = errCode.getCode();
+        this.message = message;
+    }
+
+    public TiBaseException(TiErrorCode errCode, String message, Throwable throwable) {
+        super(getMessage(errCode.getCode(), message), throwable);
         this.code = errCode.getCode();
         this.message = message;
     }

@@ -16,16 +16,32 @@ public class TiBizException extends TiBaseException {
         super(code, message);
     }
 
+    public TiBizException(int code, String message, Throwable throwable) {
+        super(code, message, throwable);
+    }
+
     public TiBizException(String message) {
         super(message);
+    }
+
+    public TiBizException(String message, Throwable throwable) {
+        super(message, throwable);
     }
 
     public TiBizException(TiErrorCode resultCode) {
         super(resultCode);
     }
 
+    public TiBizException(TiErrorCode resultCode, Throwable throwable) {
+        super(resultCode, throwable);
+    }
+
     public TiBizException(TiErrorCode resultCode, String message) {
         super(resultCode, message);
+    }
+
+    public TiBizException(TiErrorCode resultCode, String message, Throwable throwable) {
+        super(resultCode, message, throwable);
     }
 
 }
