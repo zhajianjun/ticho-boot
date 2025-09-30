@@ -32,8 +32,11 @@ import software.amazon.awssdk.services.s3.model.HeadBucketRequest;
 import software.amazon.awssdk.services.s3.model.ListBucketsResponse;
 import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsResponse;
+import software.amazon.awssdk.services.s3.model.ListPartsRequest;
+import software.amazon.awssdk.services.s3.model.ListPartsResponse;
 import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
 import software.amazon.awssdk.services.s3.model.ObjectIdentifier;
+import software.amazon.awssdk.services.s3.model.Part;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.services.s3.model.S3Object;
@@ -127,8 +130,7 @@ public class TiS3Template {
             log.warn("bucket={}不存在", bucketName);
             return false;
         } catch (S3Exception e) {
-            log.error("查询文件存储桶是否存在异常，异常:{}", e.getMessage(), e);
-            throw new TiBizException(TiBizErrorCode.FAIL, "查询文件存储桶是否存在异常");
+            throw new TiBizException(TiBizErrorCode.FAIL, "查询文件存储桶是否存在异常", e);
         }
     }
 
@@ -144,8 +146,7 @@ public class TiS3Template {
             }
             s3Client.createBucket(CreateBucketRequest.builder().bucket(bucketName).build());
         } catch (Exception e) {
-            log.error("创建文件桶异常，{}", e.getMessage(), e);
-            throw new TiBizException(TiBizErrorCode.FAIL, "创建文件桶异常");
+            throw new TiBizException(TiBizErrorCode.FAIL, "创建文件桶异常", e);
         }
     }
 
@@ -158,8 +159,7 @@ public class TiS3Template {
         try {
             s3Client.deleteBucket(DeleteBucketRequest.builder().bucket(bucketName).build());
         } catch (Exception e) {
-            log.error("删除文件桶异常，{}", e.getMessage(), e);
-            throw new TiBizException(TiBizErrorCode.FAIL, "删除文件桶异常");
+            throw new TiBizException(TiBizErrorCode.FAIL, "删除文件桶异常", e);
         }
     }
 
@@ -179,8 +179,7 @@ public class TiS3Template {
         try {
             return s3Client.listBuckets();
         } catch (Exception e) {
-            log.error("查询全部文件桶异常，{}", e.getMessage(), e);
-            throw new TiBizException(TiBizErrorCode.FAIL, "查询全部文件桶异常");
+            throw new TiBizException(TiBizErrorCode.FAIL, "查询全部文件桶异常", e);
         }
     }
 
@@ -194,15 +193,16 @@ public class TiS3Template {
      */
     public void putObject(String bucketName, String objectName, String contentType, Map<String, String> metadata, InputStream inputStream) {
         try {
-            s3Client.putObject(PutObjectRequest.builder()
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(objectName)
                 .metadata(metadata)
                 .contentType(contentType)
-                .build(), RequestBody.fromInputStream(inputStream, inputStream.available()));
+                .build();
+            RequestBody requestBody = RequestBody.fromInputStream(inputStream, inputStream.available());
+            s3Client.putObject(putObjectRequest, requestBody);
         } catch (Exception e) {
-            log.error("上传文件异常，{}", e.getMessage(), e);
-            throw new TiBizException(TiBizErrorCode.FAIL, "上传文件异常");
+            throw new TiBizException(TiBizErrorCode.FAIL, "上传文件异常", e);
         }
     }
 
@@ -216,24 +216,20 @@ public class TiS3Template {
      */
     public void putObject(String bucketName, String objectName, Map<String, String> metadata, MultipartFile multipartFile) {
         try (InputStream inputStream = multipartFile.getInputStream()) {
-            s3Client.putObject(
-                PutObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(objectName)
-                    .metadata(metadata)
-                    .contentType(multipartFile.getContentType())
-                    .build(),
-                RequestBody.fromInputStream(inputStream, multipartFile.getSize())
-            );
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(objectName)
+                .metadata(metadata)
+                .contentType(multipartFile.getContentType())
+                .build();
+            RequestBody requestBody = RequestBody.fromInputStream(inputStream, multipartFile.getSize());
+            s3Client.putObject(putObjectRequest, requestBody);
         } catch (IOException e) {
-            log.error("上传文件IO异常，{}", e.getMessage(), e);
-            throw new TiBizException(TiBizErrorCode.FAIL, "上传文件IO异常");
+            throw new TiBizException(TiBizErrorCode.FAIL, "上传文件IO异常", e);
         } catch (SdkException e) {
-            log.error("上传文件SDK异常，{}", e.getMessage(), e);
-            throw new TiBizException(TiBizErrorCode.FAIL, "上传文件SDK异常");
+            throw new TiBizException(TiBizErrorCode.FAIL, "上传文件SDK异常", e);
         } catch (Exception e) {
-            log.error("上传文件未知异常，{}", e.getMessage(), e);
-            throw new TiBizException(TiBizErrorCode.FAIL, "上传文件异常");
+            throw new TiBizException(TiBizErrorCode.FAIL, "上传文件异常", e);
         }
     }
 
@@ -262,8 +258,7 @@ public class TiS3Template {
             Upload upload = s3TransferManager.upload(uploadFileRequest);
             upload.completionFuture().join();
         } catch (Exception e) {
-            log.error("上传文件异常，{}", e.getMessage(), e);
-            throw new TiBizException(TiBizErrorCode.FAIL, "上传文件异常");
+            throw new TiBizException(TiBizErrorCode.FAIL, "上传文件异常", e);
         }
     }
 
@@ -293,8 +288,7 @@ public class TiS3Template {
             Upload upload = s3TransferManager.upload(uploadFileRequest);
             upload.completionFuture().join();
         } catch (Exception e) {
-            log.error("上传文件异常，{}", e.getMessage(), e);
-            throw new TiBizException(TiBizErrorCode.FAIL, "上传文件异常");
+            throw new TiBizException(TiBizErrorCode.FAIL, "上传文件异常", e);
         }
     }
 
@@ -317,8 +311,7 @@ public class TiS3Template {
             RequestBody requestBody = RequestBody.fromFile(Paths.get(filePath));
             s3Client.putObject(putObjectRequest, requestBody);
         } catch (Exception e) {
-            log.error("上传文件异常，{}", e.getMessage(), e);
-            throw new TiBizException(TiBizErrorCode.FAIL, "上传文件异常");
+            throw new TiBizException(TiBizErrorCode.FAIL, "上传文件异常", e);
         }
     }
 
@@ -332,8 +325,7 @@ public class TiS3Template {
         try {
             s3Client.deleteObject(DeleteObjectRequest.builder().bucket(bucketName).key(objectName).build());
         } catch (Exception e) {
-            log.error("删除文件异常，{}", e.getMessage(), e);
-            throw new TiBizException(TiBizErrorCode.FAIL, "删除文件异常");
+            throw new TiBizException(TiBizErrorCode.FAIL, "删除文件异常", e);
         }
     }
 
@@ -442,10 +434,31 @@ public class TiS3Template {
                 partNumber++;
             }
         } catch (IOException e) {
-            log.error("上传分片文件异常，{}", e.getMessage(), e);
-            throw new TiBizException(TiBizErrorCode.FAIL, "上传分片文件异常");
+            throw new TiBizException(TiBizErrorCode.FAIL, "上传分片文件异常", e);
         }
         return completedParts;
+    }
+
+    public List<CompletedPart> getCompletedPartsForUpload(String bucketName, String objectName, String uploadId) {
+        try {
+            ListPartsRequest listPartsRequest = ListPartsRequest.builder()
+                .bucket(bucketName)
+                .key(objectName)
+                .uploadId(uploadId)
+                .build();
+            ListPartsResponse listPartsResponse = s3Client.listParts(listPartsRequest);
+            List<CompletedPart> completedParts = new ArrayList<>();
+            for (Part part : listPartsResponse.parts()) {
+                CompletedPart completedPart = CompletedPart.builder()
+                    .partNumber(part.partNumber())
+                    .eTag(part.eTag())
+                    .build();
+                completedParts.add(completedPart);
+            }
+            return completedParts;
+        } catch (Exception e) {
+            throw new TiBizException(TiBizErrorCode.FAIL, "获取已完成分片列表异常", e);
+        }
     }
 
     /**
@@ -477,8 +490,7 @@ public class TiS3Template {
                 .build();
             s3Client.completeMultipartUpload(completeRequest);
         } catch (Exception e) {
-            log.error("合并文件异常，{}", e.getMessage(), e);
-            throw new TiBizException(TiBizErrorCode.FAIL, "合并文件异常");
+            throw new TiBizException(TiBizErrorCode.FAIL, "合并文件异常", e);
         }
     }
 
@@ -493,13 +505,7 @@ public class TiS3Template {
         try {
             return s3Client.getObject(GetObjectRequest.builder().bucket(bucketName).key(objectName).build());
         } catch (Exception e) {
-            log.error("文件下载异常，{}", e.getMessage(), e);
-            // if (e instanceof ErrorResponseException ex) {
-            //     if (ex.errorResponse().code().equals("NoSuchKey")) {
-            //         throw new TiBizException(TiBizErrorCode.FAIL, "文件下载异常");
-            //     }
-            // }
-            throw new TiBizException(TiBizErrorCode.FAIL, "文件下载异常");
+            throw new TiBizException(TiBizErrorCode.FAIL, "文件下载异常", e);
         }
     }
 
@@ -525,7 +531,7 @@ public class TiS3Template {
             //         throw new TiBizException(TiBizErrorCode.FAIL);
             //     }
             // }
-            throw new TiBizException(TiBizErrorCode.FAIL, "文件下载异常");
+            throw new TiBizException(TiBizErrorCode.FAIL, "文件下载异常", e);
         }
     }
 
@@ -550,8 +556,7 @@ public class TiS3Template {
                 objectList.add(result);
             }
         } catch (Exception e) {
-            log.error("根据文件前缀查询文件信息异常，{}", e.getMessage(), e);
-            throw new TiBizException(TiBizErrorCode.FAIL, "查询文件信息异常");
+            throw new TiBizException(TiBizErrorCode.FAIL, "查询文件信息异常", e);
         }
         return objectList;
     }
@@ -576,8 +581,7 @@ public class TiS3Template {
             }
             return chunkPaths;
         } catch (Exception e) {
-            log.error("获取对象文件名称列表异常，{}", e.getMessage(), e);
-            throw new TiBizException(TiBizErrorCode.FAIL, "获取对象文件名称列表异常");
+            throw new TiBizException(TiBizErrorCode.FAIL, "获取对象文件名称列表异常", e);
         }
     }
 
@@ -610,8 +614,7 @@ public class TiS3Template {
             PresignedGetObjectRequest objectRequest = s3Presigner.presignGetObject(request);
             return objectRequest.url().toString();
         } catch (Exception e) {
-            log.error("获取文件外链异常，{}", e.getMessage(), e);
-            throw new TiBizException(TiBizErrorCode.FAIL, "获取文件外链异常");
+            throw new TiBizException(TiBizErrorCode.FAIL, "获取文件外链异常", e);
         }
     }
 
@@ -644,8 +647,7 @@ public class TiS3Template {
             PresignedGetObjectRequest objectRequest = s3Presigner.presignGetObject(request);
             return objectRequest.url().toString();
         } catch (Exception e) {
-            log.error("获取文件外链异常，{}", e.getMessage(), e);
-            throw new TiBizException(TiBizErrorCode.FAIL, "获取文件外链异常");
+            throw new TiBizException(TiBizErrorCode.FAIL, "获取文件外链异常", e);
         }
     }
 
@@ -668,8 +670,7 @@ public class TiS3Template {
                 .build();
             s3Client.copyObject(copyObjectArgs);
         } catch (Exception e) {
-            log.error("拷贝文件异常，{}", e.getMessage(), e);
-            throw new TiBizException(TiBizErrorCode.FAIL, "拷贝文件异常");
+            throw new TiBizException(TiBizErrorCode.FAIL, "拷贝文件异常", e);
         }
     }
 
