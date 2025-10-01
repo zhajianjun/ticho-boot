@@ -404,35 +404,23 @@ public class TiS3Template {
         String uploadId,
         String contentType,
         Map<String, String> metadata,
+        int partNumber,
         InputStream inputStream
     ) {
         List<CompletedPart> completedParts = new ArrayList<>();
-        long partSize = tiS3Property.getPartSize();
-        int partNumber = 1;
         try {
-            byte[] buffer = new byte[(int) partSize];
-            int bytesRead;
-            while ((bytesRead = inputStream.read(buffer)) > 0) {
-                if (bytesRead < partSize) {
-                    // 处理最后一块可能不满的情况
-                    byte[] lastBuffer = new byte[bytesRead];
-                    System.arraycopy(buffer, 0, lastBuffer, 0, bytesRead);
-                    buffer = lastBuffer;
-                }
-                UploadPartRequest uploadPartRequest = UploadPartRequest.builder()
-                    .bucket(bucketName)
-                    .key(objectName)
-                    .uploadId(uploadId)
-                    .partNumber(partNumber)
-                    .build();
-                UploadPartResponse uploadPartResponse = s3Client.uploadPart(uploadPartRequest, RequestBody.fromBytes(buffer));
-                String eTag = uploadPartResponse.eTag();
-                completedParts.add(CompletedPart.builder()
-                    .partNumber(partNumber)
-                    .eTag(eTag)
-                    .build());
-                partNumber++;
-            }
+            UploadPartRequest uploadPartRequest = UploadPartRequest.builder()
+                .bucket(bucketName)
+                .key(objectName)
+                .uploadId(uploadId)
+                .partNumber(partNumber)
+                .build();
+            UploadPartResponse uploadPartResponse = s3Client.uploadPart(uploadPartRequest, RequestBody.fromInputStream(inputStream, inputStream.available()));
+            String eTag = uploadPartResponse.eTag();
+            completedParts.add(CompletedPart.builder()
+                .partNumber(partNumber)
+                .eTag(eTag)
+                .build());
         } catch (IOException e) {
             throw new TiBizException(TiBizErrorCode.FAIL, "上传分片文件异常", e);
         }
@@ -503,7 +491,12 @@ public class TiS3Template {
      */
     public ResponseInputStream<GetObjectResponse> getObject(String bucketName, String objectName) {
         try {
-            return s3Client.getObject(GetObjectRequest.builder().bucket(bucketName).key(objectName).build());
+            GetObjectRequest getObjectRequest = GetObjectRequest
+                .builder()
+                .bucket(bucketName)
+                .key(objectName)
+                .build();
+            return s3Client.getObject(getObjectRequest);
         } catch (Exception e) {
             throw new TiBizException(TiBizErrorCode.FAIL, "文件下载异常", e);
         }
@@ -514,23 +507,27 @@ public class TiS3Template {
      *
      * @param bucketName bucket名称
      * @param objectName 文件名称
-     * @param offset     起始字节的位置
-     * @param length     要读取的长度 (可选，如果无值则代表读到文件结尾)
+     * @param range      范围
      * @return 二进制流
+     *
+     * <p>range用法<p/>
+     * <pre>
+     * "bytes=0-499"：下载第0到第499个字节（前500字节）。
+     * "bytes=500-999"：下载第500到第999个字节。
+     * "bytes=500-"：从第500个字节下载到文件末尾。
+     * "bytes=-500"：下载最后500个字节。
+     * <pre/>
      */
-    public ResponseInputStream<GetObjectResponse> getObject(String bucketName, String objectName, Long offset, Long length) {
+    public ResponseInputStream<GetObjectResponse> getObject(String bucketName, String objectName, String range) {
         try {
-            return s3Client.getObject(GetObjectRequest.builder()
+            GetObjectRequest getObjectRequest = GetObjectRequest
+                .builder()
+                .range(range)
                 .bucket(bucketName)
                 .key(objectName)
-                .build());
+                .build();
+            return s3Client.getObject(getObjectRequest);
         } catch (Exception e) {
-            log.error("文件下载异常，{}", e.getMessage(), e);
-            // if (e instanceof ErrorResponseException ex) {
-            //     if (ex.errorResponse().code().equals("NoSuchKey")) {
-            //         throw new TiBizException(TiBizErrorCode.FAIL);
-            //     }
-            // }
             throw new TiBizException(TiBizErrorCode.FAIL, "文件下载异常", e);
         }
     }
@@ -551,7 +548,6 @@ public class TiS3Template {
                 .prefix(prefix)
                 .maxKeys(maxKeys)
                 .build());
-
             for (S3Object result : response.contents()) {
                 objectList.add(result);
             }

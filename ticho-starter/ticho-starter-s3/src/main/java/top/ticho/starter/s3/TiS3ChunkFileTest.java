@@ -2,20 +2,28 @@ package top.ticho.starter.s3;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.model.CompletedPart;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import top.ticho.starter.s3.component.TiS3Template;
 import top.ticho.starter.s3.prop.TiS3Property;
+import top.ticho.starter.s3.util.ChunkFileUtil;
 import top.ticho.tool.core.TiFileUtil;
 import top.ticho.tool.core.TiIdUtil;
 import top.ticho.tool.core.constant.TiStrConst;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * S3文件下载测试
@@ -33,20 +41,51 @@ public class TiS3ChunkFileTest {
         uploadChunkObject();
     }
 
-    private static void uploadChunkObject() throws IOException {
+    public static void uploadText() throws IOException {
+        initS3Template();
+        String text = "hello world";
+        String objectName = TiIdUtil.ulid();
         String bucket = tiS3Template.getTiS3Property().getDefaultBucket();
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(text.getBytes());
+        tiS3Template.putObject(bucket, objectName, "text/plain", Collections.emptyMap(), byteArrayInputStream);
+        ResponseInputStream<GetObjectResponse> object = tiS3Template.getObject(bucket, objectName);
+        byte[] bytes = object.readAllBytes();
+        System.out.println(new String(bytes, StandardCharsets.UTF_8));
+    }
+
+    /**
+     * 文件分片上传
+     */
+    public static void uploadChunkObject() throws IOException {
+        TiS3Property tiS3Property = tiS3Template.getTiS3Property();
+        String bucket = tiS3Property.getDefaultBucket();
+        String chunkBucket = tiS3Property.getChunkBucket();
         String filePath = "D:\\cache\\s3\\123.mp4";
         File file = new File(filePath);
         String fileName = file.getName();
         String mimeType = TiFileUtil.getMimeType(fileName);
-        String uploadId = tiS3Template.createMultipartUpload(bucket, fileName);
-        try (FileInputStream fileInputStream = new FileInputStream(file)) {
-            List<CompletedPart> completedParts = tiS3Template.putMultipartObject(bucket, fileName, uploadId, mimeType, Collections.emptyMap(), fileInputStream);
-            tiS3Template.composeObject(bucket, fileName, uploadId, completedParts, mimeType, Collections.emptyMap());
+        String uploadId = tiS3Template.createMultipartUpload(chunkBucket, fileName);
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
+        // 分块文件夹
+        File localChunkFolder = ChunkFileUtil.fileSpliceChunkAsync(file, 10, executorService);
+        for (File item : Objects.requireNonNull(localChunkFolder.listFiles())) {
+            try (FileInputStream fileInputStream = new FileInputStream(item)) {
+                String name = item.getName();
+                int partNumber = Integer.parseInt(name) + 1;
+                tiS3Template.putMultipartObject(chunkBucket, fileName, uploadId, mimeType, Collections.emptyMap(), partNumber, fileInputStream);
+            }
         }
+        List<CompletedPart> completedParts = tiS3Template.getCompletedPartsForUpload(chunkBucket, fileName, uploadId);
+        tiS3Template.composeObject(chunkBucket, fileName, uploadId, completedParts, mimeType, Collections.emptyMap());
+        tiS3Template.copyObject(chunkBucket, fileName, bucket, fileName);
+        tiS3Template.removeObject(chunkBucket, fileName);
+        executorService.shutdown();
     }
 
-    private static void putObject() throws IOException {
+    /**
+     * 上传对象流
+     */
+    public static void putObject() throws IOException {
         String bucket = tiS3Template.getTiS3Property().getDefaultBucket();
         String filePath = "D:\\cache\\s3\\123.mp4";
         File file = new File(filePath);
@@ -59,7 +98,10 @@ public class TiS3ChunkFileTest {
         }
     }
 
-    private static void uploadObject() {
+    /**
+     * 上传本地对象
+     */
+    public static void uploadObject() {
         String bucket = tiS3Template.getTiS3Property().getDefaultBucket();
         String filePath = "D:\\cache\\s3\\123.mp4";
         File file = new File(filePath);
@@ -68,7 +110,7 @@ public class TiS3ChunkFileTest {
         tiS3Template.uploadObject(bucket, fileName, mimeType, null, file.getAbsolutePath());
     }
 
-    private static void initS3Template() {
+    public static void initS3Template() {
         TiS3Property tiMinioProperty = new TiS3Property();
         tiMinioProperty.setEndpoint("http://127.0.0.1:9000");
         tiMinioProperty.setAccessKey("root");
