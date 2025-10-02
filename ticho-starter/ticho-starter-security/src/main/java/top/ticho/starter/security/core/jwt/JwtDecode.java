@@ -41,8 +41,7 @@ public record JwtDecode(JwtSigner jwtSigner) {
         try {
             claims = JwtHelper.decodeAndVerify(token, verifier).getClaims();
         } catch (Exception e) {
-            log.error("TOKEN 失效, {}", e.getMessage(), e);
-            throw new TiBizException(TiBizErrorCode.FAIL, "TOKEN 失效");
+            throw new TiBizException(TiBizErrorCode.FAIL, "TOKEN 失效", e);
         }
         TiAssert.isNotNull(claims, TiBizErrorCode.FAIL, "TOKEN 失效");
         Map<String, Object> map = TiJsonUtil.toMap(claims, String.class, Object.class);

@@ -350,16 +350,17 @@ public class TiS3Template {
             .build();
         boolean isError = false;
         DeleteObjectsResponse results = s3Client.deleteObjects(objectsArgs);
+        Exception e = null;
         for (DeletedObject item : results.deleted()) {
             try {
                 log.info("Error in deleting object " + item.key() + "; " + item.versionId());
-            } catch (Exception e) {
-                log.error("批量删除对象异常，{}", e.getMessage(), e);
+            } catch (Exception ex) {
                 isError = true;
+                e = ex;
             }
         }
         if (isError) {
-            throw new TiBizException(TiBizErrorCode.FAIL, "批量删除对象异常");
+            throw new TiBizException(TiBizErrorCode.FAIL, "批量删除对象异常", e);
         }
     }
 

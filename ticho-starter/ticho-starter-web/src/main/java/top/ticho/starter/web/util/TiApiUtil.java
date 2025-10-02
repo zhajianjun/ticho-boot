@@ -43,8 +43,7 @@ public class TiApiUtil {
         try {
             tiResult = supplier.get();
         } catch (Exception e) {
-            log.error("{},{}", errorMsg, e.getMessage(), e);
-            throw new TiSysException(TiBizErrorCode.APP_SERVICE_ERR, errorMsg);
+            throw new TiSysException(TiBizErrorCode.APP_SERVICE_ERR, errorMsg, e);
         }
         if (tiResult == null) {
             log.error("{},{}", errorMsg, "返回结果为空");

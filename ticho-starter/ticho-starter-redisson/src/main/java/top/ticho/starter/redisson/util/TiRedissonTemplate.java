@@ -62,8 +62,7 @@ public class TiRedissonTemplate {
                 throw new TiBizException(TiBizErrorCode.FAIL, String.format("获取锁:%s失败", key));
             }
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new TiBizException(e.getMessage());
+            throw new TiBizException(e.getMessage(), e);
         } finally {
             if (null != tiRedisDelayRunnable) {
                 tiRedisDelayRunnable.stop();
@@ -111,8 +110,7 @@ public class TiRedissonTemplate {
                 throw new TiBizException(TiBizErrorCode.FAIL, String.format("获取锁:%s失败", key));
             }
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new TiBizException(e.getMessage());
+            throw new TiBizException(e.getMessage(), e);
         } finally {
             if (null != tiRedisDelayRunnable) {
                 tiRedisDelayRunnable.stop();

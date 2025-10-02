@@ -42,6 +42,7 @@ import top.ticho.tool.json.util.TiJsonUtil;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -118,8 +119,7 @@ public class EsTemplateImpl implements EsTemplate {
             printStatus(response);
             printErrorMessage(response);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new TiBizException("es批量保存数据失败");
+            throw new TiBizException("es批量保存数据失败", e);
         }
     }
 
@@ -154,8 +154,7 @@ public class EsTemplateImpl implements EsTemplate {
             printStatus(response);
             printErrorMessage(response);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new TiBizException("es批量保存数据失败");
+            throw new TiBizException("es批量保存数据失败", e);
         }
     }
 
@@ -222,8 +221,7 @@ public class EsTemplateImpl implements EsTemplate {
             printStatus(response);
             printErrorMessage(response);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new TiBizException("es批量保存或者更新数据失败");
+            throw new TiBizException("es批量保存或者更新数据失败", e);
         }
     }
 
@@ -270,8 +268,7 @@ public class EsTemplateImpl implements EsTemplate {
             printStatus(response);
             printErrorMessage(response);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new TiBizException("es批量保存或者更新数据失败");
+            throw new TiBizException("es批量保存或者更新数据失败", e);
         }
     }
 
@@ -291,8 +288,7 @@ public class EsTemplateImpl implements EsTemplate {
             DeleteResponse response = restHighLevelClient.delete(deleteRequest, RequestOptions.DEFAULT);
             printStatus(response);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new TiBizException("es删除数据失败");
+            throw new TiBizException("es删除数据失败", e);
         }
     }
 
@@ -317,8 +313,7 @@ public class EsTemplateImpl implements EsTemplate {
             printStatus(response);
             printErrorMessage(response);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new TiBizException("es批量删除数据失败");
+            throw new TiBizException("es批量删除数据失败", e);
         }
     }
 
@@ -351,8 +346,7 @@ public class EsTemplateImpl implements EsTemplate {
             RestStatus status = e.status();
             log.error("{}, status is {}", e.getMessage(), status.name(), e);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new TiBizException("es保存数据失败");
+            throw new TiBizException("es保存数据失败", e);
         }
     }
 
@@ -373,8 +367,7 @@ public class EsTemplateImpl implements EsTemplate {
                 log.error("{}, status is {}", e.getMessage(), status.name(), e);
             }
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new TiBizException("es更新数据失败");
+            throw new TiBizException("es更新数据失败", e);
         }
     }
 
@@ -433,8 +426,7 @@ public class EsTemplateImpl implements EsTemplate {
             printStatus(response);
             printErrorMessage(response);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new TiBizException("es更新数据失败");
+            throw new TiBizException("es更新数据失败", e);
         }
     }
 
@@ -482,8 +474,7 @@ public class EsTemplateImpl implements EsTemplate {
             printStatus(response);
             printErrorMessage(response);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            throw new TiBizException("es更新数据失败");
+            throw new TiBizException("es更新数据失败", e);
         }
     }
 
@@ -493,7 +484,7 @@ public class EsTemplateImpl implements EsTemplate {
         query.must(QueryBuilders.matchQuery("id", id));
         esQuery.setQueryBuilder(query);
         esQuery.setClazz(tClass);
-        esQuery.setIndexs(List.of(index));
+        esQuery.setIndexs(Collections.singletonList(index));
         TiEsPageResult<T> pageInfo = page(esQuery);
         if (pageInfo == null || TiCollUtil.isEmpty(pageInfo.getRows())) {
             return null;
@@ -506,7 +497,7 @@ public class EsTemplateImpl implements EsTemplate {
         BoolQueryBuilder query = QueryBuilders.boolQuery();
         query.must(QueryBuilders.matchQuery("id", id));
         esQuery.setQueryBuilder(query);
-        esQuery.setIndexs(List.of(index));
+        esQuery.setIndexs(Collections.singletonList(index));
         TiEsPageResult<Map<String, Object>> pageInfo = pageForMap(esQuery);
         if (pageInfo == null || TiCollUtil.isEmpty(pageInfo.getRows())) {
             return null;
@@ -624,8 +615,7 @@ public class EsTemplateImpl implements EsTemplate {
             }
             searchResponse = restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
         } catch (IOException e) {
-            log.error("catch error:\n", e);
-            throw new TiBizException("select error");
+            throw new TiBizException("select error", e);
         }
         if (Objects.isNull(searchResponse) || searchResponse.status().getStatus() != RestStatus.OK.getStatus()) {
             throw new TiBizException("select error");
