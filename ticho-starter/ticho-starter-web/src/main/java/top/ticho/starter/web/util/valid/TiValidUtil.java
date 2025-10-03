@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.ticho.starter.view.enums.TiBizErrorCode;
 import top.ticho.starter.view.exception.TiBizException;
+import top.ticho.tool.core.TiCollUtil;
 import top.ticho.tool.core.TiObjUtil;
 
 import jakarta.validation.ConstraintViolation;
@@ -23,7 +24,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
  * Validator 参数校验
@@ -229,10 +229,10 @@ public class TiValidUtil {
      * @param validate 校验异常信息列表
      */
     private static <T> void throwValidException(Set<ConstraintViolation<T>> validate) {
-        int size;
-        if (validate == null || (size = validate.size()) == 0) {
+        if (TiCollUtil.isEmpty(validate)) {
             return;
         }
+        int size = validate.size();
         StringJoiner joiner = new StringJoiner(",", "{", "}");
         if (size == 1) {
             Iterator<ConstraintViolation<T>> violation = validate.iterator();
@@ -247,9 +247,9 @@ public class TiValidUtil {
             .stream()
             .sorted(Comparator.comparing(ConstraintViolation::getMessage))
             .peek(next -> joiner.add(next.getPropertyPath() + ":" + next.getMessage()))
-            .collect(Collectors.toList());
+            .toList();
         log.warn("参数校验异常，{}", joiner);
-        ConstraintViolation<T> violation = validated.get(0);
+        ConstraintViolation<T> violation = validated.getFirst();
         throw new TiBizException(TiBizErrorCode.PARAM_ERROR, violation.getMessage());
     }
 

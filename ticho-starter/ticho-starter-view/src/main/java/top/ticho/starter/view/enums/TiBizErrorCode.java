@@ -20,9 +20,9 @@ import java.io.Serializable;
 public enum TiBizErrorCode implements Serializable, TiErrorCode {
 
     SUCCESS(0, "操作成功"),
-    FAIL(-1, "执行失败"),
-    PARAM_ERROR(1000, "参数不能为空"),
-    IS_NOT_EXISTS(1001, "数据不存在"),
+    FAIL(-1, "操作失败"),
+    PARAM_ERROR(1000, "参数异常"),
+    IS_NOT_EXISTS(1001, "参数不存在"),
     APP_SERVICE_ERR(1001, "服务异常");
 
     @Serial
