@@ -15,15 +15,10 @@ import top.ticho.intranet.common.prop.IntranetClientProperty;
  * @date 2024-02-01 12:30
  */
 @Slf4j
-public class ServerAuthCheckListener implements ChannelFutureListener {
-
-    private final IntranetClientSupport intranetClientSupport;
-    private final IntranetClientProperty intranetClientProperty;
-
-    public ServerAuthCheckListener(IntranetClientSupport intranetClientSupport, IntranetClientProperty intranetClientProperty) {
-        this.intranetClientSupport = intranetClientSupport;
-        this.intranetClientProperty = intranetClientProperty;
-    }
+public record ServerAuthCheckListener(
+    IntranetClientSupport intranetClientSupport,
+    IntranetClientProperty intranetClientProperty
+) implements ChannelFutureListener {
 
     @Override
     public void operationComplete(ChannelFuture future) {

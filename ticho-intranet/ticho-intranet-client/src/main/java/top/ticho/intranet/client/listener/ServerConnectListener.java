@@ -4,7 +4,6 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelOption;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.client.support.IntranetApplicationSupport;
 import top.ticho.intranet.common.constant.CommConst;
@@ -17,14 +16,13 @@ import top.ticho.intranet.common.entity.Message;
  * @date 2024-02-01 12:30
  */
 @Slf4j
-@AllArgsConstructor
-public class ServerConnectListener implements ChannelFutureListener {
-
-    private final IntranetApplicationSupport intranetApplicationSupport;
-    private final String acccessKey;
-    private final Channel serverChannel;
-    private final Channel requestChannel;
-    private final String requestId;
+public record ServerConnectListener(
+    IntranetApplicationSupport intranetApplicationSupport,
+    String acccessKey,
+    Channel serverChannel,
+    Channel requestChannel,
+    String requestId
+) implements ChannelFutureListener {
 
     @Override
     public void operationComplete(ChannelFuture future) {

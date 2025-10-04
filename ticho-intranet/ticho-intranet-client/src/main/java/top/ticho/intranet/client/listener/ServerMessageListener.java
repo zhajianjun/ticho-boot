@@ -46,7 +46,7 @@ public class ServerMessageListener extends SimpleChannelInboundHandler<Message> 
         ServerMessageCloseHandler clientCloseHandle = new ServerMessageCloseHandler(intranetClientHandler);
         ServerMessageHeartbeatHandler heartbeatHandler = new ServerMessageHeartbeatHandler(intranetClientHandler);
         ServerMessageAuthResponseHandler authResponseHandler = new ServerMessageAuthResponseHandler(intranetClientHandler);
-        ServerMessageStartingHandler startingHandler = new ServerMessageStartingHandler(intranetClientHandler);
+        ServerMessageStartingHandler startingHandler = new ServerMessageStartingHandler(intranetClientHandler.intranetClientSupport(), intranetClientHandler.intranetClientProperty());
         // MAP.put(Message.AUTH, null);
         MAP.put(Message.DISABLED_ACCESS_KEY, clientCloseHandle);
         MAP.put(Message.AUTH, authResponseHandler);

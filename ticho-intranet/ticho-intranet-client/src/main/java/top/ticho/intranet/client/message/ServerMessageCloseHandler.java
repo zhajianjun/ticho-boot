@@ -14,11 +14,7 @@ import top.ticho.intranet.common.util.IntranetUtil;
  * @date 2024-02-01 12:30
  */
 @Slf4j
-public class ServerMessageCloseHandler extends AbstractServerMessageHandler {
-
-    public ServerMessageCloseHandler(IntranetClientHandler intranetClientHandler) {
-        super(intranetClientHandler);
-    }
+public record ServerMessageCloseHandler(IntranetClientHandler intranetClientHandler) implements AbstractServerMessageHandler {
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Message message) {

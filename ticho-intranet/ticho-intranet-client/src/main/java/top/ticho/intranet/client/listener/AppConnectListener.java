@@ -4,7 +4,6 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelOption;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.client.core.IntranetClientHandler;
 import top.ticho.intranet.client.support.IntranetApplicationSupport;
@@ -21,12 +20,11 @@ import top.ticho.intranet.common.prop.IntranetClientProperty;
  * @date 2024-02-01 12:30
  */
 @Slf4j
-@AllArgsConstructor
-public class AppConnectListener implements ChannelFutureListener {
-
-    private final IntranetClientHandler intranetClientHandler;
-    private final Channel serverChannel;
-    private final String requestId;
+public record AppConnectListener(
+    IntranetClientHandler intranetClientHandler,
+    Channel serverChannel,
+    String requestId
+) implements ChannelFutureListener {
 
     @Override
     public void operationComplete(ChannelFuture channelFuture) {

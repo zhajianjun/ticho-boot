@@ -16,7 +16,7 @@ import top.ticho.intranet.common.entity.Message;
  * @date 2024-02-01 12:30
  */
 @Slf4j
-public class ServerMessageTransferHandler extends AbstractServerMessageHandler {
+public record ServerMessageTransferHandler(IntranetClientHandler intranetClientHandler) implements AbstractServerMessageHandler {
 
     public ServerMessageTransferHandler(IntranetClientHandler intranetClientHandler) {
         super(intranetClientHandler);
