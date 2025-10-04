@@ -12,7 +12,7 @@ import top.ticho.intranet.common.entity.Message;
  * @date 2025-05-24 16:43
  */
 @Slf4j
-public record ServerMessageAuthResponseHandler(IntranetClientHandler intranetClientHandler) implements AbstractServerMessageHandler {
+public record ServerMessageAuthResponseHandler(IntranetClientHandler intranetClientHandler) implements ServerMessageHandler {
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Message message) {

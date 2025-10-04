@@ -17,7 +17,7 @@ import top.ticho.intranet.common.prop.IntranetClientProperty;
 public record ServerMessageStartingHandler(
     IntranetClientSupport intranetClientSupport,
     IntranetClientProperty intranetClientProperty
-) implements AbstractServerMessageHandler {
+) implements ServerMessageHandler {
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Message message) {

@@ -6,7 +6,7 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.client.core.IntranetClientHandler;
-import top.ticho.intranet.client.message.AbstractServerMessageHandler;
+import top.ticho.intranet.client.message.ServerMessageHandler;
 import top.ticho.intranet.client.message.ServerMessageAuthResponseHandler;
 import top.ticho.intranet.client.message.ServerMessageCloseHandler;
 import top.ticho.intranet.client.message.ServerMessageConnectHandler;
@@ -33,8 +33,8 @@ import java.util.Map;
 public class ServerMessageListener extends SimpleChannelInboundHandler<Message> {
 
     private final IntranetClientHandler intranetClientHandler;
-    public final Map<Byte, AbstractServerMessageHandler> MAP;
-    public final AbstractServerMessageHandler UNKNOWN;
+    public final Map<Byte, ServerMessageHandler> MAP;
+    public final ServerMessageHandler UNKNOWN;
 
     public ServerMessageListener(IntranetClientHandler intranetClientHandler) {
         this.intranetClientHandler = intranetClientHandler;
@@ -60,7 +60,7 @@ public class ServerMessageListener extends SimpleChannelInboundHandler<Message> 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Message message) {
         byte type = message.type();
-        AbstractServerMessageHandler clientHandle = MAP.getOrDefault(type, UNKNOWN);
+        ServerMessageHandler clientHandle = MAP.getOrDefault(type, UNKNOWN);
         clientHandle.channelRead0(ctx, message);
     }
 

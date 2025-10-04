@@ -12,7 +12,7 @@ import top.ticho.intranet.common.entity.Message;
  * @date 2024-02-01 12:30
  */
 @Slf4j
-public record ServerMessageUnknownHandler(IntranetClientHandler intranetClientHandler) implements AbstractServerMessageHandler {
+public record ServerMessageUnknownHandler(IntranetClientHandler intranetClientHandler) implements ServerMessageHandler {
 
     public ServerMessageUnknownHandler(IntranetClientHandler intranetClientHandler) {
         super(intranetClientHandler);

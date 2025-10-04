@@ -10,7 +10,7 @@ import top.ticho.intranet.common.entity.Message;
  * @author zhajianjun
  * @date 2024-02-01 12:30
  */
-public interface AbstractServerMessageHandler {
+public interface ServerMessageHandler {
 
 
     /**
