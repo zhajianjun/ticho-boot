@@ -2,7 +2,7 @@ package top.ticho.intranet.common.core;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import top.ticho.intranet.common.constant.CommConst;
+import top.ticho.intranet.common.constant.TiIntranetConst;
 import top.ticho.intranet.common.exception.IntranetException;
 
 import javax.net.ssl.KeyManagerFactory;
@@ -30,7 +30,7 @@ public class SslHandler {
 
     public SslHandler(String jksPath, String sslPassword) {
         try {
-            KeyStore ks = KeyStore.getInstance(CommConst.JKS);
+            KeyStore ks = KeyStore.getInstance(TiIntranetConst.JKS);
             ks.load(this.loadJks(jksPath), sslPassword.toCharArray());
             log.info("初始化证书key");
             KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
@@ -38,7 +38,7 @@ public class SslHandler {
             TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
             tmf.init(ks);
             log.info("初始化证书");
-            SSLContext sslCtx = SSLContext.getInstance(CommConst.TLS);
+            SSLContext sslCtx = SSLContext.getInstance(TiIntranetConst.TLS);
             sslCtx.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
             log.info("证书初始化成功");
             this.SslContext = sslCtx;

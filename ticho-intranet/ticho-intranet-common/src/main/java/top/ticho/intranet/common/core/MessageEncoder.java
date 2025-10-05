@@ -3,7 +3,7 @@ package top.ticho.intranet.common.core;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
-import top.ticho.intranet.common.constant.CommConst;
+import top.ticho.intranet.common.constant.TiIntranetConst;
 import top.ticho.intranet.common.entity.Message;
 
 
@@ -34,7 +34,7 @@ public class MessageEncoder extends MessageToByteEncoder<Message> {
     @Override
     protected void encode(ChannelHandlerContext ctx, Message message, ByteBuf bufOut) {
         // 计算消息体的长度
-        int messageLength = CommConst.TYPE_SIZE + CommConst.REQUEST_ID_LEN_SIZE;
+        int messageLength = TiIntranetConst.TYPE_SIZE + TiIntranetConst.REQUEST_ID_LEN_SIZE;
         byte[] uriBytes = null;
         if (message.requestId() != null) {
             // 如果URI不为null，则将URI转换为字节数组，并计算URI的长度

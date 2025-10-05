@@ -3,7 +3,7 @@ package top.ticho.intranet.common.core;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
-import top.ticho.intranet.common.constant.CommConst;
+import top.ticho.intranet.common.constant.TiIntranetConst;
 import top.ticho.intranet.common.entity.Message;
 
 
@@ -40,12 +40,12 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
     @Override
     protected Message decode(ChannelHandlerContext ctx, ByteBuf bufIn) throws Exception {
         // 调用父类的解码方法，获取解码后的ByteBuf对象
-        ByteBuf in = (ByteBuf) super.decode(ctx, bufIn);
-        if (null == in) {
+        Object decode = super.decode(ctx, bufIn);
+        if (!(decode instanceof ByteBuf in)) {
             return null;
         }
         // 读取的字节数小于4，则表明数据异常，因为长度数据为int，至少需要4字节数
-        if (in.readableBytes() < CommConst.INT_BYTES) {
+        if (in.readableBytes() < TiIntranetConst.INT_BYTES) {
             return null;
         }
         // [HEADER]读取消息体的总字节数
@@ -65,7 +65,7 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
         // 将requestId字节数组转换为字符串
         String requestId = new String(requestIdBytes);
         // 计算数据部分的长度
-        int dateLength = messageBytes - CommConst.TYPE_SIZE - CommConst.REQUEST_ID_LEN_SIZE - requestIdLength;
+        int dateLength = messageBytes - TiIntranetConst.TYPE_SIZE - TiIntranetConst.REQUEST_ID_LEN_SIZE - requestIdLength;
         // 读取数据部分字节数组
         byte[] data = new byte[dateLength];
         in.readBytes(data);

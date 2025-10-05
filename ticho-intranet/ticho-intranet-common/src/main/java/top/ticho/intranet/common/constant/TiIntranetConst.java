@@ -12,8 +12,8 @@ import java.util.Map;
  * @author zhajianjun
  * @date 2024-02-01 12:30
  */
-public class CommConst {
-    private CommConst() {
+public class TiIntranetConst {
+    private TiIntranetConst() {
     }
 
     /** int占用字节数 */
