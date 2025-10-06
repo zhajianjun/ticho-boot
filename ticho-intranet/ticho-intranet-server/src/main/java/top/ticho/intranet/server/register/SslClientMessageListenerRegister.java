@@ -1,7 +1,7 @@
 package top.ticho.intranet.server.register;
 
 import io.netty.channel.socket.SocketChannel;
-import top.ticho.intranet.common.constant.CommConst;
+import top.ticho.intranet.common.constant.TiIntranetConst;
 import top.ticho.intranet.common.core.SslHandler;
 import top.ticho.intranet.common.prop.IntranetServerProperty;
 import top.ticho.intranet.server.core.IntranetServerHandler;
@@ -33,7 +33,7 @@ public class SslClientMessageListenerRegister extends ClientMessageListenerRegis
         SSLEngine engine = sslContext.createSSLEngine();
         engine.setUseClientMode(false);
         engine.setNeedClientAuth(true);
-        sc.pipeline().addLast(CommConst.SSL, new io.netty.handler.ssl.SslHandler(engine));
+        sc.pipeline().addLast(TiIntranetConst.SSL, new io.netty.handler.ssl.SslHandler(engine));
         super.initChannel(sc);
     }
 

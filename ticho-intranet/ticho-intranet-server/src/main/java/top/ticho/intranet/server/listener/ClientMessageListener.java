@@ -7,21 +7,22 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
-import top.ticho.intranet.common.constant.CommConst;
+import top.ticho.intranet.common.constant.TiIntranetConst;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.util.IntranetUtil;
 import top.ticho.intranet.server.core.IntranetServerHandler;
-import top.ticho.intranet.server.message.AbstractClientMessageHandler;
 import top.ticho.intranet.server.message.ClientAuthMessageHandler;
 import top.ticho.intranet.server.message.ClientConnectMessageHandler;
 import top.ticho.intranet.server.message.ClientDisconnectMessageHandler;
 import top.ticho.intranet.server.message.ClientHeartbeatMessageHandler;
+import top.ticho.intranet.server.message.ClientMessageHandler;
 import top.ticho.intranet.server.message.ClientMessageUnknownHandler;
 import top.ticho.intranet.server.message.ClientTransferMessageHandler;
 import top.ticho.intranet.server.support.IntranetClientSupport;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 客户端消息监听器
@@ -32,18 +33,19 @@ import java.util.Map;
 @Slf4j
 public class ClientMessageListener extends SimpleChannelInboundHandler<Message> {
     private final IntranetClientSupport intranetClientSupport;
-    public final Map<Byte, AbstractClientMessageHandler> MAP;
-    public final AbstractClientMessageHandler UNKNOWN;
+    private final Map<Byte, ClientMessageHandler> MAP;
+    private final ClientMessageHandler UNKNOWN;
 
     public ClientMessageListener(IntranetServerHandler intranetServerHandler) {
         this.intranetClientSupport = intranetServerHandler.intranetClientSupport();
         this.MAP = new HashMap<>();
-        this.UNKNOWN = new ClientMessageUnknownHandler(intranetServerHandler);
-        ClientAuthMessageHandler serverAuthHandle = new ClientAuthMessageHandler(intranetServerHandler);
-        ClientConnectMessageHandler serverConnectHandle = new ClientConnectMessageHandler(intranetServerHandler);
-        ClientDisconnectMessageHandler serverDisconnectHandle = new ClientDisconnectMessageHandler(intranetServerHandler);
-        ClientHeartbeatMessageHandler serverHeartbeatHandle = new ClientHeartbeatMessageHandler(intranetServerHandler);
-        ClientTransferMessageHandler serverTransferHandle = new ClientTransferMessageHandler(intranetServerHandler);
+        this.UNKNOWN = new ClientMessageUnknownHandler();
+        AtomicInteger serverStatus = intranetServerHandler.serverStatus();
+        ClientAuthMessageHandler serverAuthHandle = new ClientAuthMessageHandler(intranetClientSupport, serverStatus);
+        ClientConnectMessageHandler serverConnectHandle = new ClientConnectMessageHandler(intranetClientSupport);
+        ClientDisconnectMessageHandler serverDisconnectHandle = new ClientDisconnectMessageHandler(intranetClientSupport);
+        ClientHeartbeatMessageHandler serverHeartbeatHandle = new ClientHeartbeatMessageHandler();
+        ClientTransferMessageHandler serverTransferHandle = new ClientTransferMessageHandler();
         // MAP.put(MsgType.AUTH, null);
         this.MAP.put(Message.AUTH, serverAuthHandle);
         this.MAP.put(Message.CONNECT, serverConnectHandle);
@@ -62,14 +64,14 @@ public class ClientMessageListener extends SimpleChannelInboundHandler<Message> 
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Message message) {
-        AbstractClientMessageHandler serverHandle = MAP.getOrDefault(message.type(), UNKNOWN);
+        ClientMessageHandler serverHandle = MAP.getOrDefault(message.type(), UNKNOWN);
         serverHandle.channelRead0(ctx, message);
     }
 
     @Override
     public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
         Channel channel = ctx.channel();
-        Channel extraChannel = channel.attr(CommConst.CHANNEL).get();
+        Channel extraChannel = channel.attr(TiIntranetConst.CHANNEL).get();
         if (null != extraChannel) {
             extraChannel.config().setOption(ChannelOption.AUTO_READ, channel.isWritable());
         }
@@ -79,10 +81,10 @@ public class ClientMessageListener extends SimpleChannelInboundHandler<Message> 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         Channel channel = ctx.channel();
-        Channel extraChannel = channel.attr(CommConst.CHANNEL).get();
-        String accessKey = channel.attr(CommConst.ACCESS_KEY).get();
+        Channel extraChannel = channel.attr(TiIntranetConst.CHANNEL).get();
+        String accessKey = channel.attr(TiIntranetConst.ACCESS_KEY).get();
         if (IntranetUtil.isActive(extraChannel)) {
-            String requestId = channel.attr(CommConst.REQUEST_ID).get();
+            String requestId = channel.attr(TiIntranetConst.REQUEST_ID).get();
             // 移除requestId的map信息
             intranetClientSupport.removeRequestChannel(accessKey, requestId);
             extraChannel.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);

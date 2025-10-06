@@ -4,7 +4,6 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.util.IntranetUtil;
-import top.ticho.intranet.server.core.IntranetServerHandler;
 
 
 /**
@@ -13,13 +12,7 @@ import top.ticho.intranet.server.core.IntranetServerHandler;
  * @author zhajianjun
  * @date 2024-02-01 12:30
  */
-public abstract class AbstractClientMessageHandler {
-
-    protected final IntranetServerHandler intranetServerHandler;
-
-    public AbstractClientMessageHandler(IntranetServerHandler intranetServerHandler) {
-        this.intranetServerHandler = intranetServerHandler;
-    }
+public interface ClientMessageHandler {
 
     /**
      * 读取服务端信息进行不同的处理
@@ -27,7 +20,7 @@ public abstract class AbstractClientMessageHandler {
      * @param ctx     通道处理上线文
      * @param message 服务端传输的信息
      */
-    public abstract void channelRead0(ChannelHandlerContext ctx, Message message);
+    void channelRead0(ChannelHandlerContext ctx, Message message);
 
     /**
      * 通知
@@ -36,7 +29,7 @@ public abstract class AbstractClientMessageHandler {
      * @param msgType msg类型
      * @param data    传输数据
      */
-    protected void notify(Channel channel, byte msgType, byte[] data) {
+    default void notify(Channel channel, byte msgType, byte[] data) {
         if (!IntranetUtil.isActive(channel)) {
             return;
         }

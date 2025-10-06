@@ -4,10 +4,9 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
-import top.ticho.intranet.common.constant.CommConst;
+import top.ticho.intranet.common.constant.TiIntranetConst;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.util.IntranetUtil;
-import top.ticho.intranet.server.core.IntranetServerHandler;
 
 /**
  * 客户端信息传输消息处理器
@@ -16,16 +15,12 @@ import top.ticho.intranet.server.core.IntranetServerHandler;
  * @date 2024-02-01 12:30
  */
 @Slf4j
-public class ClientTransferMessageHandler extends AbstractClientMessageHandler {
-
-    public ClientTransferMessageHandler(IntranetServerHandler intranetServerHandler) {
-        super(intranetServerHandler);
-    }
+public record ClientTransferMessageHandler() implements ClientMessageHandler {
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Message message) {
         Channel channel = ctx.channel();
-        Channel requestChannel = channel.attr(CommConst.CHANNEL).get();
+        Channel requestChannel = channel.attr(TiIntranetConst.CHANNEL).get();
         if (!IntranetUtil.isActive(requestChannel)) {
             return;
         }

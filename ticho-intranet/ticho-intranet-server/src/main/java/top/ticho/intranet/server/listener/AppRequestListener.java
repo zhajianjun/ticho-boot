@@ -6,7 +6,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
-import top.ticho.intranet.common.constant.CommConst;
+import top.ticho.intranet.common.constant.TiIntranetConst;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.prop.IntranetServerProperty;
 import top.ticho.intranet.common.util.IntranetUtil;
@@ -59,7 +59,7 @@ public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
         Long maxRequests = intranetServerProperty.getMaxRequests();
         Channel clientChannel = intranetClient.getChannel();
         // 查询请求连接通道总数，超出最大值，则关闭第一个请求通道requestChannel
-        Map<String, Channel> requestChannels = clientChannel.attr(CommConst.REQUEST_ID_ATTR_MAP).get();
+        Map<String, Channel> requestChannels = clientChannel.attr(TiIntranetConst.REQUEST_ID_ATTR_MAP).get();
         if (TiMapUtil.isNotEmpty(requestChannels) && requestChannels.size() >= maxRequests) {
             String firstKey = requestChannels.keySet().stream().findFirst().orElse(null);
             Channel oldRequestChannel = requestChannels.remove(firstKey);
@@ -70,7 +70,7 @@ public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
         // 请求通道自动读设置为false
         requestChannel.config().setOption(ChannelOption.AUTO_READ, false);
         // 请求通道添加请求连接id
-        requestChannel.attr(CommConst.REQUEST_ID).set(requestId);
+        requestChannel.attr(TiIntranetConst.REQUEST_ID).set(requestId);
         requestChannels.put(requestId, requestChannel);
         // 获取端口信息
         IntranetPort port = intranetClient.getPortMap().get(portNum);
@@ -84,14 +84,14 @@ public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
     protected void channelRead0(ChannelHandlerContext ctx, ByteBuf buf) {
         Channel requestChannel = ctx.channel();
         // log.debug("[服务端]通道数据请求, 请求通道{}", requestChannel);
-        Channel clientChannel = requestChannel.attr(CommConst.CHANNEL).get();
+        Channel clientChannel = requestChannel.attr(TiIntranetConst.CHANNEL).get();
         if (!IntranetUtil.isActive(clientChannel)) {
             requestChannel.close();
             return;
         }
         byte[] data = new byte[buf.readableBytes()];
         buf.readBytes(data);
-        Message message = new Message(Message.TRANSFER, requestChannel.attr(CommConst.REQUEST_ID).get(), data);
+        Message message = new Message(Message.TRANSFER, requestChannel.attr(TiIntranetConst.REQUEST_ID).get(), data);
         // log.warn("[7][服务端]请求传输到客户端，请求通道{}；客户端通道{}, 消息{}", requestChannel, clientChannel, message);
         clientChannel.writeAndFlush(message);
     }
@@ -109,18 +109,18 @@ public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
         }
         IntranetClient intranetClient = clientInfoOpt.get();
         Channel clientChannelGet = intranetClient.getChannel();
-        String requestId = requestChannel.attr(CommConst.REQUEST_ID).get();
+        String requestId = requestChannel.attr(TiIntranetConst.REQUEST_ID).get();
         intranetClientSupport.removeRequestChannel(clientChannelGet, requestId);
-        Channel clientChannel = requestChannel.attr(CommConst.CHANNEL).get();
+        Channel clientChannel = requestChannel.attr(TiIntranetConst.CHANNEL).get();
         if (!IntranetUtil.isActive(clientChannel)) {
             requestChannel.close();
             super.channelInactive(ctx);
             return;
         }
-        IntranetUtil.close(clientChannel.attr(CommConst.CHANNEL).get());
-        clientChannel.attr(CommConst.REQUEST_ID).set(null);
-        clientChannel.attr(CommConst.ACCESS_KEY).set(null);
-        clientChannel.attr(CommConst.CHANNEL).set(null);
+        IntranetUtil.close(clientChannel.attr(TiIntranetConst.CHANNEL).get());
+        clientChannel.attr(TiIntranetConst.REQUEST_ID).set(null);
+        clientChannel.attr(TiIntranetConst.ACCESS_KEY).set(null);
+        clientChannel.attr(TiIntranetConst.CHANNEL).set(null);
         clientChannel.config().setOption(ChannelOption.AUTO_READ, true);
         Message message = new Message(Message.DISCONNECT, requestId, null);
         clientChannel.writeAndFlush(message);
@@ -136,7 +136,7 @@ public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
         if (!isActive) {
             requestChannel.close();
         } else {
-            Channel clientChannel = requestChannel.attr(CommConst.CHANNEL).get();
+            Channel clientChannel = requestChannel.attr(TiIntranetConst.CHANNEL).get();
             if (Objects.nonNull(clientChannel)) {
                 clientChannel.config().setOption(ChannelOption.AUTO_READ, requestChannel.isWritable());
             }

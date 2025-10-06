@@ -2,7 +2,7 @@ package top.ticho.intranet.server.support;
 
 import io.netty.channel.Channel;
 import lombok.extern.slf4j.Slf4j;
-import top.ticho.intranet.common.constant.CommConst;
+import top.ticho.intranet.common.constant.TiIntranetConst;
 import top.ticho.intranet.common.util.IntranetUtil;
 import top.ticho.intranet.server.entity.IntranetClient;
 
@@ -87,7 +87,7 @@ public class IntranetClientSupport {
         if (null == channel || Objects.isNull(requestId)) {
             return null;
         }
-        Map<String, Channel> requestChannelMap = channel.attr(CommConst.REQUEST_ID_ATTR_MAP).get();
+        Map<String, Channel> requestChannelMap = channel.attr(TiIntranetConst.REQUEST_ID_ATTR_MAP).get();
         if (Objects.nonNull(requestChannelMap) && !requestChannelMap.isEmpty() && !requestChannelMap.containsKey(requestId)) {
             return null;
         }
@@ -106,7 +106,7 @@ public class IntranetClientSupport {
         if (null == channel) {
             return null;
         }
-        Map<String, Channel> requestChannelMap = channel.attr(CommConst.REQUEST_ID_ATTR_MAP).get();
+        Map<String, Channel> requestChannelMap = channel.attr(TiIntranetConst.REQUEST_ID_ATTR_MAP).get();
         if (Objects.nonNull(requestChannelMap) && requestChannelMap.containsKey(requestId)) {
             synchronized (channel) {
                 return requestChannelMap.remove(requestId);
@@ -135,7 +135,7 @@ public class IntranetClientSupport {
         if (Objects.isNull(channel)) {
             return;
         }
-        Map<String, Channel> requestChannelMap = channel.attr(CommConst.REQUEST_ID_ATTR_MAP).get();
+        Map<String, Channel> requestChannelMap = channel.attr(TiIntranetConst.REQUEST_ID_ATTR_MAP).get();
         if (Objects.nonNull(requestChannelMap)) {
             requestChannelMap.values().forEach(IntranetUtil::close);
             requestChannelMap.clear();

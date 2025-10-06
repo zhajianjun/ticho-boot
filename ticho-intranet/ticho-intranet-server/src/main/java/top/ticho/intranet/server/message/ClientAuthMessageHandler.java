@@ -3,11 +3,10 @@ package top.ticho.intranet.server.message;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
-import top.ticho.intranet.common.constant.CommConst;
+import top.ticho.intranet.common.constant.TiIntranetConst;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.util.IntranetUtil;
 import top.ticho.intranet.server.common.ServerStatus;
-import top.ticho.intranet.server.core.IntranetServerHandler;
 import top.ticho.intranet.server.entity.IntranetClient;
 import top.ticho.intranet.server.entity.IntranetPort;
 import top.ticho.intranet.server.support.IntranetClientSupport;
@@ -29,15 +28,10 @@ import java.util.stream.Collectors;
  * @date 2024-02-01 12:30
  */
 @Slf4j
-public class ClientAuthMessageHandler extends AbstractClientMessageHandler {
-    private final IntranetClientSupport intranetClientSupport;
-    private final AtomicInteger serverStatus;
-
-    public ClientAuthMessageHandler(IntranetServerHandler intranetServerHandler) {
-        super(intranetServerHandler);
-        this.intranetClientSupport = intranetServerHandler.intranetClientSupport();
-        this.serverStatus = intranetServerHandler.serverStatus();
-    }
+public record ClientAuthMessageHandler(
+    IntranetClientSupport intranetClientSupport,
+    AtomicInteger serverStatus
+) implements ClientMessageHandler {
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Message message) {
@@ -75,7 +69,7 @@ public class ClientAuthMessageHandler extends AbstractClientMessageHandler {
             .collect(Collectors.joining(","));
         // log.warn("[2]客户端[{}]成功连接，绑定端口{},客户端通道{}", accessKey, portStrs, clientChannel);
         log.info("客户端[{}]成功连接，绑定端口{}，通道：{}", accessKey, portStrs, clientChannel);
-        clientChannel.attr(CommConst.REQUEST_ID_ATTR_MAP).set(new LinkedHashMap<>());
+        clientChannel.attr(TiIntranetConst.REQUEST_ID_ATTR_MAP).set(new LinkedHashMap<>());
         intranetClient.connect(clientChannel);
     }
 

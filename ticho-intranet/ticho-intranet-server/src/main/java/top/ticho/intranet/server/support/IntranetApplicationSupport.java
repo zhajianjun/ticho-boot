@@ -4,7 +4,7 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import lombok.extern.slf4j.Slf4j;
-import top.ticho.intranet.common.constant.CommConst;
+import top.ticho.intranet.common.constant.TiIntranetConst;
 import top.ticho.intranet.common.exception.IntranetException;
 import top.ticho.intranet.common.prop.IntranetServerProperty;
 import top.ticho.intranet.common.util.IntranetUtil;
@@ -47,8 +47,8 @@ public class IntranetApplicationSupport {
         if (Objects.isNull(port)) {
             return false;
         }
-        if (port > CommConst.MAX_PORT) {
-            log.warn("绑定应用失败，端口：{}, 可用的端口号范围是从{}到{}", port, CommConst.MIN_PORT, CommConst.MAX_PORT);
+        if (port > TiIntranetConst.MAX_PORT) {
+            log.warn("绑定应用失败，端口：{}, 可用的端口号范围是从{}到{}", port, TiIntranetConst.MIN_PORT, TiIntranetConst.MAX_PORT);
             return false;
         }
         if (bindPortChannelMap.containsKey(port)) {

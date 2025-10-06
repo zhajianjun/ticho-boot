@@ -4,7 +4,7 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.nio.NioEventLoopGroup;
 import lombok.extern.slf4j.Slf4j;
-import top.ticho.intranet.common.constant.CommConst;
+import top.ticho.intranet.common.constant.TiIntranetConst;
 import top.ticho.intranet.common.exception.IntranetException;
 import top.ticho.intranet.common.prop.IntranetServerProperty;
 import top.ticho.intranet.common.util.IntranetUtil;
@@ -54,7 +54,7 @@ public record IntranetServerHandler(
         try {
             log.info("内网映射服务初始化中，端口：{}，是否开启ssl：{}, ssl端口：{}", intranetServerProperty.getPort(), intranetServerProperty.getSslEnable(), intranetServerProperty.getSslPort());
             int servPort = intranetServerProperty.getPort();
-            String host = CommConst.LOCALHOST;
+            String host = TiIntranetConst.LOCALHOST;
             serverBootstrap.bind(host, servPort).get();
             if (Objects.nonNull(sslServerBootstrap)) {
                 // 创建ssl服务端
