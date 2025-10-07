@@ -42,8 +42,6 @@ public class TiIntranetConst {
 
     public static final String JKS = "JKS";
 
-    public static final String COLON = ":";
-
     /** 请求id attr key */
     public static final AttributeKey<Map<String, Channel>> REQUEST_ID_ATTR_MAP = AttributeKey.newInstance("REQUEST_ID_MAP");
 
