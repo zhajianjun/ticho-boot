@@ -5,7 +5,7 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import top.ticho.intranet.client.core.IntranetClientHandler;
-import top.ticho.intranet.common.constant.CommConst;
+import top.ticho.intranet.common.constant.TiIntranetConst;
 import top.ticho.intranet.common.entity.Message;
 
 /**
@@ -19,11 +19,11 @@ public record ServerMessageDisconnectHandler(IntranetClientHandler intranetClien
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Message message) {
         Channel serverChannel = ctx.channel();
-        Channel requestCHannel = serverChannel.attr(CommConst.CHANNEL).get();
+        Channel requestCHannel = serverChannel.attr(TiIntranetConst.CHANNEL).get();
         if (null == requestCHannel) {
             return;
         }
-        serverChannel.attr(CommConst.CHANNEL).set(null);
+        serverChannel.attr(TiIntranetConst.CHANNEL).set(null);
         intranetClientHandler.saveReadyServerChannel(serverChannel);
         requestCHannel.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
     }

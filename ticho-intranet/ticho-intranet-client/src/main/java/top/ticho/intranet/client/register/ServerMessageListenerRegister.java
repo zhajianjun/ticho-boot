@@ -4,7 +4,7 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import top.ticho.intranet.client.core.IntranetClientHandler;
 import top.ticho.intranet.client.listener.ServerMessageListener;
-import top.ticho.intranet.common.constant.CommConst;
+import top.ticho.intranet.common.constant.TiIntranetConst;
 import top.ticho.intranet.common.core.IdleChecker;
 import top.ticho.intranet.common.core.MessageDecoder;
 import top.ticho.intranet.common.core.MessageEncoder;
@@ -38,9 +38,9 @@ public class ServerMessageListenerRegister extends ChannelInitializer<SocketChan
             engine.setUseClientMode(true);
             socketChannel.pipeline().addLast(new io.netty.handler.ssl.SslHandler(engine));
         }
-        socketChannel.pipeline().addLast(new MessageDecoder(CommConst.MAX_FRAME_LEN, CommConst.FIELD_OFFSET, CommConst.FIELD_LEN, CommConst.ADJUSTMENT, CommConst.INIT_BYTES_TO_STRIP));
+        socketChannel.pipeline().addLast(new MessageDecoder(TiIntranetConst.MAX_FRAME_LEN, TiIntranetConst.FIELD_OFFSET, TiIntranetConst.FIELD_LEN, TiIntranetConst.ADJUSTMENT, TiIntranetConst.INIT_BYTES_TO_STRIP));
         socketChannel.pipeline().addLast(new MessageEncoder());
-        socketChannel.pipeline().addLast(new IdleChecker(CommConst.READ_IDLE_TIME, CommConst.WRITE_IDLE_TIME - 10, 0));
+        socketChannel.pipeline().addLast(new IdleChecker(TiIntranetConst.READ_IDLE_TIME, TiIntranetConst.WRITE_IDLE_TIME - 10, 0));
         socketChannel.pipeline().addLast(new ServerMessageListener(intranetClientHandler));
     }
 

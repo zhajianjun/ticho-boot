@@ -5,8 +5,7 @@ import io.netty.buffer.ByteBufAllocator;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
-import top.ticho.intranet.client.core.IntranetClientHandler;
-import top.ticho.intranet.common.constant.CommConst;
+import top.ticho.intranet.common.constant.TiIntranetConst;
 import top.ticho.intranet.common.entity.Message;
 
 /**
@@ -16,17 +15,13 @@ import top.ticho.intranet.common.entity.Message;
  * @date 2024-02-01 12:30
  */
 @Slf4j
-public record ServerMessageTransferHandler(IntranetClientHandler intranetClientHandler) implements ServerMessageHandler {
-
-    public ServerMessageTransferHandler(IntranetClientHandler intranetClientHandler) {
-        super(intranetClientHandler);
-    }
+public record ServerMessageTransferHandler() implements ServerMessageHandler {
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Message message) {
         Channel serverChannel = ctx.channel();
         ByteBufAllocator alloc = ctx.alloc();
-        Channel requestChannel = serverChannel.attr(CommConst.CHANNEL).get();
+        Channel requestChannel = serverChannel.attr(TiIntranetConst.CHANNEL).get();
         if (requestChannel == null) {
             return;
         }

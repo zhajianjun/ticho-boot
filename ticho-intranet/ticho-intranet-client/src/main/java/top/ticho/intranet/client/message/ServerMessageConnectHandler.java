@@ -5,8 +5,8 @@ import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.client.core.IntranetClientHandler;
 import top.ticho.intranet.client.listener.AppConnectListener;
-import top.ticho.intranet.common.constant.CommConst;
 import top.ticho.intranet.common.entity.Message;
+import top.ticho.tool.core.constant.TiStrConst;
 
 /**
  * 服务端通道连接消息处理器
@@ -21,7 +21,7 @@ public record ServerMessageConnectHandler(IntranetClientHandler intranetClientHa
     public void channelRead0(ChannelHandlerContext ctx, Message message) {
         Channel serverChannel = ctx.channel();
         String requestId = message.requestId();
-        String[] endpoint = new String(message.data()).split(CommConst.COLON);
+        String[] endpoint = new String(message.data()).split(TiStrConst.COLON);
         String host = endpoint[0];
         int port = Integer.parseInt(endpoint[1]);
         AppConnectListener listener = new AppConnectListener(intranetClientHandler, serverChannel, requestId);

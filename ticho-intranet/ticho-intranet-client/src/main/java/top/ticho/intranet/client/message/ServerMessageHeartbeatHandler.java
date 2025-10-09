@@ -2,7 +2,6 @@ package top.ticho.intranet.client.message;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
-import top.ticho.intranet.client.core.IntranetClientHandler;
 import top.ticho.intranet.common.entity.Message;
 
 /**
@@ -12,7 +11,7 @@ import top.ticho.intranet.common.entity.Message;
  * @date 2025-05-24 16:43
  */
 @Slf4j
-public record ServerMessageHeartbeatHandler(IntranetClientHandler intranetClientHandler) implements ServerMessageHandler {
+public record ServerMessageHeartbeatHandler() implements ServerMessageHandler {
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Message message) {

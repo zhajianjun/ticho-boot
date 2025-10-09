@@ -6,7 +6,7 @@ import io.netty.channel.ChannelOption;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import top.ticho.intranet.client.listener.ServerAuthCheckListener;
-import top.ticho.intranet.common.constant.CommConst;
+import top.ticho.intranet.common.constant.TiIntranetConst;
 import top.ticho.intranet.common.prop.IntranetClientProperty;
 import top.ticho.intranet.common.util.IntranetUtil;
 
@@ -57,7 +57,7 @@ public class IntranetClientSupport {
             return;
         }
         channel.config().setOption(ChannelOption.AUTO_READ, true);
-        channel.attr(CommConst.CHANNEL).set(null);
+        channel.attr(TiIntranetConst.CHANNEL).set(null);
         // 添加一个元素并返回true
         readyServerChannels.offer(channel);
     }

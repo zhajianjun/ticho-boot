@@ -7,7 +7,7 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.client.core.IntranetClientHandler;
-import top.ticho.intranet.common.constant.CommConst;
+import top.ticho.intranet.common.constant.TiIntranetConst;
 import top.ticho.intranet.common.entity.Message;
 
 /**
@@ -28,8 +28,8 @@ public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ByteBuf byteBuf) {
         Channel responseChannel = ctx.channel();
-        Channel serverChannel = responseChannel.attr(CommConst.CHANNEL).get();
-        String requestId = responseChannel.attr(CommConst.REQUEST_ID).get();
+        Channel serverChannel = responseChannel.attr(TiIntranetConst.CHANNEL).get();
+        String requestId = responseChannel.attr(TiIntranetConst.REQUEST_ID).get();
         if (serverChannel == null) {
             responseChannel.close();
             return;
@@ -44,9 +44,9 @@ public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         Channel requestCHannel = ctx.channel();
-        String requestId = requestCHannel.attr(CommConst.REQUEST_ID).get();
+        String requestId = requestCHannel.attr(TiIntranetConst.REQUEST_ID).get();
         intranetClientHandler.removeRequestChannel(requestId);
-        Channel clientChannel = requestCHannel.attr(CommConst.CHANNEL).get();
+        Channel clientChannel = requestCHannel.attr(TiIntranetConst.CHANNEL).get();
         if (null != clientChannel) {
             Message message = new Message(Message.DISCONNECT, requestId, null);
             clientChannel.writeAndFlush(message);
@@ -57,7 +57,7 @@ public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
     @Override
     public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
         Channel requestChannel = ctx.channel();
-        Channel serverChannel = requestChannel.attr(CommConst.CHANNEL).get();
+        Channel serverChannel = requestChannel.attr(TiIntranetConst.CHANNEL).get();
         if (null != serverChannel) {
             serverChannel.config().setOption(ChannelOption.AUTO_READ, requestChannel.isWritable());
         }

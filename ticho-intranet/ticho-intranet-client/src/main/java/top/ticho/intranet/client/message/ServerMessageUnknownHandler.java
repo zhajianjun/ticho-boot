@@ -2,7 +2,6 @@ package top.ticho.intranet.client.message;
 
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
-import top.ticho.intranet.client.core.IntranetClientHandler;
 import top.ticho.intranet.common.entity.Message;
 
 /**
@@ -12,11 +11,7 @@ import top.ticho.intranet.common.entity.Message;
  * @date 2024-02-01 12:30
  */
 @Slf4j
-public record ServerMessageUnknownHandler(IntranetClientHandler intranetClientHandler) implements ServerMessageHandler {
-
-    public ServerMessageUnknownHandler(IntranetClientHandler intranetClientHandler) {
-        super(intranetClientHandler);
-    }
+public record ServerMessageUnknownHandler() implements ServerMessageHandler {
 
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Message message) {

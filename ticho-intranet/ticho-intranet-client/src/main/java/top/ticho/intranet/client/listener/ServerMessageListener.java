@@ -6,16 +6,16 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.client.core.IntranetClientHandler;
-import top.ticho.intranet.client.message.ServerMessageHandler;
 import top.ticho.intranet.client.message.ServerMessageAuthResponseHandler;
 import top.ticho.intranet.client.message.ServerMessageCloseHandler;
 import top.ticho.intranet.client.message.ServerMessageConnectHandler;
 import top.ticho.intranet.client.message.ServerMessageDisconnectHandler;
+import top.ticho.intranet.client.message.ServerMessageHandler;
 import top.ticho.intranet.client.message.ServerMessageHeartbeatHandler;
 import top.ticho.intranet.client.message.ServerMessageStartingHandler;
 import top.ticho.intranet.client.message.ServerMessageTransferHandler;
 import top.ticho.intranet.client.message.ServerMessageUnknownHandler;
-import top.ticho.intranet.common.constant.CommConst;
+import top.ticho.intranet.common.constant.TiIntranetConst;
 import top.ticho.intranet.common.entity.Message;
 import top.ticho.intranet.common.util.IntranetUtil;
 
@@ -38,14 +38,14 @@ public class ServerMessageListener extends SimpleChannelInboundHandler<Message> 
 
     public ServerMessageListener(IntranetClientHandler intranetClientHandler) {
         this.intranetClientHandler = intranetClientHandler;
-        this.UNKNOWN = new ServerMessageUnknownHandler(intranetClientHandler);
+        this.UNKNOWN = new ServerMessageUnknownHandler();
         this.MAP = new HashMap<>();
         ServerMessageConnectHandler clientConnectHandle = new ServerMessageConnectHandler(intranetClientHandler);
         ServerMessageDisconnectHandler clientDisconnectHandle = new ServerMessageDisconnectHandler(intranetClientHandler);
-        ServerMessageTransferHandler clientTransferHandle = new ServerMessageTransferHandler(intranetClientHandler);
+        ServerMessageTransferHandler clientTransferHandle = new ServerMessageTransferHandler();
         ServerMessageCloseHandler clientCloseHandle = new ServerMessageCloseHandler(intranetClientHandler);
-        ServerMessageHeartbeatHandler heartbeatHandler = new ServerMessageHeartbeatHandler(intranetClientHandler);
-        ServerMessageAuthResponseHandler authResponseHandler = new ServerMessageAuthResponseHandler(intranetClientHandler);
+        ServerMessageHeartbeatHandler heartbeatHandler = new ServerMessageHeartbeatHandler();
+        ServerMessageAuthResponseHandler authResponseHandler = new ServerMessageAuthResponseHandler();
         ServerMessageStartingHandler startingHandler = new ServerMessageStartingHandler(intranetClientHandler.intranetClientSupport(), intranetClientHandler.intranetClientProperty());
         // MAP.put(Message.AUTH, null);
         MAP.put(Message.DISABLED_ACCESS_KEY, clientCloseHandle);
@@ -67,7 +67,7 @@ public class ServerMessageListener extends SimpleChannelInboundHandler<Message> 
     @Override
     public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
         Channel clientChannel = ctx.channel();
-        Channel requestCHannel = clientChannel.attr(CommConst.CHANNEL).get();
+        Channel requestCHannel = clientChannel.attr(TiIntranetConst.CHANNEL).get();
         if (null != requestCHannel) {
             requestCHannel.config().setOption(ChannelOption.AUTO_READ, clientChannel.isWritable());
         }
@@ -82,7 +82,7 @@ public class ServerMessageListener extends SimpleChannelInboundHandler<Message> 
             intranetClientHandler.clearRequestChannels();
             intranetClientHandler.restart();
         } else {
-            Channel requestCHannel = clientChannel.attr(CommConst.CHANNEL).get();
+            Channel requestCHannel = clientChannel.attr(TiIntranetConst.CHANNEL).get();
             IntranetUtil.close(requestCHannel);
         }
         intranetClientHandler.removeReadyServerChannel(clientChannel);
