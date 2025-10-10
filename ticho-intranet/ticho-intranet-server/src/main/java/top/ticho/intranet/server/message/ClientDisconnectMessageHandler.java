@@ -17,6 +17,7 @@ import top.ticho.tool.core.TiStrUtil;
  * @date 2024-02-01 12:30
  */
 public record ClientDisconnectMessageHandler(IntranetClientSupport intranetClientSupport) implements ClientMessageHandler {
+
     @Override
     public void channelRead0(ChannelHandlerContext ctx, Message message) {
         Channel channel = ctx.channel();
