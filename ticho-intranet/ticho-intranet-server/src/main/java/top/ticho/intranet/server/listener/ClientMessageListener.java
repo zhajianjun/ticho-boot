@@ -40,8 +40,7 @@ public class ClientMessageListener extends SimpleChannelInboundHandler<Message> 
         this.intranetClientSupport = intranetServerHandler.intranetClientSupport();
         this.MAP = new HashMap<>();
         this.UNKNOWN = new ClientMessageUnknownHandler();
-        AtomicInteger serverStatus = intranetServerHandler.serverStatus();
-        ClientAuthMessageHandler serverAuthHandle = new ClientAuthMessageHandler(intranetClientSupport, serverStatus);
+        ClientAuthMessageHandler serverAuthHandle = new ClientAuthMessageHandler(intranetClientSupport, intranetServerHandler.serverStatus());
         ClientConnectMessageHandler serverConnectHandle = new ClientConnectMessageHandler(intranetClientSupport);
         ClientDisconnectMessageHandler serverDisconnectHandle = new ClientDisconnectMessageHandler(intranetClientSupport);
         ClientHeartbeatMessageHandler serverHeartbeatHandle = new ClientHeartbeatMessageHandler();

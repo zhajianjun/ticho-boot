@@ -586,7 +586,7 @@ public final class Ulid implements Serializable, Comparable<Ulid> {
      * <p>
      * 输入字符串必须有26个字符长，并且必须只包含Crockford的base 32字母表中的字符
      * <p>
-     * The first character of the input string must be between 0 and 7.
+     * 输入字符串的第一个字符必须在0 ~ 7之间。
      *
      * @see <a href="https://www.crockford.com/base32.html">Crockford's Base 32</a>
      */
