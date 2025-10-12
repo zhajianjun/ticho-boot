@@ -2,10 +2,9 @@ package top.ticho.starter.web.util.valid;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.BaseHibernateValidatorConfiguration;
 import org.hibernate.validator.HibernateValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import top.ticho.starter.view.enums.TiBizErrorCode;
 import top.ticho.starter.view.exception.TiBizException;
 import top.ticho.tool.core.TiCollUtil;
@@ -31,13 +30,11 @@ import java.util.function.Supplier;
  * @author zhajianjun
  * @date 2022-07-10 15:56
  */
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TiValidUtil {
 
-    private static final Logger log = LoggerFactory.getLogger(TiValidUtil.class);
-
     public static final Validator VALIDATOR_DEFAULT;
-
     private static final Validator VALIDATOR_FAIL_FAST;
 
     static {

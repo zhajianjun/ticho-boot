@@ -1,4 +1,4 @@
-package top.ticho.starter.web.util;
+package top.ticho.tool.core;
 
 import lombok.Data;
 
