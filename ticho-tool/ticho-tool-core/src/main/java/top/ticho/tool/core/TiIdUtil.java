@@ -13,8 +13,9 @@ import java.util.UUID;
  * @date 2025-08-04 22:41
  */
 public class TiIdUtil {
+    public static final char[] ALPHABET = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
     private static final TiSnowflake snowflake = new TiSnowflake(0, 0);
-    private static final char[] ALPHABET = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+
 
     public static Long snowId() {
         return snowflake.nextId();

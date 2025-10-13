@@ -11,7 +11,7 @@ import java.io.OutputStream;
 import java.util.Random;
 
 /**
- *
+ * 验证码创建
  *
  * @author zhajianjun
  * @date 2025-08-17 15:56
@@ -20,97 +20,68 @@ public class TiLineCaptcha {
     /**
      * 图片的宽度
      */
-    private int width = 160;
+    private final int width;
     /**
      * 图片的高度
      */
-    private int height = 40;
+    private final int height;
     /**
      * 验证码字符个数
      */
-    private int codeCount = 4;
+    private final int codeCount;
     /**
      * 验证码干扰线数
      */
-    private int lineCount = 20;
+    private final int lineCount;
     /**
      * 验证码
      */
-    private String code = null;
+    private final String code;
     /**
      * 验证码图片Buffer
      */
-    private BufferedImage buffImg = null;
+    private final BufferedImage buffImg;
 
-    private final Random random = new Random();
+    private final Random random;
 
     public TiLineCaptcha() {
-        createImage();
+        this(160, 40, 4, 20, null);
     }
 
     public TiLineCaptcha(int width, int height) {
-        this.width = width;
-        this.height = height;
-        createImage();
+        this(width, height, 4, 20, null);
     }
 
     public TiLineCaptcha(int width, int height, int codeCount) {
-        this.width = width;
-        this.height = height;
-        this.codeCount = codeCount;
-        createImage();
+        this(width, height, codeCount, 20, null);
     }
 
     public TiLineCaptcha(int width, int height, int codeCount, int lineCount) {
-        this.width = width;
-        this.height = height;
-        this.codeCount = codeCount;
-        this.lineCount = lineCount;
-        createImage();
+        this(width, height, codeCount, lineCount, null);
     }
 
     public TiLineCaptcha(int width, int height, int codeCount, int lineCount, String code) {
+        this.random = new Random();
         this.width = width;
         this.height = height;
         this.codeCount = codeCount;
         this.lineCount = lineCount;
-        createImage(code);
+        this.code = code == null ? generateCode() : code;
+        this.buffImg = createImage();
     }
 
-    /**
-     * 生成图片
-     */
-    private void createImage() {
-        String code = randomStr(codeCount); // 得到随机字符
-        doCreate(code);
-    }
-
-    /**
-     * 生成指定字符图片
-     */
-    private void createImage(String code) {
-        doCreate(code);
-    }
-
-    /**
-     * 生成验证码图片
-     *
-     * @param code 验证码
-     */
-    private void doCreate(String code) {
+    private BufferedImage createImage() {
         // 字体的宽度
-        int fontWidth = width / codeCount;
+        int fontWidth = this.width / this.codeCount;
         // 字体的高度
-        int fontHeight = height - 5;
-        int codeY = height - 8;
-
-        // 图像buffer
-        buffImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        int fontHeight = this.height - 5;
+        int codeY = this.height - 8;
+        BufferedImage buffImg = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_RGB);
         Graphics g = buffImg.getGraphics();
         // Graphics2D g = buffImg.createGraphics();
         // 设置背景色
         g.setColor(getRandColor(200, 250));
-        g.fillRect(0, 0, width, height);
+        g.fillRect(0, 0, this.width, this.height);
 
         // 设置字体
         // Font font1 = getFont(fontHeight);
@@ -122,23 +93,23 @@ public class TiLineCaptcha {
 
         // 添加噪点
         float yawpRate = 0.01f;// 噪声率
-        int area = (int) (yawpRate * width * height);
+        int area = (int) (yawpRate * this.width * this.height);
         for (int i = 0; i < area; i++) {
-            int x = random.nextInt(width);
-            int y = random.nextInt(height);
+            int x = random.nextInt(this.width);
+            int y = random.nextInt(this.height);
 
             buffImg.setRGB(x, y, random.nextInt(255));
         }
-
-        this.code = code;
-        for (int i = 0; i < codeCount; i++) {
-            String strRand = code.substring(i, i + 1);
+        for (int i = 0; i < this.codeCount; i++) {
+            String strRand = this.code.substring(i, i + 1);
             g.setColor(getRandColor(1, 255));
             // g.drawString(a,x,y);
             // a为要画出来的东西，x和y表示要画的东西最左侧字符的基线位于此图形上下文坐标系的 (x, y) 位置处
             g.drawString(strRand, i * fontWidth + 3, codeY);
         }
+        return buffImg;
     }
+
 
     private void setSomeLines(Graphics g) {
         for (int i = 0; i < lineCount; i++) {
@@ -154,17 +125,15 @@ public class TiLineCaptcha {
     /**
      * 得到随机字符
      *
-     * @param length 随机串长度
      * @return 指定长度的随机串
      */
-    public String randomStr(int length) {
-        String basicString = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+    public String generateCode() {
         StringBuilder builder = new StringBuilder();
-        int len = basicString.length() - 1;
+        int len = TiIdUtil.ALPHABET.length - 1;
         double r;
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < codeCount; i++) {
             r = (Math.random()) * len;
-            builder.append(basicString.charAt((int) r));
+            builder.append(TiIdUtil.ALPHABET[(int) r]);
         }
         return builder.toString();
     }
@@ -228,9 +197,7 @@ public class TiLineCaptcha {
     }
 
     private void shearY(Graphics g, int w1, int h1, Color color) {
-
-        int period = random.nextInt(40) + 10; // 50;
-
+        int period = random.nextInt(40) + 10;
         int frames = 20;
         int phase = 7;
         for (int i = 0; i < w1; i++) {
