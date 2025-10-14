@@ -78,14 +78,12 @@ public class TiLineCaptcha {
         int codeY = this.height - 8;
         BufferedImage buffImg = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_RGB);
         Graphics g = buffImg.getGraphics();
-        // Graphics2D g = buffImg.createGraphics();
         // 设置背景色
         g.setColor(getRandColor(200, 250));
         g.fillRect(0, 0, this.width, this.height);
 
         // 设置字体
-        // Font font1 = getFont(fontHeight);
-        Font font = new Font("Fixedsys", Font.BOLD, fontHeight);
+        Font font = getFont(fontHeight);
         g.setFont(font);
 
         // 设置干扰线
@@ -159,21 +157,7 @@ public class TiLineCaptcha {
         return new Color(r, g, b);
     }
 
-    /**
-     * 产生随机字体
-     */
-    private Font getFont(int size) {
-        Random random = new Random();
-        Font[] font = new Font[5];
-        font[0] = new Font("Ravie", Font.PLAIN, size);
-        font[1] = new Font("Antique Olive Compact", Font.PLAIN, size);
-        font[2] = new Font("Fixedsys", Font.PLAIN, size);
-        font[3] = new Font("Wide Latin", Font.PLAIN, size);
-        font[4] = new Font("Gill Sans Ultra Bold", Font.PLAIN, size);
-        return font[random.nextInt(5)];
-    }
-
-    // 扭曲方法
+        // 扭曲方法
     private void shear(Graphics g, int w1, int h1, Color color) {
         shearX(g, w1, h1, color);
         shearY(g, w1, h1, color);
@@ -207,6 +191,26 @@ public class TiLineCaptcha {
             g.drawLine(i, (int) d, i, 0);
             g.drawLine(i, (int) d + h1, i, h1);
         }
+    }
+
+    /**
+     * 产生固定字体
+     */
+    private Font getFont(int size) {
+       return new Font("Fixedsys", Font.BOLD, size);
+    }
+
+    /**
+     * 产生随机字体
+     */
+    private Font getRandomFont(int size) {
+        Font[] font = new Font[5];
+        font[0] = new Font("Ravie", Font.PLAIN, size);
+        font[1] = new Font("Antique Olive Compact", Font.PLAIN, size);
+        font[2] = new Font("Fixedsys", Font.PLAIN, size);
+        font[3] = new Font("Wide Latin", Font.PLAIN, size);
+        font[4] = new Font("Gill Sans Ultra Bold", Font.PLAIN, size);
+        return font[random.nextInt(5)];
     }
 
     public void write(OutputStream sos) throws IOException {
