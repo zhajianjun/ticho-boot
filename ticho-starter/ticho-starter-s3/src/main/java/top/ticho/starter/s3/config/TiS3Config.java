@@ -9,7 +9,7 @@ import top.ticho.starter.s3.component.TiS3Template;
 import top.ticho.starter.s3.prop.TiS3Property;
 
 /**
- * minio配置
+ * s3配置
  *
  * @author zhajianjun
  * @date 2025-09-06 15:14
@@ -21,13 +21,13 @@ public class TiS3Config {
 
     @Bean
     @ConfigurationProperties(prefix = "ticho.s3")
-    public TiS3Property minioProperty() {
+    public TiS3Property tiS3Property() {
         return new TiS3Property();
     }
 
     @Bean
-    public TiS3Template minioTemplate(TiS3Property tiMinioProperty) {
-        return new TiS3Template(tiMinioProperty);
+    public TiS3Template tiS3Template(TiS3Property tiS3Property) {
+        return new TiS3Template(tiS3Property);
     }
 
 }

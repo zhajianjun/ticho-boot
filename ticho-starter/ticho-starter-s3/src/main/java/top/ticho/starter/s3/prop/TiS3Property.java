@@ -14,7 +14,7 @@ public class TiS3Property {
 
     /** 是否开启配置 */
     private Boolean enable;
-    /** minio的地址 */
+    /** s3的地址 */
     private String endpoint;
     /** 用户名 */
     private String accessKey;

@@ -111,13 +111,13 @@ public class TiS3ChunkFileTest {
     }
 
     public static void initS3Template() {
-        TiS3Property tiMinioProperty = new TiS3Property();
-        tiMinioProperty.setEndpoint("http://127.0.0.1:9000");
-        tiMinioProperty.setAccessKey("root");
-        tiMinioProperty.setSecretKey("abcd1234");
-        tiMinioProperty.setDefaultBucket("test");
-        tiMinioProperty.setRegion(Region.CN_NORTH_1.id());
-        TiS3ChunkFileTest.tiS3Template = new TiS3Template(tiMinioProperty);
+        TiS3Property tiS3Property = new TiS3Property();
+        tiS3Property.setEndpoint("http://127.0.0.1:9000");
+        tiS3Property.setAccessKey("root");
+        tiS3Property.setSecretKey("abcd1234");
+        tiS3Property.setDefaultBucket("test");
+        tiS3Property.setRegion(Region.CN_NORTH_1.id());
+        TiS3ChunkFileTest.tiS3Template = new TiS3Template(tiS3Property);
     }
 
 }

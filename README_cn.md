@@ -59,14 +59,14 @@ Spring Boot Starter 系列模块，开箱即用：
   feign 客户端增强，默认使用okhttp，支持负载均衡与自定义拦截器。
 - **[ticho-starter-log](ticho-starter/ticho-starter-log)**  
   分布式日志追踪，集成 MDC 与日志染色功能。
-- **[ticho-starter-minio](ticho-starter/ticho-starter-minio)**  
-  对象存储服务，支持 MinIO的S3协议的文件操作。
 - **[ticho-starter-rabbitmq](ticho-starter/ticho-starter-rabbitmq)**  
   RabbitMQ 消息队列增强。
 - **[ticho-starter-redis](ticho-starter/ticho-starter-redis)**  
   Redis简化配置、工具封装等。
 - **[ticho-starter-redisson](ticho-starter/ticho-starter-redisson)**  
   分布式锁与并发控制，基于 Redisson 实现。
+- **[ticho-starter-s3](ticho-starter/ticho-starter-s3)**  
+  对象存储服务，支持S3协议的文件操作。
 - **[ticho-starter-security](ticho-starter/ticho-starter-security)**  
   安全认证模块，支持 OAuth2/JWT 鉴权与动态权限管理。
 - **[ticho-starter-view](ticho-starter/ticho-starter-view)ticho-starter-view**  

@@ -539,7 +539,7 @@ public class TiS3Template {
      * @param bucketName bucket名称
      * @param prefix     前缀
      * @param recursive  是否递归查询,true-则查询文件，包含文件夹 false-查询所有文件，不包含文件夹
-     * @return MinioItem 列表
+     * @return S3Object 列表
      */
     public List<S3Object> listObjects(String bucketName, String prefix, Integer maxKeys) {
         List<S3Object> objectList = new ArrayList<>();

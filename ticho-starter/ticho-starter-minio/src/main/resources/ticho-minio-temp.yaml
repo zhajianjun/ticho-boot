@@ -1,9 +1,0 @@
-# 配置模版
-ticho:
-  minio:
-    endpoint: http://localhost
-    accessKey: root
-    secretKey: 123456
-    imgSize: 10MB
-    fileSize: 10MB
-    defaultBucket: default

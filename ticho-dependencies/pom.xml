@@ -16,7 +16,6 @@
         <spring-cloud.version>2024.0.1</spring-cloud.version>
         <spring-cloud-alibaba-dependencies.version>2023.0.3.2</spring-cloud-alibaba-dependencies.version>
         <!-- 其它的一些信息 -->
-        <minio.version>8.1.0</minio.version>
         <amazon-s3.version>2.33.2</amazon-s3.version>
         <guava.version>33.4.8-jre</guava.version>
         <mybatis-plus.version>3.5.11</mybatis-plus.version>
@@ -65,12 +64,6 @@
             <dependency>
                 <groupId>top.ticho.starter</groupId>
                 <artifactId>ticho-starter-email</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>top.ticho.starter</groupId>
-                <artifactId>ticho-starter-minio</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -311,20 +304,6 @@
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct-processor</artifactId>
                 <version>${mapstruct.version}</version>
-            </dependency>
-
-            <!--  minio配置  -->
-            <!-- https://mvnrepository.com/artifact/io.minio/minio -->
-            <dependency>
-                <groupId>io.minio</groupId>
-                <artifactId>minio</artifactId>
-                <version>${minio.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>guava</artifactId>
-                        <groupId>com.google.guava</groupId>
-                    </exclusion>
-                </exclusions>
             </dependency>
 
             <dependency>

@@ -66,14 +66,14 @@ Spring Boot Starter modules, ready to use out-of-the-box:
   Enhanced Feign client with default OkHttp support, load balancing, and custom interceptors.
 - **[ticho-starter-log](ticho-starter/ticho-starter-log)**  
   Distributed log tracing integrating MDC and log tagging.
-- **[ticho-starter-minio](ticho-starter/ticho-starter-minio)**  
-  Object storage service supporting S3 protocol operations for MinIO.
 - **[ticho-starter-rabbitmq](ticho-starter/ticho-starter-rabbitmq)**  
   Enhanced RabbitMQ message queue capabilities.
 - **[ticho-starter-redis](ticho-starter/ticho-starter-redis)**  
   Simplified Redis configuration and utility encapsulation.
 - **[ticho-starter-redisson](ticho-starter/ticho-starter-redisson)**  
   Distributed locks and concurrency control based on Redisson.
+- **[ticho-starter-s3](ticho-starter/ticho-starter-s3)**  
+  Object storage service supporting S3 protocol operations.
 - **[ticho-starter-security](ticho-starter/ticho-starter-security)**  
   Security authentication module supporting OAuth2/JWT and dynamic permission management.
 - **[ticho-starter-view](ticho-starter/ticho-starter-view)ticho-starter-view**  
