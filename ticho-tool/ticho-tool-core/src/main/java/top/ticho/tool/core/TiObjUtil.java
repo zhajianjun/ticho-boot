@@ -19,14 +19,13 @@ public class TiObjUtil {
         if (object == null) {
             return true;
         }
-        if (object instanceof CharSequence cs) {
-            return cs.isEmpty();
-        }
         if (TiArrayUtil.isArray(object)) {
             return Array.getLength(object) == 0;
         }
         return switch (object) {
+            case CharSequence cs -> cs.isEmpty();
             case Collection<?> collection -> collection.isEmpty();
+            case Iterator<?> iterator -> !iterator.hasNext();
             case Map<?, ?> map -> map.isEmpty();
             case Optional<?> o -> o.isEmpty();
             default -> false;
