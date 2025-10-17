@@ -48,14 +48,14 @@ class TiStrFormatter {
         if (TiStrUtil.isBlank(strPattern) || TiStrUtil.isBlank(placeHolder) || TiArrayUtil.isEmpty(argArray)) {
             return strPattern;
         }
-        final int strPatternLength = strPattern.length();
-        final int placeHolderLength = placeHolder.length();
-
+         int strPatternLength = strPattern.length();
+        int placeHolderLength = placeHolder.length();
         // 初始化定义好的长度以获得更好的性能
-        final StringBuilder sbuf = new StringBuilder(strPatternLength + 50);
-
-        int handledPosition = 0;// 记录已经处理到的位置
-        int delimIndex;// 占位符所在位置
+        StringBuilder sbuf = new StringBuilder(strPatternLength + 50);
+        // 记录已经处理到的位置
+        int handledPosition = 0;
+        // 占位符所在位置
+        int delimIndex;
         for (int argIndex = 0; argIndex < argArray.length; argIndex++) {
             delimIndex = strPattern.indexOf(placeHolder, handledPosition);
             if (delimIndex == -1) {// 剩余部分无占位符
@@ -66,7 +66,6 @@ class TiStrFormatter {
                 sbuf.append(strPattern, handledPosition, strPatternLength);
                 return sbuf.toString();
             }
-
             // 转义符
             if (delimIndex > 0 && strPattern.charAt(delimIndex - 1) == TiCharConst.BACKSLASH) {// 转义符
                 if (delimIndex > 1 && strPattern.charAt(delimIndex - 2) == TiCharConst.BACKSLASH) {// 双转义符
@@ -109,7 +108,6 @@ class TiStrFormatter {
         if (null == map || map.isEmpty()) {
             return template.toString();
         }
-
         String template2 = template.toString();
         String value;
         for (Map.Entry<?, ?> entry : map.entrySet()) {
