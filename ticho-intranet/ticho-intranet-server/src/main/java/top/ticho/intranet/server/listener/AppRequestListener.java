@@ -74,7 +74,7 @@ public class AppRequestListener extends SimpleChannelInboundHandler<ByteBuf> {
         requestChannels.put(requestId, requestChannel);
         // 获取端口信息
         IntranetPort port = intranetClient.getPortMap().get(portNum);
-        Message message = new Message(Message.CONNECT, requestId, port.getEndpoint().getBytes());
+        Message message = new Message(Message.CONNECT, requestId, port.endpoint().getBytes());
         clientChannel.writeAndFlush(message);
         super.channelActive(ctx);
         // log.warn("[3][服务端]通道激活, 连接客户端{}, 消息{}", clientChannel, message);

@@ -183,17 +183,17 @@ public record IntranetServerHandler(
                 .orElseGet(HashMap::new);
             // 解绑portInfoMap中不存在，而portMapFromMem存在的端口
             portMapFromMem.values().forEach(intranetPortFromMem -> {
-                if (portMap.containsKey(intranetPortFromMem.getPort())) {
+                if (portMap.containsKey(intranetPortFromMem.port())) {
                     return;
                 }
-                unbind(accessKey, intranetPortFromMem.getPort());
+                unbind(accessKey, intranetPortFromMem.port());
             });
             // 绑定portInfoMap中存在，而portMapFromMem不存在的端口
             portMap.values().forEach(intranetPort -> {
-                if (portMapFromMem.containsKey(intranetPort.getPort())) {
+                if (portMapFromMem.containsKey(intranetPort.port())) {
                     return;
                 }
-                bind(accessKey, intranetPort.getPort(), intranetPort.getEndpoint());
+                bind(accessKey, intranetPort.port(), intranetPort.endpoint());
             });
         });
     }
