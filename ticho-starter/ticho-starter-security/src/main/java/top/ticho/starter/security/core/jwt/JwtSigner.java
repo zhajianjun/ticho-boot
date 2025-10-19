@@ -11,10 +11,10 @@ import org.springframework.security.jwt.crypto.sign.RsaSigner;
 import org.springframework.security.jwt.crypto.sign.RsaVerifier;
 import org.springframework.security.jwt.crypto.sign.SignatureVerifier;
 import org.springframework.security.jwt.crypto.sign.Signer;
-import top.ticho.starter.view.enums.TiBizErrorCode;
 import top.ticho.starter.view.util.TiAssert;
 import top.ticho.tool.core.TiBase64Util;
 import top.ticho.tool.core.TiStrUtil;
+import top.ticho.tool.core.enums.TiBizErrorCode;
 
 import java.security.KeyPair;
 import java.security.PrivateKey;

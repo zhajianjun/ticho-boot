@@ -7,10 +7,10 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.multipart.MultipartFile;
 import top.ticho.starter.mail.prop.TiMailProperty;
-import top.ticho.starter.view.enums.TiBizErrorCode;
 import top.ticho.starter.view.util.TiAssert;
 import top.ticho.tool.core.TiCollUtil;
 import top.ticho.tool.core.TiStrUtil;
+import top.ticho.tool.core.enums.TiBizErrorCode;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;

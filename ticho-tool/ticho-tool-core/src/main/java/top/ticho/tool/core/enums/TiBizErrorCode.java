@@ -1,4 +1,4 @@
-package top.ticho.starter.view.enums;
+package top.ticho.tool.core.enums;
 
 
 import lombok.AllArgsConstructor;

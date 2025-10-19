@@ -7,8 +7,8 @@ import top.ticho.starter.security.constant.TiSecurityConst;
 import top.ticho.starter.security.dto.TiToken;
 import top.ticho.starter.security.prop.TiSecurityProperty;
 import top.ticho.starter.view.core.TiSecurityUser;
-import top.ticho.starter.view.enums.TiBizErrorCode;
 import top.ticho.starter.view.util.TiAssert;
+import top.ticho.tool.core.enums.TiBizErrorCode;
 import top.ticho.tool.json.util.TiJsonUtil;
 
 import java.util.ArrayList;

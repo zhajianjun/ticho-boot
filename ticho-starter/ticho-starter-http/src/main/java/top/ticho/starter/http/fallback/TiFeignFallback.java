@@ -6,8 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
 import top.ticho.starter.view.core.TiResult;
-import top.ticho.starter.view.enums.TiBizErrorCode;
 import top.ticho.tool.core.TiStrUtil;
+import top.ticho.tool.core.enums.TiBizErrorCode;
 
 import java.lang.reflect.Method;
 import java.util.Objects;

@@ -3,11 +3,11 @@ package top.ticho.starter.view.util;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import top.ticho.starter.view.enums.TiBizErrorCode;
-import top.ticho.starter.view.enums.TiErrorCode;
-import top.ticho.starter.view.exception.TiBizException;
 import top.ticho.tool.core.TiObjUtil;
 import top.ticho.tool.core.TiStrUtil;
+import top.ticho.tool.core.enums.TiBizErrorCode;
+import top.ticho.tool.core.enums.TiErrorCode;
+import top.ticho.tool.core.exception.TiBizException;
 
 import java.util.Objects;
 import java.util.Optional;

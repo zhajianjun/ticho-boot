@@ -1,13 +1,14 @@
-package top.ticho.starter.view.exception;
+package top.ticho.tool.core.exception;
 
 import lombok.Getter;
-import top.ticho.starter.view.enums.TiErrorCode;
+import top.ticho.tool.core.TiExceptionUtil;
+import top.ticho.tool.core.enums.TiErrorCode;
 
 /**
  * 系统异常处理
  *
  * @author zhajianjun
- * @date 2022-07-10 15:56
+ * @date 2025-10-19 13:10
  */
 @Getter
 public class TiSysException extends TiBaseException {
@@ -22,6 +23,10 @@ public class TiSysException extends TiBaseException {
 
     public TiSysException(String message) {
         super(message);
+    }
+
+    public TiSysException(Throwable e) {
+        super(TiExceptionUtil.getMessage(e), e);
     }
 
     public TiSysException(String message, Throwable throwable) {

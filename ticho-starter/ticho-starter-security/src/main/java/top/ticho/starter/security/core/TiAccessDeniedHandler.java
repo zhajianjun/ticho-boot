@@ -5,7 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import top.ticho.starter.view.core.TiResult;
-import top.ticho.starter.view.enums.TiHttpErrorCode;
+import top.ticho.tool.core.enums.TiHttpErrorCode;
 import top.ticho.tool.json.util.TiJsonUtil;
 
 import jakarta.servlet.http.HttpServletRequest;

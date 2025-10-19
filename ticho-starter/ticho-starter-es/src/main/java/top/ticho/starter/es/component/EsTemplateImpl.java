@@ -33,10 +33,10 @@ import org.elasticsearch.search.sort.SortOrder;
 import top.ticho.starter.es.query.EsQuery;
 import top.ticho.starter.view.core.TiEntity;
 import top.ticho.starter.view.core.TiEsPageResult;
-import top.ticho.starter.view.exception.TiBizException;
 import top.ticho.tool.core.TiCollUtil;
 import top.ticho.tool.core.TiIdUtil;
 import top.ticho.tool.core.TiStrUtil;
+import top.ticho.tool.core.exception.TiBizException;
 import top.ticho.tool.json.util.TiJsonUtil;
 
 import java.io.IOException;

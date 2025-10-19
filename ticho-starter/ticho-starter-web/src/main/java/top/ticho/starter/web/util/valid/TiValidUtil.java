@@ -5,10 +5,10 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.BaseHibernateValidatorConfiguration;
 import org.hibernate.validator.HibernateValidator;
-import top.ticho.starter.view.enums.TiBizErrorCode;
-import top.ticho.starter.view.exception.TiBizException;
 import top.ticho.tool.core.TiCollUtil;
 import top.ticho.tool.core.TiObjUtil;
+import top.ticho.tool.core.enums.TiBizErrorCode;
+import top.ticho.tool.core.exception.TiBizException;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;

@@ -1,8 +1,9 @@
-package top.ticho.starter.view.exception;
+package top.ticho.tool.core.exception;
 
 import lombok.Getter;
-import top.ticho.starter.view.enums.TiErrorCode;
-import top.ticho.starter.view.enums.TiHttpErrorCode;
+import top.ticho.tool.core.TiStrUtil;
+import top.ticho.tool.core.enums.TiErrorCode;
+import top.ticho.tool.core.enums.TiHttpErrorCode;
 
 /**
  * 基础异常处理
@@ -12,9 +13,9 @@ import top.ticho.starter.view.enums.TiHttpErrorCode;
  */
 @Getter
 public class TiBaseException extends RuntimeException {
-    /** 状态码 */
+    /** 错误码 */
     private final int code;
-    /** 状态信息 */
+    /** 错误信息 */
     private final String message;
 
     public TiBaseException(int code, String message) {
@@ -65,8 +66,8 @@ public class TiBaseException extends RuntimeException {
         this.message = message;
     }
 
-    private static String getMessage(int code, String message) {
-        return String.format("异常代码:%s,异常信息:%s", code, message);
+    public static String getMessage(int code, String message) {
+        return TiStrUtil.format("错误码: {} 错误信息: {}", code, message);
     }
 
 }

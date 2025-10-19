@@ -1,6 +1,6 @@
 package top.ticho.tool.core;
 
-import top.ticho.tool.core.exception.TiUtilException;
+import top.ticho.tool.core.exception.TiSysException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +26,7 @@ public class TiIoUtil {
             }
             return count;
         } catch (IOException e) {
-            throw new TiUtilException(e);
+            throw new TiSysException(e);
         }
     }
 

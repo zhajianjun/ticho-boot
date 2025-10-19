@@ -1,10 +1,10 @@
-package top.ticho.starter.view.enums;
+package top.ticho.tool.core.enums;
 
 /**
  * 错误码接口
  *
  * @author zhajianjun
- * @date 2022-07-10 15:56
+ * @date 2025-10-19 13:07
  */
 public interface TiErrorCode {
 

@@ -1,8 +1,8 @@
 package top.ticho.starter.view.core;
 
 import lombok.Data;
-import top.ticho.starter.view.enums.TiBizErrorCode;
-import top.ticho.starter.view.enums.TiErrorCode;
+import top.ticho.tool.core.enums.TiBizErrorCode;
+import top.ticho.tool.core.enums.TiErrorCode;
 
 import java.io.Serial;
 import java.io.Serializable;

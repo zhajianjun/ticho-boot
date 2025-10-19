@@ -1,7 +1,8 @@
-package top.ticho.starter.view.exception;
+package top.ticho.tool.core.exception;
 
 import lombok.Getter;
-import top.ticho.starter.view.enums.TiErrorCode;
+import top.ticho.tool.core.TiExceptionUtil;
+import top.ticho.tool.core.enums.TiErrorCode;
 
 /**
  * 业务异常处理
@@ -22,6 +23,10 @@ public class TiBizException extends TiBaseException {
 
     public TiBizException(String message) {
         super(message);
+    }
+
+    public TiBizException(Throwable e) {
+        super(TiExceptionUtil.getMessage(e), e);
     }
 
     public TiBizException(String message, Throwable throwable) {

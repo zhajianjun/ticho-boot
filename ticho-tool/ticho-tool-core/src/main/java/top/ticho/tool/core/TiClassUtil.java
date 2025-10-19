@@ -2,7 +2,7 @@ package top.ticho.tool.core;
 
 import top.ticho.tool.core.constant.TiCharConst;
 import top.ticho.tool.core.constant.TiStrConst;
-import top.ticho.tool.core.exception.TiUtilException;
+import top.ticho.tool.core.exception.TiSysException;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -84,7 +84,7 @@ public class TiClassUtil {
             aClass = getClass(classLoader, className, true);
 
         } catch (ClassNotFoundException e) {
-            throw new TiUtilException(e);
+            throw new TiSysException(e);
         }
         return (Class<T>) aClass;
     }

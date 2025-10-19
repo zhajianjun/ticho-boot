@@ -1,4 +1,4 @@
-package top.ticho.starter.view.enums;
+package top.ticho.tool.core.enums;
 
 
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import java.io.Serializable;
  * 状态错误码
  *
  * @author zhajianjun
- * @date 2022-07-10 15:56
+ * @date 2025-10-19 13:07
  */
 @Getter
 @AllArgsConstructor
@@ -27,7 +27,7 @@ public enum TiHttpErrorCode implements Serializable, TiErrorCode {
     ACCESS_DENIED(403, "权限不足"),
     NOT_FOUND(404, "啥都没有"),
     METHOD_NOT_ALLOWED(405, "不允许的方法"),
-    NOT_ACCEPTABLE(406, "Not Acceptable"),
+    NOT_ACCEPTABLE(406, "不可接受"),
     UNSUPPORTED_MEDIA_TYPE(415, "不受支持的媒体类型"),
     FAIL(500, "执行失败"),
     INTERNAL_SERVER_ERROR(500, "系统异常"),
@@ -37,10 +37,9 @@ public enum TiHttpErrorCode implements Serializable, TiErrorCode {
     @Serial
     private static final long serialVersionUID = 1L;
 
-    /** 状态码 */
+    /** 错误码 */
     private final int code;
-
-    /** 状态信息 */
+    /** 错误信息 */
     private final String message;
 
 }

@@ -49,8 +49,8 @@ import software.amazon.awssdk.transfer.s3.S3TransferManager;
 import software.amazon.awssdk.transfer.s3.model.Upload;
 import software.amazon.awssdk.transfer.s3.model.UploadRequest;
 import top.ticho.starter.s3.prop.TiS3Property;
-import top.ticho.starter.view.enums.TiBizErrorCode;
-import top.ticho.starter.view.exception.TiBizException;
+import top.ticho.tool.core.enums.TiBizErrorCode;
+import top.ticho.tool.core.exception.TiBizException;
 
 import java.io.IOException;
 import java.io.InputStream;

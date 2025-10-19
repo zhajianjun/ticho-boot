@@ -4,9 +4,9 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.starter.view.core.TiResult;
-import top.ticho.starter.view.enums.TiBizErrorCode;
-import top.ticho.starter.view.exception.TiBizException;
-import top.ticho.starter.view.exception.TiSysException;
+import top.ticho.tool.core.enums.TiBizErrorCode;
+import top.ticho.tool.core.exception.TiBizException;
+import top.ticho.tool.core.exception.TiSysException;
 
 import java.util.function.Supplier;
 

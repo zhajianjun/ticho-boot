@@ -1,6 +1,6 @@
 package top.ticho.tool.core;
 
-import top.ticho.tool.core.exception.TiUtilException;
+import top.ticho.tool.core.exception.TiSysException;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -157,7 +157,7 @@ public class TiLineCaptcha {
         return new Color(r, g, b);
     }
 
-        // 扭曲方法
+    // 扭曲方法
     private void shear(Graphics g, int w1, int h1, Color color) {
         shearX(g, w1, h1, color);
         shearY(g, w1, h1, color);
@@ -197,7 +197,7 @@ public class TiLineCaptcha {
      * 产生固定字体
      */
     private Font getFont(int size) {
-       return new Font("Fixedsys", Font.BOLD, size);
+        return new Font("Fixedsys", Font.BOLD, size);
     }
 
     /**
@@ -224,7 +224,7 @@ public class TiLineCaptcha {
             ImageIO.write(buffImg, "png", baos);
             return baos.toByteArray();
         } catch (IOException e) {
-            throw new TiUtilException(e);
+            throw new TiSysException(e);
         }
     }
 

@@ -30,11 +30,11 @@ import org.springframework.web.multipart.support.MissingServletRequestPartExcept
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 import top.ticho.starter.view.core.TiResult;
-import top.ticho.starter.view.enums.TiErrorCode;
-import top.ticho.starter.view.enums.TiHttpErrorCode;
-import top.ticho.starter.view.exception.TiBizException;
-import top.ticho.starter.view.exception.TiSysException;
 import top.ticho.starter.web.annotation.TiView;
+import top.ticho.tool.core.enums.TiErrorCode;
+import top.ticho.tool.core.enums.TiHttpErrorCode;
+import top.ticho.tool.core.exception.TiBizException;
+import top.ticho.tool.core.exception.TiSysException;
 
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Map;
