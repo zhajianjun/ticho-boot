@@ -1,4 +1,4 @@
-package top.ticho.starter.web.util.valid;
+package top.ticho.tool.valid;
 
 import jakarta.validation.GroupSequence;
 import jakarta.validation.groups.Default;
@@ -7,7 +7,7 @@ import jakarta.validation.groups.Default;
  * 校验分组
  *
  * @author zhajianjun
- * @date 2022-07-10 15:56
+ * @date 2025-10-19 13:51
  */
 public class TiValidGroup {
 

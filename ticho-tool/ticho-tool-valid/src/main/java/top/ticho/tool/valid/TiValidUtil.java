@@ -1,4 +1,4 @@
-package top.ticho.starter.web.util.valid;
+package top.ticho.tool.valid;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -28,14 +28,14 @@ import java.util.function.Supplier;
  * Validator 参数校验
  *
  * @author zhajianjun
- * @date 2022-07-10 15:56
+ * @date 2025-10-19 13:51
  */
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TiValidUtil {
 
     public static final Validator VALIDATOR_DEFAULT;
-    private static final Validator VALIDATOR_FAIL_FAST;
+    public static final Validator VALIDATOR_FAIL_FAST;
 
     static {
         VALIDATOR_DEFAULT = getValidator(Validation::buildDefaultValidatorFactory);

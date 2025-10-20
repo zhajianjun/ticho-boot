@@ -1,4 +1,4 @@
-package top.ticho.starter.web.util.valid;
+package top.ticho.tool.valid;
 
 import lombok.NonNull;
 
@@ -13,7 +13,7 @@ import java.util.ListIterator;
  * 参数校验bean
  *
  * @author zhajianjun
- * @date 2022-07-10 15:56
+ * @date 2025-10-19 13:51
  */
 public class TiValidBean<E> implements List<E> {
 
