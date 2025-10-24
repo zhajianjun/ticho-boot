@@ -7,10 +7,11 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.web.multipart.MultipartFile;
 import top.ticho.starter.mail.prop.TiMailProperty;
-import top.ticho.starter.view.util.TiAssert;
+import top.ticho.tool.core.TiAssert;
 import top.ticho.tool.core.TiCollUtil;
 import top.ticho.tool.core.TiStrUtil;
 import top.ticho.tool.core.enums.TiBizErrorCode;
+import top.ticho.tool.core.exception.TiBizException;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -69,8 +70,7 @@ public class TiMailTemplate {
                 helper.setCc(cc.toArray(new String[0]));
             }
         } catch (MessagingException | UnsupportedEncodingException e) {
-            log.error(e.getMessage(), e);
-            TiAssert.cast(TiBizErrorCode.FAIL, "创建邮件MimeMessageHelper失败");
+            throw new TiBizException("创建邮件MimeMessageHelper失败", e);
         }
         List<TiMailInines> inlines = tiMailContent.getInlines();
         if (TiCollUtil.isNotEmpty(inlines)) {
