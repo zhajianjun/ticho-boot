@@ -16,7 +16,7 @@ import top.ticho.starter.security.dto.LoginRequest;
 import top.ticho.starter.security.dto.TiToken;
 import top.ticho.starter.security.service.TiLoginService;
 import top.ticho.starter.view.core.TiSecurityUser;
-import top.ticho.starter.view.util.TiAssert;
+import top.ticho.tool.core.TiAssert;
 import top.ticho.tool.core.TiMapUtil;
 import top.ticho.tool.core.enums.TiBizErrorCode;
 import top.ticho.tool.core.enums.TiHttpErrorCode;

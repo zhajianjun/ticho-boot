@@ -14,7 +14,7 @@ import top.ticho.starter.security.constant.TiSecurityConst;
 import top.ticho.starter.security.core.jwt.JwtDecode;
 import top.ticho.starter.view.core.TiResult;
 import top.ticho.starter.view.core.TiSecurityUser;
-import top.ticho.starter.view.util.TiAssert;
+import top.ticho.tool.core.TiAssert;
 import top.ticho.tool.core.TiStrUtil;
 import top.ticho.tool.core.enums.TiBizErrorCode;
 import top.ticho.tool.core.enums.TiHttpErrorCode;
