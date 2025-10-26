@@ -46,16 +46,14 @@ public class TiAssert {
 
     public static void isTrue(boolean condition, TiErrorCode errCode, Supplier<String> stringSupplier) {
         if (!condition) {
-            String errorMessage = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMessage());
-            cast(errCode, errorMessage);
+            cast(errCode, stringSupplier);
         }
     }
 
     public static void isTrue(boolean condition, Supplier<String> stringSupplier) {
         if (!condition) {
             TiErrorCode errCode = TiBizErrorCode.PARAM_ERROR;
-            String errorMessage = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMessage());
-            cast(errCode, errorMessage);
+            cast(errCode, stringSupplier);
         }
     }
 
@@ -82,16 +80,14 @@ public class TiAssert {
 
     public static void isNull(Object obj, TiErrorCode errCode, Supplier<String> stringSupplier) {
         if (Objects.nonNull(obj)) {
-            String errorMessage = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMessage());
-            cast(errCode, errorMessage);
+            cast(errCode, stringSupplier);
         }
     }
 
     public static void isNull(Object obj, Supplier<String> stringSupplier) {
         if (Objects.nonNull(obj)) {
             TiErrorCode errCode = TiBizErrorCode.PARAM_ERROR;
-            String errorMessage = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMessage());
-            cast(errCode, errorMessage);
+            cast(errCode, stringSupplier);
         }
     }
 
@@ -117,16 +113,14 @@ public class TiAssert {
 
     public static void isNotNull(Object obj, TiErrorCode errCode, Supplier<String> stringSupplier) {
         if (Objects.isNull(obj)) {
-            String errorMessage = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMessage());
-            cast(errCode, errorMessage);
+            cast(errCode, stringSupplier);
         }
     }
 
     public static void isNotNull(Object obj, Supplier<String> stringSupplier) {
         if (Objects.isNull(obj)) {
             TiErrorCode errCode = TiBizErrorCode.PARAM_ERROR;
-            String errorMessage = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMessage());
-            cast(errCode, errorMessage);
+            cast(errCode, stringSupplier);
         }
     }
 
@@ -153,16 +147,14 @@ public class TiAssert {
 
     public static void isEmpty(Object obj, TiErrorCode errCode, Supplier<String> stringSupplier) {
         if (TiObjUtil.isNotEmpty(obj)) {
-            String errorMessage = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMessage());
-            cast(errCode, errorMessage);
+            cast(errCode, stringSupplier);
         }
     }
 
     public static void isEmpty(Object obj, Supplier<String> stringSupplier) {
         if (TiObjUtil.isNotEmpty(obj)) {
             TiErrorCode errCode = TiBizErrorCode.PARAM_ERROR;
-            String errorMessage = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMessage());
-            cast(errCode, errorMessage);
+            cast(errCode, stringSupplier);
         }
     }
 
@@ -188,16 +180,14 @@ public class TiAssert {
 
     public static void isNotEmpty(Object obj, TiErrorCode errCode, Supplier<String> stringSupplier) {
         if (TiObjUtil.isEmpty(obj)) {
-            String errorMessage = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMessage());
-            cast(errCode, errorMessage);
+            cast(errCode, stringSupplier);
         }
     }
 
     public static void isNotEmpty(Object obj, Supplier<String> stringSupplier) {
         if (TiObjUtil.isEmpty(obj)) {
             TiErrorCode errCode = TiBizErrorCode.PARAM_ERROR;
-            String errorMessage = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMessage());
-            cast(errCode, errorMessage);
+            cast(errCode, stringSupplier);
         }
     }
 
@@ -224,16 +214,14 @@ public class TiAssert {
 
     public static void isBlank(String str, TiErrorCode errCode, Supplier<String> stringSupplier) {
         if (TiStrUtil.isNotBlank(str)) {
-            String errorMessage = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMessage());
-            cast(errCode, errorMessage);
+            cast(errCode, stringSupplier);
         }
     }
 
     public static void isBlank(String str, Supplier<String> stringSupplier) {
         if (TiStrUtil.isNotBlank(str)) {
             TiErrorCode errCode = TiBizErrorCode.PARAM_ERROR;
-            String errorMessage = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMessage());
-            cast(errCode, errorMessage);
+            cast(errCode, stringSupplier);
         }
     }
 
@@ -259,16 +247,14 @@ public class TiAssert {
 
     public static void isNotBlank(String str, TiErrorCode errCode, Supplier<String> stringSupplier) {
         if (TiStrUtil.isBlank(str)) {
-            String errorMessage = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMessage());
-            cast(errCode, errorMessage);
+            cast(errCode, stringSupplier);
         }
     }
 
     public static void isNotBlank(String str, Supplier<String> stringSupplier) {
         if (TiStrUtil.isBlank(str)) {
             TiErrorCode errCode = TiBizErrorCode.PARAM_ERROR;
-            String errorMessage = Optional.ofNullable(stringSupplier).map(Supplier::get).orElse(errCode.getMessage());
-            cast(errCode, errorMessage);
+            cast(errCode, stringSupplier);
         }
     }
 
