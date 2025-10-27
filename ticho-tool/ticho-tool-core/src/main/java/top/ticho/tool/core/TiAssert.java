@@ -277,8 +277,4 @@ public class TiAssert {
         throw new TiBizException(code, errorMessage);
     }
 
-    public static TiBizException getException(TiErrorCode errCode) {
-        return new TiBizException(errCode.getCode(), errCode.getMessage());
-    }
-
 }
