@@ -16,6 +16,8 @@
         <module>ticho-tool-core</module>
         <module>ticho-tool-json</module>
         <module>ticho-tool-template</module>
+        <module>ticho-tool-valid</module>
+        <module>ticho-tool-s3</module>
     </modules>
 
     <dependencyManagement>
