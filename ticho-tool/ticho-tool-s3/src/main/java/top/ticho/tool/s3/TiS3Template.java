@@ -330,10 +330,12 @@ public class TiS3Template {
         return chunkMap;
     }
 
-    public String createMultipartUpload(String bucketName, String objectName) {
+    public String createMultipartUpload(String bucketName, String objectName, String contentType, Map<String, String> metadata) {
         CreateMultipartUploadRequest createRequest = CreateMultipartUploadRequest.builder()
             .bucket(bucketName)
             .key(objectName)
+            .contentType("application/octet-stream")
+            .metadata(metadata)
             .build();
         CreateMultipartUploadResponse createResponse = s3Client.createMultipartUpload(createRequest);
         return createResponse.uploadId();

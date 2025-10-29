@@ -61,7 +61,7 @@ public class TiS3ChunkFileTest {
         File file = new File(filePath);
         String fileName = file.getName();
         String mimeType = TiFileUtil.getMimeType(fileName);
-        String uploadId = tiS3Template.createMultipartUpload(chunkBucket, fileName);
+        String uploadId = tiS3Template.createMultipartUpload(chunkBucket, fileName, mimeType, Collections.emptyMap());
         ExecutorService executorService = Executors.newFixedThreadPool(5);
         // 分块文件夹
         File localChunkFolder = TiChunkFileUtil.fileSpliceChunkAsync(file, 10, executorService);
