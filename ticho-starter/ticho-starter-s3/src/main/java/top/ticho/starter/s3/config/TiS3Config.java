@@ -5,8 +5,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import top.ticho.starter.s3.component.TiS3Template;
-import top.ticho.starter.s3.prop.TiS3Property;
+import top.ticho.tool.s3.TiS3Property;
+import top.ticho.tool.s3.TiS3Template;
 
 /**
  * s3配置

@@ -177,6 +177,12 @@
             </dependency>
 
             <dependency>
+                <groupId>top.ticho.tool</groupId>
+                <artifactId>ticho-tool-s3</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>top.ticho.generator</groupId>
                 <artifactId>ticho-generator</artifactId>
                 <version>${project.version}</version>
