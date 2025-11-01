@@ -273,7 +273,7 @@ public class TiS3Template {
     /**
      * 批量删除对象
      *
-     * @param bucketName bucket名称
+     * @param bucketName  bucket名称
      * @param objectNames 文件名称集合
      */
     public void removeObjects(String bucketName, List<String> objectNames) {
@@ -334,7 +334,7 @@ public class TiS3Template {
         CreateMultipartUploadRequest createRequest = CreateMultipartUploadRequest.builder()
             .bucket(bucketName)
             .key(objectName)
-            .contentType("application/octet-stream")
+            .contentType(contentType)
             .metadata(metadata)
             .build();
         CreateMultipartUploadResponse createResponse = s3Client.createMultipartUpload(createRequest);
@@ -523,18 +523,15 @@ public class TiS3Template {
      *
      * @param bucketName bucketName
      * @param objectName 文件名称
-     * @param expires    过期时间 <=7天，默认30分钟，单位：秒
+     * @param expires    过期时间 <=7天，默认5分钟，单位：秒
      * @return String
      */
     public String getObjectUrl(String bucketName, String objectName, Integer expires) {
         try {
-            TimeUnit timeUnit = TimeUnit.SECONDS;
             if (Objects.isNull(expires)) {
-                expires = 30;
-                timeUnit = TimeUnit.MINUTES;
+                expires = 5 * 60;
             }
-            // TimeUnit转Duration
-            Duration expiration = Duration.of(expires, timeUnit.toChronoUnit());
+            Duration expiration = Duration.ofSeconds(expires);
             GetObjectRequest getObjectRequest =
                 GetObjectRequest.builder()
                     .bucket(bucketName)
@@ -563,11 +560,11 @@ public class TiS3Template {
     public String getObjectUrl(String bucketName, String objectName, Integer expires, TimeUnit timeUnit) {
         try {
             if (Objects.isNull(expires)) {
-                expires = 24;
-                timeUnit = TimeUnit.HOURS;
+                expires = 5;
+                timeUnit = TimeUnit.MINUTES;
             }
             // TimeUnit转Duration
-            Duration expiration = Duration.of(expires, timeUnit.toChronoUnit());
+            Duration expiration = Duration.ofSeconds(timeUnit.toSeconds(expires));
             GetObjectRequest getObjectRequest =
                 GetObjectRequest.builder()
                     .bucket(bucketName)
