@@ -114,14 +114,8 @@ public class TiChunkFileUtil {
      * @throws IOException io异常
      */
     public static File fileSpliceChunk(File bigFile, File localChunkFolder, long chunkSize, DataUnit dataUnit) throws IOException {
-        if (!localChunkFolder.exists()) {
-            boolean mkdirs = localChunkFolder.mkdirs();
-            log.info("分块文件夹{}不存在，创建文件夹结果{}", localChunkFolder.getAbsolutePath(), mkdirs);
-        }
-        DataUnit unit = dataUnit;
-        if (Objects.isNull(dataUnit)) {
-            unit = DataUnit.MEGABYTES;
-        }
+        mkdirs(localChunkFolder);
+        DataUnit unit = Objects.isNull(dataUnit) ? DataUnit.MEGABYTES : dataUnit;
         DataSize dataSize = DataSize.of(chunkSize, unit);
         long chunkSizeBytes = dataSize.toBytes();
         long chunkNum = (long) Math.ceil(bigFile.length() * 1.0 / chunkSizeBytes);
@@ -134,19 +128,13 @@ public class TiChunkFileUtil {
     }
 
     public static File fileSpliceChunkAsync(File bigFile, File localChunkFolder, long chunkSize, DataUnit dataUnit, Executor executor) {
-        if (!localChunkFolder.exists()) {
-            boolean mkdirs = localChunkFolder.mkdirs();
-            log.info("分块文件夹{}不存在，创建文件夹结果{}", localChunkFolder.getAbsolutePath(), mkdirs);
-        }
-        DataUnit unit = dataUnit;
-        if (Objects.isNull(dataUnit)) {
-            unit = DataUnit.MEGABYTES;
-        }
+        mkdirs(localChunkFolder);
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+        DataUnit unit = Objects.isNull(dataUnit) ? DataUnit.MEGABYTES : dataUnit;
         DataSize dataSize = DataSize.of(chunkSize, unit);
         long chunkSizeBytes = dataSize.toBytes();
         long chunkNum = (long) Math.ceil(bigFile.length() * 1.0 / chunkSizeBytes);
-        log.info("分块总数：{}", chunkNum);
-        List<CompletableFuture<Void>> futures = new ArrayList<>();
+        // log.info("分块总数：{}", chunkNum);
         for (int i = 0; i < chunkNum; i++) {
             final int index = i;
             CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
@@ -161,6 +149,13 @@ public class TiChunkFileUtil {
         // 等待所有任务完成
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
         return localChunkFolder;
+    }
+
+    private static void mkdirs(File localChunkFolder) {
+        if (!localChunkFolder.exists()) {
+            boolean mkdirs = localChunkFolder.mkdirs();
+            log.info("文件夹{}不存在，创建文件夹结果{}", localChunkFolder.getAbsolutePath(), mkdirs);
+        }
     }
 
     private static void createChunkFile(File bigFile, File localChunkFolder, int index, long chunkSizeBytes) throws IOException {
