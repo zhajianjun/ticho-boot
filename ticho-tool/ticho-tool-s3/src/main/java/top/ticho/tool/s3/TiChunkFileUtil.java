@@ -134,7 +134,6 @@ public class TiChunkFileUtil {
         DataSize dataSize = DataSize.of(chunkSize, unit);
         long chunkSizeBytes = dataSize.toBytes();
         long chunkNum = (long) Math.ceil(bigFile.length() * 1.0 / chunkSizeBytes);
-        // log.info("分块总数：{}", chunkNum);
         for (int i = 0; i < chunkNum; i++) {
             final int index = i;
             CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
