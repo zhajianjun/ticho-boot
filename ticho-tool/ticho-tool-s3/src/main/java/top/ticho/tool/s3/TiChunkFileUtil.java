@@ -123,7 +123,6 @@ public class TiChunkFileUtil {
         for (int i = 0; i < chunkNum; i++) {
             createChunkFile(bigFile, localChunkFolder, i, chunkSizeBytes);
         }
-        // 等待所有任务完成
         return localChunkFolder;
     }
 
