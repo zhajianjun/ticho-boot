@@ -35,13 +35,12 @@ public class TiS3ChunkFileTest {
 
     public static void main(String[] args) throws IOException {
         initS3Template();
-        uploadChunkObject();
+        uploadChunkObject("D:\\cache\\s3\\123.mp4");
     }
 
-    public static void uploadText() throws IOException {
+    public static void uploadText(String objectName) throws IOException {
         initS3Template();
         String text = "hello world";
-        String objectName = TiIdUtil.ulid();
         String bucket = tiS3Template.getTiS3Property().getDefaultBucket();
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(text.getBytes());
         tiS3Template.putObject(bucket, objectName, "text/plain", Collections.emptyMap(), byteArrayInputStream);
@@ -53,11 +52,10 @@ public class TiS3ChunkFileTest {
     /**
      * 文件分片上传
      */
-    public static void uploadChunkObject() throws IOException {
+    public static void uploadChunkObject(String filePath) throws IOException {
         TiS3Property tiS3Property = tiS3Template.getTiS3Property();
         String bucket = tiS3Property.getDefaultBucket();
         String chunkBucket = tiS3Property.getChunkBucket();
-        String filePath = "D:\\cache\\s3\\123.mp4";
         File file = new File(filePath);
         String fileName = file.getName();
         String mimeType = TiFileUtil.getMimeType(fileName);
@@ -82,9 +80,8 @@ public class TiS3ChunkFileTest {
     /**
      * 上传对象流
      */
-    public static void putObject() throws IOException {
+    public static void putObject(String filePath) throws IOException {
         String bucket = tiS3Template.getTiS3Property().getDefaultBucket();
-        String filePath = "D:\\cache\\s3\\123.mp4";
         File file = new File(filePath);
         String fileName = TiFileUtil.getName(filePath);
         String mimeType = TiFileUtil.getMimeType(fileName);
@@ -98,9 +95,8 @@ public class TiS3ChunkFileTest {
     /**
      * 上传本地对象
      */
-    public static void uploadObject() {
+    public static void uploadObject(String filePath) {
         String bucket = tiS3Template.getTiS3Property().getDefaultBucket();
-        String filePath = "D:\\cache\\s3\\123.mp4";
         File file = new File(filePath);
         String fileName = file.getName();
         String mimeType = TiFileUtil.getMimeType(fileName);
