@@ -33,9 +33,15 @@ import java.util.concurrent.Executors;
 public class TiS3ChunkFileTest {
     private static TiS3Template tiS3Template;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         initS3Template();
-        uploadChunkObject("D:\\cache\\s3\\123.mp4");
+        String objectUrl = getObjectUrl("1.mp4");
+        System.out.println(objectUrl);
+    }
+
+    public static String getObjectUrl(String objectName) {
+        String bucket = tiS3Template.getTiS3Property().getDefaultBucket();
+        return tiS3Template.getObjectUrl(bucket, objectName, 60);
     }
 
     public static void uploadText(String objectName) throws IOException {

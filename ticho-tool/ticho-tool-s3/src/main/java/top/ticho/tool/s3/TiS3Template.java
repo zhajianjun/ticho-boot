@@ -27,12 +27,15 @@ import software.amazon.awssdk.services.s3.model.DeletedObject;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.HeadBucketRequest;
+import software.amazon.awssdk.services.s3.model.HeadObjectRequest;
+import software.amazon.awssdk.services.s3.model.HeadObjectResponse;
 import software.amazon.awssdk.services.s3.model.ListBucketsResponse;
 import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsResponse;
 import software.amazon.awssdk.services.s3.model.ListPartsRequest;
 import software.amazon.awssdk.services.s3.model.ListPartsResponse;
 import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.ObjectIdentifier;
 import software.amazon.awssdk.services.s3.model.Part;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
@@ -89,7 +92,7 @@ public class TiS3Template {
         StaticCredentialsProvider credentialsProvider = StaticCredentialsProvider.create(credentials);
         this.tiS3Property = tiS3Property;
         this.s3Client = S3Client.builder().endpointOverride(endpointOverride).region(region).credentialsProvider(credentialsProvider).forcePathStyle(forcePathStyle).build();
-        this.s3Presigner = S3Presigner.builder().endpointOverride(endpointOverride).region(region).credentialsProvider(credentialsProvider).build();
+        this.s3Presigner = S3Presigner.builder().endpointOverride(endpointOverride).region(region).s3Client(s3Client).credentialsProvider(credentialsProvider).build();
         this.s3AsyncClient = S3AsyncClient.builder().endpointOverride(endpointOverride).region(region).credentialsProvider(credentialsProvider).forcePathStyle(forcePathStyle).build();
         this.s3TransferManager = S3TransferManager.builder().s3Client(s3AsyncClient).build();
     }
@@ -177,6 +180,34 @@ public class TiS3Template {
         } catch (Exception e) {
             throw new TiBizException(TiBizErrorCode.FAIL, "查询全部文件桶异常", e);
         }
+    }
+
+    public boolean isObjectExists(String bucketName, String objectName) {
+        try {
+            s3Client.headObject(HeadObjectRequest.builder().bucket(bucketName).key(objectName).build());
+            return true;
+        } catch (NoSuchKeyException e) {
+            logObjectNotExists(bucketName, objectName);
+            return false;
+        } catch (S3Exception e) {
+            throw new TiBizException(TiBizErrorCode.FAIL, "查询文件是否存在异常", e);
+        }
+    }
+
+    public Map<String, String> getObjectMetadata(String bucketName, String objectName) {
+        try {
+            HeadObjectResponse headObjectResponse = s3Client.headObject(HeadObjectRequest.builder().bucket(bucketName).key(objectName).build());
+            return new HashMap<>(headObjectResponse.metadata());
+        } catch (NoSuchKeyException e) {
+            logObjectNotExists(bucketName, objectName);
+            return Collections.emptyMap();
+        } catch (S3Exception e) {
+            throw new TiBizException(TiBizErrorCode.FAIL, "查询文件元数据异常", e);
+        }
+    }
+
+    private static void logObjectNotExists(String bucketName, String objectName) {
+        log.warn("bucket={} object={}不存在", bucketName, objectName);
     }
 
     /**
@@ -527,25 +558,7 @@ public class TiS3Template {
      * @return String
      */
     public String getObjectUrl(String bucketName, String objectName, Integer expires) {
-        try {
-            if (Objects.isNull(expires)) {
-                expires = 5 * 60;
-            }
-            Duration expiration = Duration.ofSeconds(expires);
-            GetObjectRequest getObjectRequest =
-                GetObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(objectName)
-                    .build();
-            GetObjectPresignRequest request = GetObjectPresignRequest.builder()
-                .signatureDuration(expiration)
-                .getObjectRequest(getObjectRequest)
-                .build();
-            PresignedGetObjectRequest objectRequest = s3Presigner.presignGetObject(request);
-            return objectRequest.url().toString();
-        } catch (Exception e) {
-            throw new TiBizException(TiBizErrorCode.FAIL, "获取文件外链异常", e);
-        }
+        return getObjectUrl(bucketName, objectName, expires, TimeUnit.SECONDS);
     }
 
     /**
