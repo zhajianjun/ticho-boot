@@ -469,4 +469,8 @@ public class TiStrUtil {
             || c == '\u180e';
     }
 
+    public static boolean isBool(final CharSequence cs) {
+        return "true".contentEquals(cs) || "false".contentEquals(cs);
+    }
+
 }
