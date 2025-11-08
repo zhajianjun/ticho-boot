@@ -7,6 +7,7 @@ import top.ticho.tool.core.TiStrUtil;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  *
@@ -39,13 +40,26 @@ public enum YesOrNo {
         return yesOrNo == null ? null : yesOrNo.getValue();
     }
 
+    public static String getValueByCode(Integer code, String defaultValue) {
+        YesOrNo yesOrNo = getByCode(code);
+        return yesOrNo == null ? defaultValue : yesOrNo.getValue();
+    }
+
     public static YesOrNo getByCode(Boolean code) {
-        return code == null ? null : getByCode(code ? 1 : 0);
+        if (code == null) {
+            return null;
+        }
+        return code ? YES : NO;
     }
 
     public static String getValueByCode(Boolean code) {
         YesOrNo yesOrNo = getByCode(code);
         return yesOrNo == null ? null : yesOrNo.getValue();
+    }
+
+    public static String getValueByCode(Boolean code, String defaultValue) {
+        YesOrNo yesOrNo = getByCode(code);
+        return yesOrNo == null ? defaultValue : yesOrNo.getValue();
     }
 
     public static YesOrNo getByCode(String code) {
@@ -55,17 +69,28 @@ public enum YesOrNo {
         if (TiStrUtil.isNumber(code)) {
             return getByCode(TiNumberUtil.parseInt(code));
         }
-        if (TiStrUtil.isBool(code) ) {
+        if (TiStrUtil.isBool(code)) {
             return getByCode(Boolean.parseBoolean(code));
         }
         return null;
     }
-
 
     public static String getValueByCode(String code) {
         YesOrNo yesOrNo = getByCode(code);
         return yesOrNo == null ? null : yesOrNo.getValue();
     }
 
+    public static String getValueByCode(String code, String defaultValue) {
+        YesOrNo yesOrNo = getByCode(code);
+        return yesOrNo == null ? defaultValue : yesOrNo.getValue();
+    }
+
+    public static boolean isYes(Integer code) {
+        return Objects.equals(YES.getCode(), code);
+    }
+
+    public static boolean isYes(String code) {
+        return YesOrNo.YES.equals(getByCode(code));
+    }
 
 }
