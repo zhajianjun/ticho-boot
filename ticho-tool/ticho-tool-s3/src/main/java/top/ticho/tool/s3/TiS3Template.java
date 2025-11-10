@@ -123,7 +123,7 @@ public class TiS3Template {
             HeadBucketRequest request = HeadBucketRequest.builder()
                 .bucket(bucketName)
                 .build();
-            s3Client.headBucket(HeadBucketRequest.builder().bucket(bucketName).build());
+            s3Client.headBucket(request);
             return true;
         } catch (NoSuchBucketException e) {
             log.warn("bucket={}不存在", bucketName);
@@ -209,7 +209,7 @@ public class TiS3Template {
      * 上传文件
      *
      * @param bucketName  bucket名称
-     * @param key  文件名称
+     * @param key         文件名称
      * @param metadata    用户自定义数据
      * @param inputStream 文件流
      */
@@ -232,7 +232,7 @@ public class TiS3Template {
      * 上传文件
      *
      * @param bucketName  bucket名称
-     * @param key  文件名称
+     * @param key         文件名称
      * @param metadata    用户自定义数据
      * @param inputStream 文件流
      */
@@ -262,7 +262,7 @@ public class TiS3Template {
      * 本地上传文件
      *
      * @param bucketName  bucket名称
-     * @param key  文件名称
+     * @param key         文件名称
      * @param contentType 内容类型
      * @param metadata    用户自定义数据
      * @param filePath    文件路径
@@ -286,7 +286,7 @@ public class TiS3Template {
      * 删除文件
      *
      * @param bucketName bucket名称
-     * @param key 文件名称
+     * @param key        文件名称
      */
     public void removeObject(String bucketName, String key) {
         try {
@@ -421,7 +421,7 @@ public class TiS3Template {
      * 分块文件必须大于5mb
      *
      * @param bucketName     存储桶名称
-     * @param key     合并后的对象文件名称
+     * @param key            合并后的对象文件名称
      * @param uploadId       上传 ID
      * @param completedParts 已完成零件
      */
@@ -451,7 +451,7 @@ public class TiS3Template {
      * 文件下载
      *
      * @param bucketName bucket名称
-     * @param key 文件名称
+     * @param key        文件名称
      * @return 二进制流
      */
     public ResponseInputStream<GetObjectResponse> getObject(String bucketName, String key) {
@@ -471,7 +471,7 @@ public class TiS3Template {
      * 文件下载
      *
      * @param bucketName bucket名称
-     * @param key 文件名称
+     * @param key        文件名称
      * @param range      范围
      * @return 二进制流
      *
@@ -548,7 +548,7 @@ public class TiS3Template {
      * 获取文件外链
      *
      * @param bucketName bucketName
-     * @param key 文件名称
+     * @param key        文件名称
      * @param expires    过期时间 <=7天，默认5分钟，单位：秒
      * @return String
      */
@@ -560,7 +560,7 @@ public class TiS3Template {
      * 获取文件外链
      *
      * @param bucketName bucketName
-     * @param key 文件名称
+     * @param key        文件名称
      * @param expires    过期时间 <=7天
      * @param timeUnit   时间单位
      * @return String
