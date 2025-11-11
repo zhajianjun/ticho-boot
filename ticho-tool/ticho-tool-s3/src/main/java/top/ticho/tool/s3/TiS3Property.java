@@ -31,8 +31,8 @@ public class TiS3Property {
     /** 分段上传大小，最小5MB,最大5GB */
     private Long partSize = 5 * 1024 * 1024L;
     /** 默认桶 */
-    private String defaultBucket = "default";
+    // private String defaultBucket = "default";
     /** 分片桶 */
-    private String chunkBucket = "chunk";
+    // private String chunkBucket = "chunk";
 
 }
