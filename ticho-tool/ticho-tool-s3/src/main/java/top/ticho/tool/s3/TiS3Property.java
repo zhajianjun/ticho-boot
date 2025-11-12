@@ -22,8 +22,8 @@ public class TiS3Property {
     private String secretKey;
     /** 地区 */
     private String region;
-    /** forcePathStyle */
-    private Boolean forcePathStyle = true;
+    /** pathStyleAccess */
+    private Boolean pathStyleAccess = true;
     /** 图片大小限制，默认20MB */
     private DataSize maxImgSize = DataSize.ofMegabytes(20L);
     /** 文件大小限制，默认20MB */
@@ -31,8 +31,8 @@ public class TiS3Property {
     /** 分段上传大小，最小5MB,最大5GB */
     private Long partSize = 5 * 1024 * 1024L;
     /** 默认桶 */
-    // private String defaultBucket = "default";
+    private String defaultBucket = "default";
     /** 分片桶 */
-    // private String chunkBucket = "chunk";
+    private String chunkBucket = "chunk";
 
 }

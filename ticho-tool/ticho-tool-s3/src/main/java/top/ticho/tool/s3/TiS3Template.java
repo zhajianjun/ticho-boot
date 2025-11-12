@@ -10,6 +10,7 @@ import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3Configuration;
 import software.amazon.awssdk.services.s3.model.Bucket;
 import software.amazon.awssdk.services.s3.model.CompleteMultipartUploadRequest;
 import software.amazon.awssdk.services.s3.model.CompletedMultipartUpload;
@@ -49,6 +50,7 @@ import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequ
 import software.amazon.awssdk.transfer.s3.S3TransferManager;
 import software.amazon.awssdk.transfer.s3.model.Upload;
 import software.amazon.awssdk.transfer.s3.model.UploadRequest;
+import top.ticho.tool.core.TiUrlUtil;
 import top.ticho.tool.core.enums.TiBizErrorCode;
 import top.ticho.tool.core.exception.TiBizException;
 
@@ -85,16 +87,39 @@ public class TiS3Template {
         String endpoint = tiS3Property.getEndpoint();
         String accessKey = tiS3Property.getAccessKey();
         String secretKey = tiS3Property.getSecretKey();
-        Boolean forcePathStyle = tiS3Property.getForcePathStyle();
+        Boolean forcePathStyle = tiS3Property.getPathStyleAccess();
         URI endpointOverride = URI.create(endpoint);
         AwsBasicCredentials credentials = AwsBasicCredentials.create(accessKey, secretKey);
         Region region = Region.of(tiS3Property.getRegion());
         StaticCredentialsProvider credentialsProvider = StaticCredentialsProvider.create(credentials);
+        S3Configuration s3Configuration = S3Configuration.builder()
+            .chunkedEncodingEnabled(false)
+            .pathStyleAccessEnabled(forcePathStyle)
+            .build();
         this.tiS3Property = tiS3Property;
-        this.s3Client = S3Client.builder().endpointOverride(endpointOverride).region(region).credentialsProvider(credentialsProvider).forcePathStyle(forcePathStyle).build();
-        this.s3Presigner = S3Presigner.builder().endpointOverride(endpointOverride).region(region).s3Client(s3Client).credentialsProvider(credentialsProvider).build();
-        this.s3AsyncClient = S3AsyncClient.builder().endpointOverride(endpointOverride).region(region).credentialsProvider(credentialsProvider).forcePathStyle(forcePathStyle).build();
-        this.s3TransferManager = S3TransferManager.builder().s3Client(s3AsyncClient).build();
+        this.s3Client = S3Client.builder()
+            .endpointOverride(endpointOverride)
+            .region(region)
+            .credentialsProvider(credentialsProvider)
+            .serviceConfiguration(s3Configuration)
+            .build();
+        this.s3Presigner = S3Presigner.builder()
+            .endpointOverride(endpointOverride)
+            .region(region)
+            .s3Client(s3Client)
+            .credentialsProvider(credentialsProvider)
+            .serviceConfiguration(s3Configuration)
+            .build();
+        this.s3AsyncClient = S3AsyncClient.builder()
+            .endpointOverride(endpointOverride)
+            .region(region)
+            .credentialsProvider(credentialsProvider)
+            .forcePathStyle(forcePathStyle)
+            .serviceConfiguration(s3Configuration)
+            .build();
+        this.s3TransferManager = S3TransferManager.builder()
+            .s3Client(s3AsyncClient)
+            .build();
     }
 
     public void close() {
@@ -552,12 +577,12 @@ public class TiS3Template {
      * @param expires    过期时间 <=7天，默认5分钟，单位：秒
      * @return String
      */
-    public String getObjectUrl(String bucketName, String key, Integer expires) {
-        return getObjectUrl(bucketName, key, expires, TimeUnit.SECONDS);
+    public String getPreviewUrl(String bucketName, String key, Integer expires) {
+        return getPreviewUrl(bucketName, key, expires, TimeUnit.SECONDS);
     }
 
     /**
-     * 获取文件外链
+     * 获取预览链接
      *
      * @param bucketName bucketName
      * @param key        文件名称
@@ -565,18 +590,49 @@ public class TiS3Template {
      * @param timeUnit   时间单位
      * @return String
      */
-    public String getObjectUrl(String bucketName, String key, Integer expires, TimeUnit timeUnit) {
+    public String getPreviewUrl(String bucketName, String key, Integer expires, TimeUnit timeUnit) {
         try {
             if (Objects.isNull(expires)) {
                 expires = 5;
                 timeUnit = TimeUnit.MINUTES;
             }
-            // TimeUnit转Duration
+            Duration expiration = Duration.ofSeconds(timeUnit.toSeconds(expires));
+            GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .build();
+            GetObjectPresignRequest request = GetObjectPresignRequest.builder()
+                .signatureDuration(expiration)
+                .getObjectRequest(getObjectRequest)
+                .build();
+            PresignedGetObjectRequest objectRequest = s3Presigner.presignGetObject(request);
+            return objectRequest.url().toString();
+        } catch (Exception e) {
+            throw new TiBizException(TiBizErrorCode.FAIL, "获取文件外链异常", e);
+        }
+    }
+
+    /**
+     * 获取预览链接
+     *
+     * @param bucketName bucketName
+     * @param key        文件名称
+     * @param expires    过期时间 <=7天
+     * @param timeUnit   时间单位
+     * @return String
+     */
+    public String getDownloadUrl(String bucketName, String key, String filaName, Integer expires, TimeUnit timeUnit) {
+        try {
+            if (Objects.isNull(expires)) {
+                expires = 5;
+                timeUnit = TimeUnit.MINUTES;
+            }
             Duration expiration = Duration.ofSeconds(timeUnit.toSeconds(expires));
             GetObjectRequest getObjectRequest =
                 GetObjectRequest.builder()
                     .bucket(bucketName)
                     .key(key)
+                    .responseContentDisposition("attachment;filename=" + TiUrlUtil.encode(filaName))
                     .build();
             GetObjectPresignRequest request = GetObjectPresignRequest.builder()
                 .signatureDuration(expiration)
