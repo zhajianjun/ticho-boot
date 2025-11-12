@@ -87,14 +87,14 @@ public class TiS3Template {
         String endpoint = tiS3Property.getEndpoint();
         String accessKey = tiS3Property.getAccessKey();
         String secretKey = tiS3Property.getSecretKey();
-        Boolean forcePathStyle = tiS3Property.getPathStyleAccess();
+        Boolean pathStyleAccess = tiS3Property.getPathStyleAccess();
         URI endpointOverride = URI.create(endpoint);
         AwsBasicCredentials credentials = AwsBasicCredentials.create(accessKey, secretKey);
         Region region = Region.of(tiS3Property.getRegion());
         StaticCredentialsProvider credentialsProvider = StaticCredentialsProvider.create(credentials);
         S3Configuration s3Configuration = S3Configuration.builder()
             .chunkedEncodingEnabled(false)
-            .pathStyleAccessEnabled(forcePathStyle)
+            .pathStyleAccessEnabled(pathStyleAccess)
             .build();
         this.tiS3Property = tiS3Property;
         this.s3Client = S3Client.builder()
@@ -114,7 +114,6 @@ public class TiS3Template {
             .endpointOverride(endpointOverride)
             .region(region)
             .credentialsProvider(credentialsProvider)
-            .forcePathStyle(forcePathStyle)
             .serviceConfiguration(s3Configuration)
             .build();
         this.s3TransferManager = S3TransferManager.builder()
@@ -140,18 +139,18 @@ public class TiS3Template {
     /**
      * 查询文件存储桶是否存在
      *
-     * @param bucketName bucketName
+     * @param bucket bucket
      * @return true-存在，false-不存在
      */
-    public boolean bucketExists(String bucketName) {
+    public boolean bucketExists(String bucket) {
         try {
             HeadBucketRequest request = HeadBucketRequest.builder()
-                .bucket(bucketName)
+                .bucket(bucket)
                 .build();
             s3Client.headBucket(request);
             return true;
         } catch (NoSuchBucketException e) {
-            log.warn("bucket={}不存在", bucketName);
+            log.warn("bucket={}不存在", bucket);
             return false;
         } catch (Exception e) {
             throw new TiBizException(TiBizErrorCode.FAIL, "查询文件存储桶是否存在异常", e);
@@ -161,14 +160,14 @@ public class TiS3Template {
     /**
      * 创建bucket
      *
-     * @param bucketName bucketName
+     * @param bucket bucket
      */
-    public void createBucket(String bucketName) {
+    public void createBucket(String bucket) {
         try {
-            if (this.bucketExists(bucketName)) {
+            if (this.bucketExists(bucket)) {
                 return;
             }
-            s3Client.createBucket(CreateBucketRequest.builder().bucket(bucketName).build());
+            s3Client.createBucket(CreateBucketRequest.builder().bucket(bucket).build());
         } catch (Exception e) {
             throw new TiBizException(TiBizErrorCode.FAIL, "创建文件桶异常", e);
         }
@@ -177,11 +176,11 @@ public class TiS3Template {
     /**
      * 根据bucketName删除信息
      *
-     * @param bucketName bucket名称
+     * @param bucket bucket名称
      */
-    public void removeBucket(String bucketName) {
+    public void removeBucket(String bucket) {
         try {
-            s3Client.deleteBucket(DeleteBucketRequest.builder().bucket(bucketName).build());
+            s3Client.deleteBucket(DeleteBucketRequest.builder().bucket(bucket).build());
         } catch (Exception e) {
             throw new TiBizException(TiBizErrorCode.FAIL, "删除文件桶异常", e);
         }
@@ -190,10 +189,10 @@ public class TiS3Template {
     /**
      * 根据bucketName获取信息
      *
-     * @param bucketName bucket名称
+     * @param bucket bucket名称
      */
-    public Bucket getBucket(String bucketName) {
-        return this.listBuckets().buckets().stream().filter(b -> b.name().equals(bucketName)).findAny().orElse(null);
+    public Bucket getBucket(String bucket) {
+        return this.listBuckets().buckets().stream().filter(b -> b.name().equals(bucket)).findAny().orElse(null);
     }
 
     /**
@@ -207,21 +206,21 @@ public class TiS3Template {
         }
     }
 
-    public boolean objectExists(String bucketName, String key) {
+    public boolean objectExists(String bucket, String key) {
         try {
-            s3Client.headObject(HeadObjectRequest.builder().bucket(bucketName).key(key).build());
+            s3Client.headObject(HeadObjectRequest.builder().bucket(bucket).key(key).build());
             return true;
         } catch (NoSuchKeyException e) {
-            log.warn("bucket={} object={}不存在", bucketName, key);
+            log.warn("bucket={} object={}不存在", bucket, key);
             return false;
         } catch (S3Exception e) {
             throw new TiBizException(TiBizErrorCode.FAIL, "查询文件是否存在异常", e);
         }
     }
 
-    public Map<String, String> getObjectMetadata(String bucketName, String key) {
+    public Map<String, String> getObjectMetadata(String bucket, String key) {
         try {
-            HeadObjectResponse headObjectResponse = s3Client.headObject(HeadObjectRequest.builder().bucket(bucketName).key(key).build());
+            HeadObjectResponse headObjectResponse = s3Client.headObject(HeadObjectRequest.builder().bucket(bucket).key(key).build());
             return new HashMap<>(headObjectResponse.metadata());
         } catch (NoSuchKeyException e) {
             throw new TiBizException(TiBizErrorCode.FAIL, "查询文件元数据异常，文件不存在", e);
@@ -233,15 +232,15 @@ public class TiS3Template {
     /**
      * 上传文件
      *
-     * @param bucketName  bucket名称
+     * @param bucket      bucket名称
      * @param key         文件名称
      * @param metadata    用户自定义数据
      * @param inputStream 文件流
      */
-    public void putObject(String bucketName, String key, String contentType, Map<String, String> metadata, InputStream inputStream) {
+    public void putObject(String bucket, String key, String contentType, Map<String, String> metadata, InputStream inputStream) {
         try {
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                .bucket(bucketName)
+                .bucket(bucket)
                 .key(key)
                 .metadata(metadata)
                 .contentType(contentType)
@@ -256,23 +255,23 @@ public class TiS3Template {
     /**
      * 上传文件
      *
-     * @param bucketName  bucket名称
+     * @param bucket      bucket名称
      * @param key         文件名称
      * @param metadata    用户自定义数据
      * @param inputStream 文件流
      */
-    public void putLargeObject(String bucketName, String key, String contentType, Map<String, String> metadata, InputStream inputStream, ExecutorService executorService) {
+    public void putLargeObject(String bucket, String key, String contentType, Map<String, String> metadata, InputStream inputStream, ExecutorService executorService) {
         try {
             long available = inputStream.available();
             AsyncRequestBody requestBody = AsyncRequestBody.fromInputStream(inputStream, available, executorService);
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                .bucket(bucketName)
+                .bucket(bucket)
                 .key(key)
                 .metadata(metadata)
                 .contentType(contentType)
                 .build();
             UploadRequest uploadFileRequest = UploadRequest.builder()
-                .putObjectRequest(b -> b.bucket(bucketName).key(key))
+                .putObjectRequest(b -> b.bucket(bucket).key(key))
                 .putObjectRequest(putObjectRequest)
                 .requestBody(requestBody)
                 .build();
@@ -286,16 +285,16 @@ public class TiS3Template {
     /**
      * 本地上传文件
      *
-     * @param bucketName  bucket名称
+     * @param bucket      bucket名称
      * @param key         文件名称
      * @param contentType 内容类型
      * @param metadata    用户自定义数据
      * @param filePath    文件路径
      */
-    public void uploadObject(String bucketName, String key, String contentType, Map<String, String> metadata, String filePath) {
+    public void uploadObject(String bucket, String key, String contentType, Map<String, String> metadata, String filePath) {
         try {
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                .bucket(bucketName)
+                .bucket(bucket)
                 .key(key)
                 .metadata(metadata)
                 .contentType(contentType)
@@ -310,12 +309,12 @@ public class TiS3Template {
     /**
      * 删除文件
      *
-     * @param bucketName bucket名称
-     * @param key        文件名称
+     * @param bucket bucket名称
+     * @param key    文件名称
      */
-    public void removeObject(String bucketName, String key) {
+    public void removeObject(String bucket, String key) {
         try {
-            s3Client.deleteObject(DeleteObjectRequest.builder().bucket(bucketName).key(key).build());
+            s3Client.deleteObject(DeleteObjectRequest.builder().bucket(bucket).key(key).build());
         } catch (Exception e) {
             throw new TiBizException(TiBizErrorCode.FAIL, "删除文件异常", e);
         }
@@ -324,10 +323,10 @@ public class TiS3Template {
     /**
      * 批量删除对象
      *
-     * @param bucketName  bucket名称
+     * @param bucket      bucket名称
      * @param objectNames 文件名称集合
      */
-    public void removeObjects(String bucketName, List<String> objectNames) {
+    public void removeObjects(String bucket, List<String> objectNames) {
         List<ObjectIdentifier> identifiers = new ArrayList<>(objectNames.size());
         for (String key : objectNames) {
             identifiers.add(ObjectIdentifier.builder().key(key).build());
@@ -336,7 +335,7 @@ public class TiS3Template {
             .objects(identifiers)
             .build();
         DeleteObjectsRequest objectsArgs = DeleteObjectsRequest.builder()
-            .bucket(bucketName)
+            .bucket(bucket)
             .delete(delete)
             .build();
         boolean isError = false;
@@ -358,18 +357,18 @@ public class TiS3Template {
     /**
      * 获取分片名称地址HashMap key=分片序号 value=分片文件地址
      *
-     * @param bucketName 存储桶名称
-     * @param objectMd5  对象Md5
+     * @param bucket    存储桶名称
+     * @param objectMd5 对象Md5
      * @return objectChunkNameMap
      */
-    public Map<Integer, String> mapChunkObjectNames(String bucketName, String objectMd5) {
-        if (null == bucketName) {
-            bucketName = tiS3Property.getChunkBucket();
+    public Map<Integer, String> mapChunkObjectNames(String bucket, String objectMd5) {
+        if (null == bucket) {
+            bucket = tiS3Property.getChunkBucket();
         }
         if (null == objectMd5) {
             return null;
         }
-        List<String> chunkPaths = listObjectNames(bucketName, objectMd5, 1000, true);
+        List<String> chunkPaths = listObjectNames(bucket, objectMd5, 1000, true);
         if (null == chunkPaths || chunkPaths.isEmpty()) {
             return null;
         }
@@ -381,9 +380,9 @@ public class TiS3Template {
         return chunkMap;
     }
 
-    public String createMultipartUpload(String bucketName, String key, String contentType, Map<String, String> metadata) {
+    public String createMultipartUpload(String bucket, String key, String contentType, Map<String, String> metadata) {
         CreateMultipartUploadRequest createRequest = CreateMultipartUploadRequest.builder()
-            .bucket(bucketName)
+            .bucket(bucket)
             .key(key)
             .contentType(contentType)
             .metadata(metadata)
@@ -393,7 +392,7 @@ public class TiS3Template {
     }
 
     public List<CompletedPart> putMultipartObject(
-        String bucketName,
+        String bucket,
         String key,
         String uploadId,
         int partNumber,
@@ -402,7 +401,7 @@ public class TiS3Template {
         List<CompletedPart> completedParts = new ArrayList<>();
         try {
             UploadPartRequest uploadPartRequest = UploadPartRequest.builder()
-                .bucket(bucketName)
+                .bucket(bucket)
                 .key(key)
                 .uploadId(uploadId)
                 .partNumber(partNumber)
@@ -419,10 +418,10 @@ public class TiS3Template {
         return completedParts;
     }
 
-    public List<CompletedPart> getCompletedPartsForUpload(String bucketName, String key, String uploadId) {
+    public List<CompletedPart> getCompletedPartsForUpload(String bucket, String key, String uploadId) {
         try {
             ListPartsRequest listPartsRequest = ListPartsRequest.builder()
-                .bucket(bucketName)
+                .bucket(bucket)
                 .key(key)
                 .uploadId(uploadId)
                 .build();
@@ -445,13 +444,13 @@ public class TiS3Template {
      * 合并文件
      * 分块文件必须大于5mb
      *
-     * @param bucketName     存储桶名称
+     * @param bucket         存储桶名称
      * @param key            合并后的对象文件名称
      * @param uploadId       上传 ID
      * @param completedParts 已完成零件
      */
     public void composeObject(
-        String bucketName,
+        String bucket,
         String key,
         String uploadId,
         List<CompletedPart> completedParts
@@ -461,7 +460,7 @@ public class TiS3Template {
                 .parts(completedParts)
                 .build();
             CompleteMultipartUploadRequest completeRequest = CompleteMultipartUploadRequest.builder()
-                .bucket(bucketName)
+                .bucket(bucket)
                 .key(key)
                 .uploadId(uploadId)
                 .multipartUpload(completedUpload)
@@ -475,15 +474,15 @@ public class TiS3Template {
     /**
      * 文件下载
      *
-     * @param bucketName bucket名称
-     * @param key        文件名称
+     * @param bucket bucket名称
+     * @param key    文件名称
      * @return 二进制流
      */
-    public ResponseInputStream<GetObjectResponse> getObject(String bucketName, String key) {
+    public ResponseInputStream<GetObjectResponse> getObject(String bucket, String key) {
         try {
             GetObjectRequest getObjectRequest = GetObjectRequest
                 .builder()
-                .bucket(bucketName)
+                .bucket(bucket)
                 .key(key)
                 .build();
             return s3Client.getObject(getObjectRequest);
@@ -495,9 +494,9 @@ public class TiS3Template {
     /**
      * 文件下载
      *
-     * @param bucketName bucket名称
-     * @param key        文件名称
-     * @param range      范围
+     * @param bucket bucket名称
+     * @param key    文件名称
+     * @param range  范围
      * @return 二进制流
      *
      * <p>range用法<p/>
@@ -508,12 +507,12 @@ public class TiS3Template {
      * "bytes=-500"：下载最后500个字节。
      * <pre/>
      */
-    public ResponseInputStream<GetObjectResponse> getObject(String bucketName, String key, String range) {
+    public ResponseInputStream<GetObjectResponse> getObject(String bucket, String key, String range) {
         try {
             GetObjectRequest getObjectRequest = GetObjectRequest
                 .builder()
                 .range(range)
-                .bucket(bucketName)
+                .bucket(bucket)
                 .key(key)
                 .build();
             return s3Client.getObject(getObjectRequest);
@@ -521,130 +520,6 @@ public class TiS3Template {
             throw new TiBizException(TiBizErrorCode.FAIL, "文件下载异常", e);
         }
     }
-
-    /**
-     * 根据文件前缀查询文件
-     *
-     * @param bucketName bucket名称
-     * @param prefix     前缀
-     * @param maxKeys    最大键数
-     * @return S3Object 列表
-     */
-    public List<S3Object> listObjects(String bucketName, String prefix, Integer maxKeys) {
-        List<S3Object> objectList;
-        try {
-            ListObjectsResponse response = s3Client.listObjects(ListObjectsRequest.builder()
-                .bucket(bucketName)
-                .prefix(prefix)
-                .maxKeys(maxKeys)
-                .build());
-            objectList = new ArrayList<>(response.contents());
-        } catch (Exception e) {
-            throw new TiBizException(TiBizErrorCode.FAIL, "查询文件信息异常", e);
-        }
-        return objectList;
-    }
-
-    /**
-     * 获取对象文件名称列表
-     *
-     * @param bucketName 存储桶名称
-     * @param prefix     对象名称前缀
-     * @param sort       是否排序(升序)
-     * @return objectNames
-     */
-    public List<String> listObjectNames(String bucketName, String prefix, Integer maxKeys, Boolean sort) {
-        List<S3Object> chunks = listObjects(bucketName, prefix, maxKeys);
-        try {
-            List<String> chunkPaths = new ArrayList<>();
-            for (S3Object item : chunks) {
-                chunkPaths.add(item.key());
-            }
-            if (sort) {
-                Collections.sort(chunkPaths);
-            }
-            return chunkPaths;
-        } catch (Exception e) {
-            throw new TiBizException(TiBizErrorCode.FAIL, "获取对象文件名称列表异常", e);
-        }
-    }
-
-    /**
-     * 获取文件外链
-     *
-     * @param bucketName bucketName
-     * @param key        文件名称
-     * @param expires    过期时间 <=7天，默认5分钟，单位：秒
-     * @return String
-     */
-    public String getPreviewUrl(String bucketName, String key, Integer expires) {
-        return getPreviewUrl(bucketName, key, expires, TimeUnit.SECONDS);
-    }
-
-    /**
-     * 获取预览链接
-     *
-     * @param bucketName bucketName
-     * @param key        文件名称
-     * @param expires    过期时间 <=7天
-     * @param timeUnit   时间单位
-     * @return String
-     */
-    public String getPreviewUrl(String bucketName, String key, Integer expires, TimeUnit timeUnit) {
-        try {
-            if (Objects.isNull(expires)) {
-                expires = 5;
-                timeUnit = TimeUnit.MINUTES;
-            }
-            Duration expiration = Duration.ofSeconds(timeUnit.toSeconds(expires));
-            GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-                .bucket(bucketName)
-                .key(key)
-                .build();
-            GetObjectPresignRequest request = GetObjectPresignRequest.builder()
-                .signatureDuration(expiration)
-                .getObjectRequest(getObjectRequest)
-                .build();
-            PresignedGetObjectRequest objectRequest = s3Presigner.presignGetObject(request);
-            return objectRequest.url().toString();
-        } catch (Exception e) {
-            throw new TiBizException(TiBizErrorCode.FAIL, "获取文件外链异常", e);
-        }
-    }
-
-    /**
-     * 获取预览链接
-     *
-     * @param bucketName bucketName
-     * @param key        文件名称
-     * @param expires    过期时间 <=7天
-     * @param timeUnit   时间单位
-     * @return String
-     */
-    public String getDownloadUrl(String bucketName, String key, String filaName, Integer expires, TimeUnit timeUnit) {
-        try {
-            if (Objects.isNull(expires)) {
-                expires = 5;
-                timeUnit = TimeUnit.MINUTES;
-            }
-            Duration expiration = Duration.ofSeconds(timeUnit.toSeconds(expires));
-            GetObjectRequest getObjectRequest =
-                GetObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(key)
-                    .responseContentDisposition("attachment;filename=" + TiUrlUtil.encode(filaName))
-                    .build();
-            GetObjectPresignRequest request = GetObjectPresignRequest.builder()
-                .signatureDuration(expiration)
-                .getObjectRequest(getObjectRequest)
-                .build();
-            PresignedGetObjectRequest objectRequest = s3Presigner.presignGetObject(request);
-            return objectRequest.url().toString();
-        } catch (Exception e) {
-            throw new TiBizException(TiBizErrorCode.FAIL, "获取文件外链异常", e);
-        }
-    }
-
 
     /**
      * 拷贝文件
@@ -665,6 +540,140 @@ public class TiS3Template {
             s3Client.copyObject(copyObjectArgs);
         } catch (Exception e) {
             throw new TiBizException(TiBizErrorCode.FAIL, "拷贝文件异常", e);
+        }
+    }
+
+    /**
+     * 根据文件前缀查询文件
+     *
+     * @param bucket  bucket名称
+     * @param prefix  前缀
+     * @param maxKeys 最大键数
+     * @return S3Object 列表
+     */
+    public List<S3Object> listObjects(String bucket, String prefix, Integer maxKeys) {
+        List<S3Object> objectList;
+        try {
+            ListObjectsResponse response = s3Client.listObjects(ListObjectsRequest.builder()
+                .bucket(bucket)
+                .prefix(prefix)
+                .maxKeys(maxKeys)
+                .build());
+            objectList = new ArrayList<>(response.contents());
+        } catch (Exception e) {
+            throw new TiBizException(TiBizErrorCode.FAIL, "查询文件信息异常", e);
+        }
+        return objectList;
+    }
+
+    /**
+     * 获取对象文件名称列表
+     *
+     * @param bucket 存储桶名称
+     * @param prefix 对象名称前缀
+     * @param sort   是否排序(升序)
+     * @return objectNames
+     */
+    public List<String> listObjectNames(String bucket, String prefix, Integer maxKeys, Boolean sort) {
+        List<S3Object> chunks = listObjects(bucket, prefix, maxKeys);
+        try {
+            List<String> chunkPaths = new ArrayList<>();
+            for (S3Object item : chunks) {
+                chunkPaths.add(item.key());
+            }
+            if (sort) {
+                Collections.sort(chunkPaths);
+            }
+            return chunkPaths;
+        } catch (Exception e) {
+            throw new TiBizException(TiBizErrorCode.FAIL, "获取对象文件名称列表异常", e);
+        }
+    }
+
+    /**
+     * 获取文件外链
+     *
+     * @param bucket  bucket
+     * @param key     文件名称
+     * @param expires 过期时间 <=7天，默认5分钟，单位：秒
+     * @return String
+     */
+    public String getPreviewUrl(String bucket, String key, Integer expires) {
+        return getPreviewUrl(bucket, key, expires, TimeUnit.SECONDS);
+    }
+
+    /**
+     * 获取预览链接
+     *
+     * @param bucket   bucket
+     * @param key      文件名称
+     * @param expires  过期时间 <=7天，默认5分钟
+     * @param timeUnit 时间单位
+     * @return String
+     */
+    public String getPreviewUrl(String bucket, String key, Integer expires, TimeUnit timeUnit) {
+        try {
+            if (Objects.isNull(expires)) {
+                expires = 5;
+                timeUnit = TimeUnit.MINUTES;
+            }
+            Duration expiration = Duration.ofSeconds(timeUnit.toSeconds(expires));
+            GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                .bucket(bucket)
+                .key(key)
+                .build();
+            GetObjectPresignRequest request = GetObjectPresignRequest.builder()
+                .signatureDuration(expiration)
+                .getObjectRequest(getObjectRequest)
+                .build();
+            PresignedGetObjectRequest objectRequest = s3Presigner.presignGetObject(request);
+            return objectRequest.url().toString();
+        } catch (Exception e) {
+            throw new TiBizException(TiBizErrorCode.FAIL, "获取文件预览链接异常", e);
+        }
+    }
+
+    /**
+     * 获取预览链接
+     *
+     * @param bucket  bucket
+     * @param key     文件名称
+     * @param expires 过期时间 <=7天，默认5分钟，单位：秒
+     * @return String
+     */
+    public String getDownloadUrl(String bucket, String key, String filaName, Integer expires) {
+        return getDownloadUrl(bucket, key, filaName, expires, TimeUnit.SECONDS);
+    }
+
+    /**
+     * 获取预览链接
+     *
+     * @param bucket   bucket
+     * @param key      文件名称
+     * @param expires  过期时间 <=7天，默认5分钟
+     * @param timeUnit 时间单位
+     * @return String
+     */
+    public String getDownloadUrl(String bucket, String key, String filaName, Integer expires, TimeUnit timeUnit) {
+        try {
+            if (Objects.isNull(expires)) {
+                expires = 5;
+                timeUnit = TimeUnit.MINUTES;
+            }
+            Duration expiration = Duration.ofSeconds(timeUnit.toSeconds(expires));
+            GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                .bucket(bucket)
+                .key(key)
+                .responseContentDisposition("attachment;filename=" + TiUrlUtil.encode(filaName))
+                .build();
+            GetObjectPresignRequest request = GetObjectPresignRequest.builder()
+                .signatureDuration(expiration)
+                .getObjectRequest(getObjectRequest)
+                .build();
+            PresignedGetObjectRequest objectRequest = s3Presigner.presignGetObject(request);
+            return objectRequest.url().toString();
+        } catch (Exception e) {
+            throw new TiBizException(TiBizErrorCode.FAIL, "获取文件下载链接异常", e);
         }
     }
 

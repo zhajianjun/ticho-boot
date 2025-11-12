@@ -35,13 +35,18 @@ public class TiS3ChunkFileTest {
 
     public static void main(String[] args) {
         initS3Template();
-        String objectUrl = getObjectUrl("1.mp4");
+        String objectUrl = getDownloadUrl("123.mp4");
         System.out.println(objectUrl);
     }
 
-    public static String getObjectUrl(String objectName) {
+    public static String getDownloadUrl(String objectName) {
         String bucket = tiS3Template.getTiS3Property().getDefaultBucket();
-        return tiS3Template.getObjectUrl(bucket, objectName, 60);
+        return tiS3Template.getDownloadUrl(bucket, objectName, objectName, 60);
+    }
+
+    public static String getPreviewUrl(String objectName) {
+        String bucket = tiS3Template.getTiS3Property().getDefaultBucket();
+        return tiS3Template.getPreviewUrl(bucket, objectName, 60);
     }
 
     public static void uploadText(String objectName) throws IOException {
