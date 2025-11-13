@@ -2,19 +2,15 @@ package top.ticho.tool.s3;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.model.CompletedPart;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import top.ticho.tool.core.TiFileUtil;
 import top.ticho.tool.core.TiIdUtil;
 import top.ticho.tool.core.constant.TiStrConst;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -49,15 +45,10 @@ public class TiS3ChunkFileTest {
         return tiS3Template.getPreviewUrl(bucket, objectName, 60);
     }
 
-    public static void uploadText(String objectName) throws IOException {
-        initS3Template();
-        String text = "hello world";
+    public static void uploadText(String objectName) {
         String bucket = tiS3Template.getTiS3Property().getDefaultBucket();
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(text.getBytes());
-        tiS3Template.putObject(bucket, objectName, "text/plain", Collections.emptyMap(), byteArrayInputStream);
-        ResponseInputStream<GetObjectResponse> object = tiS3Template.getObject(bucket, objectName);
-        byte[] bytes = object.readAllBytes();
-        System.out.println(new String(bytes, StandardCharsets.UTF_8));
+        tiS3Template.putObjectAsString(bucket, objectName, "hello world");
+        System.out.println(tiS3Template.getObjectAsString(bucket, objectName));
     }
 
     /**
@@ -111,7 +102,7 @@ public class TiS3ChunkFileTest {
         File file = new File(filePath);
         String fileName = file.getName();
         String mimeType = TiFileUtil.getMimeType(fileName);
-        tiS3Template.uploadObject(bucket, fileName, mimeType, null, file.getAbsolutePath());
+        tiS3Template.putObjectFromFile(bucket, fileName, mimeType, null, file.getAbsolutePath());
     }
 
     public static void initS3Template() {

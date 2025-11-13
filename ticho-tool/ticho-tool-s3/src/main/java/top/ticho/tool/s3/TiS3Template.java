@@ -57,6 +57,7 @@ import top.ticho.tool.core.exception.TiBizException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -253,6 +254,43 @@ public class TiS3Template {
     }
 
     /**
+     * 本地上传文件
+     *
+     * @param bucket      bucket名称
+     * @param key         文件名称
+     * @param contentType 内容类型
+     * @param metadata    用户自定义数据
+     * @param filePath    文件路径
+     */
+    public void putObjectFromFile(String bucket, String key, String contentType, Map<String, String> metadata, String filePath) {
+        try {
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                .bucket(bucket)
+                .key(key)
+                .metadata(metadata)
+                .contentType(contentType)
+                .build();
+            RequestBody requestBody = RequestBody.fromFile(Paths.get(filePath));
+            s3Client.putObject(putObjectRequest, requestBody);
+        } catch (Exception e) {
+            throw new TiBizException(TiBizErrorCode.FAIL, "上传文件异常", e);
+        }
+    }
+
+    public void putObjectAsString(String bucket, String key, String content) {
+        try {
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                .bucket(bucket)
+                .key(key)
+                .build();
+            RequestBody requestBody = RequestBody.fromString(content);
+            s3Client.putObject(putObjectRequest, requestBody);
+        } catch (Exception e) {
+            throw new TiBizException(TiBizErrorCode.FAIL, "上传文件异常", e);
+        }
+    }
+
+    /**
      * 上传文件
      *
      * @param bucket      bucket名称
@@ -277,30 +315,6 @@ public class TiS3Template {
                 .build();
             Upload upload = s3TransferManager.upload(uploadFileRequest);
             upload.completionFuture().join();
-        } catch (Exception e) {
-            throw new TiBizException(TiBizErrorCode.FAIL, "上传文件异常", e);
-        }
-    }
-
-    /**
-     * 本地上传文件
-     *
-     * @param bucket      bucket名称
-     * @param key         文件名称
-     * @param contentType 内容类型
-     * @param metadata    用户自定义数据
-     * @param filePath    文件路径
-     */
-    public void uploadObject(String bucket, String key, String contentType, Map<String, String> metadata, String filePath) {
-        try {
-            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                .bucket(bucket)
-                .key(key)
-                .metadata(metadata)
-                .contentType(contentType)
-                .build();
-            RequestBody requestBody = RequestBody.fromFile(Paths.get(filePath));
-            s3Client.putObject(putObjectRequest, requestBody);
         } catch (Exception e) {
             throw new TiBizException(TiBizErrorCode.FAIL, "上传文件异常", e);
         }
@@ -516,6 +530,14 @@ public class TiS3Template {
                 .key(key)
                 .build();
             return s3Client.getObject(getObjectRequest);
+        } catch (Exception e) {
+            throw new TiBizException(TiBizErrorCode.FAIL, "文件下载异常", e);
+        }
+    }
+
+    public String getObjectAsString(String bucket, String key) {
+        try (ResponseInputStream<GetObjectResponse> response = getObject(bucket, key)) {
+            return new String(response.readAllBytes(), StandardCharsets.UTF_8);
         } catch (Exception e) {
             throw new TiBizException(TiBizErrorCode.FAIL, "文件下载异常", e);
         }
