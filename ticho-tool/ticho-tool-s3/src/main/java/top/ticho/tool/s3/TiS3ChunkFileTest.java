@@ -102,7 +102,7 @@ public class TiS3ChunkFileTest {
         File file = new File(filePath);
         String fileName = file.getName();
         String mimeType = TiFileUtil.getMimeType(fileName);
-        tiS3Template.putObjectFromFile(bucket, fileName, mimeType, null, file.getAbsolutePath());
+        tiS3Template.putObjectFromFile(bucket, fileName, null, file.getAbsolutePath());
     }
 
     public static void initS3Template() {

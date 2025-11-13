@@ -219,10 +219,9 @@ public class TiS3Template {
         }
     }
 
-    public Map<String, String> getObjectMetadata(String bucket, String key) {
+    public HeadObjectResponse getObjectMetadata(String bucket, String key) {
         try {
-            HeadObjectResponse headObjectResponse = s3Client.headObject(HeadObjectRequest.builder().bucket(bucket).key(key).build());
-            return new HashMap<>(headObjectResponse.metadata());
+            return s3Client.headObject(HeadObjectRequest.builder().bucket(bucket).key(key).build());
         } catch (NoSuchKeyException e) {
             throw new TiBizException(TiBizErrorCode.FAIL, "查询文件元数据异常，文件不存在", e);
         } catch (Exception e) {
@@ -256,19 +255,17 @@ public class TiS3Template {
     /**
      * 本地上传文件
      *
-     * @param bucket      bucket名称
-     * @param key         文件名称
-     * @param contentType 内容类型
-     * @param metadata    用户自定义数据
-     * @param filePath    文件路径
+     * @param bucket   bucket名称
+     * @param key      文件名称
+     * @param metadata 用户自定义数据
+     * @param filePath 文件路径
      */
-    public void putObjectFromFile(String bucket, String key, String contentType, Map<String, String> metadata, String filePath) {
+    public void putObjectFromFile(String bucket, String key, Map<String, String> metadata, String filePath) {
         try {
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucket)
                 .key(key)
                 .metadata(metadata)
-                .contentType(contentType)
                 .build();
             RequestBody requestBody = RequestBody.fromFile(Paths.get(filePath));
             s3Client.putObject(putObjectRequest, requestBody);
@@ -500,6 +497,8 @@ public class TiS3Template {
                 .key(key)
                 .build();
             return s3Client.getObject(getObjectRequest);
+        } catch (NoSuchKeyException e) {
+            throw new TiBizException(TiBizErrorCode.FAIL, "文件下载异常, 文件不存在", e);
         } catch (Exception e) {
             throw new TiBizException(TiBizErrorCode.FAIL, "文件下载异常", e);
         }
@@ -530,6 +529,8 @@ public class TiS3Template {
                 .key(key)
                 .build();
             return s3Client.getObject(getObjectRequest);
+        } catch (NoSuchKeyException e) {
+            throw new TiBizException(TiBizErrorCode.FAIL, "文件下载异常, 文件不存在", e);
         } catch (Exception e) {
             throw new TiBizException(TiBizErrorCode.FAIL, "文件下载异常", e);
         }
@@ -538,6 +539,8 @@ public class TiS3Template {
     public String getObjectAsString(String bucket, String key) {
         try (ResponseInputStream<GetObjectResponse> response = getObject(bucket, key)) {
             return new String(response.readAllBytes(), StandardCharsets.UTF_8);
+        } catch (NoSuchKeyException e) {
+            throw new TiBizException(TiBizErrorCode.FAIL, "文件下载异常, 文件不存在", e);
         } catch (Exception e) {
             throw new TiBizException(TiBizErrorCode.FAIL, "文件下载异常", e);
         }
