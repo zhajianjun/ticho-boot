@@ -30,6 +30,7 @@ import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.HeadBucketRequest;
 import software.amazon.awssdk.services.s3.model.HeadObjectRequest;
 import software.amazon.awssdk.services.s3.model.HeadObjectResponse;
+import software.amazon.awssdk.services.s3.model.ListBucketsRequest;
 import software.amazon.awssdk.services.s3.model.ListBucketsResponse;
 import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
 import software.amazon.awssdk.services.s3.model.ListObjectsResponse;
@@ -193,7 +194,14 @@ public class TiS3Template {
      * @param bucket bucket名称
      */
     public Bucket getBucket(String bucket) {
-        return this.listBuckets().buckets().stream().filter(b -> b.name().equals(bucket)).findAny().orElse(null);
+        try {
+            ListBucketsRequest bucketsRequest = ListBucketsRequest.builder()
+                .prefix(bucket)
+                .build();
+            return s3Client.listBuckets(bucketsRequest).buckets().stream().filter(b -> b.name().equals(bucket)).findAny().orElse(null);
+        } catch (Exception e) {
+            throw new TiBizException(TiBizErrorCode.FAIL, "查询全部文件桶异常", e);
+        }
     }
 
     /**
