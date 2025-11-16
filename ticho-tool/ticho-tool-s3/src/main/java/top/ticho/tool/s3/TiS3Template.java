@@ -63,7 +63,6 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -303,7 +302,7 @@ public class TiS3Template {
      * @param metadata    用户自定义数据
      * @param inputStream 文件流
      */
-    public void putLargeObject(String bucket, String key, String contentType, Map<String, String> metadata, InputStream inputStream, ExecutorService executorService) {
+    public void putObjectAsync(String bucket, String key, String contentType, Map<String, String> metadata, InputStream inputStream, ExecutorService executorService) {
         try {
             long available = inputStream.available();
             AsyncRequestBody requestBody = AsyncRequestBody.fromInputStream(inputStream, available, executorService);
@@ -373,32 +372,6 @@ public class TiS3Template {
         }
     }
 
-    /**
-     * 获取分片名称地址HashMap key=分片序号 value=分片文件地址
-     *
-     * @param bucket    存储桶名称
-     * @param objectMd5 对象Md5
-     * @return objectChunkNameMap
-     */
-    public Map<Integer, String> mapChunkObjectNames(String bucket, String objectMd5) {
-        if (null == bucket) {
-            bucket = tiS3Property.getChunkBucket();
-        }
-        if (null == objectMd5) {
-            return null;
-        }
-        List<String> chunkPaths = listObjectNames(bucket, objectMd5, 1000, true);
-        if (null == chunkPaths || chunkPaths.isEmpty()) {
-            return null;
-        }
-        Map<Integer, String> chunkMap = new HashMap<>(chunkPaths.size());
-        for (String chunkName : chunkPaths) {
-            Integer partNumber = Integer.parseInt(chunkName.substring(chunkName.indexOf("/") + 1, chunkName.lastIndexOf(".")));
-            chunkMap.put(partNumber, chunkName);
-        }
-        return chunkMap;
-    }
-
     public String createMultipartUpload(String bucket, String key, String contentType, Map<String, String> metadata) {
         CreateMultipartUploadRequest createRequest = CreateMultipartUploadRequest.builder()
             .bucket(bucket)
@@ -410,14 +383,13 @@ public class TiS3Template {
         return createResponse.uploadId();
     }
 
-    public List<CompletedPart> putMultipartObject(
+    public CompletedPart putMultipartObject(
         String bucket,
         String key,
         String uploadId,
         int partNumber,
         InputStream inputStream
     ) {
-        List<CompletedPart> completedParts = new ArrayList<>();
         try {
             UploadPartRequest uploadPartRequest = UploadPartRequest.builder()
                 .bucket(bucket)
@@ -427,14 +399,13 @@ public class TiS3Template {
                 .build();
             UploadPartResponse uploadPartResponse = s3Client.uploadPart(uploadPartRequest, RequestBody.fromInputStream(inputStream, inputStream.available()));
             String eTag = uploadPartResponse.eTag();
-            completedParts.add(CompletedPart.builder()
+            return CompletedPart.builder()
                 .partNumber(partNumber)
                 .eTag(eTag)
-                .build());
+                .build();
         } catch (IOException e) {
             throw new TiBizException(TiBizErrorCode.FAIL, "上传分片文件异常", e);
         }
-        return completedParts;
     }
 
     public List<CompletedPart> getCompletedPartsForUpload(String bucket, String key, String uploadId) {
