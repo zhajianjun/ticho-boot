@@ -555,19 +555,18 @@ public class TiS3Template {
      * @param maxKeys 最大键数
      * @return S3Object 列表
      */
-    public List<S3Object> listObjects(String bucket, String prefix, Integer maxKeys) {
-        List<S3Object> objectList;
+    public ListObjectsResponse listObjects(String bucket, String prefix, String marker, Integer maxKeys) {
         try {
-            ListObjectsResponse response = s3Client.listObjects(ListObjectsRequest.builder()
+            ListObjectsRequest request = ListObjectsRequest.builder()
                 .bucket(bucket)
                 .prefix(prefix)
+                .marker(marker)
                 .maxKeys(maxKeys)
-                .build());
-            objectList = new ArrayList<>(response.contents());
+                .build();
+            return s3Client.listObjects(request);
         } catch (Exception e) {
             throw new TiBizException(TiBizErrorCode.FAIL, "查询文件信息异常", e);
         }
-        return objectList;
     }
 
     /**
@@ -579,10 +578,10 @@ public class TiS3Template {
      * @return objectNames
      */
     public List<String> listObjectNames(String bucket, String prefix, Integer maxKeys, Boolean sort) {
-        List<S3Object> chunks = listObjects(bucket, prefix, maxKeys);
+        ListObjectsResponse response = listObjects(bucket, prefix, "", maxKeys);
         try {
             List<String> chunkPaths = new ArrayList<>();
-            for (S3Object item : chunks) {
+            for (S3Object item : response.contents()) {
                 chunkPaths.add(item.key());
             }
             if (sort) {
