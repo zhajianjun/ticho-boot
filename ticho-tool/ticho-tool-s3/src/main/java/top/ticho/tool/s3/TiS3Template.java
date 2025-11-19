@@ -140,7 +140,7 @@ public class TiS3Template {
     /**
      * 查询文件存储桶是否存在
      *
-     * @param bucket bucket
+     * @param bucket 存储桶
      * @return true-存在，false-不存在
      */
     public boolean bucketExists(String bucket) {
@@ -161,7 +161,7 @@ public class TiS3Template {
     /**
      * 创建bucket
      *
-     * @param bucket bucket
+     * @param bucket 存储桶
      */
     public void createBucket(String bucket) {
         try {
@@ -177,7 +177,7 @@ public class TiS3Template {
     /**
      * 根据bucketName删除信息
      *
-     * @param bucket bucket名称
+     * @param bucket 存储桶
      */
     public void removeBucket(String bucket) {
         try {
@@ -190,7 +190,7 @@ public class TiS3Template {
     /**
      * 根据bucketName获取信息
      *
-     * @param bucket bucket名称
+     * @param bucket 存储桶
      */
     public Bucket getBucket(String bucket) {
         try {
@@ -216,7 +216,11 @@ public class TiS3Template {
 
     public boolean objectExists(String bucket, String key) {
         try {
-            s3Client.headObject(HeadObjectRequest.builder().bucket(bucket).key(key).build());
+            HeadObjectRequest request = HeadObjectRequest.builder()
+                .bucket(bucket)
+                .key(key)
+                .build();
+            s3Client.headObject(request);
             return true;
         } catch (NoSuchKeyException e) {
             log.warn("bucket={} object={}不存在", bucket, key);
@@ -226,9 +230,20 @@ public class TiS3Template {
         }
     }
 
+    /**
+     * 获取对象元数据
+     *
+     * @param bucket 存储桶
+     * @param key    存储对象key
+     * @return {@link HeadObjectResponse }
+     */
     public HeadObjectResponse getObjectMetadata(String bucket, String key) {
         try {
-            return s3Client.headObject(HeadObjectRequest.builder().bucket(bucket).key(key).build());
+            HeadObjectRequest request = HeadObjectRequest.builder()
+                .bucket(bucket)
+                .key(key)
+                .build();
+            return s3Client.headObject(request);
         } catch (NoSuchKeyException e) {
             throw new TiBizException(TiBizErrorCode.FAIL, "查询文件元数据异常，文件不存在", e);
         } catch (Exception e) {
@@ -239,8 +254,9 @@ public class TiS3Template {
     /**
      * 上传文件
      *
-     * @param bucket      bucket名称
-     * @param key         文件名称
+     * @param bucket      存储桶
+     * @param key         存储文件key
+     * @param contentType 内容类型
      * @param metadata    用户自定义数据
      * @param inputStream 文件流
      */
@@ -260,10 +276,10 @@ public class TiS3Template {
     }
 
     /**
-     * 本地上传文件
+     * 上传本地文件
      *
-     * @param bucket   bucket名称
-     * @param key      文件名称
+     * @param bucket   存储桶
+     * @param key      存储文件key
      * @param metadata 用户自定义数据
      * @param filePath 文件路径
      */
@@ -281,6 +297,13 @@ public class TiS3Template {
         }
     }
 
+    /**
+     * 上传文本文件
+     *
+     * @param bucket  存储桶
+     * @param key     存储文件key
+     * @param content 内容
+     */
     public void putObjectAsString(String bucket, String key, String content) {
         try {
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
@@ -297,10 +320,12 @@ public class TiS3Template {
     /**
      * 上传文件
      *
-     * @param bucket      bucket名称
-     * @param key         文件名称
-     * @param metadata    用户自定义数据
-     * @param inputStream 文件流
+     * @param bucket          存储桶
+     * @param key             存储文件key
+     * @param contentType     内容类型
+     * @param metadata        用户自定义数据
+     * @param inputStream     文件流
+     * @param executorService executor
      */
     public void putObjectAsync(String bucket, String key, String contentType, Map<String, String> metadata, InputStream inputStream, ExecutorService executorService) {
         try {
@@ -327,8 +352,8 @@ public class TiS3Template {
     /**
      * 删除文件
      *
-     * @param bucket bucket名称
-     * @param key    文件名称
+     * @param bucket 存储桶
+     * @param key    存储文件key
      */
     public void removeObject(String bucket, String key) {
         try {
@@ -341,12 +366,12 @@ public class TiS3Template {
     /**
      * 批量删除对象
      *
-     * @param bucket      bucket名称
-     * @param objectNames 文件名称集合
+     * @param bucket 存储桶
+     * @param keys   文件名称集合
      */
-    public void removeObjects(String bucket, List<String> objectNames) {
-        List<ObjectIdentifier> identifiers = new ArrayList<>(objectNames.size());
-        for (String key : objectNames) {
+    public void removeObjects(String bucket, List<String> keys) {
+        List<ObjectIdentifier> identifiers = new ArrayList<>(keys.size());
+        for (String key : keys) {
             identifiers.add(ObjectIdentifier.builder().key(key).build());
         }
         Delete delete = Delete.builder()
@@ -372,6 +397,15 @@ public class TiS3Template {
         }
     }
 
+    /**
+     * 创建分片上传
+     *
+     * @param bucket      存储桶
+     * @param key         存储文件key
+     * @param contentType 内容类型
+     * @param metadata    元数据
+     * @return {@link String }
+     */
     public String createMultipartUpload(String bucket, String key, String contentType, Map<String, String> metadata) {
         CreateMultipartUploadRequest createRequest = CreateMultipartUploadRequest.builder()
             .bucket(bucket)
@@ -383,6 +417,16 @@ public class TiS3Template {
         return createResponse.uploadId();
     }
 
+    /**
+     * 上传分片文件
+     *
+     * @param bucket      存储桶
+     * @param key         存储对象key
+     * @param uploadId    上传ID
+     * @param partNumber  分片编号
+     * @param inputStream 输入流
+     * @return {@link CompletedPart }
+     */
     public CompletedPart putMultipartObject(
         String bucket,
         String key,
@@ -408,6 +452,14 @@ public class TiS3Template {
         }
     }
 
+    /**
+     * 获取上传分片文件信息
+     *
+     * @param bucket   存储桶
+     * @param key      存储对象key
+     * @param uploadId 上传ID
+     * @return {@link List }<{@link CompletedPart }>
+     */
     public List<CompletedPart> getCompletedPartsForUpload(String bucket, String key, String uploadId) {
         try {
             ListPartsRequest listPartsRequest = ListPartsRequest.builder()
@@ -432,11 +484,10 @@ public class TiS3Template {
 
     /**
      * 合并文件
-     * 分块文件必须大于5mb
      *
-     * @param bucket         存储桶名称
-     * @param key            合并后的对象文件名称
-     * @param uploadId       上传 ID
+     * @param bucket         存储桶
+     * @param key            存储文件key
+     * @param uploadId       上传ID
      * @param completedParts 已完成零件
      */
     public void composeObject(
@@ -464,8 +515,8 @@ public class TiS3Template {
     /**
      * 文件下载
      *
-     * @param bucket bucket名称
-     * @param key    文件名称
+     * @param bucket 存储桶
+     * @param key    存储文件key
      * @return 二进制流
      */
     public ResponseInputStream<GetObjectResponse> getObject(String bucket, String key) {
@@ -486,8 +537,8 @@ public class TiS3Template {
     /**
      * 文件下载
      *
-     * @param bucket bucket名称
-     * @param key    文件名称
+     * @param bucket 存储桶
+     * @param key    存储文件key
      * @param range  范围
      * @return 二进制流
      *
@@ -515,6 +566,13 @@ public class TiS3Template {
         }
     }
 
+    /**
+     * 获取字符串对象
+     *
+     * @param bucket 存储桶
+     * @param key    存储文件key
+     * @return {@link String }
+     */
     public String getObjectAsString(String bucket, String key) {
         try (ResponseInputStream<GetObjectResponse> response = getObject(bucket, key)) {
             return new String(response.readAllBytes(), StandardCharsets.UTF_8);
@@ -550,7 +608,7 @@ public class TiS3Template {
     /**
      * 根据文件前缀查询文件
      *
-     * @param bucket  bucket名称
+     * @param bucket  存储桶
      * @param prefix  前缀
      * @param maxKeys 最大键数
      * @return S3Object 列表
@@ -572,7 +630,7 @@ public class TiS3Template {
     /**
      * 获取对象文件名称列表
      *
-     * @param bucket 存储桶名称
+     * @param bucket 存储桶
      * @param prefix 对象名称前缀
      * @param sort   是否排序(升序)
      * @return objectNames
@@ -596,8 +654,8 @@ public class TiS3Template {
     /**
      * 获取文件外链
      *
-     * @param bucket  bucket
-     * @param key     文件名称
+     * @param bucket  存储桶
+     * @param key     存储文件key
      * @param expires 过期时间 <=7天，默认5分钟，单位：秒
      * @return String
      */
@@ -608,8 +666,8 @@ public class TiS3Template {
     /**
      * 获取预览链接
      *
-     * @param bucket   bucket
-     * @param key      文件名称
+     * @param bucket   存储桶
+     * @param key      存储文件key
      * @param expires  过期时间 <=7天，默认5分钟
      * @param timeUnit 时间单位
      * @return String
@@ -639,8 +697,8 @@ public class TiS3Template {
     /**
      * 获取预览链接
      *
-     * @param bucket  bucket
-     * @param key     文件名称
+     * @param bucket  存储桶
+     * @param key     存储文件key
      * @param expires 过期时间 <=7天，默认5分钟，单位：秒
      * @return String
      */
@@ -651,8 +709,8 @@ public class TiS3Template {
     /**
      * 获取预览链接
      *
-     * @param bucket   bucket
-     * @param key      文件名称
+     * @param bucket   存储桶
+     * @param key      存储文件key
      * @param expires  过期时间 <=7天，默认5分钟
      * @param timeUnit 时间单位
      * @return String
