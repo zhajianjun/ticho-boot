@@ -122,6 +122,9 @@ public class TiS3Template {
             .build();
     }
 
+    /**
+     * 关闭
+     */
     public void close() {
         if (s3Client != null) {
             s3Client.close();
@@ -141,7 +144,7 @@ public class TiS3Template {
      * 查询文件存储桶是否存在
      *
      * @param bucket 存储桶
-     * @return true-存在，false-不存在
+     * @return boolean true-存在，false-不存在
      */
     public boolean bucketExists(String bucket) {
         try {
@@ -191,6 +194,7 @@ public class TiS3Template {
      * 根据bucketName获取信息
      *
      * @param bucket 存储桶
+     * @return {@link Bucket }
      */
     public Bucket getBucket(String bucket) {
         try {
@@ -205,6 +209,8 @@ public class TiS3Template {
 
     /**
      * 获取全部bucket
+     *
+     * @return {@link ListBucketsResponse }
      */
     public ListBucketsResponse listBuckets() {
         try {
@@ -214,6 +220,13 @@ public class TiS3Template {
         }
     }
 
+    /**
+     * 文件是否存在
+     *
+     * @param bucket 存储桶
+     * @param key    存储对象key
+     * @return boolean
+     */
     public boolean objectExists(String bucket, String key) {
         try {
             HeadObjectRequest request = HeadObjectRequest.builder()
@@ -488,7 +501,7 @@ public class TiS3Template {
      * @param bucket         存储桶
      * @param key            存储文件key
      * @param uploadId       上传ID
-     * @param completedParts 已完成零件
+     * @param completedParts 已上传分片文件
      */
     public void composeObject(
         String bucket,
@@ -517,7 +530,7 @@ public class TiS3Template {
      *
      * @param bucket 存储桶
      * @param key    存储文件key
-     * @return 二进制流
+     * @return {@link ResponseInputStream }<{@link GetObjectResponse }>
      */
     public ResponseInputStream<GetObjectResponse> getObject(String bucket, String key) {
         try {
@@ -540,15 +553,7 @@ public class TiS3Template {
      * @param bucket 存储桶
      * @param key    存储文件key
      * @param range  范围
-     * @return 二进制流
-     *
-     * <p>range用法<p/>
-     * <pre>
-     * "bytes=0-499"：下载第0到第499个字节（前500字节）。
-     * "bytes=500-999"：下载第500到第999个字节。
-     * "bytes=500-"：从第500个字节下载到文件末尾。
-     * "bytes=-500"：下载最后500个字节。
-     * <pre/>
+     * @return {@link ResponseInputStream }<{@link GetObjectResponse }>
      */
     public ResponseInputStream<GetObjectResponse> getObject(String bucket, String key, String range) {
         try {
@@ -587,17 +592,17 @@ public class TiS3Template {
      * 拷贝文件
      *
      * @param sourceBucket 源桶名称
-     * @param sourceObject 源文件
+     * @param sourceKey    源文件key
      * @param targetBucket 目标桶名称
-     * @param targetObject 目标文件
+     * @param targetKey    目标文件key
      */
-    public void copyObject(String sourceBucket, String sourceObject, String targetBucket, String targetObject) {
+    public void copyObject(String sourceBucket, String sourceKey, String targetBucket, String targetKey) {
         try {
             CopyObjectRequest copyObjectArgs = CopyObjectRequest.builder()
                 .sourceBucket(sourceBucket)
-                .sourceKey(sourceObject)
+                .sourceKey(sourceKey)
                 .destinationBucket(targetBucket)
-                .destinationKey(targetObject)
+                .destinationKey(targetKey)
                 .build();
             s3Client.copyObject(copyObjectArgs);
         } catch (Exception e) {
@@ -609,9 +614,10 @@ public class TiS3Template {
      * 根据文件前缀查询文件
      *
      * @param bucket  存储桶
-     * @param prefix  前缀
+     * @param prefix  最大key数量
+     * @param marker  标记
      * @param maxKeys 最大键数
-     * @return S3Object 列表
+     * @return {@link ListObjectsResponse }
      */
     public ListObjectsResponse listObjects(String bucket, String prefix, String marker, Integer maxKeys) {
         try {
@@ -630,10 +636,11 @@ public class TiS3Template {
     /**
      * 获取对象文件名称列表
      *
-     * @param bucket 存储桶
-     * @param prefix 对象名称前缀
-     * @param sort   是否排序(升序)
-     * @return objectNames
+     * @param bucket  存储桶
+     * @param prefix  对象名称前缀
+     * @param maxKeys 最大key数量
+     * @param sort    是否排序(升序)
+     * @return {@link List }<{@link String }>
      */
     public List<String> listObjectNames(String bucket, String prefix, Integer maxKeys, Boolean sort) {
         ListObjectsResponse response = listObjects(bucket, prefix, "", maxKeys);
@@ -657,7 +664,7 @@ public class TiS3Template {
      * @param bucket  存储桶
      * @param key     存储文件key
      * @param expires 过期时间 <=7天，默认5分钟，单位：秒
-     * @return String
+     * @return {@link String }
      */
     public String getPreviewUrl(String bucket, String key, Integer expires) {
         return getPreviewUrl(bucket, key, expires, TimeUnit.SECONDS);
@@ -670,7 +677,7 @@ public class TiS3Template {
      * @param key      存储文件key
      * @param expires  过期时间 <=7天，默认5分钟
      * @param timeUnit 时间单位
-     * @return String
+     * @return {@link String }
      */
     public String getPreviewUrl(String bucket, String key, Integer expires, TimeUnit timeUnit) {
         try {
@@ -697,10 +704,11 @@ public class TiS3Template {
     /**
      * 获取预览链接
      *
-     * @param bucket  存储桶
-     * @param key     存储文件key
-     * @param expires 过期时间 <=7天，默认5分钟，单位：秒
-     * @return String
+     * @param bucket   存储桶
+     * @param key      存储文件key
+     * @param filaName 文件名
+     * @param expires  过期时间 <=7天，默认5分钟，单位：秒
+     * @return {@link String }
      */
     public String getDownloadUrl(String bucket, String key, String filaName, Integer expires) {
         return getDownloadUrl(bucket, key, filaName, expires, TimeUnit.SECONDS);
@@ -711,9 +719,10 @@ public class TiS3Template {
      *
      * @param bucket   存储桶
      * @param key      存储文件key
+     * @param filaName 文件名
      * @param expires  过期时间 <=7天，默认5分钟
      * @param timeUnit 时间单位
-     * @return String
+     * @return {@link String }
      */
     public String getDownloadUrl(String bucket, String key, String filaName, Integer expires, TimeUnit timeUnit) {
         try {
