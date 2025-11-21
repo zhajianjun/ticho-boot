@@ -666,7 +666,7 @@ public class TiS3Template {
      * @param expires 过期时间 <=7天，默认5分钟，单位：秒
      * @return {@link String }
      */
-    public String getPreviewUrl(String bucket, String key, Integer expires) {
+    public String getPreviewUrl(String bucket, String key, Long expires) {
         return getPreviewUrl(bucket, key, expires, TimeUnit.SECONDS);
     }
 
@@ -679,11 +679,11 @@ public class TiS3Template {
      * @param timeUnit 时间单位
      * @return {@link String }
      */
-    public String getPreviewUrl(String bucket, String key, Integer expires, TimeUnit timeUnit) {
+    public String getPreviewUrl(String bucket, String key, Long expires, TimeUnit timeUnit) {
         try {
             if (Objects.isNull(expires)) {
-                expires = 5;
-                timeUnit = TimeUnit.MINUTES;
+                expires = tiS3Property.getDefaultExpires();
+                timeUnit = TimeUnit.SECONDS;
             }
             Duration expiration = Duration.ofSeconds(timeUnit.toSeconds(expires));
             GetObjectRequest getObjectRequest = GetObjectRequest.builder()
@@ -710,7 +710,7 @@ public class TiS3Template {
      * @param expires  过期时间 <=7天，默认5分钟，单位：秒
      * @return {@link String }
      */
-    public String getDownloadUrl(String bucket, String key, String filaName, Integer expires) {
+    public String getDownloadUrl(String bucket, String key, String filaName, Long expires) {
         return getDownloadUrl(bucket, key, filaName, expires, TimeUnit.SECONDS);
     }
 
@@ -724,11 +724,11 @@ public class TiS3Template {
      * @param timeUnit 时间单位
      * @return {@link String }
      */
-    public String getDownloadUrl(String bucket, String key, String filaName, Integer expires, TimeUnit timeUnit) {
+    public String getDownloadUrl(String bucket, String key, String filaName, Long expires, TimeUnit timeUnit) {
         try {
             if (Objects.isNull(expires)) {
-                expires = 5;
-                timeUnit = TimeUnit.MINUTES;
+                expires = tiS3Property.getDefaultExpires();
+                timeUnit = TimeUnit.SECONDS;
             }
             Duration expiration = Duration.ofSeconds(timeUnit.toSeconds(expires));
             GetObjectRequest getObjectRequest = GetObjectRequest.builder()

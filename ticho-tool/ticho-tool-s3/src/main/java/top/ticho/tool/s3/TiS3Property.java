@@ -27,5 +27,7 @@ public class TiS3Property {
     private String defaultBucket = "default";
     /** 分片桶 */
     private String chunkBucket = "chunk";
+    /** 默认过期时间，单位(秒) */
+    private Long defaultExpires = 5L;
 
 }
