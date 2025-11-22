@@ -685,13 +685,12 @@ public class TiS3Template {
                 expires = tiS3Property.getDefaultExpires();
                 timeUnit = TimeUnit.SECONDS;
             }
-            Duration expiration = Duration.ofSeconds(timeUnit.toSeconds(expires));
             GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                 .bucket(bucket)
                 .key(key)
                 .build();
             GetObjectPresignRequest request = GetObjectPresignRequest.builder()
-                .signatureDuration(expiration)
+                .signatureDuration(Duration.ofSeconds(timeUnit.toSeconds(expires)))
                 .getObjectRequest(getObjectRequest)
                 .build();
             PresignedGetObjectRequest objectRequest = s3Presigner.presignGetObject(request);
@@ -730,14 +729,13 @@ public class TiS3Template {
                 expires = tiS3Property.getDefaultExpires();
                 timeUnit = TimeUnit.SECONDS;
             }
-            Duration expiration = Duration.ofSeconds(timeUnit.toSeconds(expires));
             GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                 .bucket(bucket)
                 .key(key)
                 .responseContentDisposition("attachment;filename=" + TiUrlUtil.encode(filaName))
                 .build();
             GetObjectPresignRequest request = GetObjectPresignRequest.builder()
-                .signatureDuration(expiration)
+                .signatureDuration(Duration.ofSeconds(timeUnit.toSeconds(expires)))
                 .getObjectRequest(getObjectRequest)
                 .build();
             PresignedGetObjectRequest objectRequest = s3Presigner.presignGetObject(request);
