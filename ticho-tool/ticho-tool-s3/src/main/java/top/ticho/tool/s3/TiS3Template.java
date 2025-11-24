@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.async.AsyncRequestBody;
 import software.amazon.awssdk.core.sync.RequestBody;
@@ -32,8 +33,8 @@ import software.amazon.awssdk.services.s3.model.HeadObjectRequest;
 import software.amazon.awssdk.services.s3.model.HeadObjectResponse;
 import software.amazon.awssdk.services.s3.model.ListBucketsRequest;
 import software.amazon.awssdk.services.s3.model.ListBucketsResponse;
-import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
-import software.amazon.awssdk.services.s3.model.ListObjectsResponse;
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
+import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
 import software.amazon.awssdk.services.s3.model.ListPartsRequest;
 import software.amazon.awssdk.services.s3.model.ListPartsResponse;
 import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
@@ -58,7 +59,6 @@ import top.ticho.tool.core.exception.TiBizException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -552,10 +552,32 @@ public class TiS3Template {
      *
      * @param bucket 存储桶
      * @param key    存储文件key
+     * @return {@link ResponseInputStream }<{@link GetObjectResponse }>
+     */
+    public ResponseBytes<GetObjectResponse> getObjectAsBytes(String bucket, String key) {
+        try {
+            GetObjectRequest getObjectRequest = GetObjectRequest
+                .builder()
+                .bucket(bucket)
+                .key(key)
+                .build();
+            return s3Client.getObjectAsBytes(getObjectRequest);
+        } catch (NoSuchKeyException e) {
+            throw new TiBizException(TiBizErrorCode.FAIL, "文件下载异常, 文件不存在", e);
+        } catch (Exception e) {
+            throw new TiBizException(TiBizErrorCode.FAIL, "文件下载异常", e);
+        }
+    }
+
+    /**
+     * 文件下载
+     *
+     * @param bucket 存储桶
+     * @param key    存储文件key
      * @param range  范围
      * @return {@link ResponseInputStream }<{@link GetObjectResponse }>
      */
-    public ResponseInputStream<GetObjectResponse> getObject(String bucket, String key, String range) {
+    public ResponseInputStream<GetObjectResponse> getObjectRange(String bucket, String key, String range) {
         try {
             GetObjectRequest getObjectRequest = GetObjectRequest
                 .builder()
@@ -579,13 +601,7 @@ public class TiS3Template {
      * @return {@link String }
      */
     public String getObjectAsString(String bucket, String key) {
-        try (ResponseInputStream<GetObjectResponse> response = getObject(bucket, key)) {
-            return new String(response.readAllBytes(), StandardCharsets.UTF_8);
-        } catch (NoSuchKeyException e) {
-            throw new TiBizException(TiBizErrorCode.FAIL, "文件下载异常, 文件不存在", e);
-        } catch (Exception e) {
-            throw new TiBizException(TiBizErrorCode.FAIL, "文件下载异常", e);
-        }
+        return getObjectAsBytes(bucket, key).asUtf8String();
     }
 
     /**
@@ -613,21 +629,21 @@ public class TiS3Template {
     /**
      * 根据文件前缀查询文件
      *
-     * @param bucket  存储桶
-     * @param prefix  最大key数量
-     * @param marker  标记
-     * @param maxKeys 最大键数
-     * @return {@link ListObjectsResponse }
+     * @param bucket            存储桶
+     * @param prefix            最大key数量
+     * @param continuationToken 标记
+     * @param maxKeys           最大键数
+     * @return {@link ListObjectsV2Response }
      */
-    public ListObjectsResponse listObjects(String bucket, String prefix, String marker, Integer maxKeys) {
+    public ListObjectsV2Response listObjects(String bucket, String prefix, String continuationToken, Integer maxKeys) {
         try {
-            ListObjectsRequest request = ListObjectsRequest.builder()
+            ListObjectsV2Request request = ListObjectsV2Request.builder()
                 .bucket(bucket)
                 .prefix(prefix)
-                .marker(marker)
+                .continuationToken(continuationToken)
                 .maxKeys(maxKeys)
                 .build();
-            return s3Client.listObjects(request);
+            return s3Client.listObjectsV2(request);
         } catch (Exception e) {
             throw new TiBizException(TiBizErrorCode.FAIL, "查询文件信息异常", e);
         }
@@ -639,15 +655,13 @@ public class TiS3Template {
      * @param bucket  存储桶
      * @param prefix  对象名称前缀
      * @param maxKeys 最大key数量
-     * @param sort    是否排序(升序)
      * @return {@link List }<{@link String }>
      */
-    public List<String> listObjectNames(String bucket, String prefix, Integer maxKeys, Boolean sort) {
-        ListObjectsResponse response = listObjects(bucket, prefix, "", maxKeys);
+    public List<String> listObjectNames(String bucket, String prefix, Integer maxKeys) {
         try {
+            ListObjectsV2Response response = listObjects(bucket, prefix, "", maxKeys);
             return response.contents().stream()
                 .map(S3Object::key)
-                .sorted()
                 .collect(Collectors.toList());
         } catch (Exception e) {
             throw new TiBizException(TiBizErrorCode.FAIL, "获取对象文件名称列表异常", e);
@@ -655,7 +669,7 @@ public class TiS3Template {
     }
 
     /**
-     * 获取文件外链
+     * 获取文件预览链接
      *
      * @param bucket  存储桶
      * @param key     存储文件key
@@ -667,7 +681,7 @@ public class TiS3Template {
     }
 
     /**
-     * 获取预览链接
+     * 获取文件预览链接
      *
      * @param bucket   存储桶
      * @param key      存储文件key
@@ -697,7 +711,7 @@ public class TiS3Template {
     }
 
     /**
-     * 获取预览链接
+     * 获取文件下载链接
      *
      * @param bucket   存储桶
      * @param key      存储文件key
@@ -710,7 +724,7 @@ public class TiS3Template {
     }
 
     /**
-     * 获取预览链接
+     * 获取文件下载链接
      *
      * @param bucket   存储桶
      * @param key      存储文件key
