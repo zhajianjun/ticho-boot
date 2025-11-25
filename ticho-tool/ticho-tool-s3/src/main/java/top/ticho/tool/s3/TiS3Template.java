@@ -351,7 +351,6 @@ public class TiS3Template {
                 .contentType(contentType)
                 .build();
             UploadRequest uploadFileRequest = UploadRequest.builder()
-                .putObjectRequest(b -> b.bucket(bucket).key(key))
                 .putObjectRequest(putObjectRequest)
                 .requestBody(requestBody)
                 .build();
@@ -645,7 +644,7 @@ public class TiS3Template {
                 .build();
             return s3Client.listObjectsV2(request);
         } catch (Exception e) {
-            throw new TiBizException(TiBizErrorCode.FAIL, "查询文件信息异常", e);
+            throw new TiBizException(TiBizErrorCode.FAIL, "查询文件异常", e);
         }
     }
 
