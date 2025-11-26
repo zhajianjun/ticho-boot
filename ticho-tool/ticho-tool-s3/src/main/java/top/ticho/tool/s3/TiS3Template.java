@@ -78,6 +78,8 @@ import java.util.stream.Collectors;
 @Data
 @Slf4j
 public class TiS3Template {
+    private static final String ATTACHMENT_FILENAME = "attachment;filename=";
+
     private final TiS3Property tiS3Property;
     private final S3Client s3Client;
     private final S3Presigner s3Presigner;
@@ -741,7 +743,7 @@ public class TiS3Template {
             GetObjectRequest getObjectRequest = GetObjectRequest.builder()
                 .bucket(bucket)
                 .key(key)
-                .responseContentDisposition("attachment;filename=" + TiUrlUtil.encode(filaName))
+                .responseContentDisposition(ATTACHMENT_FILENAME + TiUrlUtil.encode(filaName))
                 .build();
             GetObjectPresignRequest request = GetObjectPresignRequest.builder()
                 .signatureDuration(Duration.ofSeconds(timeUnit.toSeconds(expires)))
