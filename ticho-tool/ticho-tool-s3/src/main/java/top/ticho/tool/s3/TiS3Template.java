@@ -40,7 +40,6 @@ import software.amazon.awssdk.services.s3.model.ListPartsResponse;
 import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.ObjectIdentifier;
-import software.amazon.awssdk.services.s3.model.Part;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.services.s3.model.S3Object;
@@ -87,17 +86,13 @@ public class TiS3Template {
     private final S3TransferManager s3TransferManager;
 
     public TiS3Template(TiS3Property tiS3Property) {
-        String endpoint = tiS3Property.getEndpoint();
-        String accessKey = tiS3Property.getAccessKey();
-        String secretKey = tiS3Property.getSecretKey();
-        Boolean pathStyleAccess = tiS3Property.getPathStyleAccess();
-        URI endpointOverride = URI.create(endpoint);
-        AwsBasicCredentials credentials = AwsBasicCredentials.create(accessKey, secretKey);
+        URI endpointOverride = URI.create(tiS3Property.getEndpoint());
+        AwsBasicCredentials credentials = AwsBasicCredentials.create(tiS3Property.getAccessKey(), tiS3Property.getSecretKey());
         Region region = Region.of(tiS3Property.getRegion());
         StaticCredentialsProvider credentialsProvider = StaticCredentialsProvider.create(credentials);
         S3Configuration s3Configuration = S3Configuration.builder()
             .chunkedEncodingEnabled(false)
-            .pathStyleAccessEnabled(pathStyleAccess)
+            .pathStyleAccessEnabled(tiS3Property.getPathStyleAccess())
             .build();
         this.tiS3Property = tiS3Property;
         this.s3Client = S3Client.builder()
@@ -482,15 +477,10 @@ public class TiS3Template {
                 .uploadId(uploadId)
                 .build();
             ListPartsResponse listPartsResponse = s3Client.listParts(listPartsRequest);
-            List<CompletedPart> completedParts = new ArrayList<>();
-            for (Part part : listPartsResponse.parts()) {
-                CompletedPart completedPart = CompletedPart.builder()
-                    .partNumber(part.partNumber())
-                    .eTag(part.eTag())
-                    .build();
-                completedParts.add(completedPart);
-            }
-            return completedParts;
+            return listPartsResponse.parts()
+                .stream()
+                .map(part -> CompletedPart.builder().partNumber(part.partNumber()).eTag(part.eTag()).build())
+                .collect(Collectors.toList());
         } catch (Exception e) {
             throw new TiBizException(TiBizErrorCode.FAIL, "获取已完成分片列表异常", e);
         }
