@@ -37,12 +37,12 @@ public class TiS3ChunkFileTest {
 
     public static String getDownloadUrl(String objectName) {
         String bucket = tiS3Template.getTiS3Property().getDefaultBucket();
-        return tiS3Template.getDownloadUrl(bucket, objectName, objectName, 60);
+        return tiS3Template.getDownloadUrl(bucket, objectName, objectName, 60L);
     }
 
     public static String getPreviewUrl(String objectName) {
         String bucket = tiS3Template.getTiS3Property().getDefaultBucket();
-        return tiS3Template.getPreviewUrl(bucket, objectName, 60);
+        return tiS3Template.getPreviewUrl(bucket, objectName, 60L);
     }
 
     public static void uploadText(String objectName) {
