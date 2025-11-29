@@ -16,7 +16,7 @@
         <spring-cloud.version>2024.0.1</spring-cloud.version>
         <spring-cloud-alibaba-dependencies.version>2023.0.3.2</spring-cloud-alibaba-dependencies.version>
         <!-- 其它的一些信息 -->
-        <amazon-s3.version>2.33.2</amazon-s3.version>
+        <amazon-s3.version>2.39.4</amazon-s3.version>
         <guava.version>33.4.8-jre</guava.version>
         <mybatis-plus.version>3.5.11</mybatis-plus.version>
         <pagehelper-spring-boot-starter.version>2.1.0</pagehelper-spring-boot-starter.version>
