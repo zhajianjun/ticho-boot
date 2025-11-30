@@ -1,9 +1,9 @@
 package top.ticho.generator.handler;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.core.config.Configurator;
 import org.slf4j.MDC;
+import tools.jackson.core.type.TypeReference;
 import top.ticho.generator.config.GlobalConfig;
 import top.ticho.generator.constant.CommConst;
 import top.ticho.generator.exception.GenerateException;

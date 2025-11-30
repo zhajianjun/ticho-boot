@@ -27,7 +27,6 @@
         <module>ticho-starter-cache</module>
         <module>ticho-starter-gateway</module>
         <module>ticho-starter-redisson</module>
-        <module>ticho-starter-es</module>
         <module>ticho-starter-health</module>
         <module>ticho-starter-transform</module>
         <module>ticho-starter-s3</module>

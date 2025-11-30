@@ -1,9 +1,9 @@
 package top.ticho.starter.rabbitmq.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.JacksonJsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * mq序列化修改
@@ -14,8 +14,8 @@ import org.springframework.context.annotation.Bean;
 public class TiMqMessageConverterConfig {
 
     @Bean
-    public MessageConverter jsonMessageConverter(ObjectMapper objectMapper) {
-        return new Jackson2JsonMessageConverter(objectMapper);
+    public MessageConverter jsonMessageConverter(JsonMapper jsonMapper) {
+        return new JacksonJsonMessageConverter(jsonMapper);
     }
 
 

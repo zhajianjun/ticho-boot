@@ -12,21 +12,22 @@
 
     <properties>
         <!-- spring-boot spring-cloud-alibaba 版本信息 -->
-        <spring-boot-starter.version>3.4.4</spring-boot-starter.version>
-        <spring-cloud.version>2024.0.1</spring-cloud.version>
-        <spring-cloud-alibaba-dependencies.version>2023.0.3.2</spring-cloud-alibaba-dependencies.version>
+        <spring-boot-starter.version>4.0.0</spring-boot-starter.version>
+        <spring-cloud.version>2025.1.0</spring-cloud.version>
+        <spring-cloud-alibaba-dependencies.version>2025.0.0.0</spring-cloud-alibaba-dependencies.version>
         <!-- 其它的一些信息 -->
         <amazon-s3.version>2.39.4</amazon-s3.version>
-        <guava.version>33.4.8-jre</guava.version>
-        <mybatis-plus.version>3.5.11</mybatis-plus.version>
-        <pagehelper-spring-boot-starter.version>2.1.0</pagehelper-spring-boot-starter.version>
+        <guava.version>33.5.0-jre</guava.version>
+        <!-- fixme -->
+        <mybatis-plus.version>3.5.15-SNAPSHOT</mybatis-plus.version>
+        <pagehelper.version>6.1.1</pagehelper.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <log4j.version>2.24.3</log4j.version>
         <!-- 9.22.3是最后一个全功能免费版 -->
         <flyway.version>10.5.0</flyway.version>
 
-        <jackson.version>2.18.3</jackson.version>
-
+        <!-- jackson依赖 -->
+        <jackson.version>3.0.2</jackson.version>
     </properties>
 
     <dependencyManagement>
@@ -106,12 +107,6 @@
             <dependency>
                 <groupId>top.ticho.starter</groupId>
                 <artifactId>ticho-starter-redisson</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>top.ticho.starter</groupId>
-                <artifactId>ticho-starter-es</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -236,6 +231,13 @@
                 <scope>import</scope>
             </dependency>
 
+            <!-- fixme -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-aop</artifactId>
+                <version>4.0.0-M1</version>
+            </dependency>
+
             <!-- SpringCloud Alibaba -->
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
@@ -261,49 +263,16 @@
             <!-- mybatis plus -->
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <artifactId>mybatis-plus-bom</artifactId>
                 <version>${mybatis-plus.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-annotation</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-extension</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-jsqlparser</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-                <version>${mybatis-plus.version}</version>
-            </dependency>
-
 
             <dependency>
                 <groupId>com.github.pagehelper</groupId>
-                <artifactId>pagehelper-spring-boot-starter</artifactId>
-                <version>${pagehelper-spring-boot-starter.version}</version>
-                <!--使用spring boot2整合 pagehelper-spring-boot-starter必须排除一下依赖
-                    因为pagehelper-spring-boot-starter也已经在pom依赖了mybatis与mybatis-spring
-                    所以会与mybatis-plus-boot-starter中的mybatis与mybatis-spring发生冲突
-                -->
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.mybatis</groupId>
-                        <artifactId>mybatis</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.mybatis</groupId>
-                        <artifactId>mybatis-spring</artifactId>
-                    </exclusion>
-                </exclusions>
+                <artifactId>pagehelper</artifactId>
+                <version>${pagehelper.version}</version>
             </dependency>
 
             <!-- 对象拷贝工具 -->
@@ -352,13 +321,6 @@
                 <groupId>com.github.ulisesbocchio</groupId>
                 <artifactId>jasypt-spring-boot-starter</artifactId>
                 <version>3.0.5</version>
-            </dependency>
-
-            <!-- https://mvnrepository.com/artifact/cn.easy-es/easy-es-boot-starter -->
-            <dependency>
-                <groupId>cn.easy-es</groupId>
-                <artifactId>easy-es-boot-starter</artifactId>
-                <version>2.0.0-beta1</version>
             </dependency>
 
             <dependency>

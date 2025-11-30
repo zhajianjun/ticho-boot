@@ -1,21 +1,18 @@
 package top.ticho.starter.transform.serializer;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.BeanProperty;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.ser.ContextualSerializer;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import lombok.Setter;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.BeanProperty;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueSerializer;
+import tools.jackson.databind.ser.std.StdSerializer;
 import top.ticho.starter.transform.annotation.TiDesensitized;
 import top.ticho.starter.transform.enums.TiDesensitizedType;
 import top.ticho.tool.core.TiClassUtil;
 import top.ticho.tool.core.TiDesensitizedUtil;
 import top.ticho.tool.core.TiStrUtil;
 import top.ticho.tool.core.constant.TiStrConst;
-
-import java.io.IOException;
 
 /**
  * 脱敏序列化器
@@ -24,7 +21,7 @@ import java.io.IOException;
  * @date 2025-03-21 21:44
  */
 @Setter
-public class TiDesensitizedSerializer extends StdSerializer<Object> implements ContextualSerializer {
+public class TiDesensitizedSerializer extends StdSerializer<Object> {
 
     private TiDesensitized tiDesensitized;
 
@@ -36,13 +33,12 @@ public class TiDesensitizedSerializer extends StdSerializer<Object> implements C
      * 根据上下文创建适当的JsonSerializer实例。
      * 该方法用于在序列化过程中根据Bean属性的类型和注解动态选择或创建序列化器。
      *
-     * @param serializerProvider 提供序列化器的上下文环境，用于查找或创建序列化器。
-     * @param beanProperty       当前正在处理的Bean属性，包含属性的类型和注解信息。
+     * @param context      提供序列化器的上下文环境，用于查找或创建序列化器。
+     * @param beanProperty 当前正在处理的Bean属性，包含属性的类型和注解信息。
      * @return 返回一个适合当前属性的JsonSerializer实例。如果属性为null，则返回null值的序列化器。
-     * @throws JsonMappingException 如果在创建或查找序列化器过程中发生错误。
      */
     @Override
-    public JsonSerializer<Object> createContextual(SerializerProvider serializerProvider, BeanProperty beanProperty) throws JsonMappingException {
+    public ValueSerializer<Object> createContextual(SerializationContext context, BeanProperty beanProperty) {
         // 检查beanProperty是否为null，如果为null则直接返回null值的序列化器
         if (beanProperty != null) {
             // 获取属性的原始类型
@@ -63,19 +59,19 @@ public class TiDesensitizedSerializer extends StdSerializer<Object> implements C
                 }
             }
             // 如果没有找到TiDesensitized注解，则返回默认的序列化器
-            return serializerProvider.findValueSerializer(beanProperty.getType(), beanProperty);
+            return context.findValueSerializer(beanProperty.getType());
         }
-        return serializerProvider.findNullValueSerializer(null);
+        return context.findNullValueSerializer(null);
     }
 
     @Override
-    public void serialize(Object value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+    public void serialize(Object value, JsonGenerator gen, SerializationContext context) throws JacksonException {
         if (tiDesensitized == null || value == null) {
-            gen.writeObject(value);
+            gen.writePOJO(value);
             return;
         }
         String render = desensitized(value.toString(), tiDesensitized);
-        gen.writeObject(render);
+        gen.writePOJO(render);
     }
 
     public static String desensitized(String str, TiDesensitized tiDesensitized) {

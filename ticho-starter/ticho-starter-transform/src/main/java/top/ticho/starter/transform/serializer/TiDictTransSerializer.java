@@ -1,18 +1,16 @@
 package top.ticho.starter.transform.serializer;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.BeanProperty;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.ser.ContextualSerializer;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import lombok.Setter;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.BeanProperty;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueSerializer;
+import tools.jackson.databind.ser.std.StdSerializer;
 import top.ticho.starter.transform.annotation.TiDictTrans;
 import top.ticho.starter.transform.factory.TiDictTransFactory;
 import top.ticho.tool.core.TiClassUtil;
 
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -22,7 +20,7 @@ import java.util.Map;
  * @date 2025-03-24 22:15
  */
 @Setter
-public class TiDictTransSerializer extends StdSerializer<Object> implements ContextualSerializer {
+public class TiDictTransSerializer extends StdSerializer<Object> {
     private Map<String, String> dictMap;
 
     public TiDictTransSerializer() {
@@ -30,7 +28,7 @@ public class TiDictTransSerializer extends StdSerializer<Object> implements Cont
     }
 
     @Override
-    public JsonSerializer<?> createContextual(SerializerProvider serializerProvider, BeanProperty beanProperty) throws JsonMappingException {
+    public ValueSerializer<?> createContextual(SerializationContext context, BeanProperty beanProperty) {
         // 检查beanProperty是否为null，如果为null则直接返回null值的序列化器
         if (beanProperty != null) {
             // 获取属性的原始类型
@@ -49,25 +47,24 @@ public class TiDictTransSerializer extends StdSerializer<Object> implements Cont
                 }
             }
             // 如果没有找到TiDictTrans注解，则返回默认的序列化器
-            return serializerProvider.findValueSerializer(beanProperty.getType(), beanProperty);
+            return context.findValueSerializer(beanProperty.getType());
         }
-        return serializerProvider.findNullValueSerializer(null);
+        return context.findNullValueSerializer(null);
     }
 
     @Override
-    public void serialize(Object value, JsonGenerator gen, SerializerProvider provider) throws IOException {
+    public void serialize(Object value, JsonGenerator gen, SerializationContext context) throws JacksonException {
         if (value == null) {
             gen.writeNull();
             return;
         }
         // 添加类型检查
         if (!(value instanceof String)) {
-            gen.writeObject(value);
+            gen.writePOJO(value);
             return;
         }
         String valueStr = value.toString();
-        gen.writeObject(dictMap.getOrDefault(valueStr, valueStr));
-
+        gen.writePOJO(dictMap.getOrDefault(valueStr, valueStr));
     }
 
 }

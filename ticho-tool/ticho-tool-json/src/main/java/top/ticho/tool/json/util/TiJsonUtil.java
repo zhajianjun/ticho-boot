@@ -1,35 +1,25 @@
 package top.ticho.tool.json.util;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.Module;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.node.NullNode;
-import com.fasterxml.jackson.dataformat.javaprop.JavaPropsFactory;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
-import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tools.jackson.core.json.JsonReadFeature;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.JavaType;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.SerializationFeature;
+import tools.jackson.databind.cfg.MapperBuilder;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.node.NullNode;
+import tools.jackson.dataformat.javaprop.JavaPropsMapper;
+import tools.jackson.dataformat.yaml.YAMLMapper;
+import tools.jackson.datatype.jsr310.JavaTimeModule;
 import top.ticho.tool.json.constant.TiDateFormatConst;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -44,61 +34,60 @@ import java.util.Objects;
  */
 public class TiJsonUtil {
     private static final Logger log = LoggerFactory.getLogger(TiJsonUtil.class);
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-    private static final ObjectMapper MAPPER_YAML = new ObjectMapper(new YAMLFactory());
-    private static final ObjectMapper MAPPER_PROPERTY = new ObjectMapper(new JavaPropsFactory());
+    private static final JsonMapper MAPPER;
+    private static final YAMLMapper MAPPER_YAML;
+    private static final JavaPropsMapper MAPPER_PROPERTY;
 
     private TiJsonUtil() {
     }
 
     static {
-        setConfig(MAPPER);
-        setConfig(MAPPER_YAML);
-        setConfig(MAPPER_PROPERTY);
+        JsonMapper.Builder jsonBuilder = JsonMapper.builder();
+        YAMLMapper.Builder yamlBuilder = YAMLMapper.builder();
+        JavaPropsMapper.Builder propsBuilder = JavaPropsMapper.builder();
+        setJsonConfig(jsonBuilder);
+        setConfig(yamlBuilder);
+        setConfig(propsBuilder);
+        MAPPER = jsonBuilder.build();
+        MAPPER_YAML = yamlBuilder.build();
+        MAPPER_PROPERTY = propsBuilder.build();
+
     }
 
-    /**
-     * 注册模块（谨慎使用）
-     *
-     * @param module 模块
-     */
-    public static void registerModule(Module module) {
-        MAPPER.registerModule(module);
-        MAPPER_YAML.registerModule(module);
-        MAPPER_PROPERTY.registerModule(module);
-    }
-
-    public static void setConfig(ObjectMapper objectMapper) {
-        // 反序列化 默认遇到未知属性去时会抛一个JsonMappingException,所以关闭
-        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-
-        /* 这个特性决定parser是否将允许使用非双引号属性名字， （这种形式在Javascript中被允许，但是JSON标准说明书中没有）。
-         * 注意：由于JSON标准上需要为属性名称使用双引号，所以这也是一个非标准特性，默认是false的。
-         * 同样，需要设置JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES为true，打开该特性。
-         */
-        objectMapper.enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES);
+    public static void setJsonConfig(JsonMapper.Builder jsonBuilder) {
         /*
          * 这个特性决定parser是否将允许使用非双引号属性名字， （这种形式在Javascript中被允许，但是JSON标准说明书中没有）。
          * 注意：由于JSON标准上需要为属性名称使用双引号，所以这也是一个非标准特性，默认是false的。
          * 同样，需要设置JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES为true，打开该特性。
          */
-        objectMapper.enable(JsonParser.Feature.ALLOW_SINGLE_QUOTES);
+        jsonBuilder.enable(JsonReadFeature.ALLOW_SINGLE_QUOTES);
+        setConfig(jsonBuilder);
+    }
+
+    public static <M extends ObjectMapper, B extends MapperBuilder<M, B>> void setConfig(MapperBuilder<M, B> builder) {
+        // 反序列化 默认遇到未知属性去时会抛一个JsonMappingException,所以关闭
+        builder.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+
+        /* 这个特性决定parser是否将允许使用非双引号属性名字， （这种形式在Javascript中被允许，但是JSON标准说明书中没有）。
+         * 注意：由于JSON标准上需要为属性名称使用双引号，所以这也是一个非标准特性，默认是false的。
+         * 同样，需要设置JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES为true，打开该特性。
+         */
+        // builder.enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES);
         // 取消timestamps形式
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        // builder.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         // 忽略无法转换的对象
-        objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        builder.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        // 反序列化配置：允许 null 值赋给基本类型（不抛异常）
+        builder.disable(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES);
         // Jackson 将接受单个值作为数组。
-        objectMapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
-        objectMapper.setSerializationInclusion(JsonInclude.Include.ALWAYS);
-        objectMapper.setDateFormat(new SimpleDateFormat(TiDateFormatConst.YYYY_MM_DD_HH_MM_SS));
-        JavaTimeModule javaTimeModule = new JavaTimeModule();
-        javaTimeModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(TiDateFormatConst.YYYY_MM_DD_HH_MM_SS)));
-        javaTimeModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(TiDateFormatConst.YYYY_MM_DD)));
-        javaTimeModule.addSerializer(LocalTime.class, new LocalTimeSerializer(DateTimeFormatter.ofPattern(TiDateFormatConst.HH_MM_SS)));
-        javaTimeModule.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(TiDateFormatConst.YYYY_MM_DD_HH_MM_SS)));
-        javaTimeModule.addDeserializer(LocalDate.class, new LocalDateDeserializer(DateTimeFormatter.ofPattern(TiDateFormatConst.YYYY_MM_DD)));
-        javaTimeModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern(TiDateFormatConst.HH_MM_SS)));
-        objectMapper.registerModule(javaTimeModule).registerModule(new ParameterNamesModule());
+        builder.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
+        builder.changeDefaultPropertyInclusion(value -> value.withValueInclusion(JsonInclude.Include.ALWAYS));
+        builder.defaultDateFormat(new SimpleDateFormat(TiDateFormatConst.YYYY_MM_DD_HH_MM_SS));
+        builder.addModule(new JavaTimeModule());
+        // 注册JSR-310模块
+        // builder.addModule(new Java8());
+        // 注册参数名模块（需要编译时加上-parameters参数）
+        // builder.addModule(new ParameterNamesModule());
     }
 
     /**

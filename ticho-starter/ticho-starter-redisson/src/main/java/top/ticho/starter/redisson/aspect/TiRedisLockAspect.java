@@ -42,7 +42,8 @@ public class TiRedisLockAspect {
         if (lockKey > 0) {
             key += params[lockKey - 1];
         }
-        return tiRedissonTemplate.executeTb(key, expireTime, delayThread, joinPoint::proceed);
+        // return tiRedissonTemplate.executeTb(key, expireTime, delayThread, joinPoint::proceed);
+        return null;
     }
 
 }

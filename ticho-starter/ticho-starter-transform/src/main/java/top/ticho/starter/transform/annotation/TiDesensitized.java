@@ -1,7 +1,7 @@
 package top.ticho.starter.transform.annotation;
 
 import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import tools.jackson.databind.annotation.JsonSerialize;
 import top.ticho.starter.transform.enums.TiDesensitizedType;
 import top.ticho.starter.transform.serializer.TiDesensitizedSerializer;
 

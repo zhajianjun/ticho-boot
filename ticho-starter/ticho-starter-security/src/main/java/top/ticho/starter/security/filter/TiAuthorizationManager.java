@@ -2,11 +2,13 @@ package top.ticho.starter.security.filter;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.AuthorizationManager;
+import org.springframework.security.authorization.AuthorizationResult;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import top.ticho.starter.security.auth.TiAntPatternsAuthHandle;
@@ -35,7 +37,7 @@ public class TiAuthorizationManager implements AuthorizationManager<RequestAutho
      * configAttributes 为MyInvocationSecurityMetadataSource的getAttributes(Object object)这个方法返回的结果，此方法是为了判定用户请求的url 是否在权限表中，如果在权限表中，则返回给 decide 方法，用来判定用户是否有此权限。如果不在权限表中则放行。
      */
     @Override
-    public AuthorizationDecision check(Supplier<Authentication> authentication, RequestAuthorizationContext object) {
+    public AuthorizationResult authorize(@NonNull Supplier<? extends Authentication> authentication, @NonNull RequestAuthorizationContext object) {
         HttpServletRequest request = object.getRequest();
         if (tiAntPatternsAuthHandle.ignoreAuth(request) || isGranted(authentication.get())) {
             return new AuthorizationDecision(true);
