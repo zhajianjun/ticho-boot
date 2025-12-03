@@ -5,7 +5,7 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.ReturnedMessage;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.JacksonJsonMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
@@ -38,7 +38,7 @@ public class TiRabbitmqConfig implements RabbitTemplate.ConfirmCallback, RabbitT
     public void init() {
         rabbitTemplate.setConfirmCallback(this);
         rabbitTemplate.setReturnsCallback(this);
-        rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter());
+        rabbitTemplate.setMessageConverter(new JacksonJsonMessageConverter());
     }
 
 
