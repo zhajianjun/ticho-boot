@@ -1,7 +1,25 @@
 package top.ticho.starter.web.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.jackson.autoconfigure.JsonMapperBuilderCustomizer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import tools.jackson.databind.ext.javatime.deser.LocalTimeDeserializer;
+import tools.jackson.databind.ext.javatime.ser.LocalDateSerializer;
+import tools.jackson.databind.ext.javatime.ser.LocalDateTimeSerializer;
+import tools.jackson.databind.ext.javatime.ser.LocalTimeSerializer;
+import tools.jackson.databind.module.SimpleModule;
+import tools.jackson.databind.ser.std.ToStringSerializer;
+import tools.jackson.datatype.jsr310.JavaTimeModule;
+import top.ticho.starter.web.converter.TiLocalDateDeserializer;
+import top.ticho.starter.web.converter.TiLocalDateTimeDeserializer;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * RequestBody格式化
@@ -20,27 +38,29 @@ public class TiJacksonCustomizerConfig {
     @Value("${spring.jackson.local-time-format:HH:mm:ss}")
     private String localTimePattern;
 
-    // fixme
-    // @Bean
-    // public Jackson2ObjectMapperBuilderCustomizer jackson2ObjectMapperBuilderCustomizer() {
-    //     return builder -> {
-    //         builder.serializerByType(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(localDateTimePattern)));
-    //         builder.deserializerByType(LocalDateTime.class, new TiLocalDateTimeDeserializer(DateTimeFormatter.ofPattern(localDateTimePattern)));
-    //
-    //         builder.serializerByType(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(localDatePattern)));
-    //         builder.deserializerByType(LocalDate.class, new TiLocalDateDeserializer(DateTimeFormatter.ofPattern(localDatePattern)));
-    //
-    //         builder.serializerByType(LocalTime.class, new LocalTimeSerializer(DateTimeFormatter.ofPattern(localTimePattern)));
-    //         builder.deserializerByType(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern(localTimePattern)));
-    //
-    //         /*
-    //          * Jackson全局转化long类型为String,解决jackson序列化时传入前端Long类型缺失精度问题
-    //          */
-    //         builder.serializerByType(BigInteger.class, ToStringSerializer.instance);
-    //         builder.serializerByType(BigDecimal.class, ToStringSerializer.instance);
-    //         builder.serializerByType(Long.class, ToStringSerializer.instance);
-    //         builder.serializerByType(Long.TYPE, ToStringSerializer.instance);
-    //     };
-    // }
+    @Bean
+    public JsonMapperBuilderCustomizer jsonMapperBuilderCustomizer() {
+        return builder -> {
+            SimpleModule simpleModule = new SimpleModule();
+            simpleModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(localDateTimePattern)));
+            simpleModule.addDeserializer(LocalDateTime.class, new TiLocalDateTimeDeserializer(DateTimeFormatter.ofPattern(localDateTimePattern)));
+
+            simpleModule.addSerializer(LocalDate.class, new LocalDateSerializer(DateTimeFormatter.ofPattern(localDatePattern)));
+            simpleModule.addDeserializer(LocalDate.class, new TiLocalDateDeserializer(DateTimeFormatter.ofPattern(localDatePattern)));
+
+            simpleModule.addSerializer(LocalTime.class, new LocalTimeSerializer(DateTimeFormatter.ofPattern(localTimePattern)));
+            simpleModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer(DateTimeFormatter.ofPattern(localTimePattern)));
+
+            /*
+             * Jackson全局转化long类型为String,解决jackson序列化时传入前端Long类型缺失精度问题
+             */
+            simpleModule.addSerializer(BigInteger.class, ToStringSerializer.instance);
+            simpleModule.addSerializer(BigDecimal.class, ToStringSerializer.instance);
+            simpleModule.addSerializer(Long.class, ToStringSerializer.instance);
+            simpleModule.addSerializer(Long.TYPE, ToStringSerializer.instance);
+            builder.addModule(new JavaTimeModule());
+            builder.addModule(simpleModule);
+        };
+    }
 
 }
