@@ -18,8 +18,7 @@
         <!-- 其它的一些信息 -->
         <amazon-s3.version>2.39.4</amazon-s3.version>
         <guava.version>33.5.0-jre</guava.version>
-        <!-- fixme -->
-        <mybatis-plus.version>3.5.15-SNAPSHOT</mybatis-plus.version>
+        <mybatis-plus.version>3.5.15</mybatis-plus.version>
         <pagehelper.version>6.1.1</pagehelper.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <log4j.version>2.24.3</log4j.version>
