@@ -20,6 +20,7 @@
         <guava.version>33.5.0-jre</guava.version>
         <mybatis-plus.version>3.5.15</mybatis-plus.version>
         <pagehelper.version>6.1.1</pagehelper.version>
+        <pagehelper-spring-boot-starter.version>2.1.1</pagehelper-spring-boot-starter.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <log4j.version>2.24.3</log4j.version>
         <!-- 9.22.3是最后一个全功能免费版 -->
@@ -273,6 +274,12 @@
                 <groupId>com.github.pagehelper</groupId>
                 <artifactId>pagehelper</artifactId>
                 <version>${pagehelper.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${pagehelper-spring-boot-starter.version}</version>
             </dependency>
 
             <!-- 对象拷贝工具 -->
