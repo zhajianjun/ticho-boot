@@ -39,7 +39,9 @@ public class TiMybatisPlusConfig {
     @Bean
     @ConditionalOnMissingBean(PaginationInnerInterceptor.class)
     public PaginationInnerInterceptor paginationInnerInterceptor() {
-        return new PaginationInnerInterceptor(DbType.MYSQL);
+        PaginationInnerInterceptor interceptor = new PaginationInnerInterceptor(DbType.MYSQL);
+        interceptor.setOverflow(false);
+        return interceptor;
     }
 
     /**
