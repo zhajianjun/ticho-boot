@@ -1,8 +1,6 @@
 package top.ticho.starter.datasource.util;
 
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import top.ticho.starter.view.core.TiPageQuery;
@@ -10,7 +8,6 @@ import top.ticho.starter.view.core.TiPageResult;
 
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -21,20 +18,6 @@ import java.util.stream.Collectors;
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TiPageUtil {
-
-    public static <T, R> TiPageResult<R> page(Supplier<List<T>> supplier, TiPageQuery query, Function<T, R> function) {
-        query.checkPage();
-        Page<T> page = PageHelper.startPage(query.getPageNum(), query.getPageSize(), query.getCount());
-        page.doSelectPage(supplier::get);
-        return of(page, function);
-    }
-
-    public static <T> TiPageResult<T> page(Supplier<List<T>> supplier, TiPageQuery query) {
-        query.checkPage();
-        Page<T> page = PageHelper.startPage(query.getPageNum(), query.getPageSize(), query.getCount());
-        page.doSelectPage(supplier::get);
-        return of(page);
-    }
 
     public static <T> TiPageResult<T> of(Number pageNum, Number pageSize, Number total, List<T> rows) {
         return new TiPageResult<>(pageNum, pageSize, total, rows);
@@ -50,47 +33,7 @@ public class TiPageUtil {
         return target;
     }
 
-    public static <T> TiPageResult<T> of(Page<T> page) {
-        TiPageResult<T> tiPageResult = new TiPageResult<>();
-        tiPageResult.setPageNum(page.getPageNum());
-        tiPageResult.setPageSize(page.getPageSize());
-        tiPageResult.setPages(page.getPages());
-        tiPageResult.setTotal(Long.valueOf(page.getTotal()).intValue());
-        tiPageResult.setRows(page.getResult());
-        return tiPageResult;
-    }
-
-    public static <T, R> TiPageResult<R> of(Page<T> page, Function<T, R> function) {
-        TiPageResult<R> tiPageResult = new TiPageResult<>();
-        tiPageResult.setPageNum(page.getPageNum());
-        tiPageResult.setPageSize(page.getPageSize());
-        tiPageResult.setPages(page.getPages());
-        tiPageResult.setTotal(Long.valueOf(page.getTotal()).intValue());
-        tiPageResult.setRows(page.getResult().stream().map(function).collect(Collectors.toList()));
-        return tiPageResult;
-    }
-
-    public static <T> TiPageResult<T> of(PageInfo<T> page) {
-        TiPageResult<T> tiPageResult = new TiPageResult<>();
-        tiPageResult.setPageNum(page.getPageNum());
-        tiPageResult.setPageSize(page.getPageSize());
-        tiPageResult.setPages(page.getPages());
-        tiPageResult.setTotal(Long.valueOf(page.getTotal()).intValue());
-        tiPageResult.setRows(page.getList());
-        return tiPageResult;
-    }
-
-    public static <T, R> TiPageResult<R> of(PageInfo<T> page, Function<T, R> function) {
-        TiPageResult<R> tiPageResult = new TiPageResult<>();
-        tiPageResult.setPageNum(page.getPageNum());
-        tiPageResult.setPageSize(page.getPageSize());
-        tiPageResult.setPages(page.getPages());
-        tiPageResult.setTotal(Long.valueOf(page.getTotal()).intValue());
-        tiPageResult.setRows(page.getList().stream().map(function).collect(Collectors.toList()));
-        return tiPageResult;
-    }
-
-    public static <T> TiPageResult<T> of(com.baomidou.mybatisplus.extension.plugins.pagination.Page<T> page) {
+    public static <T> TiPageResult<T> of(IPage<T> page) {
         TiPageResult<T> tiPageResult = new TiPageResult<>();
         tiPageResult.setPageNum(Long.valueOf(page.getCurrent()).intValue());
         tiPageResult.setPageSize(Long.valueOf(page.getSize()).intValue());
@@ -100,7 +43,7 @@ public class TiPageUtil {
         return tiPageResult;
     }
 
-    public static <T, R> TiPageResult<R> of(com.baomidou.mybatisplus.extension.plugins.pagination.Page<T> page, Function<T, R> function) {
+    public static <T, R> TiPageResult<R> of(IPage<T> page, Function<T, R> function) {
         TiPageResult<R> tiPageResult = new TiPageResult<>();
         tiPageResult.setPageNum(Long.valueOf(page.getCurrent()).intValue());
         tiPageResult.setPageSize(Long.valueOf(page.getSize()).intValue());
