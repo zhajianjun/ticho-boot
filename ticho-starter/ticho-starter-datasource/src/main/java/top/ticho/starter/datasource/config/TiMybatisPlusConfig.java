@@ -1,9 +1,8 @@
 package top.ticho.starter.datasource.config;
 
-import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,18 +25,15 @@ import top.ticho.starter.datasource.injector.TiSqlInjector;
 public class TiMybatisPlusConfig {
 
     /**
-     * 添加分页插件
+     * Mybatis Plus 拦截器处理
      */
     @Bean
     @ConditionalOnMissingBean(MybatisPlusInterceptor.class)
-    public MybatisPlusInterceptor mybatisPlusInterceptor() {
-        // 1.创建MybatisPlusInterceptor拦截器对象
+    public MybatisPlusInterceptor mybatisPlusInterceptor(ObjectProvider<InnerInterceptor> innerInterceptorsProvider) {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
-        // 分页拦截器，如果配置多个插件, 切记分页最后添加
-        interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
-        // 乐观锁拦截器
-        interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());
-        // 如果有多数据源可以不配具体类型, 否则都建议配上具体的 DbType
+        for (InnerInterceptor innerInterceptor : innerInterceptorsProvider) {
+            interceptor.addInnerInterceptor(innerInterceptor);
+        }
         return interceptor;
     }
 
