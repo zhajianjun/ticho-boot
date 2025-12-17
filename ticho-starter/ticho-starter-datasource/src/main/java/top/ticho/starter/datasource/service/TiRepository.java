@@ -1,10 +1,16 @@
 package top.ticho.starter.datasource.service;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.transaction.annotation.Transactional;
+import top.ticho.starter.datasource.mapper.TiMapper;
+import top.ticho.starter.datasource.util.TiPageUtil;
+import top.ticho.starter.view.core.TiPageQuery;
+import top.ticho.starter.view.core.TiPageResult;
 
 import java.util.Collection;
+import java.util.function.Function;
 
 /**
  * TiRepository
@@ -63,6 +69,33 @@ public interface TiRepository<T> extends IService<T> {
 
     default boolean saveOrUpdate(T entity, Wrapper<T> updateWrapper) {
         return this.saveOrUpdate(entity);
+    }
+
+    TiMapper<T> getTiMapper();
+
+    /**
+     * 分页查询
+     *
+     * @param query        分页参数
+     * @param queryWrapper 查询条件
+     */
+    default <M extends TiPageQuery> TiPageResult<T> page(M query, Wrapper<T> queryWrapper) {
+        Page<T> page = new Page<>(query.getPageNum(), query.getPageSize(), query.getCount());
+        getTiMapper().selectPage(query, queryWrapper);
+        return TiPageUtil.of(page);
+    }
+
+    /**
+     * 分页查询
+     *
+     * @param query        分页参数
+     * @param queryWrapper 查询条件
+     * @param mapping      转换
+     */
+    default <M extends TiPageQuery, N> TiPageResult<N> page(M query, Wrapper<T> queryWrapper, Function<T, N> mapping) {
+        Page<T> page = new Page<>(query.getPageNum(), query.getPageSize(), query.getCount());
+        getTiMapper().selectPage(query, queryWrapper, mapping);
+        return TiPageUtil.of(page, mapping);
     }
 
 }
