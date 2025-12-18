@@ -170,4 +170,9 @@ public class TiRepositoryImpl<M extends TiMapper<T>, T> extends ServiceImpl<M, T
         return total == entityList.size();
     }
 
+    @Override
+    public TiMapper<T> getTiMapper() {
+        return baseMapper;
+    }
+
 }
