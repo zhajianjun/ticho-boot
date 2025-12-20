@@ -276,18 +276,6 @@
                 <scope>import</scope>
             </dependency>
 
-            <dependency>
-                <groupId>com.github.pagehelper</groupId>
-                <artifactId>pagehelper</artifactId>
-                <version>${pagehelper.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.github.pagehelper</groupId>
-                <artifactId>pagehelper-spring-boot-starter</artifactId>
-                <version>${pagehelper-spring-boot-starter.version}</version>
-            </dependency>
-
             <!-- 对象拷贝工具 -->
             <dependency>
                 <groupId>org.mapstruct</groupId>
