@@ -254,13 +254,6 @@
                 <version>2.14.0</version>
             </dependency>
 
-            <!-- druid 数据源 -->
-            <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>druid-spring-boot-starter</artifactId>
-                <version>1.2.8</version>
-            </dependency>
-
             <!-- mybatis plus -->
             <dependency>
                 <groupId>com.baomidou</groupId>
