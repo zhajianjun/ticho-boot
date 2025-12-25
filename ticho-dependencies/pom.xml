@@ -12,7 +12,7 @@
 
     <properties>
         <!-- spring-boot spring-cloud-alibaba 版本信息 -->
-        <spring-boot-starter.version>4.0.0</spring-boot-starter.version>
+        <spring-boot-starter.version>4.0.1</spring-boot-starter.version>
         <spring-cloud.version>2025.1.0</spring-cloud.version>
         <spring-cloud-alibaba-dependencies.version>2025.0.0.0</spring-cloud-alibaba-dependencies.version>
         <!-- 其它的一些信息 -->
