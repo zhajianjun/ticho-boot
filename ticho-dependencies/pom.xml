@@ -21,7 +21,7 @@
         <mybatis-plus.version>3.5.15</mybatis-plus.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <slf4j-api.version>2.0.9</slf4j-api.version>
-        <log4j.version>2.24.3</log4j.version>
+        <log4j.version>2.25.3</log4j.version>
         <!-- 9.22.3是最后一个全功能免费版 -->
         <flyway.version>10.5.0</flyway.version>
 
