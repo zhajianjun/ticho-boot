@@ -18,6 +18,7 @@
         <module>ticho-tool-template</module>
         <module>ticho-tool-valid</module>
         <module>ticho-tool-s3</module>
+        <module>ticho-tool-security</module>
     </modules>
 
     <dependencyManagement>
