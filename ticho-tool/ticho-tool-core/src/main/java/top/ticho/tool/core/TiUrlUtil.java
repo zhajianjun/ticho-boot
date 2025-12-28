@@ -1,6 +1,6 @@
 package top.ticho.tool.core;
 
-import top.ticho.tool.core.exception.TiSysException;
+import top.ticho.tool.core.exception.TiUtilException;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,7 +19,7 @@ public class TiUrlUtil {
         try {
             return new URI(TiStrUtil.trim(location));
         } catch (URISyntaxException e) {
-            throw new TiSysException(e);
+            throw new TiUtilException(e);
         }
     }
 

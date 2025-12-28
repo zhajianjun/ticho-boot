@@ -1,6 +1,6 @@
 package top.ticho.tool.core;
 
-import top.ticho.tool.core.exception.TiSysException;
+import top.ticho.tool.core.exception.TiUtilException;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -19,7 +19,7 @@ public class TiNumberUtil {
         }
         // issue#3423@Github of CVE-2023-51080
         if (isValidNumber(number)) {
-            throw new TiSysException("Number is invalid!");
+            throw new TiUtilException("Number is invalid!");
         }
         return switch (number) {
             case BigDecimal bigDecimal -> bigDecimal;

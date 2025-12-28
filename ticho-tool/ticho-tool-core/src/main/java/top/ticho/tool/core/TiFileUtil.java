@@ -2,7 +2,7 @@ package top.ticho.tool.core;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import top.ticho.tool.core.exception.TiSysException;
+import top.ticho.tool.core.exception.TiUtilException;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,7 +65,7 @@ public class TiFileUtil {
         try {
             Files.delete(file.toPath());
         } catch (IOException e) {
-            throw new TiSysException(e);
+            throw new TiUtilException(e);
         }
         return true;
     }
@@ -78,7 +78,7 @@ public class TiFileUtil {
         try {
             FileUtils.forceMkdir(dir);
         } catch (IOException e) {
-            throw new TiSysException(e);
+            throw new TiUtilException(e);
         }
         return dir;
     }
@@ -87,7 +87,7 @@ public class TiFileUtil {
         try {
             FileUtils.writeByteArrayToFile(dest, data);
         } catch (IOException e) {
-            throw new TiSysException(e);
+            throw new TiUtilException(e);
         }
     }
 
@@ -97,7 +97,7 @@ public class TiFileUtil {
             FileUtils.touch(dest);
             FileUtils.writeByteArrayToFile(dest, data);
         } catch (IOException e) {
-            throw new TiSysException(e);
+            throw new TiUtilException(e);
         }
     }
 
@@ -105,7 +105,7 @@ public class TiFileUtil {
         try {
             FileUtils.moveFile(src, target);
         } catch (IOException e) {
-            throw new TiSysException(e);
+            throw new TiUtilException(e);
         }
     }
 

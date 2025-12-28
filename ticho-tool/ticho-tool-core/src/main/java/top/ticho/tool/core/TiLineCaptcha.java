@@ -1,6 +1,6 @@
 package top.ticho.tool.core;
 
-import top.ticho.tool.core.exception.TiSysException;
+import top.ticho.tool.core.exception.TiUtilException;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -224,7 +224,7 @@ public class TiLineCaptcha {
             ImageIO.write(buffImg, "png", baos);
             return baos.toByteArray();
         } catch (IOException e) {
-            throw new TiSysException(e);
+            throw new TiUtilException(e);
         }
     }
 
