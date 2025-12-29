@@ -21,7 +21,7 @@ public class TiBase64Util {
         return new String(encode, StandardCharsets.UTF_8);
     }
 
-    public static String encode(String source) {
+    public static String encode(CharSequence source) {
         byte[] encodeAsBytes = encodeAsBytes(source);
         if (Objects.isNull(encodeAsBytes)) {
             return null;
@@ -29,7 +29,7 @@ public class TiBase64Util {
         return new String(encodeAsBytes, StandardCharsets.UTF_8);
     }
 
-    public static String decode(String source) {
+    public static String decode(CharSequence source) {
         byte[] decodeAsBytes = decodeAsBytes(source);
         if (Objects.isNull(decodeAsBytes)) {
             return null;
@@ -37,18 +37,25 @@ public class TiBase64Util {
         return new String(decodeAsBytes, StandardCharsets.UTF_8);
     }
 
-    public static byte[] encodeAsBytes(String source) {
-        if (TiStrUtil.isEmpty(source)) {
+    public static byte[] decode(byte[] source) {
+        if (Objects.isNull(source)) {
             return null;
         }
-        return Base64.getEncoder().encode(source.getBytes(StandardCharsets.UTF_8));
+        return Base64.getDecoder().decode(source);
     }
 
-    public static byte[] decodeAsBytes(String source) {
+    public static byte[] encodeAsBytes(CharSequence source) {
         if (TiStrUtil.isEmpty(source)) {
             return null;
         }
-        return Base64.getDecoder().decode(source.getBytes(StandardCharsets.UTF_8));
+        return Base64.getEncoder().encode(source.toString().getBytes(StandardCharsets.UTF_8));
+    }
+
+    public static byte[] decodeAsBytes(CharSequence source) {
+        if (TiStrUtil.isEmpty(source)) {
+            return null;
+        }
+        return Base64.getDecoder().decode(source.toString().getBytes(StandardCharsets.UTF_8));
     }
 
 
