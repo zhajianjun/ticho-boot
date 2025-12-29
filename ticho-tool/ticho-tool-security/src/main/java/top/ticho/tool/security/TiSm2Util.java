@@ -165,9 +165,15 @@ public class TiSm2Util {
      */
     public static byte[] sign(byte[] data, byte[] privateKeyBytes) {
         PrivateKey privateKey = loadPrivateKey(privateKeyBytes);
-        Signature signature = null;
+        return sign(data, privateKey);
+    }
+
+    /**
+     * SM2签名
+     */
+    public static byte[] sign(byte[] data, PrivateKey privateKey) {
         try {
-            signature = Signature.getInstance(GMObjectIdentifiers.sm2sign_with_sm3.toString(), "BC");
+            Signature signature = Signature.getInstance(GMObjectIdentifiers.sm2sign_with_sm3.toString(), BC);
             signature.initSign(privateKey);
             signature.update(data);
             return signature.sign();
@@ -180,7 +186,6 @@ public class TiSm2Util {
         } catch (SignatureException e) {
             throw new TiUtilException("签名异常，签名失败", e);
         }
-
     }
 
     /**
@@ -188,9 +193,15 @@ public class TiSm2Util {
      */
     public static boolean verify(byte[] data, byte[] sign, byte[] publicKeyBytes) {
         PublicKey publicKey = loadPublicKey(publicKeyBytes);
-        Signature signature = null;
+        return verify(data, sign, publicKey);
+    }
+
+    /**
+     * SM2验签
+     */
+    public static boolean verify(byte[] data, byte[] sign, PublicKey publicKey) {
         try {
-            signature = Signature.getInstance(GMObjectIdentifiers.sm2sign_with_sm3.toString(), "BC");
+            Signature signature = Signature.getInstance(GMObjectIdentifiers.sm2sign_with_sm3.toString(), "BC");
             signature.initVerify(publicKey);
             signature.update(data);
             return signature.verify(sign);
@@ -208,7 +219,7 @@ public class TiSm2Util {
     /**
      * 加载私钥
      */
-    private static PrivateKey loadPrivateKey(byte[] privateKeyBytes) {
+    public static PrivateKey loadPrivateKey(byte[] privateKeyBytes) {
         try {
             PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
             KeyFactory keyFactory = KeyFactory.getInstance("EC", "BC");
@@ -225,7 +236,7 @@ public class TiSm2Util {
     /**
      * 加载公钥
      */
-    private static PublicKey loadPublicKey(byte[] publicKeyBytes) {
+    public static PublicKey loadPublicKey(byte[] publicKeyBytes) {
         try {
             X509EncodedKeySpec keySpec = new X509EncodedKeySpec(publicKeyBytes);
             KeyFactory keyFactory = KeyFactory.getInstance("EC", "BC");
