@@ -29,6 +29,7 @@
         <jackson.version>3.0.2</jackson.version>
 
         <netty.version>4.2.7.Final</netty.version>
+        <jjwt.version>0.13.0</jjwt.version>
     </properties>
 
     <dependencyManagement>
@@ -175,6 +176,18 @@
             <dependency>
                 <groupId>top.ticho.tool</groupId>
                 <artifactId>ticho-tool-s3</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>top.ticho.tool</groupId>
+                <artifactId>ticho-tool-security</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>top.ticho.tool</groupId>
+                <artifactId>ticho-tool-jwt</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -456,6 +469,25 @@
                 <version>${netty.version}</version>
                 <type>pom</type>
             </dependency>
+
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
