@@ -94,8 +94,15 @@ public class TiJsonUtil {
      * 对象转Json字符串
      */
     public static String toJsonString(Object object) {
+        return toJsonString(object, null);
+    }
+
+    /**
+     * 对象转Json字符串
+     */
+    public static String toJsonString(Object object, String defaultValue) {
         if (Objects.isNull(object)) {
-            return null;
+            return defaultValue;
         }
         if (object instanceof String string) {
             return string;
@@ -104,7 +111,7 @@ public class TiJsonUtil {
             return MAPPER.writeValueAsString(object);
         } catch (Exception e) {
             log.error("Object to JsonString error, param={}, catch error {}", object, e.getMessage(), e);
-            return null;
+            return defaultValue;
         }
     }
 
@@ -353,11 +360,29 @@ public class TiJsonUtil {
      * 转JsonNode
      */
     public static JsonNode toJsonNode(Object object) {
-        try {
-            return MAPPER.valueToTree(object);
-        } catch (Exception e) {
-            log.error("Object to JsonNode exception {}", object, e);
-            return NullNode.getInstance();
+        switch (object) {
+            case null -> {
+                return NullNode.getInstance();
+            }
+            case JsonNode jsonNode -> {
+                return jsonNode;
+            }
+            case String string -> {
+                try {
+                    return MAPPER.readTree(string);
+                } catch (Exception e) {
+                    log.error("Object to JsonNode exception {}", object, e);
+                    return NullNode.getInstance();
+                }
+            }
+            default -> {
+                try {
+                    return MAPPER.valueToTree(object);
+                } catch (Exception e) {
+                    log.error("Object to JsonNode exception {}", object, e);
+                    return NullNode.getInstance();
+                }
+            }
         }
     }
 
