@@ -15,7 +15,6 @@ public interface TiErrorCode {
      */
     int getCode();
 
-
     /**
      * 错误信息
      *

@@ -24,7 +24,7 @@ public enum TiHttpErrorCode implements Serializable, TiErrorCode {
     NOT_LOGIN(401, "请登录"),
     TOKEN_INVALID(401, "TOKEN 失效"),
     NOT_ACTIVED(402, "用户未激活"),
-    ACCESS_DENIED(403, "权限不足"),
+    FORBIDDEN(403, "权限不足"),
     NOT_FOUND(404, "啥都没有"),
     METHOD_NOT_ALLOWED(405, "不允许的方法"),
     NOT_ACCEPTABLE(406, "不可接受"),
