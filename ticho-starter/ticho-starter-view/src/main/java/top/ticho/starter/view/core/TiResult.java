@@ -27,25 +27,6 @@ public class TiResult<T> implements Serializable {
     /** 时间戳 */
     private long time;
 
-    public TiResult() {
-        TiBizErrorCode success = TiBizErrorCode.SUCCESS;
-        this.code = success.getCode();
-        this.message = success.getMessage();
-        this.time = System.currentTimeMillis();
-    }
-
-    public TiResult(TiErrorCode resultCode) {
-        this.code = resultCode.getCode();
-        this.message = resultCode.getMessage();
-        this.time = System.currentTimeMillis();
-    }
-
-    public TiResult(int code, String message) {
-        this.code = code;
-        this.message = message;
-        this.time = System.currentTimeMillis();
-    }
-
     public TiResult(int code, String message, T data) {
         this.code = code;
         this.message = message;
@@ -53,20 +34,12 @@ public class TiResult<T> implements Serializable {
         this.time = System.currentTimeMillis();
     }
 
-    public static <T> TiResult<T> of(int code, String message) {
-        return new TiResult<>(code, message);
-    }
-
     public static <T> TiResult<T> of(int code, String message, T data) {
         return new TiResult<>(code, message, data);
     }
 
     public static <T> TiResult<T> of(TiErrorCode resultCode) {
-        return new TiResult<>(resultCode.getCode(), resultCode.getMessage());
-    }
-
-    public static <T> TiResult<T> of(TiErrorCode resultCode, T data) {
-        return new TiResult<>(resultCode.getCode(), resultCode.getMessage(), data);
+        return new TiResult<>(resultCode.getCode(), resultCode.getMessage(), null);
     }
 
     public static <T> TiResult<T> of(TiErrorCode resultCode, String message, T data) {
@@ -74,7 +47,7 @@ public class TiResult<T> implements Serializable {
     }
 
     public static <T> TiResult<T> ok() {
-        return new TiResult<>();
+        return new TiResult<>(TiBizErrorCode.SUCCESS.getCode(), TiBizErrorCode.SUCCESS.getMessage(), null);
     }
 
     public static <T> TiResult<T> ok(T data) {
@@ -97,22 +70,4 @@ public class TiResult<T> implements Serializable {
         return of(errCode, message, null);
     }
 
-    public static <T> TiResult<T> condition(boolean flag) {
-        return flag ? ok() : fail();
-    }
-
-    public TiResult<T> code(int code) {
-        this.code = code;
-        return this;
-    }
-
-    public TiResult<T> message(String message) {
-        this.message = message;
-        return this;
-    }
-
-    public TiResult<T> data(T data) {
-        this.data = data;
-        return this;
-    }
 }
