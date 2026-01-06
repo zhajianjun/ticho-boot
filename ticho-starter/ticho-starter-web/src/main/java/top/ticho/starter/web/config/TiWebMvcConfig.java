@@ -7,6 +7,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.converter.HttpMessageConverters;
 import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import tools.jackson.databind.json.JsonMapper;
 import top.ticho.starter.web.advice.TiResponseBodyAdvice;
 import top.ticho.starter.web.factory.TiYamlPropertySourceFactory;
 
@@ -29,7 +30,7 @@ public class TiWebMvcConfig implements WebMvcConfigurer {
      * // * @see TiJacksonCustomizerConfig#jackson2ObjectMapperBuilderCustomizer()
      */
     @Resource
-    private JacksonJsonHttpMessageConverter jacksonJsonHttpMessageConverter;
+    private JsonMapper jsonMapper;
 
     /**
      * 主要处理  ResponseHandle#beforeBodyWrite中返回String，匹配的是StringHttpMessageConverter，但是最终返回的是Result对象，导致
@@ -39,7 +40,7 @@ public class TiWebMvcConfig implements WebMvcConfigurer {
      */
     @Override
     public void configureMessageConverters(HttpMessageConverters.ServerBuilder builder) {
-        builder.addCustomConverter(jacksonJsonHttpMessageConverter);
+        builder.addCustomConverter(new JacksonJsonHttpMessageConverter(jsonMapper));
     }
 
 }

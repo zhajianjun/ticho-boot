@@ -83,7 +83,7 @@ public class TiResponseBodyAdvice implements ResponseBodyAdvice<Object> {
             // 业务异常
             response.setStatus(HttpStatus.OK.value());
             log.warn("catch error\t{}", ex.getMessage());
-            return TiResult.of(tiBizException.getCode(), tiBizException.getMessage());
+            return TiResult.of(tiBizException.getCode(), tiBizException.getMessage(), null);
         }
         TiErrorCode errCode = errCodeMap.get(ex.getClass());
         TiResult<String> tiResult;
@@ -92,7 +92,7 @@ public class TiResponseBodyAdvice implements ResponseBodyAdvice<Object> {
             response.setStatus(tiResult.getCode());
         } else if (ex instanceof TiSysException systemException) {
             // 系统异常
-            tiResult = TiResult.of(systemException.getCode(), systemException.getMessage());
+            tiResult = TiResult.of(systemException.getCode(), systemException.getMessage(), null);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         } else {
             // 未知异常
