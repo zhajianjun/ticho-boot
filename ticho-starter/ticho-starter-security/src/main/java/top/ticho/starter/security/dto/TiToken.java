@@ -6,7 +6,6 @@ import lombok.Data;
 import top.ticho.starter.security.constant.TiSecurityConst;
 
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Token信息
@@ -26,25 +25,7 @@ public class TiToken {
     /** token type */
     @JsonProperty(TiSecurityConst.TOKEN_TYPE)
     public String tokenType;
-    /** 开始时间戳，单位(s) */
-    @JsonProperty(TiSecurityConst.IAT)
-    public Long iat;
-    /** 剩余时间，单位(s) */
-    @JsonProperty(TiSecurityConst.EXPIRES_IN)
-    public Long expiresIn;
-    /** 结束时间时间戳，单位(s) */
-    @JsonProperty(TiSecurityConst.EXP)
-    public Long exp;
     @JsonIgnore
     public Map<String, Object> extInfo;
 
-
-    @JsonIgnore
-    public boolean isExpired() {
-        return exp < TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
-    }
-
-    public Long getExpiresIn() {
-        return exp - TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis());
-    }
 }

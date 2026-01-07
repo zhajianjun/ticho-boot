@@ -33,11 +33,8 @@ import top.ticho.starter.security.controller.TiLoginServiceImpl;
 import top.ticho.starter.security.controller.TiOauthController;
 import top.ticho.starter.security.core.TiAccessDeniedHandler;
 import top.ticho.starter.security.core.TiAuthenticationEntryPoint;
-import top.ticho.starter.security.core.jwt.JwtDecode;
-import top.ticho.starter.security.core.jwt.JwtEncode;
-import top.ticho.starter.security.core.jwt.JwtExtra;
-import top.ticho.starter.security.core.jwt.JwtSigner;
-import top.ticho.starter.security.core.jwt.TiJwtExtra;
+import top.ticho.starter.security.core.jwt.TiTokenExtra;
+import top.ticho.starter.security.core.jwt.TiDefaultTiTokenExtra;
 import top.ticho.starter.security.filter.AbstractAuthTokenFilter;
 import top.ticho.starter.security.filter.TiAuthorizationManager;
 import top.ticho.starter.security.filter.TiTokenAuthenticationTokenFilter;
@@ -109,33 +106,8 @@ public class TiWebSecurityConfig {
      * jwt 扩展信息
      */
     @Bean
-    public JwtExtra jwtExtra() {
-        return new TiJwtExtra();
-    }
-
-    /**
-     * jwt签名
-     */
-    @Bean
-    @ConditionalOnMissingBean
-    public JwtSigner jwtSigner() {
-        return new JwtSigner("ticho");
-    }
-
-    /**
-     * jwt编码
-     */
-    @Bean
-    public JwtEncode jwtEncode(TiSecurityProperty tiSecurityProperty, JwtSigner jwtSigner) {
-        return new JwtEncode(tiSecurityProperty, jwtSigner);
-    }
-
-    /**
-     * jwt解码
-     */
-    @Bean
-    public JwtDecode jwtDecode(JwtSigner jwtSigner) {
-        return new JwtDecode(jwtSigner);
+    public TiTokenExtra jwtExtra() {
+        return new TiDefaultTiTokenExtra();
     }
 
     /**

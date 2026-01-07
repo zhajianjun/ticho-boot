@@ -9,7 +9,7 @@ import java.util.Map;
  * @author zhajianjun
  * @date 2022-09-23 10:47
  */
-public class TiJwtExtra implements JwtExtra {
+public class TiDefaultTiTokenExtra implements TiTokenExtra {
 
     @Override
     public Map<String, Object> getExtra() {

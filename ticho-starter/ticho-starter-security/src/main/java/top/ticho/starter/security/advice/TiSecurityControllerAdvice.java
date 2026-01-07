@@ -36,7 +36,7 @@ public class TiSecurityControllerAdvice {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public TiResult<String> accessDeniedException(AccessDeniedException e, HttpServletRequest request) {
         log.warn("权限不足 e={}", e.getMessage());
-        return TiResult.of(TiHttpErrorCode.ACCESS_DENIED, e.getMessage(), request.getRequestURI());
+        return TiResult.of(TiHttpErrorCode.FORBIDDEN, e.getMessage(), request.getRequestURI());
     }
 
     /**
