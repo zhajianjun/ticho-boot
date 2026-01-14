@@ -16,7 +16,7 @@
         <spring-cloud.version>2025.1.0</spring-cloud.version>
         <spring-cloud-alibaba-dependencies.version>2025.0.0.0</spring-cloud-alibaba-dependencies.version>
         <!-- 其它的一些信息 -->
-        <amazon-s3.version>2.39.4</amazon-s3.version>
+        <amazon-s3.version>2.41.7</amazon-s3.version>
         <guava.version>33.5.0-jre</guava.version>
         <mybatis-plus.version>3.5.15</mybatis-plus.version>
         <mapstruct.version>1.6.3</mapstruct.version>
