@@ -77,7 +77,7 @@ import java.util.stream.Collectors;
 @Data
 @Slf4j
 public class TiS3Template {
-    private static final String ATTACHMENT_FILENAME = "attachment;filename=";
+    public static final String ATTACHMENT_FILENAME = "attachment;filename=";
 
     private final TiS3Property tiS3Property;
     private final S3Client s3Client;
