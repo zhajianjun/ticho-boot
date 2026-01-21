@@ -6,6 +6,7 @@
         <groupId>top.ticho.boot</groupId>
         <artifactId>ticho-boot</artifactId>
         <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>top.ticho.trace</groupId>
@@ -20,11 +21,7 @@
         <module>ticho-trace-okhttp</module>
     </modules>
 
-    <properties>
-    </properties>
-
     <dependencyManagement>
-
         <dependencies>
             <dependency>
                 <groupId>top.ticho.boot</groupId>
@@ -34,7 +31,6 @@
                 <scope>import</scope>
             </dependency>
         </dependencies>
-
     </dependencyManagement>
 
 </project>
