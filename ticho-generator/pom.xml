@@ -85,7 +85,6 @@
                     <include>**/*.xml</include>
                     <include>templates/default/*</include>
                 </includes>
-
             </resource>
         </resources>
         <plugins>
