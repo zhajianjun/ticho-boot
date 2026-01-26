@@ -27,6 +27,10 @@ public class TiRsaUtil {
     /** 密钥长度 */
     private static final int DEFAULT_KEY_SIZE = 2048;
 
+    // RSA最大加密字节数：密钥长度/8 - 11
+    private static final int MAX_ENCRYPT_BLOCK = DEFAULT_KEY_SIZE / 8 - 11;
+    // RSA最大解密字节数：密钥长度/8
+    private static final int MAX_DECRYPT_BLOCK = DEFAULT_KEY_SIZE / 8;
 
     /**
      * 生成密钥对
@@ -82,9 +86,9 @@ public class TiRsaUtil {
 
             Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
             cipher.init(Cipher.ENCRYPT_MODE, pubKey);
-            byte[] encryptedData = cipher.doFinal(data);
 
-            return TiBase64Util.encode(encryptedData);
+            // 分段加密处理大数据
+            return TiBase64Util.encode(processDataInBlocks(data, cipher, MAX_ENCRYPT_BLOCK));
         } catch (Exception e) {
             throw new TiUtilException("RSA公钥加密失败", e);
         }
@@ -107,8 +111,9 @@ public class TiRsaUtil {
 
             Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
             cipher.init(Cipher.DECRYPT_MODE, priKey);
-            byte[] decryptedData = cipher.doFinal(encryptedBytes);
 
+            // 分段解密处理大数据
+            byte[] decryptedData = processDataInBlocks(encryptedBytes, cipher, MAX_DECRYPT_BLOCK);
             return new String(decryptedData);
         } catch (Exception e) {
             throw new TiUtilException("RSA私钥解密失败", e);
@@ -142,9 +147,9 @@ public class TiRsaUtil {
 
             Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
             cipher.init(Cipher.ENCRYPT_MODE, priKey);
-            byte[] encryptedData = cipher.doFinal(data);
 
-            return TiBase64Util.encode(encryptedData);
+            // 分段加密处理大数据
+            return TiBase64Util.encode(processDataInBlocks(data, cipher, MAX_ENCRYPT_BLOCK));
         } catch (Exception e) {
             throw new TiUtilException("RSA私钥加密失败", e);
         }
@@ -167,8 +172,9 @@ public class TiRsaUtil {
 
             Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
             cipher.init(Cipher.DECRYPT_MODE, pubKey);
-            byte[] decryptedData = cipher.doFinal(encryptedBytes);
 
+            // 分段解密处理大数据
+            byte[] decryptedData = processDataInBlocks(encryptedBytes, cipher, MAX_DECRYPT_BLOCK);
             return new String(decryptedData);
         } catch (Exception e) {
             throw new TiUtilException("RSA公钥解密失败", e);
@@ -221,6 +227,53 @@ public class TiRsaUtil {
         } catch (Exception e) {
             throw new TiUtilException("RSA验证签名失败", e);
         }
+    }
+
+    /**
+     * 分块处理数据
+     *
+     * @param data      原始数据
+     * @param cipher    加密/解密器
+     * @param blockSize 块大小
+     * @return 处理后的数据
+     * @throws Exception 加密/解密异常
+     */
+    private static byte[] processDataInBlocks(byte[] data, Cipher cipher, int blockSize) throws Exception {
+        if (data.length <= blockSize) {
+            return cipher.doFinal(data);
+        }
+
+        byte[] output = new byte[0];
+        int inputOffset = 0;
+        int partLength = 0;
+
+        while (data.length - inputOffset > 0) {
+            if (data.length - inputOffset > blockSize) {
+                partLength = blockSize;
+            } else {
+                partLength = data.length - inputOffset;
+            }
+
+            byte[] cache = cipher.doFinal(data, inputOffset, partLength);
+            output = concatenateByteArrays(output, cache);
+            inputOffset += partLength;
+        }
+
+        return output;
+    }
+
+    /**
+     * 合并两个字节数组
+     *
+     * @param array1 第一个数组
+     * @param array2 第二个数组
+     * @return 合并后的数组
+     */
+    private static byte[] concatenateByteArrays(byte[] array1, byte[] array2) {
+        byte[] result = new byte[array1.length + array2.length];
+        System.arraycopy(array1, 0, result, 0, array1.length);
+        System.arraycopy(array2, 0, result, array1.length, array2.length);
+        return result;
     }
 
     public static void main(String[] args) {
