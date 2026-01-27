@@ -14,6 +14,7 @@ import java.security.SecureRandom;
 import java.security.Signature;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Objects;
 
 /**
  * RSA加解密工具类
@@ -26,7 +27,6 @@ public class TiRsaUtil {
     public static final String SIGNATURE_ALGORITHM = "SHA256withRSA";
     /** 密钥长度 */
     private static final int DEFAULT_KEY_SIZE = 2048;
-
     // RSA最大加密字节数：密钥长度/8 - 11
     private static final int MAX_ENCRYPT_BLOCK = DEFAULT_KEY_SIZE / 8 - 11;
     // RSA最大解密字节数：密钥长度/8
@@ -80,6 +80,9 @@ public class TiRsaUtil {
     public static String encryptByPublicKey(byte[] data, String publicKey) {
         try {
             byte[] keyBytes = TiBase64Util.decodeAsBytes(publicKey);
+            if (Objects.isNull(keyBytes)) {
+                return null;
+            }
             X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(keyBytes);
             KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
             PublicKey pubKey = keyFactory.generatePublic(x509KeySpec);
@@ -105,6 +108,9 @@ public class TiRsaUtil {
         try {
             byte[] encryptedBytes = TiBase64Util.decodeAsBytes(encryptedData);
             byte[] keyBytes = TiBase64Util.decodeAsBytes(privateKey);
+            if (Objects.isNull(keyBytes) || Objects.isNull(encryptedBytes)) {
+                return null;
+            }
             PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(keyBytes);
             KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
             PrivateKey priKey = keyFactory.generatePrivate(pkcs8KeySpec);
@@ -141,6 +147,9 @@ public class TiRsaUtil {
     public static String encryptByPrivateKey(byte[] data, String privateKey) {
         try {
             byte[] keyBytes = TiBase64Util.decodeAsBytes(privateKey);
+            if (Objects.isNull(keyBytes)) {
+                return null;
+            }
             PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(keyBytes);
             KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
             PrivateKey priKey = keyFactory.generatePrivate(pkcs8KeySpec);
@@ -166,6 +175,9 @@ public class TiRsaUtil {
         try {
             byte[] encryptedBytes = TiBase64Util.decodeAsBytes(encryptedData);
             byte[] keyBytes = TiBase64Util.decodeAsBytes(publicKey);
+            if (Objects.isNull(keyBytes) || Objects.isNull(encryptedBytes)) {
+                return null;
+            }
             X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(keyBytes);
             KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
             PublicKey pubKey = keyFactory.generatePublic(x509KeySpec);
@@ -191,6 +203,9 @@ public class TiRsaUtil {
     public static String sign(String data, String privateKey) {
         try {
             byte[] keyBytes = TiBase64Util.decodeAsBytes(privateKey);
+            if (Objects.isNull(keyBytes)) {
+                return null;
+            }
             PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(keyBytes);
             KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
             PrivateKey priKey = keyFactory.generatePrivate(pkcs8KeySpec);
@@ -248,17 +263,11 @@ public class TiRsaUtil {
         int partLength = 0;
 
         while (data.length - inputOffset > 0) {
-            if (data.length - inputOffset > blockSize) {
-                partLength = blockSize;
-            } else {
-                partLength = data.length - inputOffset;
-            }
-
+            partLength = Math.min(data.length - inputOffset, blockSize);
             byte[] cache = cipher.doFinal(data, inputOffset, partLength);
             output = concatenateByteArrays(output, cache);
             inputOffset += partLength;
         }
-
         return output;
     }
 
