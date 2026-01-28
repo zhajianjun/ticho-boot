@@ -232,6 +232,9 @@ public class TiRsaUtil {
     public static boolean verify(String data, String publicKey, String sign) {
         try {
             byte[] keyBytes = TiBase64Util.decodeAsBytes(publicKey);
+            if (Objects.isNull(keyBytes)) {
+                return false;
+            }
             X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(keyBytes);
             KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
             PublicKey pubKey = keyFactory.generatePublic(x509KeySpec);
@@ -257,11 +260,9 @@ public class TiRsaUtil {
         if (data.length <= blockSize) {
             return cipher.doFinal(data);
         }
-
         byte[] output = new byte[0];
         int inputOffset = 0;
-        int partLength = 0;
-
+        int partLength;
         while (data.length - inputOffset > 0) {
             partLength = Math.min(data.length - inputOffset, blockSize);
             byte[] cache = cipher.doFinal(data, inputOffset, partLength);
