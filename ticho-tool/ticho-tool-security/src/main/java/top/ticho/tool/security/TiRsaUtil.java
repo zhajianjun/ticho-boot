@@ -3,7 +3,9 @@ package top.ticho.tool.security;
 import top.ticho.tool.core.TiBase64Util;
 import top.ticho.tool.core.exception.TiUtilException;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -254,9 +256,8 @@ public class TiRsaUtil {
      * @param cipher    加密/解密器
      * @param blockSize 块大小
      * @return 处理后的数据
-     * @throws Exception 加密/解密异常
      */
-    private static byte[] processDataInBlocks(byte[] data, Cipher cipher, int blockSize) throws Exception {
+    private static byte[] processDataInBlocks(byte[] data, Cipher cipher, int blockSize) throws IllegalBlockSizeException, BadPaddingException {
         if (data.length <= blockSize) {
             return cipher.doFinal(data);
         }
