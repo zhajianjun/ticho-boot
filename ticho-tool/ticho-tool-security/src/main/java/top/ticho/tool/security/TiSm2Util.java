@@ -138,13 +138,9 @@ public class TiSm2Util {
         if (TiStrUtil.isEmpty(base64PublicKey)) {
             throw new TiUtilException("公钥不能为空");
         }
-        try {
-            byte[] publicKeyBytes = TiBase64Util.decodeAsBytes(base64PublicKey);
-            byte[] encryptBytes = encrypt(data, publicKeyBytes);
-            return TiBase64Util.encode(encryptBytes);
-        } catch (Exception e) {
-            throw new TiUtilException("SM2加密失败", e);
-        }
+        byte[] publicKeyBytes = TiBase64Util.decodeAsBytes(base64PublicKey);
+        byte[] encryptBytes = encrypt(data, publicKeyBytes);
+        return TiBase64Util.encode(encryptBytes);
     }
 
     /**
@@ -162,14 +158,10 @@ public class TiSm2Util {
         if (TiStrUtil.isEmpty(base64PrivateKey)) {
             throw new TiUtilException("私钥不能为空");
         }
-        try {
-            byte[] encryptedDataBytes = TiBase64Util.decodeAsBytes(encryptedDataBase64);
-            byte[] privateKeyBytes = TiBase64Util.decodeAsBytes(base64PrivateKey);
-            byte[] decryptBytes = decrypt(encryptedDataBytes, privateKeyBytes);
-            return new String(decryptBytes, StandardCharsets.UTF_8);
-        } catch (Exception e) {
-            throw new TiUtilException("SM2解密失败", e);
-        }
+        byte[] encryptedDataBytes = TiBase64Util.decodeAsBytes(encryptedDataBase64);
+        byte[] privateKeyBytes = TiBase64Util.decodeAsBytes(base64PrivateKey);
+        byte[] decryptBytes = decrypt(encryptedDataBytes, privateKeyBytes);
+        return new String(decryptBytes, StandardCharsets.UTF_8);
     }
 
     /**
