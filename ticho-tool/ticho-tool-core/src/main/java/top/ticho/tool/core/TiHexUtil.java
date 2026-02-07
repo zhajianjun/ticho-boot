@@ -5,6 +5,7 @@ import top.ticho.tool.core.exception.TiUtilException;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -27,9 +28,7 @@ public class TiHexUtil {
 
     static {
         // 初始化十六进制字符映射表
-        for (int i = 0; i < HEX_VALUES.length; i++) {
-            HEX_VALUES[i] = -1;
-        }
+        Arrays.fill(HEX_VALUES, -1);
         for (int i = 0; i < 10; i++) {
             HEX_VALUES['0' + i] = i;
         }
@@ -50,34 +49,27 @@ public class TiHexUtil {
         if (TiStrUtil.isEmpty(source)) {
             return null;
         }
-
         // 移除所有空白字符并转换为大写
         String hex = TiStrUtil.cleanBlank(source.toString()).toUpperCase();
-
         // 检查长度是否为偶数
         if (hex.length() % 2 != 0) {
             throw new TiUtilException("十六进制字符串长度必须为偶数，当前长度：" + hex.length());
         }
-
         // 验证字符有效性并转换
         int length = hex.length();
         byte[] result = new byte[length / 2];
-
         for (int i = 0; i < length; i += 2) {
             char highChar = hex.charAt(i);
             char lowChar = hex.charAt(i + 1);
-
             // 快速验证字符有效性
             if (highChar >= HEX_VALUES.length || lowChar >= HEX_VALUES.length ||
                 HEX_VALUES[highChar] == -1 || HEX_VALUES[lowChar] == -1) {
-                throw new TiUtilException("字符串包含非法的十六进制字符: " + highChar + "" + lowChar);
+                throw new TiUtilException("字符串包含非法的十六进制字符: " + highChar + lowChar);
             }
-
             int high = HEX_VALUES[highChar];
             int low = HEX_VALUES[lowChar];
             result[i / 2] = (byte) ((high << 4) | low);
         }
-
         return result;
     }
 
@@ -116,14 +108,12 @@ public class TiHexUtil {
         if (source == null || source.length == 0) {
             return null;
         }
-
         char[] result = new char[source.length * 2];
         for (int i = 0; i < source.length; i++) {
             byte b = source[i];
             result[i * 2] = HEX_CHARS[(b >> 4) & 0x0F];
             result[i * 2 + 1] = HEX_CHARS[b & 0x0F];
         }
-
         return new String(result);
     }
 
@@ -164,19 +154,16 @@ public class TiHexUtil {
         if (TiStrUtil.isEmpty(hex)) {
             return false;
         }
-
         String cleanHex = TiStrUtil.cleanBlank(hex.toString());
         if (cleanHex.length() % 2 != 0) {
             return false;
         }
-
         for (int i = 0; i < cleanHex.length(); i++) {
             char c = cleanHex.charAt(i);
             if (c >= HEX_VALUES.length || HEX_VALUES[c] == -1) {
                 return false;
             }
         }
-
         return true;
     }
 
@@ -198,24 +185,20 @@ public class TiHexUtil {
         String original = "123456@qq.com";
         String encoded = encodeString(original);
         String decoded = decodeAsString(encoded);
-
         System.out.println("原始字符串: " + original);
         System.out.println("编码结果: " + encoded);
         System.out.println("解码结果: " + decoded);
         System.out.println("验证结果: " + original.equals(decoded));
-
         // 测试边界情况
         System.out.println("\n=== 边界测试 ===");
         System.out.println("空字符串编码: " + encodeString(""));
         System.out.println("null字符串编码: " + encodeString(null));
         System.out.println("null字节数组编码: " + encode(null));
-
         // 测试验证功能
         System.out.println("\n=== 验证测试 ===");
         System.out.println("有效十六进制: " + isValidHex("313031393331393437334071712E636F6D"));
         System.out.println("无效十六进制(奇数长度): " + isValidHex("313"));
         System.out.println("无效十六进制(非法字符): " + isValidHex("313G"));
-
         // 测试不同编码
         System.out.println("\n=== 编码测试 ===");
         String chinese = "你好世界";
