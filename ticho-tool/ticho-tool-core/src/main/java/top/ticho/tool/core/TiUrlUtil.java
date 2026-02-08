@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 /**
  *
@@ -24,6 +25,9 @@ public class TiUrlUtil {
     }
 
     public static String encode(String url) {
+        if (Objects.isNull(url)) {
+            return null;
+        }
         return URLEncoder.encode(url, StandardCharsets.UTF_8);
     }
 
