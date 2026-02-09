@@ -13,6 +13,7 @@ import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import top.ticho.tool.core.TiBase64Util;
+import top.ticho.tool.core.TiHexUtil;
 import top.ticho.tool.core.TiStrUtil;
 import top.ticho.tool.core.exception.TiUtilException;
 
@@ -111,7 +112,7 @@ public class TiSm2Util {
         String publicKeyStr = TiBase64Util.encode(publicKey.getEncoded());
         String privateKeyStr = TiBase64Util.encode(privateKey.getEncoded());
         // 测试加解密
-        byte[] encryptData = encrypt(testData, publicKey.getEncoded());
+        byte[] encryptData = encrypt(testData.getBytes(StandardCharsets.UTF_8), publicKey.getEncoded());
         String encryptStr = TiBase64Util.encode(encryptData);
         byte[] decryptData = decrypt(encryptData, privateKey.getEncoded());
         System.out.println("==================== SM2密钥对信息 ====================");
@@ -139,8 +140,28 @@ public class TiSm2Util {
             throw new TiUtilException("公钥不能为空");
         }
         byte[] publicKeyBytes = TiBase64Util.decodeAsBytes(base64PublicKey);
-        byte[] encryptBytes = encrypt(data, publicKeyBytes);
+        byte[] encryptBytes = encrypt(data.getBytes(StandardCharsets.UTF_8), publicKeyBytes);
         return TiBase64Util.encode(encryptBytes);
+    }
+
+    /**
+     * SM2加密（Hex编码输入输出）
+     *
+     * @param data         明文数据
+     * @param hexPublicKey Hex编码的公钥
+     * @return {@link String} Hex编码的密文数据
+     * @throws TiUtilException 加密异常
+     */
+    public static String encryptHex(String data, String hexPublicKey) {
+        if (TiStrUtil.isEmpty(data)) {
+            return null;
+        }
+        if (TiStrUtil.isEmpty(hexPublicKey)) {
+            throw new TiUtilException("公钥不能为空");
+        }
+        byte[] publicKeyBytes = TiBase64Util.decodeAsBytes(hexPublicKey);
+        byte[] encryptBytes = encrypt(data.getBytes(StandardCharsets.UTF_8), publicKeyBytes);
+        return TiHexUtil.encode(encryptBytes);
     }
 
     /**
@@ -165,16 +186,37 @@ public class TiSm2Util {
     }
 
     /**
+     * SM2解密（Hex编码输入输出）
+     *
+     * @param encryptedDataHex Hex编码的密文数据
+     * @param hexPrivateKey    Hex编码的私钥
+     * @return {@link String} 明文数据
+     * @throws TiUtilException 解密异常
+     */
+    public static String decryptHex(String encryptedDataHex, String hexPrivateKey) {
+        if (TiStrUtil.isEmpty(encryptedDataHex)) {
+            return null;
+        }
+        if (TiStrUtil.isEmpty(hexPrivateKey)) {
+            throw new TiUtilException("私钥不能为空");
+        }
+        byte[] encryptedDataBytes = TiHexUtil.decodeAsBytes(encryptedDataHex);
+        byte[] privateKeyBytes = TiHexUtil.decodeAsBytes(hexPrivateKey);
+        byte[] decryptBytes = decrypt(encryptedDataBytes, privateKeyBytes);
+        return new String(decryptBytes, StandardCharsets.UTF_8);
+    }
+
+    /**
      * SM2加密（字节数组输入输出）
      *
-     * @param data           明文数据
+     * @param dataBytes      明文字节数组
      * @param publicKeyBytes 公钥字节数组
      * @return {@link byte[]} 密文字节数组
      * @throws TiUtilException 加密异常
      */
-    public static byte[] encrypt(String data, byte[] publicKeyBytes) {
-        if (TiStrUtil.isEmpty(data)) {
-            throw new TiUtilException("明文数据不能为空");
+    public static byte[] encrypt(byte[] dataBytes, byte[] publicKeyBytes) {
+        if (dataBytes == null || dataBytes.length == 0) {
+            throw new TiUtilException("明文字节数组不能为空");
         }
         if (publicKeyBytes == null || publicKeyBytes.length == 0) {
             throw new TiUtilException("公钥字节数组不能为空");
@@ -184,7 +226,6 @@ public class TiSm2Util {
             BCECPublicKey ecPublicKey = (BCECPublicKey) publicKey;
             SM2Engine engine = new SM2Engine();
             engine.init(true, new ParametersWithRandom(new ECPublicKeyParameters(ecPublicKey.getQ(), ecDomainParameters), new SecureRandom()));
-            byte[] dataBytes = data.getBytes(StandardCharsets.UTF_8);
             return engine.processBlock(dataBytes, 0, dataBytes.length);
         } catch (InvalidCipherTextException e) {
             throw new TiUtilException("加密异常，" + ERROR_INVALID_CIPHER_TEXT, e);
@@ -454,7 +495,6 @@ public class TiSm2Util {
             System.out.println("验签结果: " + verifyResult);
         } catch (Exception e) {
             System.err.println("测试过程中发生错误: " + e.getMessage());
-            e.printStackTrace();
         }
     }
 
