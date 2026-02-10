@@ -66,14 +66,22 @@ public class TiSm2Util {
 
     // ==================== 静态初始化 ====================
     static {
-        Security.addProvider(new BouncyCastleProvider());
-        X9ECParameters sm2ECParameters = ECNamedCurveTable.getByName(SM2P256V1);
-        ecDomainParameters = new ECDomainParameters(
-            sm2ECParameters.getCurve(),
-            sm2ECParameters.getG(),
-            sm2ECParameters.getN(),
-            sm2ECParameters.getH()
-        );
+        try {
+            // 添加BouncyCastle安全提供者
+            if (Security.getProvider(BC_PROVIDER) == null) {
+                Security.addProvider(new BouncyCastleProvider());
+            }
+            // 初始化SM2椭圆曲线参数
+            X9ECParameters sm2ECParameters = ECNamedCurveTable.getByName(SM2P256V1);
+            ecDomainParameters = new ECDomainParameters(
+                sm2ECParameters.getCurve(),
+                sm2ECParameters.getG(),
+                sm2ECParameters.getN(),
+                sm2ECParameters.getH()
+            );
+        } catch (Exception e) {
+            throw new ExceptionInInitializerError("SM2工具类初始化失败: " + e.getMessage());
+        }
     }
 
     /**
