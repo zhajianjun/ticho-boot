@@ -167,7 +167,7 @@ public class TiSm2Util {
         if (TiStrUtil.isEmpty(hexPublicKey)) {
             throw new TiUtilException("公钥不能为空");
         }
-        byte[] publicKeyBytes = TiBase64Util.decodeAsBytes(hexPublicKey);
+        byte[] publicKeyBytes = TiHexUtil.decodeAsBytes(hexPublicKey);
         byte[] encryptBytes = encrypt(data.getBytes(StandardCharsets.UTF_8), publicKeyBytes);
         return TiHexUtil.encode(encryptBytes);
     }
