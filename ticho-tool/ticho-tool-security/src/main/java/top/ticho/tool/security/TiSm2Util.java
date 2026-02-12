@@ -117,18 +117,22 @@ public class TiSm2Util {
         KeyPair keyPair = generateSM2KeyPair();
         PrivateKey privateKey = keyPair.getPrivate();
         PublicKey publicKey = keyPair.getPublic();
-        String publicKeyStr = TiBase64Util.encode(publicKey.getEncoded());
-        String privateKeyStr = TiBase64Util.encode(privateKey.getEncoded());
-        // 测试加解密
-        byte[] encryptData = encrypt(testData.getBytes(StandardCharsets.UTF_8), publicKey.getEncoded());
-        String encryptStr = TiBase64Util.encode(encryptData);
-        byte[] decryptData = decrypt(encryptData, privateKey.getEncoded());
+        String publicKeyBase64 = TiBase64Util.encode(publicKey.getEncoded());
+        String privateKeyBase64 = TiBase64Util.encode(privateKey.getEncoded());
+        String publicKeyHex = TiHexUtil.encode(publicKey.getEncoded());
+        String privateKeyHex = TiHexUtil.encode(privateKey.getEncoded());
+        String encryptBase64 = encryptBase64(testData, publicKeyBase64);
+        String encryptHex = encryptHex(testData, publicKeyHex);
         System.out.println("==================== SM2密钥对信息 ====================");
-        System.out.println("公钥：" + publicKeyStr);
-        System.out.println("私钥：" + privateKeyStr);
+        System.out.println("公钥(Base64)：" + publicKeyBase64);
+        System.out.println("私钥(Base64)：" + privateKeyBase64);
+        System.out.println("公钥(Hex)：" + publicKeyHex);
+        System.out.println("私钥(Hex)：" + privateKeyHex);
         System.out.println("原始数据：" + testData);
-        System.out.println("加密数据：" + encryptStr);
-        System.out.println("解密数据：" + new String(decryptData, StandardCharsets.UTF_8));
+        System.out.println("加密测试(Base64)：" + encryptBase64);
+        System.out.println("解密测试(Base64)：" + decryptBase64(encryptBase64, privateKeyBase64));
+        System.out.println("加密测试(Hex)：" + encryptHex);
+        System.out.println("解密测试(Hex)：" + decryptHex(encryptHex, privateKeyHex));
         System.out.println("====================================================");
     }
 
@@ -485,25 +489,7 @@ public class TiSm2Util {
      * 主方法 - 用于测试
      */
     public static void main(String[] args) {
-        // 测试生成密钥对
-        printGeneratedKeyPair("Hello SM2!");
-        // 测试预设密钥的加解密
-        String publicKey = "MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAEjOfgpnPIXbPE+a5SSm+xv/Uu8N1Gh7QQmiIP2gTpER74M5YFpHNkrwa//IiXtpwBoA8v9mnZQqfE2Y44eYX6Qg==";
-        String privateKey = "MIGTAgEAMBMGByqGSM49AgEGCCqBHM9VAYItBHkwdwIBAQQgc7V57xPTgMKaI2lrsvgGYYpWHd70vBXGlxawIXZZRaCgCgYIKoEcz1UBgi2hRANCAASM5+Cmc8hds8T5rlJKb7G/9S7w3UaHtBCaIg/aBOkRHvgzlgWkc2SvBr/8iJe2nAGgDy/2adlCp8TZjjh5hfpC";
-        String testData = "test1234";
-        try {
-            String encrypted = encryptBase64(testData, publicKey);
-            System.out.println("加密结果: " + encrypted);
-            String decrypted = decryptBase64(encrypted, privateKey);
-            System.out.println("解密结果: " + decrypted);
-            // 测试签名验签
-            String signature = signBase64(testData, privateKey);
-            System.out.println("签名结果: " + signature);
-            boolean verifyResult = verifyBase64(testData, signature, publicKey);
-            System.out.println("验签结果: " + verifyResult);
-        } catch (Exception e) {
-            System.err.println("测试过程中发生错误: " + e.getMessage());
-        }
+        printGeneratedKeyPair("Hello, This is SM2!");
     }
 
 }
