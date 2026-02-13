@@ -86,9 +86,6 @@ public class TiSm2Util {
 
     /**
      * 生成SM2密钥对
-     *
-     * @return {@link KeyPair} SM2密钥对
-     * @throws TiUtilException 生成密钥对异常
      */
     public static KeyPair generateSM2KeyPair() {
         try {
@@ -142,7 +139,6 @@ public class TiSm2Util {
      * @param data            明文数据
      * @param base64PublicKey Base64编码的公钥
      * @return {@link String} Base64编码的密文数据
-     * @throws TiUtilException 加密异常
      */
     public static String encryptBase64(String data, String base64PublicKey) {
         if (TiStrUtil.isEmpty(data)) {
@@ -162,7 +158,6 @@ public class TiSm2Util {
      * @param data         明文数据
      * @param hexPublicKey Hex编码的公钥
      * @return {@link String} Hex编码的密文数据
-     * @throws TiUtilException 加密异常
      */
     public static String encryptHex(String data, String hexPublicKey) {
         if (TiStrUtil.isEmpty(data)) {
@@ -182,7 +177,6 @@ public class TiSm2Util {
      * @param encryptedDataBase64 Base64编码的密文数据
      * @param base64PrivateKey    Base64编码的私钥
      * @return {@link String} 明文数据
-     * @throws TiUtilException 解密异常
      */
     public static String decryptBase64(String encryptedDataBase64, String base64PrivateKey) {
         if (TiStrUtil.isEmpty(encryptedDataBase64)) {
@@ -203,7 +197,6 @@ public class TiSm2Util {
      * @param encryptedDataHex Hex编码的密文数据
      * @param hexPrivateKey    Hex编码的私钥
      * @return {@link String} 明文数据
-     * @throws TiUtilException 解密异常
      */
     public static String decryptHex(String encryptedDataHex, String hexPrivateKey) {
         if (TiStrUtil.isEmpty(encryptedDataHex)) {
@@ -224,7 +217,6 @@ public class TiSm2Util {
      * @param dataBytes      明文字节数组
      * @param publicKeyBytes 公钥字节数组
      * @return {@link byte[]} 密文字节数组
-     * @throws TiUtilException 加密异常
      */
     public static byte[] encrypt(byte[] dataBytes, byte[] publicKeyBytes) {
         if (dataBytes == null || dataBytes.length == 0) {
@@ -252,7 +244,6 @@ public class TiSm2Util {
      * @param encryptedDataBytes 密文字节数组
      * @param privateKeyBytes    私钥字节数组
      * @return {@link byte[]} 明文数据字节数组
-     * @throws TiUtilException 解密异常
      */
     public static byte[] decrypt(byte[] encryptedDataBytes, byte[] privateKeyBytes) {
         if (encryptedDataBytes == null || encryptedDataBytes.length == 0) {
@@ -281,7 +272,6 @@ public class TiSm2Util {
      * @param data       待签名的数据
      * @param privateKey 私钥对象
      * @return {@link byte[]} 签名字节数组
-     * @throws TiUtilException 签名异常
      */
     public static byte[] sign(byte[] data, PrivateKey privateKey) {
         if (data == null || data.length == 0) {
@@ -312,7 +302,6 @@ public class TiSm2Util {
      * @param data            待签名的数据
      * @param privateKeyBytes 私钥字节数组
      * @return {@link byte[]} 签名字节数组
-     * @throws TiUtilException 签名异常
      */
     public static byte[] sign(byte[] data, byte[] privateKeyBytes) {
         if (data == null || data.length == 0) {
@@ -331,7 +320,6 @@ public class TiSm2Util {
      * @param data             待签名的数据
      * @param base64PrivateKey Base64编码的私钥
      * @return {@link String} Base64编码的签名
-     * @throws TiUtilException 签名异常
      */
     public static String signBase64(String data, String base64PrivateKey) {
         if (TiStrUtil.isEmpty(data)) {
@@ -357,7 +345,6 @@ public class TiSm2Util {
      * @param sign      签名字节数组
      * @param publicKey 公钥对象
      * @return {@link boolean} 验证结果
-     * @throws TiUtilException 验签异常
      */
     public static boolean verify(byte[] data, byte[] sign, PublicKey publicKey) {
         if (data == null || data.length == 0) {
@@ -392,7 +379,6 @@ public class TiSm2Util {
      * @param sign           签名字节数组
      * @param publicKeyBytes 公钥字节数组
      * @return {@link boolean} 验证结果
-     * @throws TiUtilException 验签异常
      */
     public static boolean verify(byte[] data, byte[] sign, byte[] publicKeyBytes) {
         if (data == null || data.length == 0) {
@@ -415,7 +401,6 @@ public class TiSm2Util {
      * @param base64Sign      Base64编码的签名
      * @param base64PublicKey Base64编码的公钥
      * @return {@link boolean} 验证结果
-     * @throws TiUtilException 验签异常
      */
     public static boolean verifyBase64(String data, String base64Sign, String base64PublicKey) {
         if (TiStrUtil.isEmpty(data)) {
@@ -442,7 +427,6 @@ public class TiSm2Util {
      *
      * @param privateKeyBytes 私钥字节数组
      * @return {@link PrivateKey} 私钥对象
-     * @throws TiUtilException 加载私钥异常
      */
     public static PrivateKey loadPrivateKey(byte[] privateKeyBytes) {
         if (privateKeyBytes == null || privateKeyBytes.length == 0) {
@@ -466,7 +450,6 @@ public class TiSm2Util {
      *
      * @param publicKeyBytes 公钥字节数组
      * @return {@link PublicKey} 公钥对象
-     * @throws TiUtilException 加载公钥异常
      */
     public static PublicKey loadPublicKey(byte[] publicKeyBytes) {
         if (publicKeyBytes == null || publicKeyBytes.length == 0) {
