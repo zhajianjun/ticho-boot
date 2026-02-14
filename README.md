@@ -9,7 +9,7 @@ components and development toolchains, empowering developers to focus on core bu
 
 **Technology Stack**
 
-* Runtime Environment: JDK 17 LTS (Long-Term Support) Version
+* Runtime Environment: JDK 21 LTS (Long-Term Support) Version
 * Core Framework: Spring Boot 3.4.4 (Compatible with Spring Framework 6.1.6)
 * Distributed Architecture: Spring Cloud 2023.0.3 + Spring Cloud Alibaba 2023.0.3.2
 * Security System: Deep integration with Spring Security 6.4.4

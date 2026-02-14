@@ -7,7 +7,7 @@ Boot应用的快速构建能力。该框架基于前沿技术栈构建，提供�
 
 **技术栈**
 
-* 运行环境：JDK 17 LTS 长期支持版本
+* 运行环境：JDK 21 LTS 长期支持版本
 * 核心框架：Spring Boot 3.4.4（兼容Spring Framework 6.1.6）
 * 分布式架构：Spring Cloud 2023.0.3 + Spring Cloud Alibaba 2023.0.3.2
 * 安全体系：Spring Security 6.4.4 深度整合
