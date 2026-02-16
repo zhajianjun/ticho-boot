@@ -21,6 +21,7 @@
         <module>ticho-tool-s3</module>
         <module>ticho-tool-security</module>
         <module>ticho-tool-jwt</module>
+        <module>ticho-tool-ffmpeg</module>
     </modules>
 
     <dependencyManagement>
