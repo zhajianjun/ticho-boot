@@ -9,7 +9,7 @@ import lombok.Data;
  * @date 2026-02-25 19:51
  */
 @Data
-public class FFmpegProperty {
+public class TiFFmpegProperty {
 
     /** FFmpeg路径 */
     private String path;
