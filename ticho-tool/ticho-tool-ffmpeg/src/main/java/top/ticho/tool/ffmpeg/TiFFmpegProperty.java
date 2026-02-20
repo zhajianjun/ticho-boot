@@ -6,7 +6,7 @@ import lombok.Data;
  * FFmpeg配置
  *
  * @author zhajianjun
- * @date 2026-02-25 19:51
+ * @date 2026-02-17 19:51
  */
 @Data
 public class TiFFmpegProperty {
