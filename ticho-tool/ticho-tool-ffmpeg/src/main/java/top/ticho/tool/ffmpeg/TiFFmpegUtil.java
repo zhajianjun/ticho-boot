@@ -19,20 +19,15 @@ import java.util.function.Consumer;
  */
 @Slf4j
 public class TiFFmpegUtil {
-
-    // FFmpeg 可执行文件的路径，建议配置在配置文件中，这里为了演示写死
-    private static final String FFMPEG_PATH = "ffmpeg";
-    // 也可以配置 FFprobe 路径
-    private static final String FFPROBE_PATH = "ffprobe";
     // 用于存储正在进行的任务，key为taskId
     private static final ConcurrentHashMap<String, Process> TASK_MAP = new ConcurrentHashMap<>();
 
     /**
      * 构建基础的命令列表
      */
-    private static List<String> buildBaseCommand() {
+    private static List<String> buildBaseCommand(String ffmpegPath) {
         List<String> command = new ArrayList<>();
-        command.add(FFMPEG_PATH);
+        command.add(ffmpegPath);
         return command;
     }
 
@@ -97,7 +92,6 @@ public class TiFFmpegUtil {
                         }
                     }
                 }
-
                 int exitCode = process.waitFor();
                 TASK_MAP.remove(taskId);
                 return exitCode;
@@ -127,15 +121,16 @@ public class TiFFmpegUtil {
     /**
      * 视频转码/压缩
      *
+     * @param ffmpegPath FFMPEG路径
      * @param inputPath  源文件路径
      * @param outputPath 输出文件路径
      * @param crf        压缩质量 (0-51, 越小质量越好，通常18-28)
      * @param preset     编码预设
      * @return 任务ID
      */
-    public static String transcodeVideo(String inputPath, String outputPath, int crf, String preset) {
+    public static String transcodeVideo(String ffmpegPath, String inputPath, String outputPath, int crf, String preset) {
         String taskId = UUID.randomUUID().toString();
-        List<String> command = buildBaseCommand();
+        List<String> command = buildBaseCommand(ffmpegPath);
         command.add("-i");
         command.add(inputPath);
         command.add("-c:v");
@@ -158,12 +153,14 @@ public class TiFFmpegUtil {
     /**
      * 视频截图
      *
+     * @param ffmpegPath FFMPEG路径
      * @param inputPath  源视频路径
      * @param outputPath 图片输出路径
      * @param time       截图时间点 (格式: 00:00:05 或 秒数)
+     * @return boolean
      */
-    public static boolean captureScreenshot(String inputPath, String outputPath, String time) {
-        List<String> command = buildBaseCommand();
+    public static boolean captureScreenshot(String ffmpegPath, String inputPath, String outputPath, String time) {
+        List<String> command = buildBaseCommand(ffmpegPath);
         command.add("-ss");
         command.add(time);
         command.add("-i");
@@ -174,18 +171,19 @@ public class TiFFmpegUtil {
         command.add("2"); // 图片质量
         command.add("-y");
         command.add(outputPath);
-
         return executeSync(command) == 0;
     }
 
     /**
      * 提取音频
      *
+     * @param ffmpegPath FFMPEG路径
      * @param inputPath  源视频路径
      * @param outputPath 音频输出路径 (如 .mp3, .aac)
+     * @return boolean
      */
-    public static boolean extractAudio(String inputPath, String outputPath) {
-        List<String> command = buildBaseCommand();
+    public static boolean extractAudio(String ffmpegPath, String inputPath, String outputPath) {
+        List<String> command = buildBaseCommand(ffmpegPath);
         command.add("-i");
         command.add(inputPath);
         command.add("-vn"); // 不处理视频
@@ -202,11 +200,13 @@ public class TiFFmpegUtil {
      * 视频拼接 (使用 concat 协议)
      * 注意：需要先创建一个 list.txt 文件，内容为 "file 'video1.mp4'\nfile 'video2.mp4'"
      *
+     * @param ffmpegPath   FFMPEG路径
      * @param listFilePath 文件列表路径
      * @param outputPath   输出路径
+     * @return boolean
      */
-    public static boolean concatVideos(String listFilePath, String outputPath) {
-        List<String> command = buildBaseCommand();
+    public static boolean concatVideos(String ffmpegPath, String listFilePath, String outputPath) {
+        List<String> command = buildBaseCommand(ffmpegPath);
         command.add("-f");
         command.add("concat");
         command.add("-safe");
@@ -217,21 +217,22 @@ public class TiFFmpegUtil {
         command.add("copy"); // 直接流复制，速度快
         command.add("-y");
         command.add(outputPath);
-
         return executeSync(command) == 0;
     }
 
     /**
      * 添加水印
      *
+     * @param ffmpegPath FFMPEG路径
      * @param inputPath  源视频
      * @param watermark  水印图片
      * @param outputPath 输出路径
      * @param position   位置 (overlay参数，例如 "10:10" 左上角, "main_w-overlay_w-10:10" 右上角)
+     * @return {@link String }
      */
-    public static String addWatermark(String inputPath, String watermark, String outputPath, String position) {
+    public static String addWatermark(String ffmpegPath, String inputPath, String watermark, String outputPath, String position) {
         String taskId = UUID.randomUUID().toString();
-        List<String> command = buildBaseCommand();
+        List<String> command = buildBaseCommand(ffmpegPath);
         command.add("-i");
         command.add(inputPath);
         command.add("-i");
