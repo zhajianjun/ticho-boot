@@ -44,7 +44,6 @@ public class TiFFmpegUtil {
             // 合并错误流和输出流
             builder.redirectErrorStream(true);
             Process process = builder.start();
-
             // 消耗输出流，防止缓冲区填满导致进程挂起
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 String line;
@@ -192,7 +191,6 @@ public class TiFFmpegUtil {
         // 如果需要转码为mp3，可以使用: command.add("libmp3lame");
         command.add("-y");
         command.add(outputPath);
-
         return executeSync(command) == 0;
     }
 
