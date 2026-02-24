@@ -24,6 +24,9 @@ public class TiFFmpegUtil {
 
     /**
      * 构建基础的命令列表
+     *
+     * @param ffmpegPath FFMPEG路径
+     * @return {@link List }<{@link String }>
      */
     private static List<String> buildBaseCommand(String ffmpegPath) {
         List<String> command = new ArrayList<>();
@@ -38,13 +41,12 @@ public class TiFFmpegUtil {
      * @return 执行结果 (0表示成功)
      */
     public static int executeSync(List<String> command) {
+        Process process = null;
         try {
             log.info("执行命令: {}", String.join(" ", command));
             ProcessBuilder builder = new ProcessBuilder(command);
-            // 合并错误流和输出流
             builder.redirectErrorStream(true);
-            Process process = builder.start();
-            // 消耗输出流，防止缓冲区填满导致进程挂起
+            process = builder.start();
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 String line;
                 while ((line = reader.readLine()) != null) {
@@ -60,6 +62,9 @@ public class TiFFmpegUtil {
             return exitCode;
         } catch (Exception e) {
             log.error("FFmpeg 执行异常", e);
+            if (process != null && process.isAlive()) {
+                process.destroy(); // 显式销毁进程避免资源泄漏
+            }
             return -1;
         }
     }
@@ -74,29 +79,35 @@ public class TiFFmpegUtil {
      */
     public static CompletableFuture<Integer> executeAsync(List<String> command, Consumer<String> consumer, String taskId) {
         return CompletableFuture.supplyAsync(() -> {
+            Process process = null;
             try {
                 log.info("Task [{}] 开始执行: {}", taskId, String.join(" ", command));
                 ProcessBuilder builder = new ProcessBuilder(command);
                 builder.redirectErrorStream(true);
-                Process process = builder.start();
-
+                process = builder.start();
                 // 将进程放入Map，以便可以强制停止
                 TASK_MAP.put(taskId, process);
 
+                StringBuilder logBuffer = new StringBuilder(); // 聚合日志
                 try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                     String line;
                     while ((line = reader.readLine()) != null) {
+                        logBuffer.append(line).append("\n");
                         if (consumer != null) {
                             consumer.accept(line);
                         }
                     }
                 }
+                log.info("Task [{}] 日志汇总:\n{}", taskId, logBuffer.toString()); // 批量输出日志
                 int exitCode = process.waitFor();
                 TASK_MAP.remove(taskId);
                 return exitCode;
             } catch (Exception e) {
                 log.error("Task [{}] 执行异常", taskId, e);
                 TASK_MAP.remove(taskId);
+                if (process != null && process.isAlive()) {
+                    process.destroy(); // 显式销毁进程避免资源泄漏
+                }
                 return -1;
             }
         });
@@ -104,13 +115,20 @@ public class TiFFmpegUtil {
 
     /**
      * 停止指定任务
+     *
+     * @param taskId 任务编号
+     * @return boolean
      */
     public static boolean stopTask(String taskId) {
         Process process = TASK_MAP.get(taskId);
         if (process != null && process.isAlive()) {
-            process.destroy();
-            log.info("Task [{}] 已停止", taskId);
-            return true;
+            synchronized (process) { // 双重检查锁定
+                if (process.isAlive()) {
+                    process.destroy();
+                    log.info("Task [{}] 已停止", taskId);
+                    return true;
+                }
+            }
         }
         return false;
     }
