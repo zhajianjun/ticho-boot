@@ -26,7 +26,6 @@ public class TiFFmpegUtil {
      * 构建基础的命令列表
      *
      * @param ffmpegPath FFMPEG路径
-     * @return {@link List }<{@link String }>
      */
     private static List<String> buildBaseCommand(String ffmpegPath) {
         List<String> command = new ArrayList<>();
