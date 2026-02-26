@@ -21,6 +21,11 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>top.ticho.tool</groupId>
+            <artifactId>ticho-tool-core</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

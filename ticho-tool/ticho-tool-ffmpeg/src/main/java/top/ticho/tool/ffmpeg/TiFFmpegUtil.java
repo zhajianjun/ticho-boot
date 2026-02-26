@@ -1,12 +1,12 @@
 package top.ticho.tool.ffmpeg;
 
 import lombok.extern.slf4j.Slf4j;
+import top.ticho.tool.core.TiIdUtil;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
@@ -145,7 +145,7 @@ public class TiFFmpegUtil {
      * @return 任务ID
      */
     public static String transcodeVideo(String ffmpegPath, String inputPath, String outputPath, int crf, String preset) {
-        String taskId = UUID.randomUUID().toString();
+        String taskId = TiIdUtil.shortUuid();
         List<String> command = buildBaseCommand(ffmpegPath);
         command.add("-i");
         command.add(inputPath);
@@ -246,7 +246,7 @@ public class TiFFmpegUtil {
      * @return {@link String }
      */
     public static String addWatermark(String ffmpegPath, String inputPath, String watermark, String outputPath, String position) {
-        String taskId = UUID.randomUUID().toString();
+        String taskId = TiIdUtil.shortUuid();
         List<String> command = buildBaseCommand(ffmpegPath);
         command.add("-i");
         command.add(inputPath);
