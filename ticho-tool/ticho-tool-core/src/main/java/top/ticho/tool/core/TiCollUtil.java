@@ -68,4 +68,14 @@ public class TiCollUtil {
             .collect(Collectors.joining(conjunction));
     }
 
+    public static <T> String join(Collection<T> collection, CharSequence delimiter, CharSequence prefix, CharSequence suffix) {
+        if (null == collection) {
+            return null;
+        }
+        return collection
+            .stream()
+            .map(Object::toString)
+            .collect(Collectors.joining(delimiter, prefix, suffix));
+    }
+
 }
