@@ -39,13 +39,7 @@ public class TiCollUtil {
     }
 
     public static List<String> toList(Collection<?> collection) {
-        if (isEmpty(collection)) {
-            return null;
-        }
-        return collection
-            .stream()
-            .map(Object::toString)
-            .toList();
+        return toList(collection, Object::toString);
     }
 
     public static <T, R> List<R> toList(Collection<T> collection, Function<T, R> function) {
