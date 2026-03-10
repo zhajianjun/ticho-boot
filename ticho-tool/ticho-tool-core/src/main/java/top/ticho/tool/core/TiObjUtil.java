@@ -15,6 +15,22 @@ import java.util.Optional;
  */
 public class TiObjUtil {
 
+    /**
+     * 判断对象是否为空
+     * <p>支持以下类型的判空：
+     * <ul>
+     * <li>{@code null} - 返回 true</li>
+     * <li>数组 - 长度为 0 时返回 true</li>
+     * <li>{@link CharSequence} - 调用 {@code isEmpty()} 方法</li>
+     * <li>{@link Collection} - 调用 {@code isEmpty()} 方法</li>
+     * <li>{@link Iterator} - 没有下一个元素时返回 true</li>
+     * <li>{@link Map} - 调用 {@code isEmpty()} 方法</li>
+     * <li>{@link Optional} - 调用 {@code isEmpty()} 方法</li>
+     * </ul>
+     *
+     * @param object 待判断的对象
+     * @return 如果对象为空返回 true，否则返回 false
+     */
     public static boolean isEmpty(final Object object) {
         if (object == null) {
             return true;
@@ -32,23 +48,33 @@ public class TiObjUtil {
         };
     }
 
+    /**
+     * 判断对象是否不为空
+     *
+     * @param obj 待判断的对象
+     * @return 如果对象不为空返回 true，否则返回 false
+     * @see #isEmpty(Object)
+     */
     public static boolean isNotEmpty(Object obj) {
         return !isEmpty(obj);
     }
 
     /**
-     * 计算对象长度，如果是字符串调用其length函数，集合类调用其size函数，数组调用其length属性，其他可遍历对象遍历计算长度<br>
-     * 支持的类型包括：
+     * 计算对象长度
+     * <p>支持以下类型的长度计算：
      * <ul>
-     * <li>CharSequence</li>
-     * <li>Map</li>
-     * <li>Iterator</li>
-     * <li>Enumeration</li>
-     * <li>Array</li>
+     * <li>{@code null} - 返回 0</li>
+     * <li>{@link CharSequence} - 调用 {@code length()} 方法</li>
+     * <li>{@link Collection} - 调用 {@code size()} 方法</li>
+     * <li>{@link Map} - 调用 {@code size()} 方法</li>
+     * <li>{@link Iterator} - 遍历迭代器计算元素个数</li>
+     * <li>{@link Enumeration} - 遍历枚举计算元素个数</li>
+     * <li>数组 - 获取数组长度</li>
      * </ul>
+     * <p>注意：对于 {@link Iterator} 和 {@link Enumeration} 类型，遍历会消耗其中的元素</p>
      *
      * @param obj 被计算长度的对象
-     * @return 长度
+     * @return 长度值，如果对象类型不支持则返回 -1
      */
     public static int length(Object obj) {
         switch (obj) {
@@ -90,6 +116,14 @@ public class TiObjUtil {
         return -1;
     }
 
+    /**
+     * 如果对象为 null 则返回默认值，否则返回对象本身
+     *
+     * @param <T>          对象类型
+     * @param object       待判断的对象
+     * @param defaultValue 默认值
+     * @return 如果对象为 null 返回默认值，否则返回对象本身
+     */
     public static <T> T getIfNull(final T object, final T defaultValue) {
         return object != null ? object : defaultValue;
     }
