@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.starter.view.core.TiResult;
+import top.ticho.tool.core.TiStrUtil;
 import top.ticho.tool.core.enums.TiBizErrorCode;
 import top.ticho.tool.core.exception.TiBizException;
 import top.ticho.tool.core.exception.TiSysException;
@@ -46,8 +47,8 @@ public class TiApiUtil {
             throw new TiSysException(TiBizErrorCode.APP_SERVICE_ERR, errorMsg, e);
         }
         if (tiResult == null) {
-            log.error("{},{}", errorMsg, "返回结果为空");
-            throw new TiSysException(TiBizErrorCode.APP_SERVICE_ERR, errorMsg);
+            String format = TiStrUtil.format("{},{}", errorMsg, "返回结果为空");
+            throw new TiSysException(TiBizErrorCode.APP_SERVICE_ERR, format);
         }
         int code = tiResult.getCode();
         String message = tiResult.getMessage();

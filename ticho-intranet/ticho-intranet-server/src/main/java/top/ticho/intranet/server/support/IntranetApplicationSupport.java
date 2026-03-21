@@ -8,6 +8,7 @@ import top.ticho.intranet.common.constant.TiIntranetConst;
 import top.ticho.intranet.common.exception.IntranetException;
 import top.ticho.intranet.common.prop.IntranetServerProperty;
 import top.ticho.intranet.common.util.IntranetUtil;
+import top.ticho.tool.core.TiStrUtil;
 
 import java.util.Map;
 import java.util.Objects;
@@ -65,8 +66,8 @@ public class IntranetApplicationSupport {
             channelFuture.get();
             bindPortChannelMap.put(port, channelFuture.channel());
         } catch (InterruptedException | ExecutionException e) {
-            log.error("绑定应用失败，端口：{}，错误信息：{}", port, e.getMessage(), e);
-            throw new IntranetException(e.getMessage(), e);
+            String format = TiStrUtil.format("绑定应用失败，端口：{}", port);
+            throw new IntranetException(format, e);
         }
         log.info("绑定应用成功，端口：{}", port);
         return true;

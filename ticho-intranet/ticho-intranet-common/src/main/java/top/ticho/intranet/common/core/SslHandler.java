@@ -43,7 +43,6 @@ public class SslHandler {
             log.info("证书初始化成功");
             this.SslContext = sslCtx;
         } catch (Exception e) {
-            log.error("加载证书失败;catch{}.", e.getMessage(), e);
             throw new IntranetException("加载证书失败", e);
         }
     }

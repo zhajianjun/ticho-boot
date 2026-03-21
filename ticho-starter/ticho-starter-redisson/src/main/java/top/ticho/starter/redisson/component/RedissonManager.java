@@ -31,8 +31,7 @@ public class RedissonManager {
             Config config = RedissonConfigFactory.getInstance().createConfig(redissonProperties);
             redisson = Redisson.create(config);
         } catch (Exception e) {
-            log.error("Redisson init error", e);
-            throw new IllegalArgumentException("please input correct configurations,connectionType must in standalone/sentinel/cluster/masterslave");
+            throw new IllegalArgumentException("please input correct configurations,connectionType must in standalone/sentinel/cluster/masterslave", e);
         }
     }
 

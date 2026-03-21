@@ -12,7 +12,7 @@ public class IntranetException extends RuntimeException {
         super(message);
     }
 
-    public IntranetException(String message, Exception e) {
+    public IntranetException(String message, Throwable e) {
         super(message, e);
     }
 

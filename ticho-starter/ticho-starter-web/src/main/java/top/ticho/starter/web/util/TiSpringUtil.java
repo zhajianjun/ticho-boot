@@ -114,7 +114,6 @@ public class TiSpringUtil implements ApplicationContextAware {
         try {
             executionChain = mapping.getHandler(request);
         } catch (Exception e) {
-            log.error("Failed to get handler method for request: {}", request, e);
             throw new RuntimeException("Failed to get handler method", e);
         }
         if (executionChain == null) {
