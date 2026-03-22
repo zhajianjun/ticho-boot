@@ -46,13 +46,13 @@ public class MySqlTypeConverter implements TypeConverter {
         } else if (typeLower.contains("double")) {
             return JavaType.DOUBLE;
         } else if (!typeLower.contains("json") && !typeLower.contains("enum")) {
-            return getDatepropertyType(dateType, typeLower);
+            return getDatePropertyType(dateType, typeLower);
         } else {
             return JavaType.STRING;
         }
     }
 
-    private JavaType getDatepropertyType(DateType dateType, String type) {
+    private JavaType getDatePropertyType(DateType dateType, String type) {
         String year = "year";
         String time = "time";
         String date = "date";

@@ -9,14 +9,14 @@ import java.util.Map;
  * @author zhajianjun
  * @date 2024-02-01 12:30
  */
-public class KeyWordsRegistrey {
+public class KeyWordsRegistry {
     private final Map<DbType, KeyWordsHandler> key_words_enum_map = new EnumMap<>(DbType.class);
 
-    public KeyWordsRegistrey() {
+    public KeyWordsRegistry() {
         this.key_words_enum_map.put(DbType.MYSQL, new MySqlKeyWordsHandler());
     }
 
-    public KeyWordsRegistrey(DbType dbType, KeyWordsHandler keyWordsHandler) {
+    public KeyWordsRegistry(DbType dbType, KeyWordsHandler keyWordsHandler) {
         this.key_words_enum_map.putIfAbsent(dbType, keyWordsHandler);
     }
 

@@ -21,7 +21,7 @@ import top.ticho.generator.enums.DbType;
 import top.ticho.generator.enums.JavaType;
 import top.ticho.generator.exception.GenerateException;
 import top.ticho.generator.keywords.KeyWordsHandler;
-import top.ticho.generator.keywords.KeyWordsRegistrey;
+import top.ticho.generator.keywords.KeyWordsRegistry;
 import top.ticho.generator.keywords.MySqlKeyWordsHandler;
 import top.ticho.generator.util.AssertUtil;
 import top.ticho.generator.util.BeetlUtil;
@@ -89,7 +89,7 @@ public class ProjectHandler {
         AssertUtil.isTrue(Objects.nonNull(dataSourceConfig), "数据源配置[dataSourceConfig]不能为空");
         AssertUtil.isTrue(Objects.nonNull(projectConfig), "项目配置[projectConfig]不能为空");
         AssertUtil.isTrue(ObjUtil.isNotEmpty(fileTemplateConfigMap), "模板配置[fileTemplateConfigs]不能为空");
-        DbType dbType = Optional.ofNullable(DbType.getDbType(dataSourceConfig.getDriverName())).orElse(DbType.MYSQL);
+        DbType dbType = DbType.getDbType(dataSourceConfig.getDriverName()).orElse(DbType.MYSQL);
         this.globalConfig = globalConfig;
         this.dataSourceConfig = dataSourceConfig;
         this.projectConfig = projectConfig;
@@ -123,8 +123,8 @@ public class ProjectHandler {
     }
 
     private KeyWordsHandler getKeyWordsHandler(DbType dbType) {
-        KeyWordsRegistrey keyWordsRegistrey = new KeyWordsRegistrey();
-        return Optional.ofNullable(keyWordsRegistrey.getKeyWordsHandler(dbType)).orElseGet(MySqlKeyWordsHandler::new);
+        KeyWordsRegistry keyWordsRegistry = new KeyWordsRegistry();
+        return Optional.ofNullable(keyWordsRegistry.getKeyWordsHandler(dbType)).orElseGet(MySqlKeyWordsHandler::new);
     }
 
     private TypeConverter getTypeConverter(DbType dbType) {
