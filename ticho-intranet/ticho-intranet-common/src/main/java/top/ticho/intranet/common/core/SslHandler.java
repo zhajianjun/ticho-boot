@@ -29,9 +29,9 @@ public class SslHandler {
     private final SSLContext SslContext;
 
     public SslHandler(String jksPath, String sslPassword) {
-        try {
+        try (InputStream inputStream = this.loadJks(jksPath)) {
             KeyStore ks = KeyStore.getInstance(TiIntranetConst.JKS);
-            ks.load(this.loadJks(jksPath), sslPassword.toCharArray());
+            ks.load(inputStream, sslPassword.toCharArray());
             log.info("初始化证书key");
             KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
             kmf.init(ks, sslPassword.toCharArray());
