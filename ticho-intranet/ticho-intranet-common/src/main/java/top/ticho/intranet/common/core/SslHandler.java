@@ -26,7 +26,7 @@ import java.security.KeyStore;
 @Slf4j
 public class SslHandler {
 
-    private final SSLContext SslContext;
+    private final SSLContext sslContext;
 
     public SslHandler(String jksPath, String sslPassword) {
         try (InputStream inputStream = this.loadJks(jksPath)) {
@@ -41,7 +41,7 @@ public class SslHandler {
             SSLContext sslCtx = SSLContext.getInstance(TiIntranetConst.TLS);
             sslCtx.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
             log.info("证书初始化成功");
-            this.SslContext = sslCtx;
+            this.sslContext = sslCtx;
         } catch (Exception e) {
             throw new IntranetException("加载证书失败", e);
         }
