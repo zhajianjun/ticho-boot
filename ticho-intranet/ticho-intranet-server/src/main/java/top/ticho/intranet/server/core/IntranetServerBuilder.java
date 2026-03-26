@@ -1,7 +1,10 @@
 package top.ticho.intranet.server.core;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.IoHandlerFactory;
+import io.netty.channel.MultiThreadIoEventLoopGroup;
+import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import top.ticho.intranet.common.prop.IntranetServerProperty;
 import top.ticho.intranet.server.common.ServerStatus;
@@ -40,8 +43,9 @@ public class IntranetServerBuilder {
     }
 
     public static IntranetServerHandler build(IntranetServerProperty intranetServerProperty, IntranetApplicationListenFilter intranetApplicationListenFilter) {
-        NioEventLoopGroup serverBoss = new NioEventLoopGroup(intranetServerProperty.getBossThreads());
-        NioEventLoopGroup serverWorker = new NioEventLoopGroup(intranetServerProperty.getWorkerThreads());
+        IoHandlerFactory ioHandlerFactory = NioIoHandler.newFactory();
+        EventLoopGroup serverBoss = new MultiThreadIoEventLoopGroup(intranetServerProperty.getBossThreads(), ioHandlerFactory);
+        EventLoopGroup serverWorker = new MultiThreadIoEventLoopGroup(intranetServerProperty.getWorkerThreads(), ioHandlerFactory);
         boolean sslEnable = Boolean.TRUE.equals(intranetServerProperty.getSslEnable());
         AtomicInteger serverStatus = new AtomicInteger(ServerStatus.INITING.getCode());
         ServerBootstrap serverBootstrap = createBootstrap(serverBoss, serverWorker);
@@ -69,7 +73,7 @@ public class IntranetServerBuilder {
         return intranetServerHandler;
     }
 
-    private static ServerBootstrap createBootstrap(NioEventLoopGroup serverBoss, NioEventLoopGroup serverWorker) {
+    private static ServerBootstrap createBootstrap(EventLoopGroup serverBoss, EventLoopGroup serverWorker) {
         ServerBootstrap serverBootstrap = new ServerBootstrap();
         serverBootstrap.group(serverBoss, serverWorker);
         serverBootstrap.channel(NioServerSocketChannel.class);

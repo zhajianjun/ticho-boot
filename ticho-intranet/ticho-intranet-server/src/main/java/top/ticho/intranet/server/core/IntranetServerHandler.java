@@ -2,7 +2,7 @@ package top.ticho.intranet.server.core;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.EventLoopGroup;
 import lombok.extern.slf4j.Slf4j;
 import top.ticho.intranet.common.constant.TiIntranetConst;
 import top.ticho.intranet.common.exception.IntranetException;
@@ -36,8 +36,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public record IntranetServerHandler(
     AtomicInteger serverStatus,
-    NioEventLoopGroup serverBoss,
-    NioEventLoopGroup serverWorker,
+    EventLoopGroup serverBoss,
+    EventLoopGroup serverWorker,
     IntranetServerProperty intranetServerProperty,
     ServerBootstrap serverBootstrap,
     ServerBootstrap sslServerBootstrap,
@@ -249,6 +249,33 @@ public record IntranetServerHandler(
     public List<IntranetClient> findAll() {
         checkStatus();
         return intranetClientSupport.findAll();
+    }
+
+    /**
+     * 优雅关闭服务端
+     * <p>
+     * 关闭所有客户端连接，释放EventLoopGroup资源
+     * </p>
+     */
+    public void shutdown() {
+        log.info("开始关闭内网映射服务...");
+        serverStatus.set(ServerStatus.DISABLED.getCode());
+        try {
+            // 删除所有客户端
+            removeAll();
+            // 优雅关闭EventLoopGroup
+            if (serverBoss != null) {
+                serverBoss.shutdownGracefully();
+                log.info("Server Boss EventLoopGroup 已关闭");
+            }
+            if (serverWorker != null) {
+                serverWorker.shutdownGracefully();
+                log.info("Server Worker EventLoopGroup 已关闭");
+            }
+            log.info("内网映射服务已关闭");
+        } catch (Exception e) {
+            log.error("关闭内网映射服务时发生错误", e);
+        }
     }
 
 }

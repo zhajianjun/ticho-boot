@@ -4,8 +4,8 @@ import io.netty.channel.Channel;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 客户端
@@ -30,7 +30,8 @@ public class IntranetClient {
     public IntranetClient(String accessKey, String name) {
         this.accessKey = accessKey;
         this.name = name;
-        this.portMap = new HashMap<>();
+        // 使用 ConcurrentHashMap 确保线程安全
+        this.portMap = new ConcurrentHashMap<>();
     }
 
     public void connect(Channel channel) {
