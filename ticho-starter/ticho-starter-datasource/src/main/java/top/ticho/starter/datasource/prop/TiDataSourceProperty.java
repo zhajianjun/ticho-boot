@@ -42,6 +42,12 @@ public class TiDataSourceProperty {
         private Boolean showParams;
         /** 是否打印简化的日志信息 */
         private Boolean printSimple;
+        /**
+         * 敏感字段名称列表（支持模糊匹配）
+         * 默认包含：password, pwd, passwd, secret, token, phone, mobile, idCard, idcard
+         * 配置示例：ticho.datasource.log.sensitive-fields=password,secret,phone
+         */
+        private String sensitiveFields;
     }
 
 }
