@@ -33,9 +33,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -47,6 +49,12 @@ import java.util.stream.Collectors;
 @Slf4j
 public class TiWebLogInterceptor implements HandlerInterceptor, Ordered {
 
+    /** 默认敏感字段列表 */
+    private static final Set<String> DEFAULT_SENSITIVE_FIELDS = new HashSet<>(Arrays.asList(
+        "password", "pwd", "passwd", "secret", "token", "authorization",
+        "phone", "mobile", "idCard", "idcard", "id_card"
+    ));
+
     /** 日志信息线程变量 */
     private static final ThreadLocal<TiHttpLog> logTheadLocal = new ThreadLocal<>();
     /** 日志过滤地址匹配线程变量 */
@@ -57,10 +65,30 @@ public class TiWebLogInterceptor implements HandlerInterceptor, Ordered {
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
     /** 环境变量 */
     private final Environment environment;
+    /** 敏感字段集合 */
+    private final Set<String> sensitiveFields;
 
     public TiWebLogInterceptor(TiLogProperty tiLogProperty, Environment environment) {
         this.tiLogProperty = tiLogProperty;
         this.environment = environment;
+        this.sensitiveFields = initSensitiveFields();
+    }
+
+    /**
+     * 初始化敏感字段集合
+     */
+    private Set<String> initSensitiveFields() {
+        Set<String> fields = new HashSet<>(DEFAULT_SENSITIVE_FIELDS);
+        if (TiStrUtil.isNotBlank(tiLogProperty.getSensitiveFields())) {
+            String[] customFields = tiLogProperty.getSensitiveFields().split(",");
+            for (String field : customFields) {
+                String trimmedField = field.trim().toLowerCase();
+                if (TiStrUtil.isNotBlank(trimmedField)) {
+                    fields.add(trimmedField);
+                }
+            }
+        }
+        return fields;
     }
 
     public static TiHttpLog logInfo() {
@@ -137,31 +165,35 @@ public class TiWebLogInterceptor implements HandlerInterceptor, Ordered {
         if (tiHttpLog == null) {
             return;
         }
-        String type = request.getMethod();
-        String url = request.getRequestURI();
-        String resBody = getResBody(response);
-        Map<String, String> resHeaderMap = getHeaders(response);
-        String resHeaders = toJson(resHeaderMap);
-        long end = System.currentTimeMillis();
-        int status = response.getStatus();
-        Long consume = tiHttpLog.getConsume();
-        tiHttpLog.setResBody(resBody);
-        tiHttpLog.setResHeaders(resHeaders);
-        if (ex != null) {
-            tiHttpLog.setErrMessage(ex.getMessage());
+        try {
+            String type = request.getMethod();
+            String url = request.getRequestURI();
+            String resBody = getResBody(response);
+            Map<String, String> resHeaderMap = getHeaders(response);
+            String resHeaders = toJson(resHeaderMap);
+            long end = System.currentTimeMillis();
+            int status = response.getStatus();
+            Long consume = tiHttpLog.getConsume();
+            tiHttpLog.setResBody(resBody);
+            tiHttpLog.setResHeaders(resHeaders);
+            if (ex != null) {
+                tiHttpLog.setErrMessage(ex.getMessage());
+            }
+            tiHttpLog.setEnd(end);
+            tiHttpLog.setStatus(status);
+            tiHttpLog.setMdcMap(MDC.getCopyOfContextMap());
+            boolean print = Boolean.TRUE.equals(tiLogProperty.getPrint());
+            Boolean anyMatch = antPathMatchLocal.get();
+            if (print && !anyMatch) {
+                log.info("[REQ] {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}, 响应头={}", type, url, status, consume, nullOfDefault(resBody), nullOfDefault(resHeaders));
+            }
+            ApplicationContext applicationContext = TiSpringUtil.getApplicationContext();
+            applicationContext.publishEvent(new TiWebLogEvent(applicationContext, tiHttpLog, handler));
+        } finally {
+            // 确保ThreadLocal被清理，避免内存泄漏
+            logTheadLocal.remove();
+            antPathMatchLocal.remove();
         }
-        tiHttpLog.setEnd(end);
-        tiHttpLog.setStatus(status);
-        tiHttpLog.setMdcMap(MDC.getCopyOfContextMap());
-        boolean print = Boolean.TRUE.equals(tiLogProperty.getPrint());
-        Boolean anyMatch = antPathMatchLocal.get();
-        if (print && !anyMatch) {
-            log.info("[REQ] {} {} 请求结束, 状态={}, 耗时={}ms, 响应参数={}, 响应头={}", type, url, status, consume, nullOfDefault(resBody), nullOfDefault(resHeaders));
-        }
-        ApplicationContext applicationContext = TiSpringUtil.getApplicationContext();
-        applicationContext.publishEvent(new TiWebLogEvent(applicationContext, tiHttpLog, handler));
-        logTheadLocal.remove();
-        antPathMatchLocal.remove();
     }
 
     private String getResBody(HttpServletResponse response) {
@@ -185,7 +217,8 @@ public class TiWebLogInterceptor implements HandlerInterceptor, Ordered {
             // 因为无法判断文本域是否是单值或者双值，所以我们全部使用双值接收
             String[] values = request.getParameterValues(name);
             String value = String.join(",", Arrays.stream(values).filter(TiStrUtil::isNotBlank).collect(Collectors.joining(",")));
-            map.put(name, value);
+            // 对敏感字段进行脱敏处理
+            map.put(name, isSensitiveField(name) ? maskSensitiveValue(value) : value);
         }
         return map;
     }
@@ -199,7 +232,8 @@ public class TiWebLogInterceptor implements HandlerInterceptor, Ordered {
             // 根据文本域的name来获取值
             // 因为无法判断文本域是否是单值或者双值，所以我们全部使用双值接收
             String value = request.getHeader(name);
-            map.put(name, value);
+            // 对敏感字段进行脱敏处理
+            map.put(name, isSensitiveField(name) ? maskSensitiveValue(value) : value);
         }
         return map;
     }
@@ -231,6 +265,53 @@ public class TiWebLogInterceptor implements HandlerInterceptor, Ordered {
     @Override
     public int getOrder() {
         return tiLogProperty.getOrder();
+    }
+
+    /**
+     * 判断字段是否为敏感字段
+     *
+     * @param fieldName 字段名
+     * @return 是否为敏感字段
+     */
+    private boolean isSensitiveField(String fieldName) {
+        if (TiStrUtil.isBlank(fieldName)) {
+            return false;
+        }
+        String lowerFieldName = fieldName.toLowerCase();
+        for (String sensitiveField : sensitiveFields) {
+            if (lowerFieldName.contains(sensitiveField)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 对敏感值进行脱敏处理
+     * <p>
+     * 脱敏规则：
+     * <ul>
+     *     <li>长度 <= 2：显示前1位，其余用*代替</li>
+     *     <li>长度 3-4：显示前1位和后1位，中间用*代替</li>
+     *     <li>长度 >= 5：显示前2位和后2位，中间用*代替</li>
+     * </ul>
+     * </p>
+     *
+     * @param value 原始值
+     * @return 脱敏后的值
+     */
+    private String maskSensitiveValue(String value) {
+        if (TiStrUtil.isBlank(value)) {
+            return value;
+        }
+        int length = value.length();
+        if (length <= 2) {
+            return value.charAt(0) + "*".repeat(Math.max(0, length - 1));
+        } else if (length <= 4) {
+            return value.charAt(0) + "*" + value.charAt(length - 1);
+        } else {
+            return value.substring(0, 2) + "****" + value.substring(length - 2);
+        }
     }
 
 }
