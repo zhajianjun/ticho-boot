@@ -1,12 +1,12 @@
 package top.ticho.starter.rabbitmq.config;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.ReturnedMessage;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.JacksonJsonMessageConverter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -22,17 +22,14 @@ import java.util.Optional;
  * @author zhajianjun
  * @date 2022-09-13 16:39
  */
+@RequiredArgsConstructor
 @Configuration
 @PropertySource(value = "classpath:ticho-rabbitmq.properties")
 @Slf4j
 public class TiRabbitmqConfig implements RabbitTemplate.ConfirmCallback, RabbitTemplate.ReturnsCallback {
 
-
-    @Autowired
-    private RabbitTemplate rabbitTemplate;
-
-    @Autowired
-    private ApplicationContext applicationContext;
+    private final RabbitTemplate rabbitTemplate;
+    private final ApplicationContext applicationContext;
 
     @PostConstruct
     public void init() {
