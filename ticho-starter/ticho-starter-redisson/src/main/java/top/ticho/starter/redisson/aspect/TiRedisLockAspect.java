@@ -3,7 +3,6 @@ package top.ticho.starter.redisson.aspect;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -24,9 +23,11 @@ import top.ticho.starter.redisson.util.TiRedissonTemplate;
 @ConditionalOnClass(Aspect.class)
 public class TiRedisLockAspect {
 
-    @Autowired
-    private TiRedissonTemplate tiRedissonTemplate;
+    private final TiRedissonTemplate tiRedissonTemplate;
 
+    public TiRedisLockAspect(TiRedissonTemplate tiRedissonTemplate) {
+        this.tiRedissonTemplate = tiRedissonTemplate;
+    }
 
     @Around("@annotation(tiRedisLock)")
     public Object around(ProceedingJoinPoint joinPoint, TiRedisLock tiRedisLock) throws Throwable {
@@ -39,11 +40,11 @@ public class TiRedisLockAspect {
         // 取得方法名
         String key = joinPoint.getSignature().getDeclaringTypeName() + "." + joinPoint.getSignature().getName();
         // -1代表锁整个方法，而非具体锁哪条数据
-        if (lockKey > 0) {
+        if (lockKey > 0 && params != null && lockKey <= params.length) {
             key += params[lockKey - 1];
         }
-        // return tiRedissonTemplate.executeTb(key, expireTime, delayThread, joinPoint::proceed);
-        return null;
+        // 执行分布式锁逻辑
+        return tiRedissonTemplate.executeTb(key, expireTime, delayThread, joinPoint::proceed);
     }
 
 }
