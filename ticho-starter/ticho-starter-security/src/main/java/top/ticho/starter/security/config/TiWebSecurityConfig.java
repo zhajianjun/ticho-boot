@@ -56,13 +56,19 @@ public class TiWebSecurityConfig {
 
     /**
      * 处理安全控制台打印
+     * <p>
+     * 注意：默认用户应通过配置文件 ticho.security.users 进行配置，
+     * 而非硬编码密码。详见 {@link TiSecurityProperty#getUsers()}
      *
      * @see UserDetailsServiceAutoConfiguration 87行 会打印存储在内存的权限用户密码
+     * @deprecated 请使用配置文件设置默认用户，此方法已废弃
      */
+    @Deprecated
     @Autowired
     public void handleConsoleSecurityPrint(SecurityProperties properties) {
         SecurityProperties.User user = properties.getUser();
-        user.setPassword("user");
+        // 不再设置硬编码密码，请通过配置文件设置
+        // user.setPassword("user");
     }
 
     @Bean
