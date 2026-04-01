@@ -25,5 +25,11 @@ public class TiLogProperty {
     private List<String> antPatterns = new ArrayList<>();
     /** 拦截器排序 */
     private Integer order = Integer.MIN_VALUE + 10000;
+    /**
+     * 敏感字段名称列表（支持模糊匹配），用于日志脱敏
+     * 默认包含：password, pwd, passwd, secret, token, authorization, phone, mobile, idCard, idcard
+     * 配置示例：ticho.log.sensitive-fields=password,secret,token,authorization
+     */
+    private String sensitiveFields;
 
 }
