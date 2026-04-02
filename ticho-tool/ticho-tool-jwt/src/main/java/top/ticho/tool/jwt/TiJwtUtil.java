@@ -165,15 +165,23 @@ public class TiJwtUtil {
      *     <li>输出 Claims 信息</li>
      * </ol>
      * </p>
+     * <p>
+     * <b>安全警告</b>：此方法包含硬编码的测试密钥，仅供演示使用。
+     * 生产环境必须从安全配置（如配置文件、密钥管理服务、环境变量）中获取密钥。
+     * 建议使用 {@link top.ticho.tool.security.TiSm2Util#generateSM2KeyPair()} 生成新的密钥对。
+     * </p>
+     *
      */
     public static void test() {
+        // 警告：以下密钥仅供测试使用，生产环境请使用自己的密钥对
         String publicKey = "MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAEjOfgpnPIXbPE+a5SSm+xv/Uu8N1Gh7QQmiIP2gTpER74M5YFpHNkrwa//IiXtpwBoA8v9mnZQqfE2Y44eYX6Qg==";
         String privateKey = "MIGTAgEAMBMGByqGSM49AgEGCCqBHM9VAYItBHkwdwIBAQQgc7V57xPTgMKaI2lrsvgGYYpWHd70vBXGlxawIXZZRaCgCgYIKoEcz1UBgi2hRANCAASM5+Cmc8hds8T5rlJKb7G/9S7w3UaHtBCaIg/aBOkRHvgzlgWkc2SvBr/8iJe2nAGgDy/2adlCp8TZjjh5hfpC";
+
         String token = generateTokenWithSM2(Map.of("test", true), TiBase64Util.decodeAsBytes(privateKey), 1000);
-        System.out.println(token);
+        System.out.println("生成的 Token: " + token);
         TiJwt tiJwt = parseToken(token);
         tiJwt.verify(TiBase64Util.decodeAsBytes(publicKey));
-        System.out.println(tiJwt.claims());
+        System.out.println("验证结果: " + tiJwt.claims());
     }
 
     /**
