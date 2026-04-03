@@ -2,6 +2,7 @@ package top.ticho.tool.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -82,11 +83,11 @@ public class TiCollUtil {
      * @param function   转换函数
      * @param <T>        原始元素类型
      * @param <R>        目标元素类型
-     * @return 转换后的列表，若集合为空则返回 null
+     * @return 转换后的列表，若集合为空则返回空列表
      */
     public static <T, R> List<R> toList(Collection<T> collection, Function<T, R> function) {
         if (isEmpty(collection)) {
-            return null;
+            return Collections.emptyList();
         }
         return collection
             .stream()
