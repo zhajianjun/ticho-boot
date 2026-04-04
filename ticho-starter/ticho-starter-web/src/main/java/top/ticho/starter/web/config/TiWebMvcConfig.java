@@ -11,8 +11,6 @@ import tools.jackson.databind.json.JsonMapper;
 import top.ticho.starter.web.advice.TiResponseBodyAdvice;
 import top.ticho.starter.web.factory.TiYamlPropertySourceFactory;
 
-import jakarta.annotation.Resource;
-
 /**
  * 基础视图配置
  *
@@ -24,13 +22,11 @@ import jakarta.annotation.Resource;
 @PropertySource(factory = TiYamlPropertySourceFactory.class, value = "classpath:ticho-web.yaml")
 public class TiWebMvcConfig implements WebMvcConfigurer {
 
-    /**
-     * Jackson2ObjectMapperBuilderCustomizer的自定义bean的配置会体现在生成的MappingJackson2HttpMessageConverter的bean中
-     * <p>
-     * // * @see TiJacksonCustomizerConfig#jackson2ObjectMapperBuilderCustomizer()
-     */
-    @Resource
-    private JsonMapper jsonMapper;
+    private final JsonMapper jsonMapper;
+
+    public TiWebMvcConfig(JsonMapper jsonMapper) {
+        this.jsonMapper = jsonMapper;
+    }
 
     /**
      * 主要处理  ResponseHandle#beforeBodyWrite中返回String，匹配的是StringHttpMessageConverter，但是最终返回的是Result对象，导致

@@ -51,28 +51,28 @@ import java.util.Map;
 @RestControllerAdvice
 @Order(Ordered.LOWEST_PRECEDENCE - 10)
 public class TiResponseBodyAdvice implements ResponseBodyAdvice<Object> {
-    public static Map<Class<? extends Throwable>, TiHttpErrorCode> errCodeMap = null;
-    private final HttpServletResponse response;
+    /**
+     * 错误代码映射表，使用不可变Map确保线程安全
+     */
+    private static final Map<Class<? extends Throwable>, TiHttpErrorCode> ERR_CODE_MAP = Map.ofEntries(
+        Map.entry(BindException.class, TiHttpErrorCode.BAD_REQUEST),
+        Map.entry(TypeMismatchException.class, TiHttpErrorCode.BAD_REQUEST),
+        Map.entry(NoHandlerFoundException.class, TiHttpErrorCode.BAD_REQUEST),
+        Map.entry(HandlerMethodValidationException.class, TiHttpErrorCode.BAD_REQUEST),
+        Map.entry(ServletRequestBindingException.class, TiHttpErrorCode.BAD_REQUEST),
+        Map.entry(HttpMessageNotReadableException.class, TiHttpErrorCode.BAD_REQUEST),
+        Map.entry(MissingServletRequestPartException.class, TiHttpErrorCode.BAD_REQUEST),
+        Map.entry(MissingServletRequestParameterException.class, TiHttpErrorCode.BAD_REQUEST),
+        Map.entry(MissingPathVariableException.class, TiHttpErrorCode.INTERNAL_SERVER_ERROR),
+        Map.entry(ConversionNotSupportedException.class, TiHttpErrorCode.INTERNAL_SERVER_ERROR),
+        Map.entry(HttpMessageNotWritableException.class, TiHttpErrorCode.INTERNAL_SERVER_ERROR),
+        Map.entry(HttpRequestMethodNotSupportedException.class, TiHttpErrorCode.METHOD_NOT_ALLOWED),
+        Map.entry(HttpMediaTypeNotSupportedException.class, TiHttpErrorCode.UNSUPPORTED_MEDIA_TYPE),
+        Map.entry(HttpMediaTypeNotAcceptableException.class, TiHttpErrorCode.NOT_ACCEPTABLE),
+        Map.entry(AsyncRequestTimeoutException.class, TiHttpErrorCode.SERVICE_UNAVAILABLE)
+    );
 
-    static {
-        TiResponseBodyAdvice.errCodeMap = Map.ofEntries(
-            Map.entry(BindException.class, TiHttpErrorCode.BAD_REQUEST),
-            Map.entry(TypeMismatchException.class, TiHttpErrorCode.BAD_REQUEST),
-            Map.entry(NoHandlerFoundException.class, TiHttpErrorCode.BAD_REQUEST),
-            Map.entry(HandlerMethodValidationException.class, TiHttpErrorCode.BAD_REQUEST),
-            Map.entry(ServletRequestBindingException.class, TiHttpErrorCode.BAD_REQUEST),
-            Map.entry(HttpMessageNotReadableException.class, TiHttpErrorCode.BAD_REQUEST),
-            Map.entry(MissingServletRequestPartException.class, TiHttpErrorCode.BAD_REQUEST),
-            Map.entry(MissingServletRequestParameterException.class, TiHttpErrorCode.BAD_REQUEST),
-            Map.entry(MissingPathVariableException.class, TiHttpErrorCode.INTERNAL_SERVER_ERROR),
-            Map.entry(ConversionNotSupportedException.class, TiHttpErrorCode.INTERNAL_SERVER_ERROR),
-            Map.entry(HttpMessageNotWritableException.class, TiHttpErrorCode.INTERNAL_SERVER_ERROR),
-            Map.entry(HttpRequestMethodNotSupportedException.class, TiHttpErrorCode.METHOD_NOT_ALLOWED),
-            Map.entry(HttpMediaTypeNotSupportedException.class, TiHttpErrorCode.UNSUPPORTED_MEDIA_TYPE),
-            Map.entry(HttpMediaTypeNotAcceptableException.class, TiHttpErrorCode.NOT_ACCEPTABLE),
-            Map.entry(AsyncRequestTimeoutException.class, TiHttpErrorCode.SERVICE_UNAVAILABLE)
-        );
-    }
+    private final HttpServletResponse response;
 
     /**
      * 全局错误用于捕获不可预知的异常
@@ -85,7 +85,7 @@ public class TiResponseBodyAdvice implements ResponseBodyAdvice<Object> {
             log.warn("catch error\t{}", ex.getMessage());
             return TiResult.of(tiBizException.getCode(), tiBizException.getMessage(), null);
         }
-        TiErrorCode errCode = errCodeMap.get(ex.getClass());
+        TiErrorCode errCode = ERR_CODE_MAP.get(ex.getClass());
         TiResult<String> tiResult;
         if (errCode != null) {
             tiResult = TiResult.of(errCode);
