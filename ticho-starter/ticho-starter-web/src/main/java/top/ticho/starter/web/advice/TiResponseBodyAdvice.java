@@ -120,7 +120,13 @@ public class TiResponseBodyAdvice implements ResponseBodyAdvice<Object> {
     }
 
     @Override
-    public Object beforeBodyWrite(Object o, @NonNull MethodParameter methodParameter, @NonNull MediaType mediaType, @NonNull Class<? extends HttpMessageConverter<?>> aClass, @NonNull ServerHttpRequest serverHttpRequest, @NonNull ServerHttpResponse serverHttpResponse) {
+    public Object beforeBodyWrite(
+        Object o,
+        @NonNull MethodParameter methodParameter,
+        @NonNull MediaType mediaType,
+        @NonNull Class<? extends HttpMessageConverter<?>> aClass,
+        @NonNull ServerHttpRequest serverHttpRequest, @NonNull ServerHttpResponse serverHttpResponse
+    ) {
         if (o instanceof TiResult) {
             return o;
         }
