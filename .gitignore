@@ -40,3 +40,4 @@ logs/
 /ticho-generator/templates/
 /ticho-generator/config*.yml
 /ticho-generator/global*.yml
+/.claude/settings.local.json
