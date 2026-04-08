@@ -56,13 +56,17 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * 数据源配置
+ * 项目处理器
+ * <p>负责加载项目配置、获取数据库表信息、渲染模板并生成代码文件</p>
  *
  * @author zhajianjun
  * @date 2024-02-01 12:30
  */
 @Slf4j
 public class ProjectHandler {
+
+    /** 数据库连接超时时间（毫秒） */
+    private static final long CONNECTION_TIMEOUT_MS = 10_000;
 
     /** 全局配置 */
     private final GlobalConfig globalConfig;
@@ -231,7 +235,7 @@ public class ProjectHandler {
         // 在这里可以做别的任何事情
         try {
             // 取得结果，同时设置超时执行时间为10秒。同样可以用future.get()，不设置执行超时时间取得结果
-            connection = future.get(10000, TimeUnit.MILLISECONDS);
+            connection = future.get(CONNECTION_TIMEOUT_MS, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             String extracted = getErrorMessage(e, future);

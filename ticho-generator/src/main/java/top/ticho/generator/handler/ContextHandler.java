@@ -25,6 +25,9 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 上下文处理器
+ * <p>负责初始化日志和链路追踪，加载全局配置，并按环境执行项目代码生成</p>
+ *
  * @author zhajianjun
  * @date 2024-11-23 20:14
  */
@@ -36,7 +39,7 @@ public class ContextHandler {
     public void handle() {
         initLogAndTrace();
         try {
-            handle1();
+            processProjects();
         } catch (Exception e) {
             log.error("任务执行异常：{}", e.getMessage(), e);
         } finally {
@@ -50,7 +53,7 @@ public class ContextHandler {
         TraceUtil.trace();
     }
 
-    public void handle1() {
+    public void processProjects() {
         log.warn("执行路径[{}]", CommConst.PROJECT_PATH);
         GlobalYml globalYml = getGlobalYml();
         GlobalConfig globalConfig = Optional.ofNullable(globalYml).map(GlobalYml::getGlobalConfig).orElse(null);
