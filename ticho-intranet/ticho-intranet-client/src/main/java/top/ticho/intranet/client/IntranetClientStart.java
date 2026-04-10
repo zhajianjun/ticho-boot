@@ -23,7 +23,7 @@ public class IntranetClientStart {
     public static void main(String[] args) {
         Configurator.initialize("Client", "config/log4j2.xml");
         String projectPath = System.getProperty("user.dir");
-        String filePath = projectPath + File.separator + "/config/client.yaml";
+        String filePath = projectPath + "/config/client.yaml";
         IntranetClientProperty intranetClientProperty;
         try {
             intranetClientProperty = TiJsonUtil.toObjectFromProperty(new File(filePath), IntranetClientProperty.class);
