@@ -18,7 +18,7 @@ public class TiTraceProperty {
     private String trace = TiTraceConst.DEFAULT_TRACE;
     /** 日志过滤地址 */
     private List<String> antPatterns = new ArrayList<>();
-    /** 拦截器排序 */
+    /** 拦截器排序，使用极低优先级确保链路拦截器最先执行（保留1000的偏移量给可能更早的组件） */
     private Integer order = Integer.MIN_VALUE + 1000;
 
 }
