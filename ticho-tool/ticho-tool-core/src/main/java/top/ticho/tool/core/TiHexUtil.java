@@ -3,6 +3,8 @@ package top.ticho.tool.core;
 
 import top.ticho.tool.core.exception.TiUtilException;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
@@ -15,6 +17,7 @@ import java.util.Objects;
  * @author zhajianjun
  * @date 2026-02-04 20:33
  */
+@Slf4j
 public class TiHexUtil {
 
     /** 十六进制字符数组 */
@@ -185,28 +188,25 @@ public class TiHexUtil {
         String original = "123456@qq.com";
         String encoded = encodeString(original);
         String decoded = decodeAsString(encoded);
-        System.out.println("原始字符串: " + original);
-        System.out.println("编码结果: " + encoded);
-        System.out.println("解码结果: " + decoded);
-        System.out.println("验证结果: " + original.equals(decoded));
-        // 测试边界情况
-        System.out.println("\n=== 边界测试 ===");
-        System.out.println("空字符串编码: " + encodeString(""));
-        System.out.println("null字符串编码: " + encodeString(null));
-        System.out.println("null字节数组编码: " + encode(null));
-        // 测试验证功能
-        System.out.println("\n=== 验证测试 ===");
-        System.out.println("有效十六进制: " + isValidHex("313031393331393437334071712E636F6D"));
-        System.out.println("无效十六进制(奇数长度): " + isValidHex("313"));
-        System.out.println("无效十六进制(非法字符): " + isValidHex("313G"));
-        // 测试不同编码
-        System.out.println("\n=== 编码测试 ===");
+        log.info("原始字符串: {}", original);
+        log.info("编码结果: {}", encoded);
+        log.info("解码结果: {}", decoded);
+        log.info("验证结果: {}", original.equals(decoded));
+        log.info("=== 边界测试 ===");
+        log.info("空字符串编码: {}", encodeString(""));
+        log.info("null字符串编码: {}", encodeString(null));
+        log.info("null字节数组编码: {}", encode(null));
+        log.info("=== 验证测试 ===");
+        log.info("有效十六进制: {}", isValidHex("313031393331393437334071712E636F6D"));
+        log.info("无效十六进制(奇数长度): {}", isValidHex("313"));
+        log.info("无效十六进制(非法字符): {}", isValidHex("313G"));
+        log.info("=== 编码测试 ===");
         String chinese = "你好世界";
         String gbkEncoded = encodeString(chinese, Charset.forName("GBK"));
         String gbkDecoded = decodeAsString(gbkEncoded, Charset.forName("GBK"));
-        System.out.println("中文原字符串: " + chinese);
-        System.out.println("GBK编码: " + gbkEncoded);
-        System.out.println("GBK解码: " + gbkDecoded);
+        log.info("中文原字符串: {}", chinese);
+        log.info("GBK编码: {}", gbkEncoded);
+        log.info("GBK解码: {}", gbkDecoded);
     }
 
 }
