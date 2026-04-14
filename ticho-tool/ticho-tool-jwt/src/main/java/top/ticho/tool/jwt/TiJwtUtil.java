@@ -9,6 +9,7 @@ import io.jsonwebtoken.impl.TokenizedJwt;
 import io.jsonwebtoken.impl.io.CharSequenceReader;
 import io.jsonwebtoken.jackson.io.JacksonDeserializer;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import top.ticho.tool.core.TiBase64Util;
 import top.ticho.tool.core.TiIdUtil;
 import top.ticho.tool.core.exception.TiUtilException;
@@ -30,6 +31,7 @@ import java.util.Map;
  * @author zhajianjun
  * @date 2025-12-27 14:28
  */
+@Slf4j
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 public class TiJwtUtil {
     /** JWT Header 中的类型标识 */
@@ -178,10 +180,10 @@ public class TiJwtUtil {
         String privateKey = "MIGTAgEAMBMGByqGSM49AgEGCCqBHM9VAYItBHkwdwIBAQQgc7V57xPTgMKaI2lrsvgGYYpWHd70vBXGlxawIXZZRaCgCgYIKoEcz1UBgi2hRANCAASM5+Cmc8hds8T5rlJKb7G/9S7w3UaHtBCaIg/aBOkRHvgzlgWkc2SvBr/8iJe2nAGgDy/2adlCp8TZjjh5hfpC";
 
         String token = generateTokenWithSM2(Map.of("test", true), TiBase64Util.decodeAsBytes(privateKey), 1000);
-        System.out.println("生成的 Token: " + token);
+        log.info("生成的 Token: {}", token);
         TiJwt tiJwt = parseToken(token);
         tiJwt.verify(TiBase64Util.decodeAsBytes(publicKey));
-        System.out.println("验证结果: " + tiJwt.claims());
+        log.info("验证结果: {}", tiJwt.claims());
     }
 
     /**
