@@ -12,6 +12,8 @@ import org.bouncycastle.crypto.params.ParametersWithRandom;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import top.ticho.tool.core.TiBase64Util;
 import top.ticho.tool.core.TiHexUtil;
 import top.ticho.tool.core.TiStrUtil;
@@ -43,6 +45,7 @@ import java.security.spec.X509EncodedKeySpec;
  * @date 2025-12-27 11:44
  */
 public class TiSm2Util {
+    private static final Logger log = LoggerFactory.getLogger(TiSm2Util.class);
     // ==================== 常量定义 ====================
     /** 椭圆曲线算法名称 */
     public static final String EC_ALGORITHM = "EC";
@@ -52,7 +55,8 @@ public class TiSm2Util {
     public static final String SM2P256V1 = "sm2p256v1";
     /** SM2签名算法OID */
     public static final String SM2_SIGN_ALGORITHM = GMObjectIdentifiers.sm2sign_with_sm3.toString();
-    public static final ECDomainParameters ecDomainParameters;
+    /** SM2椭圆曲线域参数，基于sm2p256v1标准曲线 */
+    public static final ECDomainParameters EC_DOMAIN_PARAMETERS;
 
     // ==================== 异常消息常量 ====================
     private static final String ERROR_UNKNOWN_ALGORITHM = "未知加密算法";
@@ -73,7 +77,7 @@ public class TiSm2Util {
             }
             // 初始化SM2椭圆曲线参数
             X9ECParameters sm2ECParameters = ECNamedCurveTable.getByName(SM2P256V1);
-            ecDomainParameters = new ECDomainParameters(
+            EC_DOMAIN_PARAMETERS = new ECDomainParameters(
                 sm2ECParameters.getCurve(),
                 sm2ECParameters.getG(),
                 sm2ECParameters.getN(),
@@ -120,17 +124,17 @@ public class TiSm2Util {
         String privateKeyHex = TiHexUtil.encode(privateKey.getEncoded());
         String encryptBase64 = encryptBase64(testData, publicKeyBase64);
         String encryptHex = encryptHex(testData, publicKeyHex);
-        System.out.println("==================== SM2密钥对信息 ====================");
-        System.out.println("公钥(Base64)：" + publicKeyBase64);
-        System.out.println("私钥(Base64)：" + privateKeyBase64);
-        System.out.println("公钥(Hex)：" + publicKeyHex);
-        System.out.println("私钥(Hex)：" + privateKeyHex);
-        System.out.println("原始数据：" + testData);
-        System.out.println("加密测试(Base64)：" + encryptBase64);
-        System.out.println("解密测试(Base64)：" + decryptBase64(encryptBase64, privateKeyBase64));
-        System.out.println("加密测试(Hex)：" + encryptHex);
-        System.out.println("解密测试(Hex)：" + decryptHex(encryptHex, privateKeyHex));
-        System.out.println("====================================================");
+        log.info("==================== SM2密钥对信息 ====================");
+        log.info("公钥(Base64)：{}", publicKeyBase64);
+        log.info("私钥(Base64)：{}", privateKeyBase64);
+        log.info("公钥(Hex)：{}", publicKeyHex);
+        log.info("私钥(Hex)：{}", privateKeyHex);
+        log.info("原始数据：{}", testData);
+        log.info("加密测试(Base64)：{}", encryptBase64);
+        log.info("解密测试(Base64)：{}", decryptBase64(encryptBase64, privateKeyBase64));
+        log.info("加密测试(Hex)：{}", encryptHex);
+        log.info("解密测试(Hex)：{}", decryptHex(encryptHex, privateKeyHex));
+        log.info("====================================================");
     }
 
     /**
@@ -229,7 +233,7 @@ public class TiSm2Util {
             PublicKey publicKey = loadPublicKey(publicKeyBytes);
             BCECPublicKey ecPublicKey = (BCECPublicKey) publicKey;
             SM2Engine engine = new SM2Engine();
-            engine.init(true, new ParametersWithRandom(new ECPublicKeyParameters(ecPublicKey.getQ(), ecDomainParameters), new SecureRandom()));
+            engine.init(true, new ParametersWithRandom(new ECPublicKeyParameters(ecPublicKey.getQ(), EC_DOMAIN_PARAMETERS), new SecureRandom()));
             return engine.processBlock(dataBytes, 0, dataBytes.length);
         } catch (InvalidCipherTextException e) {
             throw new TiUtilException("加密异常，" + ERROR_INVALID_CIPHER_TEXT, e);
@@ -257,7 +261,7 @@ public class TiSm2Util {
             BCECPrivateKey ecPrivateKey = (BCECPrivateKey) privateKey;
 
             SM2Engine engine = new SM2Engine();
-            engine.init(false, new ECPrivateKeyParameters(ecPrivateKey.getD(), ecDomainParameters));
+            engine.init(false, new ECPrivateKeyParameters(ecPrivateKey.getD(), EC_DOMAIN_PARAMETERS));
             return engine.processBlock(encryptedDataBytes, 0, encryptedDataBytes.length);
         } catch (InvalidCipherTextException | IllegalArgumentException e) {
             throw new TiUtilException("解密异常，" + ERROR_INVALID_CIPHER_TEXT, e);
