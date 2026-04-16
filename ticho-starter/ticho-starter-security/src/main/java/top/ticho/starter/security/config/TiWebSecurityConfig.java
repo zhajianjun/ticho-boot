@@ -2,12 +2,9 @@ package top.ticho.starter.security.config;
 
 
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.security.autoconfigure.SecurityProperties;
-import org.springframework.boot.security.autoconfigure.UserDetailsServiceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -33,8 +30,8 @@ import top.ticho.starter.security.controller.TiLoginServiceImpl;
 import top.ticho.starter.security.controller.TiOauthController;
 import top.ticho.starter.security.core.TiAccessDeniedHandler;
 import top.ticho.starter.security.core.TiAuthenticationEntryPoint;
-import top.ticho.starter.security.core.jwt.TiTokenExtra;
 import top.ticho.starter.security.core.jwt.TiDefaultTiTokenExtra;
+import top.ticho.starter.security.core.jwt.TiTokenExtra;
 import top.ticho.starter.security.filter.AbstractAuthTokenFilter;
 import top.ticho.starter.security.filter.TiAuthorizationManager;
 import top.ticho.starter.security.filter.TiTokenAuthenticationTokenFilter;
@@ -54,23 +51,6 @@ import top.ticho.starter.view.task.TiTaskDecortor;
 @EnableMethodSecurity
 public class TiWebSecurityConfig {
 
-    /**
-     * 处理安全控制台打印
-     * <p>
-     * 注意：默认用户应通过配置文件 ticho.security.users 进行配置，
-     * 而非硬编码密码。详见 {@link TiSecurityProperty#getUsers()}
-     *
-     * @see UserDetailsServiceAutoConfiguration 87行 会打印存储在内存的权限用户密码
-     * @deprecated 请使用配置文件设置默认用户，此方法已废弃
-     */
-    @Deprecated
-    @Autowired
-    public void handleConsoleSecurityPrint(SecurityProperties properties) {
-        SecurityProperties.User user = properties.getUser();
-        // 不再设置硬编码密码，请通过配置文件设置
-        // user.setPassword("user");
-    }
-
     @Bean
     @Order(100)
     public SecurityFilterChain tiSecurityFilterChain(HttpSecurity http, TiAntPatternsAuthHandle tiAntPatternsAuthHandle, ObjectProvider<AbstractAuthTokenFilter<?>> abstractAuthTokenFilterProvider) throws Exception {
@@ -86,12 +66,16 @@ public class TiWebSecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             // 允许跨域请求
             .cors(Customizer.withDefaults())
-            // 关闭csrf
-            .csrf(AbstractHttpConfigurer::disable)
             // 禁用session
-            .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)).authorizeHttpRequests(registry -> registry.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll().anyRequest().access(new TiAuthorizationManager(tiAntPatternsAuthHandle))).securityMatcher(request -> true)
+            .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(registry -> registry
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .anyRequest().access(new TiAuthorizationManager(tiAntPatternsAuthHandle)))
+            .securityMatcher(request -> true)
             // 显式声明禁用缓存控制
-            .headers(headers -> headers.cacheControl(HeadersConfigurer.CacheControlConfig::disable)).addFilterBefore(abstractAuthTokenFilter, LogoutFilter.class).exceptionHandling(handling -> handling
+            .headers(headers -> headers.cacheControl(HeadersConfigurer.CacheControlConfig::disable))
+            .addFilterBefore(abstractAuthTokenFilter, LogoutFilter.class)
+            .exceptionHandling(handling -> handling
                 // 先处理未认证
                 .authenticationEntryPoint(new TiAuthenticationEntryPoint())
                 // 后处理权限不足
