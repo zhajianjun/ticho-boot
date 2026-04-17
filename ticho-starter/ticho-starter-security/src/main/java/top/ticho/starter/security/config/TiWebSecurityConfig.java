@@ -53,7 +53,7 @@ public class TiWebSecurityConfig {
 
     @Bean
     @Order(100)
-    public SecurityFilterChain tiSecurityFilterChain(HttpSecurity http, TiAntPatternsAuthHandle tiAntPatternsAuthHandle, ObjectProvider<AbstractAuthTokenFilter<?>> abstractAuthTokenFilterProvider) throws Exception {
+    public SecurityFilterChain tiSecurityFilterChain(HttpSecurity http, TiAntPatternsAuthHandle tiAntPatternsAuthHandle, ObjectProvider<AbstractAuthTokenFilter<?>> abstractAuthTokenFilterProvider) {
         AbstractAuthTokenFilter<?> abstractAuthTokenFilter = abstractAuthTokenFilterProvider.getIfAvailable(TiTokenAuthenticationTokenFilter::new);
         http
             // 禁用表单登录
