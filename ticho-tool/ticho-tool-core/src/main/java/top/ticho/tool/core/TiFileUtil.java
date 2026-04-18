@@ -169,7 +169,7 @@ public class TiFileUtil {
      * 移动文件
      * 将源文件移动到目标位置，如果目标文件已存在会被覆盖
      *
-     * @param src 源文件对象
+     * @param src    源文件对象
      * @param target 目标文件对象
      * @throws TiUtilException 移动失败时抛出
      */

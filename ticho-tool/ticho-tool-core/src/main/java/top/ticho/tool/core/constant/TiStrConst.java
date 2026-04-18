@@ -10,7 +10,7 @@ public class TiStrConst {
 
     public static final String EMPTY = "";
     public static final String EMPTY_JSON = "{}";
-    
+
     /**
      * 字符常量：空格符 {@code " "}
      */
@@ -89,6 +89,6 @@ public class TiStrConst {
     public static final String AT = "@";
 
     public static final String DL = "$";
-    
+
 
 }

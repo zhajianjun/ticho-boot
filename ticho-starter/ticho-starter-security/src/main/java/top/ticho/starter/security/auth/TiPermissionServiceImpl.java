@@ -6,7 +6,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import top.ticho.tool.core.TiObjUtil;
-import top.ticho.tool.json.util.TiJsonUtil;
 
 import java.util.Collection;
 import java.util.HashSet;

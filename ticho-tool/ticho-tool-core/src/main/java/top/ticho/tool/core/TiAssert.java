@@ -25,8 +25,8 @@ public class TiAssert {
      * 断言条件必须为 true
      * 如果条件不为 true，则抛出指定错误码和错误信息的业务异常
      *
-     * @param condition 需要判断的条件
-     * @param code 错误码
+     * @param condition    需要判断的条件
+     * @param code         错误码
      * @param errorMessage 错误信息
      * @throws TiBizException 当条件不为 true 时抛出
      */
@@ -41,7 +41,7 @@ public class TiAssert {
      * 如果条件不为 true，则抛出指定错误码的业务异常
      *
      * @param condition 需要判断的条件
-     * @param errCode 错误码枚举
+     * @param errCode   错误码枚举
      * @throws TiBizException 当条件不为 true 时抛出
      */
     public static void isTrue(boolean condition, TiErrorCode errCode) {
@@ -55,7 +55,7 @@ public class TiAssert {
      * 如果条件不为 true，则抛出参数错误异常并附带指定消息
      *
      * @param condition 需要判断的条件
-     * @param message 错误信息
+     * @param message   错误信息
      * @throws TiBizException 当条件不为 true 时抛出
      */
     public static void isTrue(boolean condition, String message) {
@@ -68,8 +68,8 @@ public class TiAssert {
      * 断言条件必须为 true
      * 如果条件不为 true，则抛出指定错误码和错误信息的业务异常
      *
-     * @param condition 需要判断的条件
-     * @param errCode 错误码枚举
+     * @param condition    需要判断的条件
+     * @param errCode      错误码枚举
      * @param errorMessage 错误信息
      * @throws TiBizException 当条件不为 true 时抛出
      */
@@ -83,8 +83,8 @@ public class TiAssert {
      * 断言条件必须为 true
      * 如果条件不为 true，则使用 Supplier 懒加载获取错误信息并抛出异常
      *
-     * @param condition 需要判断的条件
-     * @param errCode 错误码枚举
+     * @param condition      需要判断的条件
+     * @param errCode        错误码枚举
      * @param stringSupplier 错误信息提供者（懒加载）
      * @throws TiBizException 当条件不为 true 时抛出
      */
@@ -98,7 +98,7 @@ public class TiAssert {
      * 断言条件必须为 true
      * 如果条件不为 true，则使用默认参数错误码和 Supplier 提供的错误信息抛出异常
      *
-     * @param condition 需要判断的条件
+     * @param condition      需要判断的条件
      * @param stringSupplier 错误信息提供者（懒加载）
      * @throws TiBizException 当条件不为 true 时抛出
      */
@@ -116,7 +116,7 @@ public class TiAssert {
      * 断言对象必须为 null
      * 如果对象不为 null，则抛出指定错误码的业务异常
      *
-     * @param obj 需要判断的对象
+     * @param obj     需要判断的对象
      * @param errCode 错误码枚举
      * @throws TiBizException 当对象不为 null 时抛出
      */
@@ -130,7 +130,7 @@ public class TiAssert {
      * 断言对象必须为 null
      * 如果对象不为 null，则抛出参数错误异常并附带指定消息
      *
-     * @param obj 需要判断的对象
+     * @param obj     需要判断的对象
      * @param message 错误信息
      * @throws TiBizException 当对象不为 null 时抛出
      */
@@ -144,8 +144,8 @@ public class TiAssert {
      * 断言对象必须为 null
      * 如果对象不为 null，则抛出指定错误码和错误信息的业务异常
      *
-     * @param obj 需要判断的对象
-     * @param errCode 错误码枚举
+     * @param obj          需要判断的对象
+     * @param errCode      错误码枚举
      * @param errorMessage 错误信息
      * @throws TiBizException 当对象不为 null 时抛出
      */
@@ -159,8 +159,8 @@ public class TiAssert {
      * 断言对象必须为 null
      * 如果对象不为 null，则使用 Supplier 懒加载获取错误信息并抛出异常
      *
-     * @param obj 需要判断的对象
-     * @param errCode 错误码枚举
+     * @param obj            需要判断的对象
+     * @param errCode        错误码枚举
      * @param stringSupplier 错误信息提供者（懒加载）
      * @throws TiBizException 当对象不为 null 时抛出
      */
@@ -174,7 +174,7 @@ public class TiAssert {
      * 断言对象必须为 null
      * 如果对象不为 null，则使用默认参数错误码和 Supplier 提供的错误信息抛出异常
      *
-     * @param obj 需要判断的对象
+     * @param obj            需要判断的对象
      * @param stringSupplier 错误信息提供者（懒加载）
      * @throws TiBizException 当对象不为 null 时抛出
      */
@@ -191,7 +191,7 @@ public class TiAssert {
      * 断言对象必须不为 null
      * 如果对象为 null，则抛出指定错误码的业务异常
      *
-     * @param obj 需要判断的对象
+     * @param obj     需要判断的对象
      * @param errCode 错误码枚举
      * @throws TiBizException 当对象为 null 时抛出
      */
@@ -205,7 +205,7 @@ public class TiAssert {
      * 断言对象必须不为 null
      * 如果对象为 null，则抛出参数错误异常并附带指定消息
      *
-     * @param obj 需要判断的对象
+     * @param obj     需要判断的对象
      * @param message 错误信息
      * @throws TiBizException 当对象为 null 时抛出
      */
@@ -219,8 +219,8 @@ public class TiAssert {
      * 断言对象必须不为 null
      * 如果对象为 null，则抛出指定错误码和错误信息的业务异常
      *
-     * @param obj 需要判断的对象
-     * @param errCode 错误码枚举
+     * @param obj          需要判断的对象
+     * @param errCode      错误码枚举
      * @param errorMessage 错误信息
      * @throws TiBizException 当对象为 null 时抛出
      */
@@ -234,8 +234,8 @@ public class TiAssert {
      * 断言对象必须不为 null
      * 如果对象为 null，则使用 Supplier 懒加载获取错误信息并抛出异常
      *
-     * @param obj 需要判断的对象
-     * @param errCode 错误码枚举
+     * @param obj            需要判断的对象
+     * @param errCode        错误码枚举
      * @param stringSupplier 错误信息提供者（懒加载）
      * @throws TiBizException 当对象为 null 时抛出
      */
@@ -249,7 +249,7 @@ public class TiAssert {
      * 断言对象必须不为 null
      * 如果对象为 null，则使用默认参数错误码和 Supplier 提供的错误信息抛出异常
      *
-     * @param obj 需要判断的对象
+     * @param obj            需要判断的对象
      * @param stringSupplier 错误信息提供者（懒加载）
      * @throws TiBizException 当对象为 null 时抛出
      */
@@ -267,7 +267,7 @@ public class TiAssert {
      * 断言对象必须为空
      * 如果对象不为空，则抛出指定错误码的业务异常
      *
-     * @param obj 需要判断的对象
+     * @param obj     需要判断的对象
      * @param errCode 错误码枚举
      * @throws TiBizException 当对象不为空时抛出
      */
@@ -281,7 +281,7 @@ public class TiAssert {
      * 断言对象必须为空
      * 如果对象不为空，则抛出参数错误异常并附带指定消息
      *
-     * @param obj 需要判断的对象
+     * @param obj     需要判断的对象
      * @param message 错误信息
      * @throws TiBizException 当对象不为空时抛出
      */
@@ -295,8 +295,8 @@ public class TiAssert {
      * 断言对象必须为空
      * 如果对象不为空，则抛出指定错误码和错误信息的业务异常
      *
-     * @param obj 需要判断的对象
-     * @param errCode 错误码枚举
+     * @param obj          需要判断的对象
+     * @param errCode      错误码枚举
      * @param errorMessage 错误信息
      * @throws TiBizException 当对象不为空时抛出
      */
@@ -310,8 +310,8 @@ public class TiAssert {
      * 断言对象必须为空
      * 如果对象不为空，则使用 Supplier 懒加载获取错误信息并抛出异常
      *
-     * @param obj 需要判断的对象
-     * @param errCode 错误码枚举
+     * @param obj            需要判断的对象
+     * @param errCode        错误码枚举
      * @param stringSupplier 错误信息提供者（懒加载）
      * @throws TiBizException 当对象不为空时抛出
      */
@@ -325,7 +325,7 @@ public class TiAssert {
      * 断言对象必须为空
      * 如果对象不为空，则使用默认参数错误码和 Supplier 提供的错误信息抛出异常
      *
-     * @param obj 需要判断的对象
+     * @param obj            需要判断的对象
      * @param stringSupplier 错误信息提供者（懒加载）
      * @throws TiBizException 当对象不为空时抛出
      */
@@ -342,7 +342,7 @@ public class TiAssert {
      * 断言对象必须不为空
      * 如果对象为空，则抛出指定错误码的业务异常
      *
-     * @param obj 需要判断的对象
+     * @param obj     需要判断的对象
      * @param errCode 错误码枚举
      * @throws TiBizException 当对象为空时抛出
      */
@@ -356,7 +356,7 @@ public class TiAssert {
      * 断言对象必须不为空
      * 如果对象为空，则抛出参数错误异常并附带指定消息
      *
-     * @param obj 需要判断的对象
+     * @param obj     需要判断的对象
      * @param message 错误信息
      * @throws TiBizException 当对象为空时抛出
      */
@@ -370,8 +370,8 @@ public class TiAssert {
      * 断言对象必须不为空
      * 如果对象为空，则抛出指定错误码和错误信息的业务异常
      *
-     * @param obj 需要判断的对象
-     * @param errCode 错误码枚举
+     * @param obj          需要判断的对象
+     * @param errCode      错误码枚举
      * @param errorMessage 错误信息
      * @throws TiBizException 当对象为空时抛出
      */
@@ -385,8 +385,8 @@ public class TiAssert {
      * 断言对象必须不为空
      * 如果对象为空，则使用 Supplier 懒加载获取错误信息并抛出异常
      *
-     * @param obj 需要判断的对象
-     * @param errCode 错误码枚举
+     * @param obj            需要判断的对象
+     * @param errCode        错误码枚举
      * @param stringSupplier 错误信息提供者（懒加载）
      * @throws TiBizException 当对象为空时抛出
      */
@@ -400,7 +400,7 @@ public class TiAssert {
      * 断言对象必须不为空
      * 如果对象为空，则使用默认参数错误码和 Supplier 提供的错误信息抛出异常
      *
-     * @param obj 需要判断的对象
+     * @param obj            需要判断的对象
      * @param stringSupplier 错误信息提供者（懒加载）
      * @throws TiBizException 当对象为空时抛出
      */
@@ -418,7 +418,7 @@ public class TiAssert {
      * 断言字符串必须为空白（null、空字符串或仅包含空白字符）
      * 如果字符串不为空白，则抛出指定错误码的业务异常
      *
-     * @param str 需要判断的字符串
+     * @param str     需要判断的字符串
      * @param errCode 错误码枚举
      * @throws TiBizException 当字符串不为空白时抛出
      */
@@ -432,7 +432,7 @@ public class TiAssert {
      * 断言字符串必须为空白（null、空字符串或仅包含空白字符）
      * 如果字符串不为空白，则抛出参数错误异常并附带指定消息
      *
-     * @param str 需要判断的字符串
+     * @param str     需要判断的字符串
      * @param message 错误信息
      * @throws TiBizException 当字符串不为空白时抛出
      */
@@ -446,8 +446,8 @@ public class TiAssert {
      * 断言字符串必须为空白（null、空字符串或仅包含空白字符）
      * 如果字符串不为空白，则抛出指定错误码和错误信息的业务异常
      *
-     * @param str 需要判断的字符串
-     * @param errCode 错误码枚举
+     * @param str          需要判断的字符串
+     * @param errCode      错误码枚举
      * @param errorMessage 错误信息
      * @throws TiBizException 当字符串不为空白时抛出
      */
@@ -461,8 +461,8 @@ public class TiAssert {
      * 断言字符串必须为空白（null、空字符串或仅包含空白字符）
      * 如果字符串不为空白，则使用 Supplier 懒加载获取错误信息并抛出异常
      *
-     * @param str 需要判断的字符串
-     * @param errCode 错误码枚举
+     * @param str            需要判断的字符串
+     * @param errCode        错误码枚举
      * @param stringSupplier 错误信息提供者（懒加载）
      * @throws TiBizException 当字符串不为空白时抛出
      */
@@ -476,7 +476,7 @@ public class TiAssert {
      * 断言字符串必须为空白（null、空字符串或仅包含空白字符）
      * 如果字符串不为空白，则使用默认参数错误码和 Supplier 提供的错误信息抛出异常
      *
-     * @param str 需要判断的字符串
+     * @param str            需要判断的字符串
      * @param stringSupplier 错误信息提供者（懒加载）
      * @throws TiBizException 当字符串不为空白时抛出
      */
@@ -493,7 +493,7 @@ public class TiAssert {
      * 断言字符串必须不为空白（非 null、非空且包含非空白字符）
      * 如果字符串为空白，则抛出指定错误码的业务异常
      *
-     * @param obj 需要判断的字符串
+     * @param obj     需要判断的字符串
      * @param errCode 错误码枚举
      * @throws TiBizException 当字符串为空白时抛出
      */
@@ -507,7 +507,7 @@ public class TiAssert {
      * 断言字符串必须不为空白（非 null、非空且包含非空白字符）
      * 如果字符串为空白，则抛出参数错误异常并附带指定消息
      *
-     * @param str 需要判断的字符串
+     * @param str     需要判断的字符串
      * @param message 错误信息
      * @throws TiBizException 当字符串为空白时抛出
      */
@@ -521,8 +521,8 @@ public class TiAssert {
      * 断言字符串必须不为空白（非 null、非空且包含非空白字符）
      * 如果字符串为空白，则抛出指定错误码和错误信息的业务异常
      *
-     * @param obj 需要判断的字符串
-     * @param errCode 错误码枚举
+     * @param obj          需要判断的字符串
+     * @param errCode      错误码枚举
      * @param errorMessage 错误信息
      * @throws TiBizException 当字符串为空白时抛出
      */
@@ -536,8 +536,8 @@ public class TiAssert {
      * 断言字符串必须不为空白（非 null、非空且包含非空白字符）
      * 如果字符串为空白，则使用 Supplier 懒加载获取错误信息并抛出异常
      *
-     * @param str 需要判断的字符串
-     * @param errCode 错误码枚举
+     * @param str            需要判断的字符串
+     * @param errCode        错误码枚举
      * @param stringSupplier 错误信息提供者（懒加载）
      * @throws TiBizException 当字符串为空白时抛出
      */
@@ -551,7 +551,7 @@ public class TiAssert {
      * 断言字符串必须不为空白（非 null、非空且包含非空白字符）
      * 如果字符串为空白，则使用默认参数错误码和 Supplier 提供的错误信息抛出异常
      *
-     * @param str 需要判断的字符串
+     * @param str            需要判断的字符串
      * @param stringSupplier 错误信息提供者（懒加载）
      * @throws TiBizException 当字符串为空白时抛出
      */
@@ -577,7 +577,7 @@ public class TiAssert {
     /**
      * 直接抛出指定错误码和错误信息的业务异常
      *
-     * @param errCode 错误码枚举
+     * @param errCode      错误码枚举
      * @param errorMessage 错误信息
      * @throws TiBizException 总是抛出
      */
@@ -588,7 +588,7 @@ public class TiAssert {
     /**
      * 直接抛出业务异常，支持使用 Supplier 懒加载错误信息
      *
-     * @param errCode 错误码枚举
+     * @param errCode        错误码枚举
      * @param stringSupplier 错误信息提供者（懒加载）
      * @throws TiBizException 总是抛出
      */
@@ -600,7 +600,7 @@ public class TiAssert {
     /**
      * 直接抛出指定错误码和错误信息的业务异常
      *
-     * @param code 错误码
+     * @param code         错误码
      * @param errorMessage 错误信息
      * @throws TiBizException 总是抛出
      */

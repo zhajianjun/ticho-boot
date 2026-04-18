@@ -48,7 +48,7 @@ class TiStrFormatter {
         if (TiStrUtil.isBlank(strPattern) || TiStrUtil.isBlank(placeHolder) || TiArrayUtil.isEmpty(argArray)) {
             return strPattern;
         }
-         int strPatternLength = strPattern.length();
+        int strPatternLength = strPattern.length();
         int placeHolderLength = placeHolder.length();
         // 初始化定义好的长度以获得更好的性能
         StringBuilder sbuf = new StringBuilder(strPatternLength + 50);
